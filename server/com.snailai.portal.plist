@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.snailai.portal</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/robinmacpro2021/龙虾文件夹/蜗牛AI/官网学生登录/server/.venv/bin/python</string>
+        <string>/Users/robinmacpro2021/龙虾文件夹/蜗牛AI/官网学生登录/server/app.py</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/robinmacpro2021/龙虾文件夹/蜗牛AI/官网学生登录/server</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOST</key>
+        <string>0.0.0.0</string>
+        <key>PORT</key>
+        <string>8080</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/Users/robinmacpro2021/龙虾文件夹/蜗牛AI/官网学生登录/server/portal.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/robinmacpro2021/龙虾文件夹/蜗牛AI/官网学生登录/server/portal.log</string>
+</dict>
+</plist>

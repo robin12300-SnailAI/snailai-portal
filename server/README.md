@@ -7,14 +7,13 @@
 ## 一、本地运行
 
 ```bash
-# 1) 创建并激活虚拟环境（一次性）
-PY=/Users/robinmacpro2021/.workbuddy/binaries/python/versions/3.13.12/bin/python3
-PYTHON_VENV=/Users/robinmacpro2021/.workbuddy/binaries/python/envs/snailai-portal
-$PY -m venv "$PYTHON_VENV"
-"$PYTHON_VENV/bin/pip" install -r server/requirements.txt
+# 1) 创建项目自带虚拟环境（一次性；已随仓库忽略 .venv）
+cd 官网学生登录
+python3 -m venv server/.venv
+server/.venv/bin/pip install -r server/requirements.txt
 
 # 2) 启动（默认 127.0.0.1:5000）
-PORT=5000 "$PYTHON_VENV/bin/python" server/app.py
+PORT=5000 server/.venv/bin/python server/app.py
 ```
 
 打开 http://127.0.0.1:5000/ 即可。首次启动自动建库 `server/snailai.db` 并写入演示数据。
@@ -33,7 +32,7 @@ PORT=5000 "$PYTHON_VENV/bin/python" server/app.py
 
 ```bash
 cd 官网学生登录
-VENV=/Users/robinmacpro2021/.workbuddy/binaries/python/envs/snailai-portal
+VENV=server/.venv
 
 # 列出当前用户
 "$VENV/bin/python" server/manage.py listusers
@@ -77,6 +76,47 @@ gunicorn -w 2 -b 0.0.0.0:5000 server:app
 - `server/snailai.db` 是 SQLite 文件，随服务进程保存在磁盘，**务必定期备份此文件**。
 - SQLite 适合几十~上百并发读写；学员规模更大时再迁移到 PostgreSQL（改 `db_conn()` 即可）。
 
+### 方案 C：本机 Mac + Tailscale（最省事，适合小范围 / 内部培训）
+
+把服务跑在自己 24 小时开机的 Mac 上，学员通过 **Tailscale 私有网络**访问，
+**不暴露到公网**、数据留在自己 Mac（不丢），零月费。
+
+**前提**
+- Mac 上装好 Tailscale 并登录（https://tailscale.com）；学员设备也装 Tailscale 并被你邀请进同一网络。
+- 选 **8080 端口**——macOS 的 AirPlay 接收器默认占用 5000，会冲突。
+
+**1) 安装常驻服务（开机/登录自启 + 崩溃自重启）**
+
+仓库内已附 `server/com.snailai.portal.plist`（绝对路径指向本项目）。安装：
+
+```bash
+# 复制到系统启动目录
+cp server/com.snailai.portal.plist ~/Library/LaunchAgents/
+# 注册并启动（macOS 13+ 用 bootstrap，不要用已废弃的 load）
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.snailai.portal.plist
+launchctl kickstart gui/$(id -u)/com.snailai.portal
+```
+
+日志：`server/portal.log`。状态：`launchctl print gui/$(id -u)/com.snailai.portal`。
+
+**2) 学员访问地址**（二选一，效果相同）
+- 域名：`http://robin-new-pro.tail823ec6.ts.net:8080/login.html`
+- 或 IP：`http://100.96.236.34:8080/login.html`
+
+> 若换机器 / 重装，MagicDNS 域名会变化，以 `tailscale ip -4` 或 `tailscale status` 为准。
+
+**3) 停止 / 重启**
+```bash
+launchctl bootout gui/$(id -u)/com.snailai.portal        # 停止
+launchctl kickstart gui/$(id -u)/com.snailai.portal       # 重启
+```
+
+**4) 注意**
+- 服务绑定 `0.0.0.0`，因此**同一 Wi-Fi 下**的其他设备也能访问该端口；门户有登录鉴权，家庭网络一般无碍。
+- 首次有外部设备访问时，macOS 可能弹窗询问「是否允许 Python 接收传入连接」，点允许。
+- 改代码后：`launchctl kickstart gui/$(id -u)/com.snailai.portal` 重启生效。
+- 备份数据库：`cp server/snailai.db server/snailai.db.bak-$(date +%F)`。
+
 ### 跨域（GitHub Pages 门户 + 独立后端）
 若门户继续托管在 GitHub Pages、后端单独部署，在门户任意页面 `<head>` 之前加：
 ```html
@@ -93,6 +133,7 @@ gunicorn -w 2 -b 0.0.0.0:5000 server:app
 ```
 https://你的后端地址/login.html
 ```
+（方案 C 本机 + Tailscale 则为 `http://robin-new-pro.tail823ec6.ts.net:8080/login.html` 或 Tailscale IP）
 （或统一改成后端域名根路径）。
 
 ---

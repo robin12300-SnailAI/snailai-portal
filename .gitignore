@@ -16,6 +16,9 @@ __pycache__/
 # 日志
 *.log
 
+# 本机常驻服务日志
+server/portal.log
+
 # 路演 / 课程内容二进制（体积大，单独托管，暂不入库）
 # 后续若要入库：git add -f <文件> 或配置 Git LFS
 路演直播 PPT/**/*.m4a
