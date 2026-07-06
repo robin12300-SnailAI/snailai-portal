@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>路演直播 PPT · 蜗牛AI 学员学堂</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <div id="nav-root"></div>
+  <div id="announce-root"></div>
+
+  <div class="wrap">
+    <h2 class="section-title">🎤 路演 / 直播 PPT</h2>
+    <p class="section-sub">历次分享会与直播的幻灯片合集，随时回看。</p>
+    <div id="list"></div>
+  </div>
+
+  <div id="foot-root"></div>
+
+  <script src="../assets/data.js"></script>
+  <script src="../assets/auth.js"></script>
+  <script src="../assets/app.js"></script>
+  <script>
+    requireAuth();
+    const typeLabel = { roadshow: "路演", livestream: "直播", playlist: "播放列表" };
+    let html = "";
+    ROADSHOW_SLIDES.forEach((r, i) => {
+      const ready = !!r.url;
+      html += `
+        <div class="road-card">
+          <div class="road-head">
+            <h4>${r.title}</h4>
+            <div class="road-meta">
+              ${r.type ? `<span class="tag">${typeLabel[r.type] || r.type}</span>` : ""}
+              ${r.date ? `<span>📅 ${r.date}</span>` : ""}
+            </div>
+          </div>
+          ${ready ? ytEmbedHtml(r.url, r.title) : `<div class="pending">📭 视频待上传</div>`}
+        </div>`;
+    });
+    document.getElementById("list").innerHTML = html;
+    initPortal("roadmap");
+  </script>
+</body>
+</html>

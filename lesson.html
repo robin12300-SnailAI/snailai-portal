@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>课时详情 · 蜗牛AI 学员学堂</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div id="nav-root"></div>
+  <div id="announce-root"></div>
+
+  <div class="wrap">
+    <a class="btn btn-ghost btn-sm" id="backLink" href="#">← 返回课程</a>
+    <h2 class="section-title" id="lTitle" style="margin-top:14px;"></h2>
+    <p class="section-sub" id="lDesc"></p>
+
+    <!-- PPT 查看器 -->
+    <div class="viewer" style="margin-bottom:28px;">
+      <div class="viewer-bar">
+        <strong id="viewerTitle">课程 PPT</strong>
+        <div class="viewer-nav">
+          <button onclick="prevSlide()">‹ 上一张</button>
+          <span id="pageInfo" style="font-size:13px;color:var(--gray-600);"></span>
+          <button onclick="nextSlide()">下一张 ›</button>
+        </div>
+      </div>
+      <div class="viewer-stage" id="stage"></div>
+      <div class="viewer-thumbs" id="thumbs"></div>
+    </div>
+
+    <!-- 课程视频 -->
+    <h3 class="section-title" style="font-size:18px;margin-top:8px;">📺 课程视频</h3>
+    <div id="videos" style="margin-top:12px;margin-bottom:20px;"></div>
+
+    <!-- 资料下载 -->
+    <h3 class="section-title" style="font-size:18px;">📎 配套资料</h3>
+    <div id="materials" style="margin-top:12px;"></div>
+  </div>
+
+  <div id="foot-root"></div>
+
+  <script src="assets/data.js"></script>
+  <script src="assets/auth.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+    requireAuth();
+    const params = new URLSearchParams(location.search);
+    const courseId = params.get("course") || "online";
+    const lessonId = params.get("lesson") || "l01";
+    const course = COURSES[courseId];
+    let lesson = null;
+    course.modules.forEach(m => m.lessons.forEach(l => { if (l.id === lessonId) lesson = l; }));
+
+    if (!lesson) { document.body.innerHTML = "<p style='padding:40px'>未找到该课时</p>"; }
+    document.getElementById("lTitle").textContent = (lessonId.replace("l", "")) + ". " + lesson.title;
+    document.getElementById("lDesc").textContent = lesson.desc + " · " + lesson.duration;
+    document.getElementById("backLink").href =
+      (courseId === "online" ? "AI 应用线上班/" : "AI 财富线下班/") + "index.html";
+
+    /* ---------- PPT 查看器 ---------- */
+    let idx = 0;
+    const slides = lesson.slides || [];
+    const stage = document.getElementById("stage");
+    const thumbs = document.getElementById("thumbs");
+
+    if (slides.length === 0) {
+      stage.innerHTML = `<div class="empty">📭 PPT 待上传<br><br>老师会把本节课的 PPT 导出为图片放进来，<br>届时刷新即可在线翻看。</div>`;
+      document.getElementById("pageInfo").textContent = "";
+    } else {
+      slides.forEach((src, i) => {
+        const img = document.createElement("img");
+        img.src = src; img.onclick = () => goSlide(i);
+        thumbs.appendChild(img);
+      });
+      renderSlide();
+    }
+
+    function renderSlide() {
+      stage.innerHTML = `<img src="${slides[idx]}" alt="slide ${idx + 1}">`;
+      document.getElementById("pageInfo").textContent = `${idx + 1} / ${slides.length}`;
+      [...thumbs.children].forEach((t, i) => t.classList.toggle("active", i === idx));
+    }
+    function goSlide(i) { idx = Math.max(0, Math.min(slides.length - 1, i)); renderSlide(); }
+    function prevSlide() { if (slides.length) goSlide(idx - 1); }
+    function nextSlide() { if (slides.length) goSlide(idx + 1); }
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowLeft") prevSlide();
+      if (e.key === "ArrowRight") nextSlide();
+    });
+
+    /* ---------- 资料 ---------- */
+    const mats = lesson.materials || [];
+    const box = document.getElementById("materials");
+    if (mats.length === 0) {
+      box.innerHTML = `<div class="pending">📭 配套资料待上传</div>`;
+    } else {
+      box.innerHTML = mats.map(m => `
+        <div class="material">
+          <div class="fi">${fileIcon(m.file)}</div>
+          <div class="mt"><b>${m.name}</b><span>${m.file.split("/").pop()}</span></div>
+          <a class="btn btn-primary btn-sm" href="${m.file}" download>下载</a>
+        </div>`).join("");
+    }
+    function fileIcon(f) {
+      const e = (f.split(".").pop() || "").toLowerCase();
+      if (e === "pdf") return "📕"; if (["doc","docx"].includes(e)) return "📘";
+      if (["zip","rar"].includes(e)) return "🗜️"; if (["png","jpg","jpeg"].includes(e)) return "🖼️";
+      return "📄";
+    }
+
+    /* ---------- 课程视频（YouTube 内嵌）---------- */
+    const vids = lesson.videos || [];
+    const vbox = document.getElementById("videos");
+    if (vids.length === 0) {
+      vbox.innerHTML = `<div class="pending">📭 本节视频待上传</div>`;
+    } else {
+      vbox.innerHTML = vids.map(v => `
+        <div class="video-item">
+          <div class="video-title">${v.title || "课程视频"}</div>
+          ${ytEmbedHtml(v.url, v.title)}
+        </div>`).join("");
+    }
+
+    initPortal(courseId === "online" ? "online" : "offline");
+  </script>
+</body>
+</html>

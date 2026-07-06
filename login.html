@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学员登录 · 蜗牛AI 学员学堂</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="auth-page">
+  <div class="auth-card">
+    <div class="brand"><div class="logo">🐌</div></div>
+    <h1>学员登录</h1>
+    <p class="sub">SnailAI 学员学堂 · 课程回顾与资料中心</p>
+
+    <form id="loginForm" onsubmit="return doLogin(event)">
+      <div class="field">
+        <label for="username">用户名</label>
+        <input id="username" type="text" placeholder="请输入用户名" autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="pwd">密码</label>
+        <input id="pwd" type="password" placeholder="请输入密码" autocomplete="current-password">
+      </div>
+      <div class="err" id="err"></div>
+      <button type="submit" class="btn btn-primary btn-block">登 录</button>
+    </form>
+
+    <div class="demo-acct">
+      <b>测试账号（上线前请替换）</b><br>
+      学员：student01 / snail123<br>
+      学员：student02 / snail123<br>
+      助教：ta01 / snailai@ta<br>
+      总讲师：teacher01 / snail@teacher
+    </div>
+  </div>
+
+  <script src="assets/auth.js"></script>
+  <script>
+    // 已登录则直接进学堂
+    if (isLoggedIn()) location.href = "dashboard.html";
+
+    function doLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById("username").value.trim();
+      const p = document.getElementById("pwd").value;
+      const btn = e.target.querySelector("button[type=submit]");
+      btn.disabled = true;
+      login(u, p).then(r => {
+        if (!r.ok) {
+          document.getElementById("err").textContent = r.msg;
+          btn.disabled = false;
+          return;
+        }
+        const next = new URLSearchParams(location.search).get("next");
+        location.href = next && next.endsWith(".html") ? next : "dashboard.html";
+      }).catch(err => {
+        document.getElementById("err").textContent = "网络错误，请稍后重试";
+        btn.disabled = false;
+      });
+      return false;
+    }
+  </script>
+</body>
+</html>

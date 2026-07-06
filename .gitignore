@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+.env
+
+# SQLite 数据库（运行时由 server/app.py 自动建库并播种，不入库）
+*.db
+
+# OS
+.DS_Store
+.DS_Store?
+
+# 日志
+*.log
+
+# 路演 / 课程内容二进制（体积大，单独托管，暂不入库）
+# 后续若要入库：git add -f <文件> 或配置 Git LFS
+路演直播 PPT/**/*.m4a
+路演直播 PPT/**/*.mp4
+路演直播 PPT/**/*.mov
+路演直播 PPT/**/*.avi
+路演直播 PPT/**/*.pdf
+路演直播 PPT/**/*.png
+路演直播 PPT/**/*.jpg
+路演直播 PPT/**/*.jpeg

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的学堂 · 蜗牛AI 学员学堂</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div id="nav-root"></div>
+  <div id="announce-root"></div>
+
+  <div class="wrap">
+    <h2 class="section-title" id="welcome">欢迎回来 👋</h2>
+    <p class="section-sub">在这里回顾每一节课的 PPT，下载共享资料，并完成你的 AI 能力清单。</p>
+
+    <!-- 能力清单进度 -->
+    <div class="card" style="margin-bottom:24px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div>
+          <h3 id="capCardTitle" style="margin:0 0 4px;">📋 AI 能力清单进度</h3>
+          <span class="progress-label" id="capProgressText"></span>
+        </div>
+        <a class="btn btn-primary btn-sm" href="AI 能力清单/">去勾选 →</a>
+      </div>
+      <div class="progress" style="margin-top:12px;"><span id="capBar" style="width:0%"></span></div>
+    </div>
+
+    <!-- 四大板块 -->
+    <div class="grid grid-2">
+      <a class="card link" href="AI 应用线上班/">
+        <div class="icon">🟢</div>
+        <h3>AI 应用线上班</h3>
+        <p>零基础到能用的 AI 应用入门，10 课时回顾与资料下载。</p>
+        <div class="meta">进入课程 →</div>
+      </a>
+      <a class="card link" href="AI 财富线下班/">
+        <div class="icon">💰</div>
+        <h3>AI 财富线下班</h3>
+        <p>悉尼线下·用 AI 武装投资决策，课件与实战资料。</p>
+        <div class="meta">进入课程 →</div>
+      </a>
+      <a class="card link" href="AI 能力清单/">
+        <div class="icon">✅</div>
+        <h3>AI 能力清单</h3>
+        <p>逐项确认 AI 能力：学员自查 → 助教初审 → 总讲师最终确认。</p>
+        <div class="meta">查看清单 →</div>
+      </a>
+      <a class="card link" href="路演直播 PPT/">
+        <div class="icon">🎤</div>
+        <h3>路演直播 PPT</h3>
+        <p>历次分享会与直播的 PPT 合集，随时回看。</p>
+        <div class="meta">查看回放 →</div>
+      </a>
+    </div>
+  </div>
+
+  <div id="foot-root"></div>
+
+  <script src="assets/data.js"></script>
+  <script src="assets/auth.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+    requireAuth();
+    const user = getCurrentUser();
+    document.getElementById("welcome").textContent = "欢迎回来，" + user.name + " 👋";
+
+    const titleEl = document.getElementById("capCardTitle");
+    const textEl = document.getElementById("capProgressText");
+    const barEl = document.getElementById("capBar");
+
+    (async function () {
+      let total = 0;
+      try { total = (await apiGetCapabilities()).length; } catch (e) {}
+
+      if (isStaff()) {
+        let students = [];
+        try { students = await listStudents(); } catch (e) {}
+        let sum = 0;
+        for (const s of students) {
+          let ch = {};
+          try { ch = await apiGetChecks(s.username); } catch (e) {}
+          let f = 0;
+          Object.values(ch).forEach(x => { if (x && x.final) f++; });
+          sum += f;
+        }
+        const avg = (students.length && total)
+          ? Math.round(sum / students.length / total * 100) : 0;
+        titleEl.textContent = "👥 学员能力总览（" + students.length + " 人）";
+        textEl.textContent = "学员整体通过率 " + avg + "% · 进入清单可逐人管理";
+        barEl.style.width = avg + "%";
+      } else {
+        let ch = {};
+        try { ch = await apiGetChecks(user.username); } catch (e) {}
+        let f = 0;
+        Object.values(ch).forEach(x => { if (x && x.final) f++; });
+        const pct = total ? Math.round(f / total * 100) : 0;
+        titleEl.textContent = "📋 AI 能力清单进度";
+        textEl.textContent = "已通过 " + f + " / " + total + " 项能力（" + pct + "%）";
+        barEl.style.width = pct + "%";
+      }
+      initPortal("dashboard");
+    })();
+  </script>
+</body>
+</html>

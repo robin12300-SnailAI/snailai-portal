@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 能力清单 · 蜗牛AI 学员学堂</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+    .ov-table { width:100%; border-collapse:collapse; font-size:14px; }
+    .ov-table th, .ov-table td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
+    .ov-table th { color:var(--gray-600); font-weight:600; }
+    .ov-table tbody tr { cursor:pointer; }
+    .ov-table tbody tr:hover { background:var(--gray-50); }
+    .ov-table tbody tr.sel { background:var(--green-50); }
+    .mini-bar { display:inline-block; width:80px; height:8px; background:var(--gray-200); border-radius:99px; overflow:hidden; vertical-align:middle; margin-right:6px; }
+    .mini-bar > span { display:block; height:100%; background:var(--green-500); }
+    .three-stat { display:flex; gap:8px; flex-wrap:wrap; }
+    .pill { background:var(--gray-100); border-radius:99px; padding:4px 12px; font-size:13px; }
+    label.ro { opacity:.6; }
+    .table-wrap { overflow-x:auto; }
+  </style>
+</head>
+<body>
+  <div id="nav-root"></div>
+  <div id="announce-root"></div>
+
+  <div class="wrap">
+    <h2 class="section-title">✅ AI 能力清单</h2>
+    <p class="section-sub">每项能力需经三步确认：① 学员自查 → ② 助教初审 → ③ 总讲师最终确认。三关全过即正式通过。</p>
+
+    <!-- 助教/总讲师专属：学员选择 -->
+    <div id="staffBar" class="card" style="display:none;margin-bottom:20px;">
+      <div class="toolbar">
+        <strong id="roleLabel"></strong>
+        <label style="font-size:14px;">选择学员：
+          <select id="studentSel" onchange="selectStudent(this.value)" style="font-size:14px;padding:4px 8px;"></select>
+        </label>
+      </div>
+      <p class="hint" id="staffHint"></p>
+    </div>
+
+    <!-- 助教/总讲师专属：学员总览表 -->
+    <div id="overviewCard" class="card" style="display:none;margin-bottom:20px;">
+      <h3 style="margin:0 0 12px;">👥 学员能力总览</h3>
+      <div class="table-wrap"><table id="overviewTable" class="ov-table"></table></div>
+      <p class="hint">点击某位学员可查看 / 编辑其三项确认进度。</p>
+    </div>
+
+    <!-- 当前学员进度 -->
+    <div class="card" style="margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div>
+          <h3 id="progressTitle" style="margin:0 0 4px;"></h3>
+          <span class="progress-label" id="progressText"></span>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="exportBtn" onclick="exportCurrent()">⬇ 导出</button>
+      </div>
+      <div class="progress" style="margin-top:12px;"><span id="bar" style="width:0%"></span></div>
+      <div class="three-stat" id="threeStat" style="margin-top:10px;"></div>
+    </div>
+
+    <div id="list"></div>
+  </div>
+
+  <div id="foot-root"></div>
+
+  <script src="../assets/data.js"></script>
+  <script src="../assets/auth.js"></script>
+  <script src="../assets/app.js"></script>
+  <script>
+    requireAuth();
+    const user = getCurrentUser();
+    const role = user.role;                       // student | ta | instructor
+    const EDIT_LEVEL = role === "student" ? "self" : (role === "ta" ? "ta" : "final");
+    const staff = isStaff();
+    let viewed = user.username;                   // 当前正在查看的学员
+    let CAPS = [];                                // 能力项（来自后端）
+    let studentMap = {};                          // username -> name
+
+    function nameOf(un) {
+      if (un === user.username) return user.name;
+      return studentMap[un] || un;
+    }
+
+    (async function init() {
+      try {
+        CAPS = await apiGetCapabilities();
+      } catch (e) { alert("加载能力清单失败：" + e.message); return; }
+
+      if (staff) {
+        document.getElementById("staffBar").style.display = "block";
+        document.getElementById("overviewCard").style.display = "block";
+        document.getElementById("roleLabel").textContent = role === "ta" ? "🧑‍🏫 助教初审模式" : "👑 总讲师最终确认模式";
+        document.getElementById("staffHint").textContent = role === "ta"
+          ? "你可为每位学员勾选「初审」。学员自查与总讲师最终确认的状态只读。"
+          : "你可为每位学员勾选「最终确认」。学员自查与助教初审的状态只读。";
+        document.getElementById("exportBtn").textContent = "⬇ 导出当前学员";
+        try {
+          const sts = await listStudents();
+          sts.forEach(s => { studentMap[s.username] = s.name; });
+          const sel = document.getElementById("studentSel");
+          sts.forEach(s => {
+            const o = document.createElement("option");
+            o.value = s.username; o.textContent = s.name + " (" + s.username + ")";
+            sel.appendChild(o);
+          });
+          if (sts.length) { viewed = sts[0].username; sel.value = viewed; }
+        } catch (e) {}
+        await renderOverview();
+      } else {
+        document.getElementById("exportBtn").textContent = "⬇ 导出我的清单";
+      }
+      await renderDetail();
+      await updateProgress();
+      initPortal("checklist");
+    })();
+
+    /* ---------- 渲染清单明细 ---------- */
+    async function renderDetail() {
+      let checks = {};
+      try { checks = await apiGetChecks(viewed); }
+      catch (e) { alert(e.message); return; }
+      const groups = {};
+      CAPS.forEach(c => { (groups[c.category] = groups[c.category] || []).push(c); });
+      let html = "";
+      Object.keys(groups).forEach(cat => {
+        html += `<div class="cap-cat"><h3>${cat}</h3>`;
+        groups[cat].forEach(c => {
+          const st = checks[c.id] || {};
+          const self = !!st.self, ta = !!st.ta, fin = !!st.final;
+          let badge;
+          if (fin)       badge = `<span class="cap-status pass">✅ 已通过</span>`;
+          else if (ta)   badge = `<span class="cap-status wait">🟡 初审通过</span>`;
+          else if (self) badge = `<span class="cap-status none">🔵 自查中</span>`;
+          else           badge = `<span class="cap-status none">⚪ 未开始</span>`;
+
+          const cb = (level, label, val) => {
+            const editable = (level === EDIT_LEVEL);
+            const dis = editable ? "" : "disabled";
+            const chk = val ? "checked" : "";
+            const tag = level === "self" ? "学员" : (level === "ta" ? "助教" : "总讲师");
+            return `<label class="${editable ? "" : "ro"}"><input type="checkbox" ${chk} ${dis} onchange="setLevel('${c.id}','${level}',this.checked)"> ${label}（${tag}）</label>`;
+          };
+
+          html += `
+            <div class="cap-item">
+              <div class="cap-head">
+                <div style="flex:1">
+                  <div class="cap-name">${c.name} ${badge}</div>
+                  <div class="cap-desc">${c.desc}</div>
+                </div>
+              </div>
+              <div class="cap-checks">
+                ${cb("self", "自查", self)}
+                ${cb("ta", "初审", ta)}
+                ${cb("final", "最终确认", fin)}
+              </div>
+            </div>`;
+        });
+        html += `</div>`;
+      });
+      document.getElementById("list").innerHTML = html;
+    }
+
+    /* ---------- 勾选（仅本人权限那一列可改）---------- */
+    async function setLevel(capId, level, val) {
+      if (level !== EDIT_LEVEL) return;       // 非本角色权限，拒绝
+      try {
+        await apiSetCheck(viewed, capId, level, val);
+      } catch (e) { alert(e.message); return; }
+      await renderDetail(); await updateProgress();
+      if (staff) await renderOverview();
+    }
+
+    /* ---------- 进度 ---------- */
+    async function updateProgress() {
+      let checks = {};
+      try { checks = await apiGetChecks(viewed); } catch (e) {}
+      const total = CAPS.length;
+      let s = 0, t = 0, f = 0;
+      CAPS.forEach(c => {
+        const x = checks[c.id];
+        if (x) { if (x.self) s++; if (x.ta) t++; if (x.final) f++; }
+      });
+      document.getElementById("bar").style.width = (total ? f / total * 100 : 0) + "%";
+      document.getElementById("progressText").textContent = `通过 ${f} / ${total} 项 · 初审 ${t} · 自查 ${s}`;
+      document.getElementById("progressTitle").textContent = staff ? ("进度 · " + nameOf(viewed)) : "我的进度";
+      document.getElementById("threeStat").innerHTML =
+        `<span class="pill">自查 ${s}</span><span class="pill">初审 ${t}</span><span class="pill">最终 ${f}</span>`;
+    }
+
+    /* ---------- 切换学员（助教/总讲师）---------- */
+    async function selectStudent(un) {
+      viewed = un;
+      await renderDetail(); await updateProgress();
+      if (staff) {
+        document.getElementById("studentSel").value = un;
+        await renderOverview();
+      }
+    }
+
+    /* ---------- 学员总览表 ---------- */
+    async function renderOverview() {
+      const tbl = document.getElementById("overviewTable");
+      const students = await listStudents();
+      const total = CAPS.length;
+      let html = `<thead><tr><th>学员</th><th>自查</th><th>初审</th><th>最终确认</th><th>通过率</th></tr></thead><tbody>`;
+      for (const s of students) {
+        let ch = {};
+        try { ch = await apiGetChecks(s.username); } catch (e) {}
+        let sC = 0, tC = 0, fC = 0;
+        CAPS.forEach(c => { const x = ch[c.id]; if (x) { if (x.self) sC++; if (x.ta) tC++; if (x.final) fC++; } });
+        const pct = total ? Math.round(fC / total * 100) : 0;
+        html += `<tr onclick="selectStudent('${s.username}')" class="${s.username === viewed ? "sel" : ""}">
+          <td>${s.name}</td>
+          <td>${sC}/${total}</td>
+          <td>${tC}/${total}</td>
+          <td>${fC}/${total}</td>
+          <td><span class="mini-bar"><span style="width:${pct}%"></span></span>${pct}%</td>
+        </tr>`;
+      }
+      html += `</tbody>`;
+      tbl.innerHTML = html;
+    }
+
+    /* ---------- 导出（从后端拉取当前学员勾选，下载备份）---------- */
+    async function exportCurrent() {
+      let checks = {};
+      try { checks = await apiGetChecks(viewed); } catch (e) { alert(e.message); return; }
+      const data = {
+        student: viewed,
+        name: nameOf(viewed),
+        exportedAt: new Date().toISOString(),
+        checks
+      };
+      download(JSON.stringify(data, null, 2), "能力清单_" + viewed + ".json");
+    }
+    function download(text, name) {
+      const blob = new Blob([text], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = name; a.click();
+      URL.revokeObjectURL(a.href);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 财富线下班 · 蜗牛AI 学员学堂</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <div id="nav-root"></div>
+  <div id="announce-root"></div>
+
+  <div class="wrap">
+    <h2 class="section-title" id="cTitle">AI 财富线下班</h2>
+    <p class="section-sub" id="cDesc"></p>
+    <div id="modules"></div>
+  </div>
+
+  <div id="foot-root"></div>
+
+  <script src="../assets/data.js"></script>
+  <script src="../assets/auth.js"></script>
+  <script src="../assets/app.js"></script>
+  <script>
+    requireAuth();
+    const course = COURSES.offline;
+    document.getElementById("cTitle").textContent = course.cover + " " + course.name;
+    document.getElementById("cDesc").textContent = course.desc;
+
+    const p = navPrefix();
+    let html = "";
+    course.modules.forEach(mod => {
+      html += `<div class="module"><h3>${mod.title}</h3>`;
+      mod.lessons.forEach(ls => {
+        const ready = ls.slides && ls.slides.length > 0;
+        html += `
+          <a class="lesson" href="${p}lesson.html?course=offline&lesson=${ls.id}">
+            <div class="num">${ls.id.replace("l", "")}</div>
+            <div class="info">
+              <h4>${ls.title}</h4>
+              <p>${ls.desc}</p>
+            </div>
+            <div class="dur">${ls.duration}</div>
+            <div class="badge ${ready ? "ready" : ""}">${ready ? "有课件" : "资料准备中"}</div>
+          </a>`;
+      });
+      html += `</div>`;
+    });
+    document.getElementById("modules").innerHTML = html;
+
+    initPortal("offline");
+  </script>
+</body>
+</html>
