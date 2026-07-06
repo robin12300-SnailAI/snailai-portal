@@ -26,16 +26,27 @@
       <div class="yt-wrap"><iframe src="https://www.youtube.com/embed/CInKi20s1i0" title="进化你的财富：AI大师课" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
     </section>
 
-    <!-- ② PDF 课件 -->
+    <!-- ② 课件图片画廊 -->
     <section class="block">
-      <h3 class="block-title">② 课程主课件（PDF · 15 页）</h3>
-      <p class="note">下方为完整课件，可直接在线翻阅；手机端若加载慢，可点下方按钮下载后查看。</p>
-      <div class="pdf-wrap">
-        <iframe src="AI_Wealth_Mecha%20(1).pdf" title="AI Wealth Masterclass 课件"></iframe>
-      </div>
-      <div class="pdf-bar">
-        <a class="btn btn-ghost btn-sm" href="AI_Wealth_Mecha%20(1).pdf" target="_blank" rel="noopener">⬇️ 新窗口打开 / 下载 PDF</a>
-      </div>
+      <h3 class="block-title">② 课程主课件（15 页 · 图文版）</h3>
+      <p class="note">下方为完整课件，可逐页翻阅；手机端点缩略图切换大图。</p>
+      <div class="pv-main"><img id="pvMain" src="slides/slide-01.jpg" alt="课件第 1 页"></div>
+      <div class="pv-thumbs" id="pvThumbs"></div>
+      <script>
+        (function () {
+          var N = 15, pad = function (n) { return String(n).padStart(2, "0"); };
+          var main = document.getElementById("pvMain");
+          var box = document.getElementById("pvThumbs");
+          for (var i = 1; i <= N; i++) {
+            var t = document.createElement("img");
+            var src = "slides/slide-" + pad(i) + ".jpg";
+            t.src = src; t.alt = "课件第 " + i + " 页";
+            t.onclick = (function (s) { return function () { main.src = s; }; })(src);
+            box.appendChild(t);
+          }
+          if (box.firstChild) box.firstChild.classList.add("active");
+        })();
+      </script>
     </section>
 
     <!-- ③ 配图 -->
