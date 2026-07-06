@@ -142,6 +142,37 @@ const ROADSHOW_SLIDES = [
 /* 课前 4 小时预习视频（线上班开班前必看）*/
 const PREP_VIDEO = { title: "开课前核心准备 · 4 小时 AI 基础预习", url: "https://www.youtube.com/watch?v=--Qcfa5Kwbo" };
 
+/* ---------- 直播回放 · 配套课件 ----------
+ * 每场直播除视频外，还整理了可学习的课件页（学习指南 / PDF / 配图 / NotebookLM）。
+ * 字段：
+ *   title   标题
+ *   date    日期
+ *   type    roadshow=路演 | livestream=直播
+ *   desc    一句话简介（显示在卡片上）
+ *   video   视频链接（内嵌预览）
+ *   page    课件页相对路径（相对「路演直播 PPT」目录，如 "20260623 直播/"）
+ */
+const LIVE_LESSONS = [
+  {
+    id: "20260623",
+    title: "AI 咒语重塑生意与财富",
+    date: "2026-06-23",
+    type: "livestream",
+    desc: "完整学习指南：10 道自测题 + 答案 + 深度思考 + 术语表，附音频回放与 NotebookLM 闪卡。",
+    video: "https://youtu.be/-7Hxlfj2QYg",
+    page: "20260623 直播/"
+  },
+  {
+    id: "20260704",
+    title: "进化你的财富：AI 大师课 · 蜗牛 AI 财富澳洲应用课",
+    date: "2026-07-04",
+    type: "livestream",
+    desc: "财富 AI 应用实战课件（15 页 PDF）+ 澳洲理财投资指南配图 + NotebookLM 闪卡自测。",
+    video: "https://youtu.be/CInKi20s1i0",
+    page: "20260704 直播/"
+  }
+];
+
 /* ---------- YouTube 解析 / 内嵌助手 ---------- */
 /* 从各种 YouTube 链接中提取可嵌入的信息：{id} 或 {list} */
 function ytParse(url) {

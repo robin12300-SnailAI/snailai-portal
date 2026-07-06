@@ -14,6 +14,10 @@
     <h2 class="section-title">🎤 路演 / 直播 PPT</h2>
     <p class="section-sub">历次分享会与直播的幻灯片合集，随时回看。</p>
     <div id="list"></div>
+
+    <h2 class="section-title" style="margin-top:40px">📚 直播配套课件</h2>
+    <p class="section-sub">每场直播整理成的可学习课件：学习指南 / PDF / 配图 / NotebookLM 资料。</p>
+    <div id="lessons"></div>
   </div>
 
   <div id="foot-root"></div>
@@ -24,8 +28,10 @@
   <script>
     requireAuth();
     const typeLabel = { roadshow: "路演", livestream: "直播", playlist: "播放列表" };
+
+    /* 视频墙 */
     let html = "";
-    ROADSHOW_SLIDES.forEach((r, i) => {
+    ROADSHOW_SLIDES.forEach((r) => {
       const ready = !!r.url;
       html += `
         <div class="road-card">
@@ -40,6 +46,28 @@
         </div>`;
     });
     document.getElementById("list").innerHTML = html;
+
+    /* 配套课件卡片 */
+    let lh = "";
+    LIVE_LESSONS.forEach((r) => {
+      lh += `
+        <div class="road-card">
+          <div class="road-head">
+            <h4>${r.title}</h4>
+            <div class="road-meta">
+              <span class="tag">${typeLabel[r.type] || r.type}</span>
+              ${r.date ? `<span>📅 ${r.date}</span>` : ""}
+            </div>
+          </div>
+          <p style="font-size:14px;color:var(--gray-600);margin:6px 0 14px">${r.desc}</p>
+          ${ytEmbedHtml(r.video, r.title)}
+          <div style="margin-top:14px">
+            <a class="btn btn-primary btn-sm" href="${r.page}">📖 查看完整课件 →</a>
+          </div>
+        </div>`;
+    });
+    document.getElementById("lessons").innerHTML = lh;
+
     initPortal("roadmap");
   </script>
 </body>
