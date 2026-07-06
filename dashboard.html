@@ -14,16 +14,15 @@
     <h2 class="section-title" id="welcome">欢迎回来 👋</h2>
     <p class="section-sub">在这里回顾每一节课的 PPT，下载共享资料，并完成你的 AI 能力清单。</p>
 
-    <!-- 能力清单进度 -->
+    <!-- AI 能力清单说明（确认在企业微信完成）-->
     <div class="card" style="margin-bottom:24px;">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
         <div>
-          <h3 id="capCardTitle" style="margin:0 0 4px;">📋 AI 能力清单进度</h3>
-          <span class="progress-label" id="capProgressText"></span>
+          <h3 style="margin:0 0 4px;">📋 AI 能力清单</h3>
+          <span class="progress-label">逐项能力确认请在 <b>企业微信智能表格</b> 完成（学员自查 → 助教初审 → 总讲师最终确认）。</span>
         </div>
-        <a class="btn btn-primary btn-sm" href="AI 能力清单/">去勾选 →</a>
+        <a class="btn btn-primary btn-sm" href="AI 能力清单/">查看能力清单 →</a>
       </div>
-      <div class="progress" style="margin-top:12px;"><span id="capBar" style="width:0%"></span></div>
     </div>
 
     <!-- 四大板块 -->
@@ -43,7 +42,7 @@
       <a class="card link" href="AI 能力清单/">
         <div class="icon">✅</div>
         <h3>AI 能力清单</h3>
-        <p>逐项确认 AI 能力：学员自查 → 助教初审 → 总讲师最终确认。</p>
+        <p>查看你需掌握的 22 项 AI 能力清单（确认在企微完成）。</p>
         <div class="meta">查看清单 →</div>
       </a>
       <a class="card link" href="路演直播 PPT/">
@@ -64,43 +63,7 @@
     requireAuth();
     const user = getCurrentUser();
     document.getElementById("welcome").textContent = "欢迎回来，" + user.name + " 👋";
-
-    const titleEl = document.getElementById("capCardTitle");
-    const textEl = document.getElementById("capProgressText");
-    const barEl = document.getElementById("capBar");
-
-    (async function () {
-      let total = 0;
-      try { total = (await apiGetCapabilities()).length; } catch (e) {}
-
-      if (isStaff()) {
-        let students = [];
-        try { students = await listStudents(); } catch (e) {}
-        let sum = 0;
-        for (const s of students) {
-          let ch = {};
-          try { ch = await apiGetChecks(s.username); } catch (e) {}
-          let f = 0;
-          Object.values(ch).forEach(x => { if (x && x.final) f++; });
-          sum += f;
-        }
-        const avg = (students.length && total)
-          ? Math.round(sum / students.length / total * 100) : 0;
-        titleEl.textContent = "👥 学员能力总览（" + students.length + " 人）";
-        textEl.textContent = "学员整体通过率 " + avg + "% · 进入清单可逐人管理";
-        barEl.style.width = avg + "%";
-      } else {
-        let ch = {};
-        try { ch = await apiGetChecks(user.username); } catch (e) {}
-        let f = 0;
-        Object.values(ch).forEach(x => { if (x && x.final) f++; });
-        const pct = total ? Math.round(f / total * 100) : 0;
-        titleEl.textContent = "📋 AI 能力清单进度";
-        textEl.textContent = "已通过 " + f + " / " + total + " 项能力（" + pct + "%）";
-        barEl.style.width = pct + "%";
-      }
-      initPortal("dashboard");
-    })();
+    initPortal("dashboard");
   </script>
 </body>
 </html>
