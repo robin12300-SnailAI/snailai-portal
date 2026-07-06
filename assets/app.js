@@ -6,15 +6,23 @@
  * 所以无论页面在根目录还是子目录都能正确跳转。
  * ============================================================ */
 
-/* 计算从当前页面回到门户根目录的相对前缀 */
+/* 计算从当前页面回到门户根目录的相对前缀
+ * 兼容两种运行位置：
+ *   - 本地开发：文件夹名为「官网学生登录」
+ *   - 线上部署：挂在 /student/ 子目录（如 GitHub Pages 的 /chocolate/student/）
+ * 关键点：/student/ 带前导斜杠会产生空路径段，必须切片时去掉。
+ */
 function navPrefix() {
-  const href = location.href;
-  let idx = href.indexOf("官网学生登录");
-  if (idx === -1) idx = href.indexOf("/student/");
+  const href = location.href.split("?")[0].split("#")[0];
+  let marker = "官网学生登录";
+  let idx = href.indexOf(marker);
+  if (idx === -1) { marker = "/student/"; idx = href.indexOf(marker); }
   if (idx === -1) return "./";
-  const segs = href.slice(idx).split("/").slice(1); // 去掉根名
+  // 取 marker 之后的路径段（去掉前导斜杠），按 "/" 计算相对层级
+  const rest = href.slice(idx + marker.length);
+  const segs = rest.split("/").filter(s => s.length > 0);
   let depth = segs.length;
-  if (depth > 0 && segs[depth - 1].indexOf(".") > -1) depth -= 1;
+  if (depth > 0 && segs[depth - 1].indexOf(".") > -1) depth -= 1; // 末段是文件
   return depth > 0 ? "../".repeat(depth) : "./";
 }
 

@@ -35,7 +35,7 @@ async function login(username, password) {
 
 function logout() {
   _clearSession();
-  location.href = "login.html";
+  location.href = navPrefix() + "login.html";
 }
 
 function _saveSession(user) {
@@ -50,10 +50,20 @@ function getCurrentUser() {
 }
 function isLoggedIn() { return !!getCurrentUser(); }
 
-/* 需要登录的页面调用：未登录跳转到登录页 */
+/* 需要登录的页面调用：未登录跳转到登录页（自动算门户根目录相对路径）*/
 function requireAuth() {
   if (!isLoggedIn()) {
-    location.href = "login.html?next=" + encodeURIComponent(location.pathname.split("/").pop() || "dashboard.html");
+    // 计算相对于门户根目录的当前路径，作为登录后回跳地址
+    const here = location.href.split("?")[0].split("#")[0];
+    let marker = "官网学生登录";
+    let idx = here.indexOf(marker);
+    if (idx === -1) { marker = "/student/"; idx = here.indexOf(marker); }
+    let next = "dashboard.html";
+    if (idx > -1) {
+      const rel = here.slice(idx + marker.length).replace(/^\//, "");
+      if (rel && rel !== "login.html") next = rel;
+    }
+    location.href = navPrefix() + "login.html?next=" + encodeURIComponent(next);
   }
 }
 
