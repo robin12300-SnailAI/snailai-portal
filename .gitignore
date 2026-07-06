@@ -19,13 +19,11 @@ __pycache__/
 # 本机常驻服务日志
 server/portal.log
 
-# 路演 / 课程内容二进制（体积大，单独托管，暂不入库）
-# 后续若要入库：git add -f <文件> 或配置 Git LFS
+# 路演 / 课程内容二进制
+# 大体积原文件不入库（m4a/mp4/mov/avi/pdf），改用压缩 mp3 + 图片画廊部署到 Pages
 路演直播 PPT/**/*.m4a
 路演直播 PPT/**/*.mp4
 路演直播 PPT/**/*.mov
 路演直播 PPT/**/*.avi
 路演直播 PPT/**/*.pdf
-路演直播 PPT/**/*.png
-路演直播 PPT/**/*.jpg
-路演直播 PPT/**/*.jpeg
+# png / jpg / jpeg / mp3 入库（GitHub Pages 持久托管需要这些静态资源）
