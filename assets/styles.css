@@ -235,6 +235,12 @@ img { max-width: 100%; }
 .catalog-chapters li:last-child { border-bottom: none; }
 .catalog-empty { padding: 14px 18px; font-size: 13px; color: var(--gray-400); text-align: center; background: var(--gray-100); margin: 0 10px 12px; border-radius: 10px; }
 
+/* 课程目录内的课件下载区块（第7项起） */
+.catalog-mats { padding: 4px 18px 16px 58px; }
+.catalog-mats-title { font-size: 14px; font-weight: 700; color: var(--green-700); margin: 6px 0 10px; }
+.catalog-mats .material { margin-bottom: 8px; padding: 10px 12px; background: #fff; }
+.catalog-mats .material:last-child { margin-bottom: 0; }
+
 /* ---------- YouTube 内嵌播放器 ---------- */
 .yt-wrap { position: relative; width: 100%; padding-top: 56.25%; border-radius: var(--radius); overflow: hidden; background: #000; box-shadow: var(--shadow); }
 .yt-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }

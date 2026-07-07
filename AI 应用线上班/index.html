@@ -49,6 +49,7 @@
           lessonIdx++;
           const chs = ls.chapters || [];
           const hasContent = chs.length > 0;
+          const mats = ls.materials || [];
           catalogHtml += `
             <details class="catalog-lesson" ${lessonIdx === 1 ? "open" : ""}>
               <summary class="catalog-summary">
@@ -59,6 +60,15 @@
               </summary>
               ${hasContent ? `<div class="catalog-chapters"><ol>${chs.map(c => `<li>${c}</li>`).join("")}</ol></div>` :
                 `<div class="catalog-empty">📝 目录待更新，老师会在课前发布本节详细内容</div>`}
+              ${mats.length ? `<div class="catalog-mats">
+                <div class="catalog-mats-title">📎 ${ls.materialsTitle || "课件下载"}（${mats.length} 个文件 · 点击下载）</div>
+                ${mats.map(m => `
+                  <div class="material">
+                    <div class="fi">${matIcon(m)}</div>
+                    <div class="mt"><b>${m.name}</b><span>${/^https?:\/\//i.test(m.file) ? "☁️ Google 云端硬盘" : m.file.split("/").pop()}</span></div>
+                    <a class="btn btn-primary btn-sm" href="${m.file}" target="_blank" rel="noopener">下载</a>
+                  </div>`).join("")}
+              </div>` : ``}
             </details>`;
         });
       });
@@ -103,21 +113,6 @@
             <div class="dur">${ls.duration}</div>
             <div class="badge ${ready ? "ready" : ""}">${ready ? (hasMats ? "📎 可下载" : "有课件") : "资料准备中"}</div>
           </a>`;
-        // 有 materials 时在卡片下方直接嵌下载列表（默认展开第一堂课）
-        if (hasMats) {
-          const isOpen = ls.id === "l01" ? " open" : "";
-          html += `<details class="catalog-lesson mat-block${isOpen}" style="margin:6px 0 16px;padding:12px 14px;background:var(--surface);border-radius:10px;border:1px solid var(--border)">
-            <summary style="cursor:pointer;font-weight:600;color:var(--primary);font-size:15px">📎 ${matTitle}（${mats.length} 个文件）</summary>
-            <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
-              ${mats.map(m => `
-                <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,.6);border-radius:8px">
-                  <span style="font-size:20px;flex-shrink:0">${matIcon(m)}</span>
-                  <span style="flex:1;min-width:0"><b style="font-size:13px">${m.name}</b><br><span style="font-size:11px;color:var(--gray-500)">${/^https?:\/\//i.test(m.file)?"☁️ Google 云端硬盘":m.file.split("/").pop()}</span></span>
-                  <a class="btn btn-primary btn-sm" href="${m.file}" target="_blank" rel="noopener" style="white-space:nowrap;flex-shrink:0">⬇ 下载</a>
-                </div>`).join("")}
-            </div>
-          </details>`;
-        }
       });
       html += `</div>`;
     });
