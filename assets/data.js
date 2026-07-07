@@ -112,34 +112,54 @@ const COURSES = {
  *   desc      一句话说明（让学员知道这是什么）
  * 学员勾选状态与教师确认状态存 localStorage，不在此处。
  */
+/* AI 能力清单（按等级分段，连续编号 1–22）
+ * 字段：
+ *   id      内部主键（保留 c01–c22，兼容旧备份）
+ *   no      展示序号（1–22 连续）
+ *   tier    等级：初级 | 中级 | 高级
+ *   category 原主题标签（仅作小标签展示）
+ *   name / desc  名称 / 说明
+ * 打勾规则（见 AI 能力清单/index.html）：
+ *   初级 → 助教打勾即过；中级 / 高级 → 助教初审 + 讲师终审。
+ */
 const CAPABILITIES = [
-  { id: "c01", category: "AI 认知与思维", name: "理解 AI 的能力边界", desc: "能说清大模型能做什么、不能做什么，不把 AI 当万能神" },
-  { id: "c02", category: "AI 认知与思维", name: "输出式学习思维", desc: "边用边学，用 AI 完成真实任务而非只看教程" },
-  { id: "c03", category: "AI 认知与思维", name: "从问题出发选工具", desc: "先有真实问题，再找 AI 怎么帮，而非为用而用" },
+  /* ---------- 初级（助教打勾即过）---------- */
+  { id: "c01", no: 1,  tier: "初级", category: "AI 认知与思维", name: "理解 AI 的能力边界", desc: "能说清大模型能做什么、不能做什么，不把 AI 当万能神" },
+  { id: "c02", no: 2,  tier: "初级", category: "AI 认知与思维", name: "输出式学习思维", desc: "边用边学，用 AI 完成真实任务而非只看教程" },
+  { id: "c03", no: 3,  tier: "初级", category: "AI 认知与思维", name: "从问题出发选工具", desc: "先有真实问题，再找 AI 怎么帮，而非为用而用" },
+  { id: "c04", no: 4,  tier: "初级", category: "基础工具使用", name: "ChatGPT 提示词基础", desc: "会用角色+任务+约束结构，从问答题变选择题" },
+  { id: "c05", no: 5,  tier: "初级", category: "基础工具使用", name: "豆包 / 语音输入法", desc: "会用悬浮窗语音输入，用语音和 AI 对话做记录" },
+  { id: "c06", no: 6,  tier: "初级", category: "基础工具使用", name: "Gemini 与 Google 全家桶", desc: "会用侧边栏、Drive/Calendar 联动、记忆导入" },
+  { id: "c07", no: 7,  tier: "初级", category: "基础工具使用", name: "NotebookLM 资料总结", desc: "上传资料让 AI 总结、提取要点" },
+  { id: "c08", no: 8,  tier: "初级", category: "基础工具使用", name: "PDF / 文档处理", desc: "图片 PDF 转文字、生成 Word/PDF" },
 
-  { id: "c04", category: "基础工具使用", name: "ChatGPT 提示词基础", desc: "会用角色+任务+约束结构，从问答题变选择题" },
-  { id: "c05", category: "基础工具使用", name: "豆包 / 语音输入法", desc: "会用悬浮窗语音输入，用语音和 AI 对话做记录" },
-  { id: "c06", category: "基础工具使用", name: "Gemini 与 Google 全家桶", desc: "会用侧边栏、Drive/Calendar 联动、记忆导入" },
-  { id: "c07", category: "基础工具使用", name: "NotebookLM 资料总结", desc: "上传资料让 AI 总结、提取要点" },
-  { id: "c08", category: "基础工具使用", name: "PDF / 文档处理", desc: "图片 PDF 转文字、生成 Word/PDF" },
+  /* ---------- 中级（助教初审 + 讲师终审）---------- */
+  { id: "c09", no: 9,  tier: "中级", category: "内容创作", name: "AI 写短视频脚本", desc: "会用钩子+内容+结尾结构生成脚本" },
+  { id: "c10", no: 10, tier: "中级", category: "内容创作", name: "文生图提示词", desc: "能写基础文生图提示词生成图片" },
+  { id: "c11", no: 11, tier: "中级", category: "内容创作", name: "AI 邮件处理", desc: "起草、翻译、提炼英文/中文邮件" },
+  { id: "c12", no: 12, tier: "中级", category: "工作流与自动化", name: "双 AI 协作模式", desc: "主管 AI 规划 + 执行 AI 落地的工作流" },
+  { id: "c13", no: 13, tier: "中级", category: "工作流与自动化", name: "提示词工程进阶", desc: "能从喜欢的模板提取并升级提示词" },
+  { id: "c14", no: 14, tier: "中级", category: "工作流与自动化", name: "AI 记忆系统配置", desc: "会用 Soul/Identity/User/Memory 建立 AI 档案" },
+  { id: "c15", no: 15, tier: "中级", category: "工作流与自动化", name: "自动化任务设置", desc: "会设每日/定时自动化，让 AI 替你跑" },
+  { id: "c17", no: 16, tier: "中级", category: "工作流与自动化", name: "企业微信机器人推送", desc: "配置 Webhook，让 AI 推送到手机" },
 
-  { id: "c09", category: "内容创作", name: "AI 写短视频脚本", desc: "会用钩子+内容+结尾结构生成脚本" },
-  { id: "c10", category: "内容创作", name: "文生图提示词", desc: "能写基础文生图提示词生成图片" },
-  { id: "c11", category: "内容创作", name: "AI 邮件处理", desc: "起草、翻译、提炼英文/中文邮件" },
+  /* ---------- 高级（助教初审 + 讲师终审）---------- */
+  { id: "c16", no: 17, tier: "高级", category: "工作流与自动化", name: "自定义技能开发", desc: "能用 MD+JSON 把重复工作变成一键技能" },
+  { id: "c18", no: 18, tier: "高级", category: "财富 AI 应用", name: "财务 / 报税自动化", desc: "澳洲费用分析、银行对账单 OCR、报税整理" },
+  { id: "c19", no: 19, tier: "高级", category: "财富 AI 应用", name: "股票 / 房产 AI 分析", desc: "用 AI 做强度系统、房产数据自动化复盘" },
+  { id: "c20", no: 20, tier: "高级", category: "财富 AI 应用", name: "个人 AI 财富工作流", desc: "搭建从数据到决策的完整投资 AI 流程" },
+  { id: "c21", no: 21, tier: "高级", category: "安全与伦理", name: "隐私与数据安全", desc: "知道什么资料不该喂给公开 AI、用本地/合规方案" },
+  { id: "c22", no: 22, tier: "高级", category: "安全与伦理", name: "AI 内容甄别", desc: "能识别 AI 幻觉、交叉验证关键信息" }
+];
 
-  { id: "c12", category: "工作流与自动化", name: "双 AI 协作模式", desc: "主管 AI 规划 + 执行 AI 落地的工作流" },
-  { id: "c13", category: "工作流与自动化", name: "提示词工程进阶", desc: "能从喜欢的模板提取并升级提示词" },
-  { id: "c14", category: "工作流与自动化", name: "AI 记忆系统配置", desc: "会用 Soul/Identity/User/Memory 建立 AI 档案" },
-  { id: "c15", category: "工作流与自动化", name: "自动化任务设置", desc: "会设每日/定时自动化，让 AI 替你跑" },
-  { id: "c16", category: "工作流与自动化", name: "自定义技能开发", desc: "能用 MD+JSON 把重复工作变成一键技能" },
-  { id: "c17", category: "工作流与自动化", name: "企业微信机器人推送", desc: "配置 Webhook，让 AI 推送到手机" },
-
-  { id: "c18", category: "财富 AI 应用", name: "财务 / 报税自动化", desc: "澳洲费用分析、银行对账单 OCR、报税整理" },
-  { id: "c19", category: "财富 AI 应用", name: "股票 / 房产 AI 分析", desc: "用 AI 做强度系统、房产数据自动化复盘" },
-  { id: "c20", category: "财富 AI 应用", name: "个人 AI 财富工作流", desc: "搭建从数据到决策的完整投资 AI 流程" },
-
-  { id: "c21", category: "安全与伦理", name: "隐私与数据安全", desc: "知道什么资料不该喂给公开 AI、用本地/合规方案" },
-  { id: "c22", category: "安全与伦理", name: "AI 内容甄别", desc: "能识别 AI 幻觉、交叉验证关键信息" }
+/* 证书等级（按「已通过」项数解锁，类似青铜白银）
+ * 已通过定义：初级=助教勾；中级/高级=助教勾且讲师勾。 */
+const CERT_LEVELS = [
+  { min: 22, key: "diamond",  name: "钻石", icon: "👑", color: "#7c4dff" },
+  { min: 19, key: "platinum", name: "铂金", icon: "💎", color: "#26c6da" },
+  { min: 16, key: "gold",     name: "黄金", icon: "🥇", color: "#ffb300" },
+  { min: 12, key: "silver",   name: "白银", icon: "🥈", color: "#90a4ae" },
+  { min: 8,  key: "bronze",   name: "青铜", icon: "🥉", color: "#cd7f32" }
 ];
 
 /* 路演 / 直播 PPT（独立板块，统一展示）

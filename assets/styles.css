@@ -151,20 +151,34 @@ img { max-width: 100%; }
 .pending { color: var(--gray-400); font-size: 14px; padding: 20px; text-align: center; background: var(--gray-100); border-radius: 12px; }
 
 /* ---------- 能力清单 ---------- */
-.cap-cat { margin-bottom: 26px; }
-.cap-cat > h3 { font-size: 16px; color: var(--green-700); margin-bottom: 12px; }
+.cap-tier { margin-bottom: 26px; }
+.cap-tier-title { font-size: 16px; margin-bottom: 12px; padding: 6px 14px; border-radius: 10px; display: inline-block; font-weight: 800; }
+.cap-tier-title.tier-basic { background: #e8f5e9; color: #2e7d32; }
+.cap-tier-title.tier-mid   { background: #e3f2fd; color: #1565c0; }
+.cap-tier-title.tier-adv   { background: #fce4ec; color: #ad1457; }
 .cap-item { background: #fff; border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; }
 .cap-item .cap-head { display: flex; align-items: flex-start; gap: 12px; }
 .cap-item .cap-name { font-weight: 700; font-size: 15px; }
 .cap-item .cap-desc { font-size: 13px; color: var(--gray-600); margin-top: 4px; }
+.cap-tag { font-size: 11px; font-weight: 600; color: var(--gray-400); background: var(--gray-100); padding: 1px 8px; border-radius: 999px; margin-left: 8px; }
 .cap-checks { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--gray-200); }
 .cap-checks label { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .cap-checks input { width: 18px; height: 18px; accent-color: var(--green-700); cursor: pointer; }
 .cap-checks .teacher { color: var(--orange); }
+.cap-na { font-size: 13px; color: var(--gray-400); font-weight: 600; }
 .cap-status { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
 .cap-status.pass { background: var(--green-100); color: var(--green-700); }
 .cap-status.wait { background: #fff3e0; color: var(--orange); }
 .cap-status.none { background: var(--gray-100); color: var(--gray-400); }
+
+/* 证书等级卡片 */
+.cert-card { display: flex; align-items: center; gap: 18px; background: #fff; border: 1px solid var(--gray-200); border-radius: 14px; padding: 18px 22px; margin-bottom: 22px; box-shadow: 0 2px 10px rgba(0,0,0,.04); }
+.cert-icon { font-size: 42px; line-height: 1; flex: none; }
+.cert-body { flex: 1; }
+.cert-name { font-size: 20px; font-weight: 800; }
+.cert-sub { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+.cert-hint { font-size: 13px; color: var(--gray-600); margin-top: 6px; }
+.cert-hint b { color: var(--green-700); }
 
 /* 能力清单交互补充 */
 .cap-no { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 7px; background: var(--green-100); color: var(--green-700); font-size: 12px; font-weight: 700; flex: none; margin-right: 8px; }

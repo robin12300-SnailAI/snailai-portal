@@ -12,13 +12,16 @@
 
   <div class="wrap">
     <h2 class="section-title">✅ AI 能力清单</h2>
-    <p class="section-sub">三项确认流程：<b>学员自查 → 助教初审 → 总讲师最终确认</b>。当前以 <b id="roleLabel"></b> 身份查看，你只能勾选自己那一列，其余列为只读。</p>
+    <p class="section-sub">勾选流程：<b>助教初审 → 总讲师终审</b>（初级能力助教打勾即过）。学员可查看自己的进度与证书，但不能打勾。</p>
+
+    <!-- 证书等级卡片 -->
+    <div id="certCard"></div>
 
     <!-- 助教 / 讲师：学员选择 + 总览 -->
     <div id="staffBar"></div>
     <div id="overviewWrap"></div>
 
-    <!-- 能力清单（学员视图 or 选中的学员）-->
+    <!-- 能力清单（按等级分段）-->
     <div id="list"></div>
 
     <!-- 导出 / 导入 -->
@@ -35,7 +38,8 @@
     const user = getCurrentUser();
     const role = user.role;                                  // student | ta | instructor
     const isStaff = (role === "ta" || role === "instructor");
-    const EDIT_COL = role === "student" ? "self" : role === "ta" ? "ta" : "final";
+    const canTa = (role === "ta");
+    const canFinal = (role === "instructor");
     const ROLE_NAME = { student: "学员", ta: "助教", instructor: "总讲师" };
     const students = USERS.filter(u => u.role === "student");
     const LS_KEY = "snailai_checklist_v1";
@@ -47,23 +51,69 @@
     let checks = loadChecks();
     function saveChecks() { localStorage.setItem(LS_KEY, JSON.stringify(checks)); }
     function getCap(username, capId) {
-      return (checks[username] && checks[username][capId]) || { self: false, ta: false, final: false };
+      return (checks[username] && checks[username][capId]) || { ta: false, final: false };
     }
     function setCap(username, capId, col, val) {
       checks[username] = checks[username] || {};
-      checks[username][capId] = checks[username][capId] || { self: false, ta: false, final: false };
+      checks[username][capId] = checks[username][capId] || { ta: false, final: false };
       checks[username][capId][col] = val;
+      // 助教取消初审时，同步清空讲师终审，保持顺序一致
+      if (col === "ta" && !val) checks[username][capId].final = false;
       saveChecks();
     }
 
     let viewUser = (role === "student") ? user.username : (students[0] ? students[0].username : null);
 
-    /* ---------- 状态徽标 ---------- */
-    function capState(c) {
-      if (c.self && c.ta && c.final) return { cls: "pass", txt: "✅ 已通过" };
-      if (c.self && c.ta)           return { cls: "wait", txt: "🟡 初审通过" };
-      if (c.self)                   return { cls: "wait", txt: "🔵 自查中" };
+    /* ---------- 通过判定 ---------- */
+    function isPassed(c, st) {
+      if (c.tier === "初级") return !!st.ta;
+      return !!st.ta && !!st.final;
+    }
+    function countPassed(username) {
+      let n = 0;
+      CAPABILITIES.forEach(c => { if (isPassed(c, getCap(username, c.id))) n++; });
+      return n;
+    }
+    function capStatus(c, st) {
+      if (c.tier === "初级") {
+        return st.ta ? { cls: "pass", txt: "✅ 已通过" } : { cls: "none", txt: "未开始" };
+      }
+      if (st.ta && st.final) return { cls: "pass", txt: "✅ 已通过" };
+      if (st.ta)           return { cls: "wait", txt: "🟡 初审通过" };
       return { cls: "none", txt: "未开始" };
+    }
+
+    /* ---------- 证书等级 ---------- */
+    function certOf(passed) {
+      for (const c of CERT_LEVELS) if (passed >= c.min) return c;
+      return null;
+    }
+    function nextCert(passed) {
+      let best = null;
+      for (const c of CERT_LEVELS) if (c.min > passed && (!best || c.min < best.min)) best = c;
+      return best;
+    }
+    function renderCertCard(username) {
+      const passed = countPassed(username);
+      const total = CAPABILITIES.length;
+      const cur = certOf(passed);
+      const nxt = nextCert(passed);
+      const pct = Math.round(passed / total * 100);
+      const name = cur ? `${cur.icon} ${cur.name}` : "🔒 未定级";
+      const color = cur ? cur.color : "#b0bec5";
+      let hint;
+      if (nxt) hint = `再完成 <b>${nxt.min - passed}</b> 项即可升级到 ${nxt.icon} ${nxt.name}`;
+      else hint = "🎉 已达最高等级，全部能力通过！";
+      document.getElementById("certCard").innerHTML = `
+        <div class="cert-card" style="border-left:6px solid ${color};">
+          <div class="cert-icon" style="color:${color}">${cur ? cur.icon : "🔒"}</div>
+          <div class="cert-body">
+            <div class="cert-name" style="color:${color}">${name}</div>
+            <div class="cert-sub">已通过 ${passed} / ${total} 项能力</div>
+            <div class="progress" style="margin-top:8px;"><span style="width:${pct}%;background:${color}"></span></div>
+            <div class="cert-hint">${hint}</div>
+          </div>
+        </div>`;
     }
 
     /* ---------- 助教 / 讲师：学员选择器 ---------- */
@@ -71,15 +121,16 @@
       if (!isStaff) return;
       const opts = students.map(s =>
         `<option value="${s.username}" ${s.username === viewUser ? "selected" : ""}>${s.name}（${s.username}）</option>`).join("");
+      const editTxt = canTa ? "助教初审" : canFinal ? "讲师终审" : "—";
       document.getElementById("staffBar").innerHTML = `
         <div class="staff-bar">
           <span class="staff-label">查看学员：</span>
           <select id="studentSel">${opts}</select>
-          <span class="staff-hint">你当前可勾选：<b>${EDIT_COL === "ta" ? "助教初审" : EDIT_COL === "final" ? "讲师终审" : "—"}</b></span>
+          <span class="staff-hint">你当前可勾选：<b>${editTxt}</b></span>
         </div>`;
       document.getElementById("studentSel").addEventListener("change", e => {
         viewUser = e.target.value;
-        renderList(); renderOverview(); renderStaffBar();
+        renderAll();
       });
     }
 
@@ -88,62 +139,71 @@
       if (!isStaff) return;
       const total = CAPABILITIES.length;
       const rows = students.map(s => {
-        let self = 0, ta = 0, fin = 0;
+        let ta = 0, fin = 0;
         CAPABILITIES.forEach(c => {
           const st = getCap(s.username, c.id);
-          if (st.self) self++; if (st.ta) ta++; if (st.final) fin++;
+          if (st.ta) ta++;
+          if (st.final) fin++;
         });
+        const passed = countPassed(s.username);
+        const cert = certOf(passed);
         return `<tr data-u="${s.username}" class="${s.username === viewUser ? "active" : ""}">
           <td>${s.name}</td>
-          <td>${self}/${total}</td>
           <td>${ta}/${total}</td>
           <td>${fin}/${total}</td>
-          <td>${Math.round(fin / total * 100)}%</td>
+          <td>${Math.round(passed / total * 100)}%</td>
+          <td>${cert ? cert.icon + " " + cert.name : "🔒 未定级"}</td>
         </tr>`;
       }).join("");
       document.getElementById("overviewWrap").innerHTML = `
         <div class="overview">
           <h3 class="catalog-title" style="margin-top:4px;">📊 学员总览（${students.length} 人）</h3>
           <table class="ov-table">
-            <thead><tr><th>学员</th><th>自查</th><th>初审</th><th>最终</th><th>通过率</th></tr></thead>
+            <thead><tr><th>学员</th><th>初审</th><th>终审</th><th>通过率</th><th>证书等级</th></tr></thead>
             <tbody>${rows}</tbody>
           </table>
         </div>`;
       document.querySelectorAll("#overviewWrap tbody tr").forEach(tr => {
-        tr.addEventListener("click", () => { viewUser = tr.dataset.u; renderList(); renderOverview(); renderStaffBar(); });
+        tr.addEventListener("click", () => { viewUser = tr.dataset.u; renderAll(); });
       });
     }
 
-    /* ---------- 能力清单（按类别分组，含 3 勾选）---------- */
+    /* ---------- 能力清单（按等级分段，2 勾选）---------- */
     function renderList() {
       if (!viewUser) {
         document.getElementById("list").innerHTML = `<div class="pending">暂无学员数据</div>`;
         return;
       }
-      const groups = {};
-      CAPABILITIES.forEach(c => { (groups[c.category] = groups[c.category] || []).push(c); });
-      let n = 0, html = "";
-      Object.keys(groups).forEach(cat => {
-        html += `<div class="cap-cat"><h3>${cat}</h3>`;
-        groups[cat].forEach(c => {
-          n++;
-          const st = capState(getCap(viewUser, c.id));
-          const canSelf = EDIT_COL === "self";
-          const canTa = EDIT_COL === "ta";
-          const canFinal = EDIT_COL === "final";
+      const TIERS = ["初级", "中级", "高级"];
+      let html = "";
+      TIERS.forEach(tier => {
+        const items = CAPABILITIES.filter(c => c.tier === tier);
+        if (!items.length) return;
+        const tierCls = tier === "初级" ? "tier-basic" : tier === "中级" ? "tier-mid" : "tier-adv";
+        html += `<div class="cap-tier"><h3 class="cap-tier-title ${tierCls}">${tier}（${items.length} 项）</h3>`;
+        items.forEach(c => {
+          const st = getCap(viewUser, c.id);
+          const state = capStatus(c, st);
+          const taChk = st.ta ? "checked" : "";
+          const finalChk = st.final ? "checked" : "";
+          // 初级：讲师终审不适用（显示 —）；中高级：讲师终审在助教未勾前锁定
+          const finalDisabled = (!canFinal) || (tier !== "初级" && !st.ta) ? "disabled" : "";
+          const taDisabled = canTa ? "" : "disabled";
+          const finalCell = tier === "初级"
+            ? `<span class="cap-na">—</span>`
+            : `<label class="teacher"><input type="checkbox" data-cap="${c.id}" data-col="final" ${finalChk} ${finalDisabled}> 讲师终审</label>`;
           html += `
             <div class="cap-item">
               <div class="cap-head">
                 <div>
-                  <div class="cap-name"><span class="cap-no">${n}</span>${c.name}</div>
+                  <div class="cap-name"><span class="cap-no">${c.no}</span>${c.name} <span class="cap-tag">${c.category}</span></div>
                   <div class="cap-desc">${c.desc}</div>
                 </div>
-                <span class="cap-status ${st.cls}">${st.txt}</span>
+                <span class="cap-status ${state.cls}">${state.txt}</span>
               </div>
               <div class="cap-checks">
-                <label><input type="checkbox" data-cap="${c.id}" data-col="self" ${getCap(viewUser, c.id).self ? "checked" : ""} ${canSelf ? "" : "disabled"}> 学员自查</label>
-                <label class="teacher"><input type="checkbox" data-cap="${c.id}" data-col="ta" ${getCap(viewUser, c.id).ta ? "checked" : ""} ${canTa ? "" : "disabled"}> 助教初审</label>
-                <label class="teacher"><input type="checkbox" data-cap="${c.id}" data-col="final" ${getCap(viewUser, c.id).final ? "checked" : ""} ${canFinal ? "" : "disabled"}> 讲师终审</label>
+                <label><input type="checkbox" data-cap="${c.id}" data-col="ta" ${taChk} ${taDisabled}> 助教初审</label>
+                ${finalCell}
               </div>
             </div>`;
         });
@@ -155,8 +215,7 @@
           const capId = e.target.dataset.cap;
           const col = e.target.dataset.col;
           setCap(viewUser, capId, col, e.target.checked);
-          renderList();
-          if (isStaff) renderOverview();
+          renderAll();
         });
       });
     }
@@ -189,11 +248,12 @@
           Object.keys(data).forEach(u => {
             checks[u] = checks[u] || {};
             Object.keys(data[u]).forEach(capId => {
-              checks[u][capId] = Object.assign(checks[u][capId] || { self: false, ta: false, final: false }, data[u][capId]);
+              const src = data[u][capId] || {};
+              checks[u][capId] = { ta: !!src.ta, final: !!src.final };
             });
           });
           saveChecks();
-          renderStaffBar(); renderOverview(); renderList();
+          renderAll();
           alert("导入成功，已与本地备份合并。");
         } catch (err) { alert("导入失败：文件格式不正确。"); }
       };
@@ -201,12 +261,15 @@
     }
 
     /* ---------- 初始化 ---------- */
-    document.getElementById("roleLabel").textContent = ROLE_NAME[role];
+    function renderAll() {
+      renderCertCard(viewUser);
+      renderStaffBar();
+      renderOverview();
+      renderList();
+    }
+    document.getElementById("roleLabel") && (document.getElementById("roleLabel").textContent = ROLE_NAME[role]);
     renderIO();
-    renderStaffBar();
-    renderOverview();
-    renderList();
-
+    renderAll();
     initPortal("checklist");
   </script>
 </body>

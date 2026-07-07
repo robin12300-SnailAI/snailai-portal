@@ -18,13 +18,13 @@
     <div class="card" style="margin-bottom:24px;">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
         <div>
-          <h3 style="margin:0 0 4px;">📋 AI 能力清单</h3>
-          <span class="progress-label" id="capProgressLabel">三项确认（学员自查 → 助教初审 → 总讲师最终确认）进度。</span>
+          <h3 style="margin:0 0 4px;">📋 AI 能力清单 <span id="capCertBadge"></span></h3>
+          <span class="progress-label" id="capProgressLabel">勾选流程：助教初审 → 总讲师终审（初级助教勾即过）。</span>
           <div class="progress" style="margin-top:10px;max-width:360px;">
             <span id="capProgressBar" style="width:0%"></span>
           </div>
         </div>
-        <a class="btn btn-primary btn-sm" href="AI 能力清单/">查看 / 勾选能力 →</a>
+        <a class="btn btn-primary btn-sm" href="AI 能力清单/">查看能力清单 →</a>
       </div>
     </div>
 
@@ -74,27 +74,36 @@
       try { checks = JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch (e) {}
       const total = (typeof CAPABILITIES !== "undefined") ? CAPABILITIES.length : 22;
       const isStaff = (user.role === "ta" || user.role === "instructor");
+      function isPassed(c, st) {
+        if (c.tier === "初级") return !!st.ta;
+        return !!st.ta && !!st.final;
+      }
       let passed = 0, denom = 0;
       if (isStaff) {
         const students = USERS.filter(u => u.role === "student");
         students.forEach(s => {
           CAPABILITIES.forEach(c => {
             const st = (checks[s.username] && checks[s.username][c.id]) || {};
-            denom++; if (st.final) passed++;
+            denom++; if (isPassed(c, st)) passed++;
           });
         });
         document.getElementById("capProgressLabel").textContent =
-          "全班 " + students.length + " 人 · 已最终确认 " + passed + " / " + denom + " 项";
+          "全班 " + students.length + " 人 · 已通过 " + passed + " / " + denom + " 项";
       } else {
         CAPABILITIES.forEach(c => {
           const st = (checks[user.username] && checks[user.username][c.id]) || {};
-          denom++; if (st.final) passed++;
+          denom++; if (isPassed(c, st)) passed++;
         });
         document.getElementById("capProgressLabel").textContent =
-          "你已最终确认 " + passed + " / " + total + " 项能力";
+          "你已通过 " + passed + " / " + total + " 项能力";
       }
       const pct = denom ? Math.round(passed / denom * 100) : 0;
       document.getElementById("capProgressBar").style.width = pct + "%";
+      // 证书徽章
+      let cert = null;
+      for (const c of (typeof CERT_LEVELS !== "undefined" ? CERT_LEVELS : [])) if (passed >= c.min) cert = c;
+      document.getElementById("capCertBadge").textContent = cert ? (cert.icon + " " + cert.name) : "🔒 未定级";
+      document.getElementById("capCertBadge").style.cssText = "font-size:13px;font-weight:700;padding:2px 10px;border-radius:999px;background:" + (cert ? cert.color : "#eceff1") + ";color:#fff;";
     })();
 
     initPortal("dashboard");
