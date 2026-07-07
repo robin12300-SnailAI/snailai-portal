@@ -45,7 +45,10 @@ const COURSES = {
       {
         title: "模块二 · 基础工具实战",
         lessons: [
-          { id: "l03", title: "第 3 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] },
+          { id: "l03", title: "第 3 堂课", desc: "技能开发与 GitHub 随改推送", duration: "120 min", slides: [], materials: [],
+            chapters: [
+              "生成一个技能：GitHub 随改推送（例：网站修改技能）"
+            ] },
           { id: "l04", title: "第 4 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] },
           { id: "l05", title: "第 5 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] },
           { id: "l06", title: "第 6 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] }
