@@ -14,14 +14,17 @@
     <h2 class="section-title" id="welcome">欢迎回来 👋</h2>
     <p class="section-sub">在这里回顾每一节课的 PPT，下载共享资料，并完成你的 AI 能力清单。</p>
 
-    <!-- AI 能力清单说明（确认在企业微信完成）-->
+    <!-- AI 能力清单进度 -->
     <div class="card" style="margin-bottom:24px;">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
         <div>
           <h3 style="margin:0 0 4px;">📋 AI 能力清单</h3>
-          <span class="progress-label">逐项能力确认请在 <b>企业微信智能表格</b> 完成（学员自查 → 助教初审 → 总讲师最终确认）。</span>
+          <span class="progress-label" id="capProgressLabel">三项确认（学员自查 → 助教初审 → 总讲师最终确认）进度。</span>
+          <div class="progress" style="margin-top:10px;max-width:360px;">
+            <span id="capProgressBar" style="width:0%"></span>
+          </div>
         </div>
-        <a class="btn btn-primary btn-sm" href="AI 能力清单/">查看能力清单 →</a>
+        <a class="btn btn-primary btn-sm" href="AI 能力清单/">查看 / 勾选能力 →</a>
       </div>
     </div>
 
@@ -42,7 +45,7 @@
       <a class="card link" href="AI 能力清单/">
         <div class="icon">✅</div>
         <h3>AI 能力清单</h3>
-        <p>查看你需掌握的 22 项 AI 能力清单（确认在企微完成）。</p>
+        <p>查看并勾选你需掌握的 22 项 AI 能力（自查 / 初审 / 终审在此完成）。</p>
         <div class="meta">查看清单 →</div>
       </a>
       <a class="card link" href="路演直播 PPT/">
@@ -63,6 +66,37 @@
     requireAuth();
     const user = getCurrentUser();
     document.getElementById("welcome").textContent = "欢迎回来，" + user.name + " 👋";
+
+    /* ---------- 能力清单进度 ---------- */
+    (function renderCapProgress() {
+      const LS_KEY = "snailai_checklist_v1";
+      let checks = {};
+      try { checks = JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch (e) {}
+      const total = (typeof CAPABILITIES !== "undefined") ? CAPABILITIES.length : 22;
+      const isStaff = (user.role === "ta" || user.role === "instructor");
+      let passed = 0, denom = 0;
+      if (isStaff) {
+        const students = USERS.filter(u => u.role === "student");
+        students.forEach(s => {
+          CAPABILITIES.forEach(c => {
+            const st = (checks[s.username] && checks[s.username][c.id]) || {};
+            denom++; if (st.final) passed++;
+          });
+        });
+        document.getElementById("capProgressLabel").textContent =
+          "全班 " + students.length + " 人 · 已最终确认 " + passed + " / " + denom + " 项";
+      } else {
+        CAPABILITIES.forEach(c => {
+          const st = (checks[user.username] && checks[user.username][c.id]) || {};
+          denom++; if (st.final) passed++;
+        });
+        document.getElementById("capProgressLabel").textContent =
+          "你已最终确认 " + passed + " / " + total + " 项能力";
+      }
+      const pct = denom ? Math.round(passed / denom * 100) : 0;
+      document.getElementById("capProgressBar").style.width = pct + "%";
+    })();
+
     initPortal("dashboard");
   </script>
 </body>

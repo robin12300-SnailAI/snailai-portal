@@ -168,6 +168,26 @@ img { max-width: 100%; }
 .cap-status.wait { background: #fff3e0; color: var(--orange); }
 .cap-status.none { background: var(--gray-100); color: var(--gray-400); }
 
+/* 能力清单交互补充 */
+.cap-no { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 7px; background: var(--green-100); color: var(--green-700); font-size: 12px; font-weight: 700; flex: none; margin-right: 8px; }
+.cap-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.cap-head .cap-name { display: flex; align-items: center; }
+.cap-checks input:disabled { cursor: not-allowed; opacity: .55; }
+.cap-checks label:has(input:disabled) { opacity: .6; }
+.staff-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: #fff; border: 1px solid var(--gray-200); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; }
+.staff-bar select { padding: 8px 12px; border: 1px solid var(--gray-200); border-radius: 10px; font-size: 14px; font-family: inherit; background: #fff; }
+.staff-label { font-weight: 700; color: var(--gray-600); }
+.staff-hint { font-size: 13px; color: var(--gray-600); }
+.staff-hint b { color: var(--green-700); }
+.overview { margin-bottom: 26px; }
+.ov-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--gray-200); border-radius: 12px; overflow: hidden; font-size: 14px; }
+.ov-table th, .ov-table td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--gray-200); }
+.ov-table th { background: var(--green-100); color: var(--green-700); font-weight: 800; }
+.ov-table tbody tr { cursor: pointer; transition: background .12s; }
+.ov-table tbody tr:hover { background: var(--gray-100); }
+.ov-table tbody tr.active { background: var(--green-100); }
+.io-note { font-size: 12px; color: var(--gray-400); margin-left: 6px; }
+
 /* ---------- 公告条 ---------- */
 .announce { background: #fff8e1; border: 1px solid #ffe082; color: #8d6e00; padding: 12px 24px; font-size: 14px; text-align: center; }
 
