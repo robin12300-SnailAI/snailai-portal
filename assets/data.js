@@ -33,8 +33,12 @@ const COURSES = {
               "课后作业（连上 email / drive 等服务）"
             ]
           },
-          { id: "l02", title: "第 2 堂课", desc: "待定", duration: "90 min", slides: [], materials: [],
-            chapters: [] }
+          { id: "l02", title: "第 2 堂课", desc: "AI 刚需项目启动与建设", duration: "90 min", slides: [], materials: [],
+            chapters: [
+              "AI 刚需提示词完工后，WorkBuddy 设立共享项，GitHub 推送",
+              "学员上传项目资产",
+              "开始项目 AI 建设"
+            ] }
         ]
       },
       {
