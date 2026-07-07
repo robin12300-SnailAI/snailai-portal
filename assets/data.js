@@ -17,13 +17,14 @@ const COURSES = {
       {
         title: "模块一 · AI 认知觉醒",
         lessons: [
-          { id: "l01", title: "第 1 堂课 — 开营日：认识你的 AI 助手", desc: "龙虾(WorkBuddy)介绍、MCP与自定义技能、如何对话、个人AI刚需确定、学员刚需项目启动、课后作业", duration: "90 min", slides: [], materials: [], videos: [],
+          { id: "l01", title: "第 1 堂课 — 开营日：认识你的 AI 助手", desc: "龙虾(WorkBuddy)介绍、MCP与自定义技能、如何对话、个人AI刚需确定、学员刚需项目启动、注册 GitHub 账户、课后作业（连上 email/drive 等）", duration: "90 min", slides: [], materials: [], videos: [],
             chapters: [
               "龙虾(WorkBuddy)总体介绍 — MCP 和自定义技能",
               "如何与龙虾(WorkBuddy)对话",
               "个人 AI 刚需确定",
               "选取一些学员开始 AI 刚需项目",
-              "课后作业（联通 email / drive 等服务）"
+              "注册 GitHub 账户",
+              "课后作业（连上 email / drive 等服务）"
             ]
           },
           { id: "l02", title: "第 2 堂课", desc: "待定", duration: "90 min", slides: [], materials: [],
