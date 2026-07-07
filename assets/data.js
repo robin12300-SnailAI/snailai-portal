@@ -17,7 +17,13 @@ const COURSES = {
       {
         title: "模块一 · AI 认知觉醒",
         lessons: [
-          { id: "l01", title: "第 1 堂课 — 开营日：认识你的 AI 助手", desc: "龙虾(WorkBuddy)介绍、MCP与自定义技能、如何对话、个人AI刚需确定、学员刚需项目启动、注册 GitHub 账户、课后作业（连上 email/drive 等）", duration: "90 min", slides: [], materials: [], videos: [],
+          { id: "l01", title: "第 1 堂课 — 开营日：认识你的 AI 助手", desc: "龙虾(WorkBuddy)介绍、MCP与自定义技能、如何对话、个人AI刚需确定、学员刚需项目启动、注册 GitHub 账户、课后作业（连上 email/drive 等）", duration: "90 min", slides: [], materialsTitle: "20260707 课件链接", materials: [
+            { name: "7月7日讲座讲稿（Word）", file: "https://drive.google.com/uc?export=download&id=15bzSSb4gi9TxUsyHk9NK6UBdz_3oYZxF" },
+            { name: "AI 项目落地蓝图（PDF）", file: "https://drive.google.com/uc?export=download&id=11DvZPBYoh_O4ACB3m_jX90DbvZdyNnJo" },
+            { name: "AI 提示词进阶指南（图片）", file: "https://drive.google.com/uc?export=download&id=18YGFjTb3C_IT0CQm9n8p9BT8Tg45pVi9" },
+            { name: "打造你的专属 AI 数字分身（音频）", file: "https://drive.google.com/uc?export=download&id=1Xc8eoB-7nlxbV2fBvauIlstoUA8eWvM0" },
+            { name: "AI 成功的秘密：从基础到自动化工作流（视频）", file: "https://drive.google.com/uc?export=download&id=1DvTNxaBGIEj7WOg_JLEXqpUHhHiYj3yQ" }
+          ], videos: [],
             chapters: [
               "龙虾(WorkBuddy)总体介绍 — MCP 和自定义技能",
               "如何与龙虾(WorkBuddy)对话",

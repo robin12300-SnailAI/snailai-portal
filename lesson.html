@@ -34,7 +34,7 @@
     <div id="videos" style="margin-top:12px;margin-bottom:20px;"></div>
 
     <!-- 资料下载 -->
-    <h3 class="section-title" style="font-size:18px;">📎 配套资料</h3>
+    <h3 class="section-title" style="font-size:18px;">📎 <span id="matTitle">配套资料</span></h3>
     <div id="materials" style="margin-top:12px;"></div>
   </div>
 
@@ -92,20 +92,38 @@
     /* ---------- 资料 ---------- */
     const mats = lesson.materials || [];
     const box = document.getElementById("materials");
+    const matTitle = document.getElementById("matTitle");
+    if (matTitle) matTitle.textContent = lesson.materialsTitle || "配套资料";
     if (mats.length === 0) {
       box.innerHTML = `<div class="pending">📭 配套资料待上传</div>`;
     } else {
-      box.innerHTML = mats.map(m => `
+      box.innerHTML = mats.map(m => {
+        const isUrl = /^https?:\/\//i.test(m.file || "");
+        const sub = isUrl ? "☁️ Google 云端硬盘" : m.file.split("/").pop();
+        return `
         <div class="material">
-          <div class="fi">${fileIcon(m.file)}</div>
-          <div class="mt"><b>${m.name}</b><span>${m.file.split("/").pop()}</span></div>
-          <a class="btn btn-primary btn-sm" href="${m.file}" download>下载</a>
-        </div>`).join("");
+          <div class="fi">${fileIcon(m)}</div>
+          <div class="mt"><b>${m.name}</b><span>${sub}</span></div>
+          <a class="btn btn-primary btn-sm" href="${m.file}" target="_blank" rel="noopener">下载</a>
+        </div>`;
+      }).join("");
     }
-    function fileIcon(f) {
+    function fileIcon(m) {
+      const f = m.file || "";
+      const nm = (m.name || "").toLowerCase();
+      if (/^https?:\/\//i.test(f)) {
+        if (nm.includes("视频")) return "🎬";
+        if (nm.includes("音频")) return "🎵";
+        if (nm.includes("pdf")) return "📕";
+        if (nm.includes("图片") || nm.includes("png") || nm.includes("jpg")) return "🖼️";
+        if (nm.includes("word") || nm.includes("docx") || nm.includes("讲座")) return "📘";
+        return "☁️";
+      }
       const e = (f.split(".").pop() || "").toLowerCase();
       if (e === "pdf") return "📕"; if (["doc","docx"].includes(e)) return "📘";
       if (["zip","rar"].includes(e)) return "🗜️"; if (["png","jpg","jpeg"].includes(e)) return "🖼️";
+      if (["mp3","m4a","wav","aac"].includes(e)) return "🎵";
+      if (["mp4","mov","avi","webm"].includes(e)) return "🎬";
       return "📄";
     }
 
