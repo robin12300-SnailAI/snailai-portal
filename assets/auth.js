@@ -17,10 +17,22 @@
 
 /* ---------- 硬编码账号表（上线前替换）---------- */
 const USERS = [
-  { username: "student01", name: "学员一号", password: "snail123", role: "student" },
-  { username: "student02", name: "学员二号", password: "snail123", role: "student" },
-  { username: "ta01",      name: "助教一号", password: "snailai@ta",  role: "ta" },
-  { username: "teacher01", name: "罗宾 Robin", password: "snail@teacher", role: "instructor" }
+  { username: "serena",     name: "Serena 谢昕言", password: "12345", role: "student" },
+  { username: "mandy",      name: "Mandy 曼蒂",    password: "12345", role: "student" },
+  { username: "jenny",      name: "Jenny",         password: "12345", role: "student" },
+  { username: "jackie",     name: "Jackie",        password: "12345", role: "student" },
+  { username: "xianlu",     name: "仙路",          password: "12345", role: "student" },
+  { username: "coco",       name: "雅雅CoCo",      password: "12345", role: "student" },
+  { username: "xieyouchen", name: "谢侑辰",        password: "12345", role: "student" },
+  { username: "wuqing",     name: "吴清",          password: "12345", role: "student" },
+  { username: "jiangpei",   name: "蒋培",          password: "12345", role: "student" },
+  { username: "laoliu",     name: "laoliu",        password: "12345", role: "student" },
+  { username: "suping",     name: "suping",        password: "12345", role: "student" },
+  { username: "lucy",       name: "Lucy",          password: "12345", role: "student" },
+  { username: "step",       name: "step",          password: "12345", role: "student" },
+  { username: "zilin",      name: "子霖",          password: "12345", role: "student" },
+  { username: "ta01",       name: "助教一号",      password: "snailai@ta",  role: "ta" },
+  { username: "teacher01",  name: "罗宾 Robin",    password: "snail@teacher", role: "instructor" }
 ];
 
 const SESSION_KEY = "snailai_session"; // 存 {user}
