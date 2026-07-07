@@ -32,6 +32,10 @@ const USERS = [
   { username: "step",       name: "step",          password: "12345", role: "student" },
   { username: "zilin",      name: "子霖",          password: "12345", role: "student" },
   { username: "zhujiao",    name: "助教",          password: "12300", role: "ta" },
+  { username: "Maureen123", name: "Maureen",       password: "12300", role: "ta" },
+  { username: "xiejin123",  name: "xiejin",        password: "12300", role: "ta" },
+  { username: "jiangpei123",name: "jiangpei",      password: "12300", role: "ta" },
+  { username: "wuqing123",  name: "wuqing",        password: "12300", role: "ta" },
   { username: "robin",      name: "罗宾 Robin",    password: "12300", role: "instructor" }
 ];
 
