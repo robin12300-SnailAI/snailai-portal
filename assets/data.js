@@ -17,7 +17,7 @@ const COURSES = {
       {
         title: "模块一 · AI 认知觉醒",
         lessons: [
-          { id: "l01", title: "第 1 堂课 — 开营日：认识你的 AI 助手", desc: "龙虾(WorkBuddy)介绍、MCP与自定义技能、如何对话、个人AI刚需确定、学员刚需项目启动、注册 GitHub 账户、课后作业（连上 email/drive 等）", duration: "90 min", slides: [], materialsTitle: "20260707 课件链接", materials: [
+          { id: "l01", title: "第 1 堂课 — 开营日：认识你的 AI 助手", desc: "龙虾(WorkBuddy)介绍、MCP与自定义技能、如何对话、个人AI刚需确定、学员刚需项目启动、注册 GitHub 账户、课后作业（连上 email/drive 等）", duration: "120 min", slides: [], materialsTitle: "20260707 课件链接", materials: [
             { name: "7月7日讲座讲稿（Word）", file: "https://drive.google.com/uc?export=download&id=15bzSSb4gi9TxUsyHk9NK6UBdz_3oYZxF" },
             { name: "AI 项目落地蓝图（PDF）", file: "https://drive.google.com/uc?export=download&id=11DvZPBYoh_O4ACB3m_jX90DbvZdyNnJo" },
             { name: "AI 提示词进阶指南（图片）", file: "https://drive.google.com/uc?export=download&id=18YGFjTb3C_IT0CQm9n8p9BT8Tg45pVi9" },
@@ -33,7 +33,7 @@ const COURSES = {
               "课后作业（连上 email / drive 等服务）"
             ]
           },
-          { id: "l02", title: "第 2 堂课", desc: "AI 刚需项目启动与建设", duration: "90 min", slides: [], materials: [],
+          { id: "l02", title: "第 2 堂课", desc: "AI 刚需项目启动与建设", duration: "120 min", slides: [], materials: [],
             chapters: [
               "AI 刚需提示词完工后，WorkBuddy 设立共享项，GitHub 推送",
               "学员上传项目资产",
@@ -45,24 +45,24 @@ const COURSES = {
       {
         title: "模块二 · 基础工具实战",
         lessons: [
-          { id: "l03", title: "第 3 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] },
-          { id: "l04", title: "第 4 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] },
-          { id: "l05", title: "第 5 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] },
-          { id: "l06", title: "第 6 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] }
+          { id: "l03", title: "第 3 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] },
+          { id: "l04", title: "第 4 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] },
+          { id: "l05", title: "第 5 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] },
+          { id: "l06", title: "第 6 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] }
         ]
       },
       {
         title: "模块三 · 生活场景应用",
         lessons: [
-          { id: "l07", title: "第 7 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] },
-          { id: "l08", title: "第 8 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] },
-          { id: "l09", title: "第 9 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] }
+          { id: "l07", title: "第 7 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] },
+          { id: "l08", title: "第 8 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] },
+          { id: "l09", title: "第 9 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] }
         ]
       },
       {
         title: "模块四 · 总结与下一步",
         lessons: [
-          { id: "l10", title: "第 10 堂课 — 结营日", desc: "回顾核心方法、建立你的 AI 工作流、中级预告", duration: "90 min", slides: [], materials: [], chapters: [] }
+          { id: "l10", title: "第 10 堂课 — 结营日", desc: "回顾核心方法、建立你的 AI 工作流、中级预告", duration: "120 min", slides: [], materials: [], chapters: [] }
         ]
       }
     ]
@@ -79,30 +79,30 @@ const COURSES = {
       {
         title: "模块一 · AI 投资认知",
         lessons: [
-          { id: "l01", title: "用 AI 武装投资决策", desc: "AI 时代的投资信息优势、认知框架", duration: "90 min", slides: [], materials: [], chapters: [] },
-          { id: "l02", title: "数据驱动的投资思维", desc: "从感觉投资到数据投资、指标体系建设", duration: "90 min", slides: [], materials: [], chapters: [] }
+          { id: "l01", title: "用 AI 武装投资决策", desc: "AI 时代的投资信息优势、认知框架", duration: "120 min", slides: [], materials: [], chapters: [] },
+          { id: "l02", title: "数据驱动的投资思维", desc: "从感觉投资到数据投资、指标体系建设", duration: "120 min", slides: [], materials: [], chapters: [] }
         ]
       },
       {
         title: "模块二 · AI 分析实战",
         lessons: [
-          { id: "l03", title: "财务与报税自动化（澳洲场景）", desc: "费用分析、银行对账单 OCR、AI 辅助报税", duration: "90 min", slides: [], materials: [], chapters: [] },
-          { id: "l04", title: "股票 / 房产 AI 分析", desc: "强度系统、房产数据自动化、复盘方法", duration: "90 min", slides: [], materials: [], chapters: [] },
-          { id: "l05", title: "银行对账单 OCR 与数据处理", desc: "扫描件识别、结构化数据、可视化", duration: "90 min", slides: [], materials: [], chapters: [] }
+          { id: "l03", title: "财务与报税自动化（澳洲场景）", desc: "费用分析、银行对账单 OCR、AI 辅助报税", duration: "120 min", slides: [], materials: [], chapters: [] },
+          { id: "l04", title: "股票 / 房产 AI 分析", desc: "强度系统、房产数据自动化、复盘方法", duration: "120 min", slides: [], materials: [], chapters: [] },
+          { id: "l05", title: "银行对账单 OCR 与数据处理", desc: "扫描件识别、结构化数据、可视化", duration: "120 min", slides: [], materials: [], chapters: [] }
         ]
       },
       {
         title: "模块三 · AI 工作流搭建",
         lessons: [
-          { id: "l06", title: "双 AI 执行模式", desc: "主管 AI + 执行 AI 协作干活", duration: "90 min", slides: [], materials: [], chapters: [] },
-          { id: "l07", title: "自动化与每日提醒", desc: "自动化任务、企业微信推送、每日报告", duration: "90 min", slides: [], materials: [], chapters: [] }
+          { id: "l06", title: "双 AI 执行模式", desc: "主管 AI + 执行 AI 协作干活", duration: "120 min", slides: [], materials: [], chapters: [] },
+          { id: "l07", title: "自动化与每日提醒", desc: "自动化任务、企业微信推送、每日报告", duration: "120 min", slides: [], materials: [], chapters: [] }
         ]
       },
       {
         title: "模块四 · 综合与结营",
         lessons: [
-          { id: "l08", title: "个人 AI 财富工作流搭建", desc: "从问题出发→选工具→自动化执行", duration: "90 min", slides: [], materials: [], chapters: [] },
-          { id: "l09", title: "结营与持续升级", desc: "回顾、旗舰版介绍、3 个月学习计划", duration: "90 min", slides: [], materials: [], chapters: [] }
+          { id: "l08", title: "个人 AI 财富工作流搭建", desc: "从问题出发→选工具→自动化执行", duration: "120 min", slides: [], materials: [], chapters: [] },
+          { id: "l09", title: "结营与持续升级", desc: "回顾、旗舰版介绍、3 个月学习计划", duration: "120 min", slides: [], materials: [], chapters: [] }
         ]
       }
     ]
