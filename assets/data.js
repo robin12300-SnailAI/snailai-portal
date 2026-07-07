@@ -37,7 +37,8 @@ const COURSES = {
             chapters: [
               "AI 刚需提示词完工后，WorkBuddy 设立共享项，GitHub 推送",
               "学员上传项目资产",
-              "开始项目 AI 建设"
+              "开始项目 AI 建设",
+              "作业：我的购买清单技能，SQLite 数据库"
             ] }
         ]
       },
