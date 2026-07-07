@@ -31,8 +31,8 @@ const USERS = [
   { username: "lucy",       name: "Lucy",          password: "12345", role: "student" },
   { username: "step",       name: "step",          password: "12345", role: "student" },
   { username: "zilin",      name: "子霖",          password: "12345", role: "student" },
-  { username: "ta01",       name: "助教一号",      password: "snailai@ta",  role: "ta" },
-  { username: "teacher01",  name: "罗宾 Robin",    password: "snail@teacher", role: "instructor" }
+  { username: "zhujiao",    name: "助教",          password: "12300", role: "ta" },
+  { username: "robin",      name: "罗宾 Robin",    password: "12300", role: "instructor" }
 ];
 
 const SESSION_KEY = "snailai_session"; // 存 {user}
