@@ -17,31 +17,40 @@ const COURSES = {
       {
         title: "模块一 · AI 认知觉醒",
         lessons: [
-          { id: "l01", title: "AI 是什么，不是什么", desc: "大模型认知、能力边界、第一次和 AI 对话", duration: "45 min", slides: [], materials: [], videos: [{ title: "什么是 AI 刚需", url: "https://youtu.be/NZag6CZ0PHA" }] },
-          { id: "l02", title: "输出式学习 — 你的不懂恰恰是 AI 存在的意义", desc: "边用边学 > 先学后用，用 AI 学一个不懂的东西", duration: "45 min", slides: [], materials: [] }
+          { id: "l01", title: "第 1 堂课 — 开营日：认识你的 AI 助手", desc: "龙虾(WorkBuddy)介绍、MCP与自定义技能、如何对话、个人AI刚需确定、学员刚需项目启动、课后作业", duration: "90 min", slides: [], materials: [], videos: [],
+            chapters: [
+              "龙虾(WorkBuddy)总体介绍 — MCP 和自定义技能",
+              "如何与龙虾(WorkBuddy)对话",
+              "个人 AI 刚需确定",
+              "选取一些学员开始 AI 刚需项目",
+              "课后作业（联通 email / drive 等服务）"
+            ]
+          },
+          { id: "l02", title: "第 2 堂课", desc: "待定", duration: "90 min", slides: [], materials: [],
+            chapters: [] }
         ]
       },
       {
         title: "模块二 · 基础工具实战",
         lessons: [
-          { id: "l03", title: "ChatGPT 正确使用姿势", desc: "从问答题变选择题、提示词基本结构、避免总结的坑", duration: "45 min", slides: [], materials: [] },
-          { id: "l04", title: "AI 输入法与应用安装", desc: "豆包输入法悬浮窗、语音转文字、用语音做日记", duration: "45 min", slides: [], materials: [] },
-          { id: "l05", title: "Gemini 与 Google 全家桶", desc: "侧边栏、Drive/Calendar/Tasks 联动、记忆功能", duration: "45 min", slides: [], materials: [] },
-          { id: "l06", title: "AI 文档与内容处理", desc: "NotebookLM、PDF 扫描件处理、Word/PDF 生成", duration: "45 min", slides: [], materials: [] }
+          { id: "l03", title: "第 3 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] },
+          { id: "l04", title: "第 4 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] },
+          { id: "l05", title: "第 5 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] },
+          { id: "l06", title: "第 6 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] }
         ]
       },
       {
         title: "模块三 · 生活场景应用",
         lessons: [
-          { id: "l07", title: "AI 与邮件、日常信息处理", desc: "浏览器插件、邮件起草翻译、微信里用 AI", duration: "45 min", slides: [], materials: [] },
-          { id: "l08", title: "AI 与购物、生活决策", desc: "亚马逊比价、优缺点对比表、购买决策", duration: "45 min", slides: [], materials: [] },
-          { id: "l09", title: "AI 与内容创作入门", desc: "短视频脚本、文生图、简单视频生成", duration: "45 min", slides: [], materials: [] }
+          { id: "l07", title: "第 7 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] },
+          { id: "l08", title: "第 8 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] },
+          { id: "l09", title: "第 9 堂课", desc: "待定", duration: "90 min", slides: [], materials: [], chapters: [] }
         ]
       },
       {
         title: "模块四 · 总结与下一步",
         lessons: [
-          { id: "l10", title: "AI 开窍日 — 你能用 AI 做什么", desc: "回顾核心方法、建立你的 AI 工作流、中级预告", duration: "45 min", slides: [], materials: [] }
+          { id: "l10", title: "第 10 堂课 — 结营日", desc: "回顾核心方法、建立你的 AI 工作流、中级预告", duration: "90 min", slides: [], materials: [], chapters: [] }
         ]
       }
     ]

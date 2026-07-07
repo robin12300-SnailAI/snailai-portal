@@ -13,6 +13,10 @@
   <div class="wrap">
     <h2 class="section-title" id="cTitle">AI 应用线上班</h2>
     <p class="section-sub" id="cDesc"></p>
+
+    <!-- 📋 课程目录 -->
+    <div class="course-catalog" id="catalog"></div>
+
     <div id="prepBanner" style="margin:18px 0 8px;"></div>
     <div id="modules"></div>
   </div>
@@ -34,6 +38,33 @@
         <div class="video-title">▶ ${PREP_VIDEO.title}</div>
         ${ytEmbedHtml(PREP_VIDEO.url, PREP_VIDEO.title)}
       </div>`;
+
+    /* ---------- 📋 课程目录 ---------- */
+    (function renderCatalog() {
+      const container = document.getElementById("catalog");
+      let lessonIdx = 0;
+      let catalogHtml = `<h3 class="catalog-title">📋 课程目录（共 ${course.modules.reduce((s,m)=>s+m.lessons.length,0)} 节课）</h3><div class="catalog-list">`;
+      course.modules.forEach(mod => {
+        mod.lessons.forEach(ls => {
+          lessonIdx++;
+          const chs = ls.chapters || [];
+          const hasContent = chs.length > 0;
+          catalogHtml += `
+            <details class="catalog-lesson" ${lessonIdx === 1 ? "open" : ""}>
+              <summary class="catalog-summary">
+                <span class="catalog-num">${lessonIdx}</span>
+                <span class="catalog-name">${ls.title}</span>
+                <span class="catalog-dur">${ls.duration}</span>
+                <span class="catalog-arrow">▸</span>
+              </summary>
+              ${hasContent ? `<div class="catalog-chapters"><ol>${chs.map(c => `<li>${c}</li>`).join("")}</ol></div>` :
+                `<div class="catalog-empty">📝 目录待更新，老师会在课前发布本节详细内容</div>`}
+            </details>`;
+        });
+      });
+      catalogHtml += `</div>`;
+      container.innerHTML = catalogHtml;
+    })();
 
     const p = navPrefix();
     let html = "";
