@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-title-zh="AI 能力清单 · 蜗牛AI 学员学堂" data-title-en="AI Capability Checklist · SnailAI Portal">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,6 +30,13 @@
     .wrap{max-width:1180px;margin:0 auto;padding:8px 20px 60px}
     .page-title{font-size:26px;font-weight:800;margin:10px 0 4px}
     .page-sub{color:var(--ink-3);font-size:14px;margin-bottom:18px}
+
+    /* 语言切换器 */
+    .lang-switch{position:fixed;top:14px;right:14px;z-index:900;display:flex;gap:4px;
+      background:#fff;border:1px solid var(--line);border-radius:100px;padding:4px;box-shadow:var(--shadow)}
+    .lang-switch .lang-btn{font-family:inherit;font-size:13px;font-weight:600;border:none;
+      background:transparent;color:var(--ink-3);padding:6px 14px;border-radius:100px;cursor:pointer;transition:.15s}
+    .lang-switch .lang-btn.active{background:var(--accent);color:#fff}
 
     /* 登录卡片 */
     #loginView{max-width:380px;margin:8vh auto 0;background:#fff;border:1px solid var(--line);
@@ -111,6 +118,11 @@
   </style>
 </head>
 <body>
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
   <div class="topbar">
     <div class="brand">蜗牛AI<span class="dot">·</span>学员学堂</div>
     <div class="who" id="whoBox"></div>
@@ -118,27 +130,27 @@
 
   <!-- 登录视图 -->
   <div id="loginView">
-    <h2>🔐 登录 AI 能力清单</h2>
-    <p>使用你的学员账号登录（数据存于蜗牛AI 后端，实时同步）</p>
+    <h2 data-zh="🔐 登录 AI 能力清单" data-en="🔐 Sign in to AI Capability Checklist">🔐 登录 AI 能力清单</h2>
+    <p data-zh="使用你的学员账号登录（数据存于蜗牛AI 后端，实时同步）" data-en="Sign in with your student account (data is stored on SnailAI's backend and synced in real time)">使用你的学员账号登录（数据存于蜗牛AI 后端，实时同步）</p>
     <div class="field">
-      <label>账号</label>
-      <input id="username" type="text" autocomplete="username" placeholder="如 serena">
+      <label data-zh="账号" data-en="Username">账号</label>
+      <input id="username" type="text" autocomplete="username" data-ph-zh="如 serena" data-ph-en="e.g. serena" placeholder="如 serena">
     </div>
     <div class="field">
-      <label>密码</label>
-      <input id="password" type="password" autocomplete="current-password" placeholder="密码">
+      <label data-zh="密码" data-en="Password">密码</label>
+      <input id="password" type="password" autocomplete="current-password" data-ph-zh="密码" data-ph-en="Password" placeholder="密码">
     </div>
-    <button class="btn btn-accent" id="loginBtn" style="width:100%">登录</button>
+    <button class="btn btn-accent" id="loginBtn" style="width:100%" data-zh="登录" data-en="Sign In">登录</button>
     <div class="login-err" id="loginErr"></div>
   </div>
 
   <!-- 应用视图 -->
   <div class="wrap" id="appView" style="display:none">
     <h1 class="page-title">✅ AI 能力清单</h1>
-    <p class="page-sub">9 项课前准备能力 · 三角色审核（学员自查 / 助教审核 / 讲师审核）。数据实时存于后端，多人协作自动同步。</p>
+    <p class="page-sub" data-zh="9 项课前准备能力 · 三角色审核（学员自查 / 助教审核 / 讲师审核）。数据实时存于后端，多人协作自动同步。" data-en="9 pre-class capabilities · three-role review (self-check / TA review / instructor review). Data is stored on the backend in real time and synced automatically across collaborators.">9 项课前准备能力 · 三角色审核（学员自查 / 助教审核 / 讲师审核）。数据实时存于后端，多人协作自动同步。</p>
 
     <div class="legend">
-      <h3>📋 能力项说明（列头 ①~⑨ 对应如下）</h3>
+      <h3 data-zh="📋 能力项说明（列头 ①~⑨ 对应如下）" data-en="📋 Capability legend (columns ①–⑨ correspond to the following)">📋 能力项说明（列头 ①~⑨ 对应如下）</h3>
       <ol id="legendList"></ol>
     </div>
 
@@ -149,26 +161,37 @@
     </div>
   </div>
 
-  <div class="foot">蜗牛AI 学员学堂 · AI 能力清单（SQLite 驱动）· 数据私有、实时同步</div>
+  <div class="foot" data-zh="蜗牛AI 学员学堂 · AI 能力清单（SQLite 驱动）· 数据私有、实时同步" data-en="SnailAI Student Portal · AI Capability Checklist (SQLite-powered) · Private data, real-time sync">蜗牛AI 学员学堂 · AI 能力清单（SQLite 驱动）· 数据私有、实时同步</div>
   <div id="toast"></div>
 
   <script>
+    const LANG_KEY = "snailai-lang";
+    let curLang = localStorage.getItem(LANG_KEY) || "zh";
+    const L_ = (zh, en) => curLang === "en" ? en : zh;
+
     const API = window.SNAILAI_API_BASE || "";
     const COLS = [
-      {key:"self",  label:"学员自查", cls:"self"},
-      {key:"ta",    label:"助教审核", cls:"ta"},
-      {key:"final", label:"讲师审核", cls:"final"}
+      {key:"self",  cls:"self",  zh:"学员自查", en:"Self-check"},
+      {key:"ta",    cls:"ta",    zh:"助教审核", en:"TA Review"},
+      {key:"final", cls:"final", zh:"讲师审核", en:"Instructor"}
     ];
-    const ROLE_NAME = {student:"学员", ta:"助教", instructor:"讲师"};
+    const ROLE_NAME = {
+      student:   {zh:"学员", en:"Student"},
+      ta:        {zh:"助教", en:"TA"},
+      instructor:{zh:"讲师", en:"Instructor"}
+    };
     let TOKEN = sessionStorage.getItem("snailai_api_token");
     let ME = null; try { ME = JSON.parse(sessionStorage.getItem("snailai_me")||"null"); } catch(e){}
     let CAPS = [], STUDENTS = [];
+
+    function colLabel(col){ return curLang === "en" ? col.en : col.zh; }
+    function roleName(r){ return (ROLE_NAME[r] && ROLE_NAME[r][curLang]) || r; }
 
     function api(path, opts={}) {
       opts.headers = Object.assign({"Content-Type":"application/json"}, opts.headers||{});
       if (TOKEN) opts.headers["Authorization"] = "Bearer " + TOKEN;
       return fetch(API + path, opts).then(r => {
-        if (r.status === 401) { logout(); throw new Error("登录已失效"); }
+        if (r.status === 401) { logout(); throw new Error(L_("登录已失效", "Session expired")); }
         return r.json();
       });
     }
@@ -190,13 +213,17 @@
       return false;
     }
 
+    function whoHtml(){
+      return `欢迎 <b>${ME.name}</b> · ${roleName(ME.role)} · <a href="#" id="logoutLink">${L_("退出","Log out")}</a>`;
+    }
+
     async function doLogin(){
       const u = document.getElementById("username").value.trim();
       const p = document.getElementById("password").value;
       document.getElementById("loginErr").textContent = "";
       try {
         const d = await api("/api/login", {method:"POST", body:JSON.stringify({username:u, password:p})});
-        if (!d.ok) throw new Error(d.error || "登录失败");
+        if (!d.ok) throw new Error(d.error || L_("登录失败", "Login failed"));
         TOKEN = d.token; ME = d.user;
         sessionStorage.setItem("snailai_api_token", TOKEN);
         sessionStorage.setItem("snailai_me", JSON.stringify(ME));
@@ -207,8 +234,7 @@
     async function enterApp(){
       document.getElementById("loginView").style.display = "none";
       document.getElementById("appView").style.display = "block";
-      document.getElementById("whoBox").innerHTML =
-        `欢迎 <b>${ME.name}</b> · ${ROLE_NAME[ME.role]||ME.role} · <a href="#" id="logoutLink">退出</a>`;
+      document.getElementById("whoBox").innerHTML = whoHtml();
       document.getElementById("logoutLink").onclick = (e)=>{e.preventDefault();logout();};
       await load();
     }
@@ -242,14 +268,14 @@
       const html = CAPS.map((c,i)=>{
         let n=0;
         STUDENTS.forEach(st=>{ const ck=st.checks[c.id]; if(ck && ck.self) n++; });
-        return `<div class="stat"><div class="n">${n}/${STUDENTS.length}</div><div class="l">${i+1}·自查</div></div>`;
+        return `<div class="stat"><div class="n">${n}/${STUDENTS.length}</div><div class="l">${i+1}·${L_("自查","Self")}</div></div>`;
       }).join("");
       document.getElementById("statsBar").innerHTML = html;
     }
 
     function renderMatrix(){
-      if (!STUDENTS.length){ document.getElementById("matrixBox").innerHTML='<div class="empty">暂无学员数据</div>'; return; }
-      const head = `<thead><tr><th class="name">学员</th>${CAPS.map((c,i)=>
+      if (!STUDENTS.length){ document.getElementById("matrixBox").innerHTML='<div class="empty">'+L_("暂无学员数据","No student data yet")+'</div>'; return; }
+      const head = `<thead><tr><th class="name">${L_("学员","Student")}</th>${CAPS.map((c,i)=>
         `<th title="${c.description||""}"><span class="col-no">${i+1}</span>${c.title}</th>`).join("")}</tr></thead>`;
       const body = "<tbody>" + STUDENTS.map(st=>{
         const cells = CAPS.map(c=>{
@@ -258,7 +284,7 @@
             const on = !!ck[col.key];
             const dis = canEdit(col.key) ? "" : "disabled";
             return `<span class="chip ${col.cls} ${on?"on":""}" data-u="${st.username}" data-cap="${c.id}" data-col="${col.key}" ${dis}>
-              <span class="dot"></span>${col.label}</span>`;
+              <span class="dot"></span>${colLabel(col)}</span>`;
           }).join("");
           return `<td><div class="cells">${chips}</div></td>`;
         }).join("");
@@ -277,16 +303,37 @@
       try {
         await api("/api/checks/"+u+"/"+capId, {method:"PUT",
           body:JSON.stringify({column:col, value:willOn?1:0})});
-        toast("已保存");
-        // 刷新该学员统计
+        toast(L_("已保存","Saved"));
         const st = STUDENTS.find(s=>s.username===u);
         const ck = await api("/api/checks/"+u); st.checks = ck.checks||{};
         renderStats();
       } catch(e){
         el.classList.toggle("on", !willOn);          // 回滚
-        toast("保存失败：" + e.message);
+        toast(L_("保存失败：","Save failed: ") + e.message);
       }
     }
+
+    /* 语言切换 */
+    function setLang(lang){
+      curLang = lang;
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-CN');
+      document.querySelectorAll('[data-zh]').forEach(el => {
+        const tx = el.getAttribute('data-' + lang);
+        if (tx !== null) el.textContent = tx;
+      });
+      document.querySelectorAll('[data-ph-zh]').forEach(el => {
+        el.setAttribute('placeholder', el.getAttribute('data-ph-' + lang));
+      });
+      const ti = document.querySelector('[data-title-zh]');
+      if (ti) document.title = ti.getAttribute('data-title-' + lang);
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+      localStorage.setItem(LANG_KEY, lang);
+      if (ME && CAPS.length) {
+        document.getElementById("whoBox").innerHTML = whoHtml();
+        renderLegend(); renderStats(); renderMatrix();
+      }
+    }
+    document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
 
     // 初始化
     if (TOKEN && ME) { enterApp(); }

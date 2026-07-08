@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-title-zh="课时详情 · 蜗牛AI 学员学堂" data-title-en="Lesson Detail · SnailAI Portal">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
   <div id="nav-root"></div>
   <div id="announce-root"></div>
 
@@ -45,6 +50,7 @@
   <script src="assets/app.js"></script>
   <script>
     requireAuth();
+    const L_ = (zh, en) => curLang === "en" ? en : zh;
     const params = new URLSearchParams(location.search);
     const courseId = params.get("course") || "online";
     const lessonId = params.get("lesson") || "l01";
@@ -52,20 +58,78 @@
     let lesson = null;
     course.modules.forEach(m => m.lessons.forEach(l => { if (l.id === lessonId) lesson = l; }));
 
-    if (!lesson) { document.body.innerHTML = "<p style='padding:40px'>未找到该课时</p>"; }
-    document.getElementById("lTitle").textContent = (lessonId.replace("l", "")) + ". " + lesson.title;
-    document.getElementById("lDesc").textContent = lesson.desc + " · " + lesson.duration;
+    if (!lesson) { document.body.innerHTML = "<p style='padding:40px'>" + L_("未找到该课时", "Lesson not found") + "</p>"; }
+
     document.getElementById("backLink").href =
       (courseId === "online" ? "AI 应用线上班/" : "AI 财富线下班/") + "index.html";
 
-    /* ---------- PPT 查看器 ---------- */
+    function fileIcon(m) {
+      const f = m.file || "";
+      const nm = (m.name || "").toLowerCase();
+      if (/^https?:\/\//i.test(f)) {
+        if (nm.includes("视频")) return "🎬";
+        if (nm.includes("音频")) return "🎵";
+        if (nm.includes("pdf")) return "📕";
+        if (nm.includes("图片") || nm.includes("png") || nm.includes("jpg")) return "🖼️";
+        if (nm.includes("word") || nm.includes("docx") || nm.includes("讲座")) return "📘";
+        return "☁️";
+      }
+      const e = (f.split(".").pop() || "").toLowerCase();
+      if (e === "pdf") return "📕"; if (["doc","docx"].includes(e)) return "📘";
+      if (["zip","rar"].includes(e)) return "🗜️"; if (["png","jpg","jpeg"].includes(e)) return "🖼️";
+      if (["mp3","m4a","wav","aac"].includes(e)) return "🎵";
+      if (["mp4","mov","avi","webm"].includes(e)) return "🎬";
+      return "📄";
+    }
+
+    function renderAll() {
+      if (!lesson) return;
+      document.getElementById("lTitle").textContent = (lessonId.replace("l", "")) + ". " + lesson.title;
+      document.getElementById("lDesc").textContent = lesson.desc + " · " + lesson.duration;
+      document.getElementById("backLink").textContent = "← " + L_("返回课程", "Back to Course");
+      document.getElementById("viewerTitle").textContent = L_("课程 PPT", "Course Slides");
+      document.getElementById("matTitle").textContent = lesson.materialsTitle || L_("配套资料", "Materials");
+
+      /* ---------- 资料 ---------- */
+      const mats = lesson.materials || [];
+      const box = document.getElementById("materials");
+      if (mats.length === 0) {
+        box.innerHTML = `<div class="pending">📭 ${L_("配套资料待上传", "Materials to be uploaded")}</div>`;
+      } else {
+        box.innerHTML = mats.map(m => {
+          const isUrl = /^https?:\/\//i.test(m.file || "");
+          const sub = isUrl ? "☁️ Google 云端硬盘" : m.file.split("/").pop();
+          return `
+          <div class="material">
+            <div class="fi">${fileIcon(m)}</div>
+            <div class="mt"><b>${m.name}</b><span>${sub}</span></div>
+            <a class="btn btn-primary btn-sm" href="${m.file}" target="_blank" rel="noopener">${L_("下载", "Download")}</a>
+          </div>`;
+        }).join("");
+      }
+
+      /* ---------- 课程视频（YouTube 内嵌）---------- */
+      const vids = lesson.videos || [];
+      const vbox = document.getElementById("videos");
+      if (vids.length === 0) {
+        vbox.innerHTML = `<div class="pending">📭 ${L_("本节视频待上传", "Video to be uploaded")}</div>`;
+      } else {
+        vbox.innerHTML = vids.map(v => `
+          <div class="video-item">
+            <div class="video-title">${v.title || L_("课程视频", "Course Video")}</div>
+            ${ytEmbedHtml(v.url, v.title)}
+          </div>`).join("");
+      }
+    }
+
+    /* ---------- PPT 查看器（图片，无需随语言重渲染）---------- */
     let idx = 0;
     const slides = lesson.slides || [];
     const stage = document.getElementById("stage");
     const thumbs = document.getElementById("thumbs");
 
     if (slides.length === 0) {
-      stage.innerHTML = `<div class="empty">📭 PPT 待上传<br><br>老师会把本节课的 PPT 导出为图片放进来，<br>届时刷新即可在线翻看。</div>`;
+      stage.innerHTML = `<div class="empty">📭 ${L_("PPT 待上传", "Slides to be uploaded")}<br><br>${L_("老师会把本节课的 PPT 导出为图片放进来，", "The teacher will export this lesson's PPT as images and drop them in —")}<br>${L_("届时刷新即可在线翻看。", "refresh to view online.")}</div>`;
       document.getElementById("pageInfo").textContent = "";
     } else {
       slides.forEach((src, i) => {
@@ -89,58 +153,10 @@
       if (e.key === "ArrowRight") nextSlide();
     });
 
-    /* ---------- 资料 ---------- */
-    const mats = lesson.materials || [];
-    const box = document.getElementById("materials");
-    const matTitle = document.getElementById("matTitle");
-    if (matTitle) matTitle.textContent = lesson.materialsTitle || "配套资料";
-    if (mats.length === 0) {
-      box.innerHTML = `<div class="pending">📭 配套资料待上传</div>`;
-    } else {
-      box.innerHTML = mats.map(m => {
-        const isUrl = /^https?:\/\//i.test(m.file || "");
-        const sub = isUrl ? "☁️ Google 云端硬盘" : m.file.split("/").pop();
-        return `
-        <div class="material">
-          <div class="fi">${fileIcon(m)}</div>
-          <div class="mt"><b>${m.name}</b><span>${sub}</span></div>
-          <a class="btn btn-primary btn-sm" href="${m.file}" target="_blank" rel="noopener">下载</a>
-        </div>`;
-      }).join("");
-    }
-    function fileIcon(m) {
-      const f = m.file || "";
-      const nm = (m.name || "").toLowerCase();
-      if (/^https?:\/\//i.test(f)) {
-        if (nm.includes("视频")) return "🎬";
-        if (nm.includes("音频")) return "🎵";
-        if (nm.includes("pdf")) return "📕";
-        if (nm.includes("图片") || nm.includes("png") || nm.includes("jpg")) return "🖼️";
-        if (nm.includes("word") || nm.includes("docx") || nm.includes("讲座")) return "📘";
-        return "☁️";
-      }
-      const e = (f.split(".").pop() || "").toLowerCase();
-      if (e === "pdf") return "📕"; if (["doc","docx"].includes(e)) return "📘";
-      if (["zip","rar"].includes(e)) return "🗜️"; if (["png","jpg","jpeg"].includes(e)) return "🖼️";
-      if (["mp3","m4a","wav","aac"].includes(e)) return "🎵";
-      if (["mp4","mov","avi","webm"].includes(e)) return "🎬";
-      return "📄";
-    }
-
-    /* ---------- 课程视频（YouTube 内嵌）---------- */
-    const vids = lesson.videos || [];
-    const vbox = document.getElementById("videos");
-    if (vids.length === 0) {
-      vbox.innerHTML = `<div class="pending">📭 本节视频待上传</div>`;
-    } else {
-      vbox.innerHTML = vids.map(v => `
-        <div class="video-item">
-          <div class="video-title">${v.title || "课程视频"}</div>
-          ${ytEmbedHtml(v.url, v.title)}
-        </div>`).join("");
-    }
-
+    renderAll();
     initPortal(courseId === "online" ? "online" : "offline");
+    setLang(curLang);
+    window.addEventListener("langchange", renderAll);
   </script>
 </body>
 </html>

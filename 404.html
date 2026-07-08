@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-title-zh="404 · 页面未找到 | 蜗牛 AI" data-title-en="404 · Page Not Found | Snail AI">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -101,9 +101,42 @@
     font-size: 0.78rem;
     color: var(--ink-light);
   }
+  /* Language switcher (coral theme, fixed top-right) */
+  .lang-switch {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 50;
+    display: inline-flex;
+    background: white;
+    border: 1.5px solid rgba(26, 26, 46, 0.12);
+    border-radius: 100px;
+    padding: 3px;
+    box-shadow: 0 4px 14px rgba(26, 26, 46, 0.08);
+  }
+  .lang-btn {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ink-light);
+    padding: 6px 14px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .lang-btn.active {
+    background: var(--accent);
+    color: white;
+  }
 </style>
 </head>
 <body>
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
   <div class="wrap">
     <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo" class="logo">
     <div class="code">404</div>
@@ -117,5 +150,27 @@
     </div>
     <p class="footer">🐌 蜗牛 AI · robin12300-snailai.github.io</p>
   </div>
+<script>
+  const LANG_KEY = 'snailai-lang';
+  function applyLang(lang) {
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.innerHTML = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    document.title = (lang === 'en'
+      ? document.documentElement.getAttribute('data-title-en')
+      : document.documentElement.getAttribute('data-title-zh')) || document.title;
+    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+  });
+  let savedLang = 'zh';
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {}
+  applyLang(savedLang);
+</script>
 </body>
 </html>

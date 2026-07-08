@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-title-zh="蜗牛 AI · 助教天地" data-title-en="SnailAI · Teacher Portal">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -242,6 +242,8 @@
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.lang === lang);
     });
+    const _tt = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
+    if (_tt) document.title = _tt;
     try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
   }
   document.querySelectorAll('.lang-btn').forEach(btn => {

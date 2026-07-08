@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-title-zh="蜗牛 AI · 澳洲华人AI 应用教育学院" data-title-en="SnailAI · AI Training for Chinese Australians">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1417,6 +1417,8 @@
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.lang === lang);
     });
+    const _t = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
+    if (_t) document.title = _t;
     try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
   }
   document.querySelectorAll('.lang-btn').forEach(btn => {

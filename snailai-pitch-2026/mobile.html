@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-title-zh="蜗牛 AI 澳洲华人 AI 应用私享会（手机版）" data-title-en="Snail AI Australian-Chinese AI Application Session (Mobile)">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
@@ -129,6 +129,10 @@
   h2{font-size:6vw !important;line-height:1.2 !important}
   h3{font-size:5vw !important;line-height:1.25 !important}
 }
+  /* Language switcher (coral theme) */
+  .lang-switch { position: fixed; top: 16px; right: 16px; z-index: 999; display: inline-flex; background: #fff; border: 1.5px solid rgba(0,0,0,0.1); border-radius: 100px; padding: 3px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+  .lang-btn { border: none; background: transparent; font-family: inherit; font-size: 0.85rem; font-weight: 700; color: #8a8a9a; padding: 6px 14px; border-radius: 100px; cursor: pointer; transition: all 0.2s ease; }
+  .lang-btn.active { background: #FF5B1F; color: #fff; }
 </style>
 :root{
   --ink:#0E0E10;--ink-2:#1A1A1E;--ink-3:#5A5A65;
@@ -281,6 +285,11 @@
 </style>
 </head>
 <body>
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
 <div class="deck" id="deck">
 
   <!-- ========== 1 · 封面 ========== -->
@@ -288,7 +297,7 @@
     <div class="cover">
       <div class="top">
         <span></span>
-        <span>Snail AI · 2026 / 06 / 20 · Sydney</span>
+        <span data-zh="蜗牛 AI · 2026 / 06 / 20 · 悉尼" data-en="Snail AI · 2026 / 06 / 20 · Sydney">Snail AI · 2026 / 06 / 20 · Sydney</span>
       </div>
       <div class="brand">
         <img src="images/snailai_logo.png" class="snail" loading="lazy" decoding="async" alt="蜗牛AI">
@@ -299,28 +308,28 @@
         <div class="qr"><img src="images/qr_live_event_v3.png" loading="lazy" decoding="async" alt="现场群二维码"></div>
       </div>
       <div class="bot">
-        <span>主办 · 蜗牛 AI &nbsp;·&nbsp; 主讲 · Robin</span>
-        <span>扫码入群 · 2:00 PM · 6.20</span>
+        <span data-zh="主办 · 蜗牛 AI &nbsp;·&nbsp; 主讲 · Robin" data-en="Host · Snail AI &nbsp;·&nbsp; Speaker · Robin">主办 · 蜗牛 AI &nbsp;·&nbsp; 主讲 · Robin</span>
+        <span data-zh="扫码入群 · 下午 2:00 · 6.20" data-en="Scan to join · 2:00 PM · 6.20">扫码入群 · 2:00 PM · 6.20</span>
       </div>
-      <div class="sponsor-line">KSI 悉尼土地投资 · 独家冠名赞助</div>
+      <div class="sponsor-line" data-zh="KSI 悉尼土地投资 · 独家冠名赞助" data-en="KSI Sydney Land Investment · Exclusive Title Sponsor">KSI 悉尼土地投资 · 独家冠名赞助</div>
     </div>
   </section>
   <!-- ========== 2 · 第一环节 ========== -->
   <section class="slide theme-dark" data-n="2">
     <div class="divider">
       <div class="top">
-        <span>Snail AI · 2026</span>
-        <span>Chapter 01 · Robin</span>
+        <span data-zh="蜗牛 AI · 2026" data-en="Snail AI · 2026">Snail AI · 2026</span>
+        <span data-zh="第一环节 · Robin" data-en="Chapter 01 · Robin">Chapter 01 · Robin</span>
       </div>
       <div class="title-wrap">
         <div class="num">01</div>
         <div>
-          <div class="ttl">第一环节</div>
+          <div class="ttl" data-zh="第一环节" data-en="Part One">第一环节</div>
         </div>
       </div>
       <div class="bot">
-        <span>Robin · 主讲</span>
-        <span>5 min</span>
+        <span data-zh="Robin · 主讲" data-en="Robin · Speaker">Robin · 主讲</span>
+        <span data-zh="5 分钟" data-en="5 min">5 min</span>
       </div>
     </div>
   </section>
@@ -330,8 +339,8 @@
 <section class="slide theme-light" data-n="3">
     <div class="grid">
       <div class="col-12" style="grid-column:1/13;display:flex;justify-content:space-between;align-items:flex-end">
-        <span class="kicker">01 · Speaker</span>
-        <span class="t-meta">5 min</span>
+        <span class="kicker" data-zh="01 · 主讲人" data-en="01 · Speaker">01 · Speaker</span>
+        <span class="t-meta" data-zh="5 分钟" data-en="5 min">5 min</span>
       </div>
       <div style="grid-column:1/13;display:grid;grid-template-columns:1fr 2fr;gap:48px;align-items:start;margin-top:18px">
         <div class="robin-photo" data-anim>
@@ -358,8 +367,8 @@
 <section class="slide theme-light" data-n="4">
     <div style="display:grid;grid-template-rows:auto 1fr auto;padding:64px 64px 80px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">03 · Team</span>
-        <span class="t-meta">团队介绍</span>
+        <span class="kicker" data-zh="03 · 团队" data-en="03 · Team">03 · Team</span>
+        <span class="t-meta" data-zh="团队介绍" data-en="Team Intro">团队介绍</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px">
         <div style="text-align:center">
@@ -421,8 +430,8 @@
 <section class="slide theme-light" data-n="5">
     <div class="grid">
       <div style="grid-column:1/13;display:flex;justify-content:space-between;align-items:flex-end">
-        <span class="kicker">02 · Why this</span>
-        <span class="t-meta">Purpose</span>
+        <span class="kicker" data-zh="02 · 分享初衷" data-en="02 · Why this">02 · Why this</span>
+        <span class="t-meta" data-zh="初衷" data-en="Purpose">Purpose</span>
       </div>
       <div style="grid-column:1/13;margin-top:18px">
         <h1 class="h-xl" data-anim>我为什么要做这个 <em style="font-style:normal;color:var(--accent)">分享</em></h1>
@@ -453,11 +462,11 @@
 <section class="slide theme-light" data-n="6">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">03 · The Anxious Curve</span>
-        <span class="t-meta">焦虑图</span>
+        <span class="kicker" data-zh="03 · 焦虑曲线" data-en="03 · The Anxious Curve">03 · The Anxious Curve</span>
+        <span class="t-meta" data-zh="焦虑图" data-en="The Anxiety Curve">焦虑图</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px">
-        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">焦虑图</h1>
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em" data-zh="焦虑图" data-en="The Anxiety Curve">焦虑图</h1>
         <div style="width:100%;max-width:1152px">
           <img src="images/焦虑图1.JPG" style="width:100%;height:auto;display:block;object-fit:contain;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);margin:0 auto" loading="lazy" decoding="async" alt="焦虑图">
         </div>
@@ -469,11 +478,11 @@
 <section class="slide theme-light" data-n="7">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">04 · Early Adoption</span>
-        <span class="t-meta">早期图</span>
+        <span class="kicker" data-zh="04 · 早期采用" data-en="04 · Early Adoption">04 · Early Adoption</span>
+        <span class="t-meta" data-zh="早期图" data-en="Early Adoption">早期图</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px">
-        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">早期图</h1>
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em" data-zh="早期图" data-en="Early Adoption">早期图</h1>
         <div style="width:43%;max-width:500px">
           <img src="images/早期图.JPG" style="width:100%;height:auto;display:block;object-fit:contain;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);margin:0 auto" loading="lazy" decoding="async" alt="早期图">
         </div>
@@ -485,8 +494,8 @@
 <section class="slide theme-light" data-n="8">
     <div class="grid">
       <div style="grid-column:1/13;display:flex;justify-content:space-between;align-items:flex-end">
-        <span class="kicker">04 · 9 Workflows</span>
-        <span class="t-meta">9 真实场景</span>
+        <span class="kicker" data-zh="04 · 9 大工作流" data-en="04 · 9 Workflows">04 · 9 Workflows</span>
+        <span class="t-meta" data-zh="9 真实场景" data-en="9 Real Scenarios">9 真实场景</span>
       </div>
       <div style="grid-column:1/13;margin-top:10px">
         <h1 class="h-xl" data-anim>Robin 在澳洲是如何<br><em style="font-style:normal;color:var(--accent)">使用 AI 的</em></h1>
@@ -511,11 +520,11 @@
 <section class="slide theme-light" data-n="9">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">01 · Google Workspace</span>
-        <span class="t-meta">谷歌全家桶</span>
+        <span class="kicker" data-zh="01 · 谷歌全家桶" data-en="01 · Google Workspace">01 · Google Workspace</span>
+        <span class="t-meta" data-zh="谷歌全家桶" data-en="Google Workspace">谷歌全家桶</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
-        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">谷歌全家桶</h1>
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em" data-zh="谷歌全家桶" data-en="Google Workspace">谷歌全家桶</h1>
         
 
         <div class="body" style="text-align:center;color:var(--ink-2)">Gemini · Gmail · 日历 · 任务</div>
@@ -527,11 +536,11 @@
 <section class="slide theme-light" data-n="10">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">02 · Legal Review</span>
-        <span class="t-meta">法律合同审核</span>
+        <span class="kicker" data-zh="02 · 法律合同审核" data-en="02 · Legal Review">02 · Legal Review</span>
+        <span class="t-meta" data-zh="法律合同审核" data-en="Legal Review">法律合同审核</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
-        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">法律合同审核</h1>
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em" data-zh="法律合同审核" data-en="Legal Contract Review">法律合同审核</h1>
         
 
         <div class="body" style="text-align:center;color:var(--ink-2)">NotebookLM</div>
@@ -543,11 +552,11 @@
 <section class="slide theme-light" data-n="11">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">03 · ChatGPT Atlas</span>
-        <span class="t-meta">浏览器 · 帮你找东西</span>
+        <span class="kicker" data-zh="03 · ChatGPT Atlas" data-en="03 · ChatGPT Atlas">03 · ChatGPT Atlas</span>
+        <span class="t-meta" data-zh="浏览器 · 帮你找东西" data-en="Browser · Find Things for You">浏览器 · 帮你找东西</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
-        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">ChatGPT Atlas</h1>
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em" data-zh="ChatGPT Atlas" data-en="ChatGPT Atlas">ChatGPT Atlas</h1>
         
 
         <div class="body" style="text-align:center;color:var(--ink-2)">浏览器 · 帮你找东西</div>
@@ -559,11 +568,11 @@
 <section class="slide theme-light" data-n="12">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">04 · Real Estate Report</span>
-        <span class="t-meta">房地产报告</span>
+        <span class="kicker" data-zh="04 · 房地产报告" data-en="04 · Real Estate Report">04 · Real Estate Report</span>
+        <span class="t-meta" data-zh="房地产报告" data-en="Real Estate Report">房地产报告</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
-        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">房地产报告</h1>
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em" data-zh="房地产报告" data-en="Real Estate Report">房地产报告</h1>
         
 
         <div class="body" style="text-align:center;color:var(--ink-2)">KSI 投资必备</div>
@@ -575,11 +584,11 @@
 <section class="slide theme-light" data-n="13">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">05 · WorkBuddy</span>
-        <span class="t-meta">做文件 · KGC · 推荐信</span>
+        <span class="kicker" data-zh="05 · WorkBuddy" data-en="05 · WorkBuddy">05 · WorkBuddy</span>
+        <span class="t-meta" data-zh="做文件 · KGC · 推荐信" data-en="Docs · KGC · Ref Letters">做文件 · KGC · 推荐信</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
-        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">WorkBuddy</h1>
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em" data-zh="WorkBuddy" data-en="WorkBuddy">WorkBuddy</h1>
         
 
         <div class="body" style="text-align:center;color:var(--ink-2)">做文件 · KGC · 推荐信</div>
@@ -591,11 +600,11 @@
 <section class="slide theme-light" data-n="14">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">06 · My Health</span>
-        <span class="t-meta">我的健康</span>
+        <span class="kicker" data-zh="06 · 我的健康" data-en="06 · My Health">06 · My Health</span>
+        <span class="t-meta" data-zh="我的健康" data-en="My Health">我的健康</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
-        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">我的健康</h1>
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em" data-zh="我的健康" data-en="My Health">我的健康</h1>
         
 
         <div class="body" style="text-align:center;color:var(--ink-2)">扁平足 · 血液检查报告</div>
@@ -607,11 +616,11 @@
 <section class="slide theme-light" data-n="15">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">07 · Marketing</span>
-        <span class="t-meta">营销</span>
+        <span class="kicker" data-zh="07 · 营销" data-en="07 · Marketing">07 · Marketing</span>
+        <span class="t-meta" data-zh="营销" data-en="Marketing">营销</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
-        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">营销</h1>
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em" data-zh="营销" data-en="Marketing">营销</h1>
         
 
         <div class="body" style="text-align:center;color:var(--ink-2)">土地 CRM</div>
@@ -623,11 +632,11 @@
 <section class="slide theme-light" data-n="16">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">09 · Investment</span>
-        <span class="t-meta">投资</span>
+        <span class="kicker" data-zh="09 · 投资" data-en="09 · Investment">09 · Investment</span>
+        <span class="t-meta" data-zh="投资" data-en="Investment">投资</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
-        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">投资</h1>
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em" data-zh="投资" data-en="Investment">投资</h1>
         <div class="body" style="text-align:center;color:var(--ink-2)">股票强度指数</div>
       </div>
     </div>
@@ -637,11 +646,11 @@
 <section class="slide theme-light" data-n="17">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">08 · AI Music</span>
-        <span class="t-meta">AI 音乐</span>
+        <span class="kicker" data-zh="08 · AI 音乐" data-en="08 · AI Music">08 · AI Music</span>
+        <span class="t-meta" data-zh="AI 音乐" data-en="AI Music">AI 音乐</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
-        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">AI 音乐</h1>
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em" data-zh="AI 音乐" data-en="AI Music">AI 音乐</h1>
         <div class="body" style="text-align:center;color:var(--ink-2)">Mureka · 小铃铛 Mac App</div>
       </div>
     </div>
@@ -651,8 +660,8 @@
 <section class="slide theme-light" data-n="18">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">How to Learn</span>
-        <span class="t-meta">学习方法</span>
+        <span class="kicker" data-zh="学习方法" data-en="How to Learn">How to Learn</span>
+        <span class="t-meta" data-zh="学习方法" data-en="How to Learn">学习方法</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%">
         <div style="width:90%;max-width:1000px;margin:0 auto">
@@ -667,8 +676,8 @@
 <section class="slide theme-light" data-n="19">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">What to Learn</span>
-        <span class="t-meta">学徒制 · 学习什么</span>
+        <span class="kicker" data-zh="学习内容" data-en="What to Learn">What to Learn</span>
+        <span class="t-meta" data-zh="学徒制 · 学习什么" data-en="Apprenticeship · What to Learn">学徒制 · 学习什么</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%">
         <div style="width:90%;max-width:1000px;margin:0 auto">
@@ -683,8 +692,8 @@
 <section class="slide theme-light" data-n="20">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">AI Evolution Path</span>
-        <span class="t-meta">3个月进化路径</span>
+        <span class="kicker" data-zh="AI 进化路径" data-en="AI Evolution Path">AI Evolution Path</span>
+        <span class="t-meta" data-zh="3 个月进化路径" data-en="3-Month Evolution Path">3个月进化路径</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%">
         <div style="width:92%;max-width:1100px;margin:0 auto">
@@ -699,8 +708,8 @@
 <section class="slide theme-light" data-n="21">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">AI Enlightenment</span>
-        <span class="t-meta">AI顿悟</span>
+        <span class="kicker" data-zh="AI 顿悟" data-en="AI Enlightenment">AI Enlightenment</span>
+        <span class="t-meta" data-zh="AI 顿悟" data-en="AI Enlightenment">AI顿悟</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%">
         <div style="width:92%;max-width:1100px;margin:0 auto">
@@ -715,34 +724,34 @@
 <section class="slide theme-light" data-n="22">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:56px 64px 80px;min-height:100vh">
       <div style="display:flex;justify-content:flex-start;align-items:flex-start">
-        <span class="kicker">Course · Pricing</span>
+        <span class="kicker" data-zh="课程 · 费用" data-en="Course · Pricing">Course · Pricing</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%">
         <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em;line-height:1.3;margin-bottom:36px">学习课程：<br><span style="color:var(--accent)">3 个月 · 18 节课</span></h1>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:36px;width:100%;max-width:960px">
           <!-- 线上班 -->
           <div style="background:#fff;border-radius:16px;padding:32px 28px;text-align:center;border:2px solid var(--ink-2);box-shadow:0 4px 20px rgba(0,0,0,.06)">
-            <div style="font-family:var(--mono);font-size:12px;letter-spacing:.15em;color:var(--ink-3);margin-bottom:10px;text-transform:uppercase;font-weight:600">Class A · Online</div>
+            <div style="font-family:var(--mono);font-size:12px;letter-spacing:.15em;color:var(--ink-3);margin-bottom:10px;text-transform:uppercase;font-weight:600" data-zh="CLASS A · 线上" data-en="Class A · Online">Class A · Online</div>
             <div style="font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-.01em;line-height:1.15">AI 第一期<br><span style="color:var(--accent)">线上班</span></div>
             <div style="font-size:14px;color:var(--ink-2);margin-top:10px;line-height:1.5">18 节线上课<br>每周 2 晚 8:30–10:30pm</div>
             <div style="font-size:44px;font-weight:900;color:var(--accent);margin-top:18px;letter-spacing:-.03em;font-family:var(--mono)">$599</div>
-            <div style="font-size:12px;color:var(--ink-3);font-family:var(--mono);margin-top:2px">AUD</div>
+            <div style="font-size:12px;color:var(--ink-3);font-family:var(--mono);margin-top:2px" data-zh="AUD" data-en="AUD">AUD</div>
             <div style="margin-top:18px;display:flex;justify-content:center">
               <img src="images/qr_online_class_v2.png" loading="lazy" decoding="async" alt="线上班二维码" style="width:160px;height:160px;object-fit:cover;border-radius:8px">
             </div>
-            <div style="font-size:11px;color:var(--ink-3);margin-top:8px">扫码加入线上班群</div>
+            <div style="font-size:11px;color:var(--ink-3);margin-top:8px" data-zh="扫码加入线上班群" data-en="Scan to join online class group">扫码加入线上班群</div>
           </div>
           <!-- 线下班 -->
           <div style="background:var(--accent);border-radius:16px;padding:32px 28px;text-align:center;box-shadow:0 6px 24px rgba(255,91,31,.25)">
-            <div style="font-family:var(--mono);font-size:12px;letter-spacing:.15em;color:rgba(255,255,255,.7);margin-bottom:10px;text-transform:uppercase;font-weight:600">Class B · Hybrid</div>
+            <div style="font-family:var(--mono);font-size:12px;letter-spacing:.15em;color:rgba(255,255,255,.7);margin-bottom:10px;text-transform:uppercase;font-weight:600" data-zh="CLASS B · 混合" data-en="Class B · Hybrid">Class B · Hybrid</div>
             <div style="font-size:26px;font-weight:800;color:#fff;letter-spacing:-.01em;line-height:1.15">AI 第一期<br><span style="color:#fff;border:1px solid rgba(255,255,255,.5);padding:3px 12px;border-radius:4px;margin-top:4px;display:inline-block">线下+线上班</span></div>
             <div style="font-size:14px;color:rgba(255,255,255,.85);margin-top:10px;line-height:1.5">9 节线下 + 9 节线上<br>共 18 节课 · 每周六 1–4pm</div>
             <div style="font-size:44px;font-weight:900;color:#fff;margin-top:18px;letter-spacing:-.03em;font-family:var(--mono)">$999</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.65);font-family:var(--mono);margin-top:2px">AUD</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.65);font-family:var(--mono);margin-top:2px" data-zh="AUD" data-en="AUD">AUD</div>
             <div style="margin-top:18px;display:flex;justify-content:center">
               <img src="images/qr_offline_class_v2.png" loading="lazy" decoding="async" alt="线下班二维码" style="width:160px;height:160px;object-fit:cover;border-radius:8px">
             </div>
-            <div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:8px">扫码加入线下班群</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:8px" data-zh="扫码加入线下班群" data-en="Scan to join hybrid class group">扫码加入线下班群</div>
           </div>
         </div>
       </div>
@@ -754,18 +763,18 @@
   <section class="slide theme-dark" data-n="23">
     <div class="divider">
       <div class="top">
-        <span>Snail AI · 2026</span>
-        <span>Chapter 02 · Michael Guo</span>
+        <span data-zh="蜗牛 AI · 2026" data-en="Snail AI · 2026">Snail AI · 2026</span>
+        <span data-zh="第二环节 · Michael Guo" data-en="Chapter 02 · Michael Guo">Chapter 02 · Michael Guo</span>
       </div>
       <div class="title-wrap">
         <div class="num">02</div>
         <div>
-          <div class="ttl">第二环节</div>
+          <div class="ttl" data-zh="第二环节" data-en="Part Two">第二环节</div>
         </div>
       </div>
       <div class="bot">
-        <span>Michael Guo · KSI Speaker</span>
-        <span>15 min</span>
+        <span data-zh="Michael Guo · KSI 主讲" data-en="Michael Guo · KSI Speaker">Michael Guo · KSI Speaker</span>
+        <span data-zh="15 分钟" data-en="15 min">15 min</span>
       </div>
     </div>
   </section>
@@ -1061,18 +1070,18 @@
   <section class="slide theme-dark" data-n="30">
     <div class="divider">
       <div class="top">
-        <span>Snail AI · 2026</span>
-        <span>Chapter 03 · Interactive</span>
+        <span data-zh="蜗牛 AI · 2026" data-en="Snail AI · 2026">Snail AI · 2026</span>
+        <span data-zh="第三环节 · 互动" data-en="Chapter 03 · Interactive">Chapter 03 · Interactive</span>
       </div>
       <div class="title-wrap">
         <div class="num">03</div>
         <div>
-          <div class="ttl">第三环节</div>
+          <div class="ttl" data-zh="第三环节" data-en="Part Three">第三环节</div>
         </div>
       </div>
       <div class="bot">
-        <span>互动 · 问答 · 交流</span>
-        <span>30 min</span>
+        <span data-zh="互动 · 问答 · 交流" data-en="Interaction · Q&A · Discussion">互动 · 问答 · 交流</span>
+        <span data-zh="30 分钟" data-en="30 min">30 min</span>
       </div>
     </div>
   </section>
@@ -1081,8 +1090,8 @@
   <section class="slide theme-light" data-n="31">
     <div style="display:grid;grid-template-rows:auto 1fr auto;padding:64px 64px 80px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">05 · Interactive</span>
-        <span class="t-meta">互动环节</span>
+        <span class="kicker" data-zh="05 · 互动环节" data-en="05 · Interactive">05 · Interactive</span>
+        <span class="t-meta" data-zh="互动环节" data-en="Interactive">互动环节</span>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-content:center">
         <!-- 左侧：用户填写 -->
@@ -1134,23 +1143,23 @@
   <section class="slide theme-light" data-n="32">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:48px 56px 72px;min-height:100vh">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <span class="kicker">报名海报</span>
-        <span class="t-meta">Enrollment</span>
+        <span class="kicker" data-zh="报名海报" data-en="Enrollment Poster">报名海报</span>
+        <span class="t-meta" data-zh="报名" data-en="Enrollment">Enrollment</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;width:100%">
-        <h1 class="h-xl" style="color:var(--ink);text-align:center">第一期课程 <span style="color:var(--accent)">报名海报</span></h1>
+        <h1 class="h-xl" style="color:var(--ink);text-align:center" data-zh="第一期课程 <span style="color:var(--accent)">报名海报</span>" data-en="Course 1 <span style="color:var(--accent)">Enrollment Poster</span>">第一期课程 <span style="color:var(--accent)">报名海报</span></h1>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:770px;align-items:start">
           <div style="background:#fff;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.12);overflow:hidden;border:1px solid var(--ink-2)">
             <img src="images/poster_online.jpg" loading="lazy" decoding="async" alt="线上班报名海报" style="width:100%;height:auto;display:block">
             <div style="text-align:center;padding:14px;background:var(--paper-2)">
-              <span class="t-cat">线上班 · CLASS A</span>
+              <span class="t-cat" data-zh="线上班 · CLASS A" data-en="Online · CLASS A">线上班 · CLASS A</span>
               <div class="body" style="margin-top:4px;color:var(--ink-3)">每周二晚直播 + 周六北悉尼线下</div>
             </div>
           </div>
           <div style="background:#fff;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.12);overflow:hidden;border:1px solid var(--ink-2)">
             <img src="images/poster_offline.jpg" loading="lazy" decoding="async" alt="线下班报名海报" style="width:100%;height:auto;display:block">
             <div style="text-align:center;padding:14px;background:var(--paper-2)">
-              <span class="t-cat">线下+线上班 · CLASS B</span>
+              <span class="t-cat" data-zh="线下+线上班 · CLASS B" data-en="Hybrid · CLASS B">线下+线上班 · CLASS B</span>
               <div class="body" style="margin-top:4px;color:var(--ink-3)">周六北悉尼 + 每周二线上</div>
             </div>
           </div>
@@ -1163,34 +1172,34 @@
   <section class="slide theme-light" data-n="33">
     <div style="display:grid;grid-template-rows:auto 1fr;padding:56px 64px 80px;min-height:100vh">
       <div style="display:flex;justify-content:flex-start;align-items:flex-start">
-        <span class="kicker">Course · Pricing</span>
+        <span class="kicker" data-zh="课程 · 费用" data-en="Course · Pricing">Course · Pricing</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%">
         <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em;line-height:1.3;margin-bottom:36px">学习课程：<br><span style="color:var(--accent)">3 个月 · 18 节课</span></h1>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:36px;width:100%;max-width:960px">
           <!-- 线上班 -->
           <div style="background:#fff;border-radius:16px;padding:32px 28px;text-align:center;border:2px solid var(--ink-2);box-shadow:0 4px 20px rgba(0,0,0,.06)">
-            <div style="font-family:var(--mono);font-size:12px;letter-spacing:.15em;color:var(--ink-3);margin-bottom:10px;text-transform:uppercase;font-weight:600">Class A · Online</div>
+            <div style="font-family:var(--mono);font-size:12px;letter-spacing:.15em;color:var(--ink-3);margin-bottom:10px;text-transform:uppercase;font-weight:600" data-zh="CLASS A · 线上" data-en="Class A · Online">Class A · Online</div>
             <div style="font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-.01em;line-height:1.15">AI 第一期<br><span style="color:var(--accent)">线上班</span></div>
             <div style="font-size:14px;color:var(--ink-2);margin-top:10px;line-height:1.5">18 节线上课<br>每周 2 晚 8:30–10:30pm</div>
             <div style="font-size:44px;font-weight:900;color:var(--accent);margin-top:18px;letter-spacing:-.03em;font-family:var(--mono)">$599</div>
-            <div style="font-size:12px;color:var(--ink-3);font-family:var(--mono);margin-top:2px">AUD</div>
+            <div style="font-size:12px;color:var(--ink-3);font-family:var(--mono);margin-top:2px" data-zh="AUD" data-en="AUD">AUD</div>
             <div style="margin-top:18px;display:flex;justify-content:center">
               <img src="images/qr_online_class_v2.png" loading="lazy" decoding="async" alt="线上班二维码" style="width:160px;height:160px;object-fit:cover;border-radius:8px">
             </div>
-            <div style="font-size:11px;color:var(--ink-3);margin-top:8px">扫码加入线上班群</div>
+            <div style="font-size:11px;color:var(--ink-3);margin-top:8px" data-zh="扫码加入线上班群" data-en="Scan to join online class group">扫码加入线上班群</div>
           </div>
           <!-- 线下班 -->
           <div style="background:var(--accent);border-radius:16px;padding:32px 28px;text-align:center;box-shadow:0 6px 24px rgba(255,91,31,.25)">
-            <div style="font-family:var(--mono);font-size:12px;letter-spacing:.15em;color:rgba(255,255,255,.7);margin-bottom:10px;text-transform:uppercase;font-weight:600">Class B · Hybrid</div>
+            <div style="font-family:var(--mono);font-size:12px;letter-spacing:.15em;color:rgba(255,255,255,.7);margin-bottom:10px;text-transform:uppercase;font-weight:600" data-zh="CLASS B · 混合" data-en="Class B · Hybrid">Class B · Hybrid</div>
             <div style="font-size:26px;font-weight:800;color:#fff;letter-spacing:-.01em;line-height:1.15">AI 第一期<br><span style="color:#fff;border:1px solid rgba(255,255,255,.5);padding:3px 12px;border-radius:4px;margin-top:4px;display:inline-block">线下+线上班</span></div>
             <div style="font-size:14px;color:rgba(255,255,255,.85);margin-top:10px;line-height:1.5">9 节线下 + 9 节线上<br>共 18 节课 · 每周六 1–4pm</div>
             <div style="font-size:44px;font-weight:900;color:#fff;margin-top:18px;letter-spacing:-.03em;font-family:var(--mono)">$999</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.65);font-family:var(--mono);margin-top:2px">AUD</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.65);font-family:var(--mono);margin-top:2px" data-zh="AUD" data-en="AUD">AUD</div>
             <div style="margin-top:18px;display:flex;justify-content:center">
               <img src="images/qr_offline_class_v2.png" loading="lazy" decoding="async" alt="线下班二维码" style="width:160px;height:160px;object-fit:cover;border-radius:8px">
             </div>
-            <div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:8px">扫码加入线下班群</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:8px" data-zh="扫码加入线下班群" data-en="Scan to join hybrid class group">扫码加入线下班群</div>
           </div>
         </div>
       </div>
@@ -1198,5 +1207,23 @@
   </section>
 
 </div>
+<script>
+  const LANG_KEY = 'snailai-lang';
+  function applyLang(lang) {
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.innerHTML = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+    const t = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
+    if (t) document.title = t;
+    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', () => applyLang(btn.dataset.lang)));
+  let savedLang = 'zh';
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {}
+  applyLang(savedLang);
+</script>
+
 </body>
 </html>

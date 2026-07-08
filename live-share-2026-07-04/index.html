@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-title-zh="蜗牛AI · 财富投资技术应用直播分享会 · 2026.07.04" data-title-en="SnailAI · Wealth Investing Tech Live Share · 2026.07.04">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -990,20 +990,31 @@ h2.title {
   .top-nav { display: none; }
   section { page-break-before: always; padding: 40px 0; }
 }
+
+  /* Language switcher (gold theme) */
+  .lang-switch { position: fixed; top: 16px; right: 16px; z-index: 999; display: inline-flex; background: #fff; border: 1.5px solid rgba(0,0,0,0.1); border-radius: 100px; padding: 3px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+  .lang-btn { border: none; background: transparent; font-family: inherit; font-size: 0.85rem; font-weight: 700; color: #8a8a9a; padding: 6px 14px; border-radius: 100px; cursor: pointer; transition: all 0.2s ease; }
+  .lang-btn.active { background: #c9a14a; color: #fff; }
+  /* Embed switcher inside existing top nav */
+  .top-nav .lang-switch { position: static; box-shadow: none; background: rgba(255,255,255,0.7); border: 1px solid var(--line); margin-left: 4px; padding: 2px; }
 </style>
 </head>
 <body>
 
 <div class="top-nav">
-  <div class="live"><span class="dot"></span><span>LIVE · 7月4日 20:00</span></div>
+  <div class="live"><span class="dot"></span><span data-zh="LIVE · 7月4日 20:00" data-en="LIVE · Jul 4 20:00">LIVE · 7月4日 20:00</span></div>
   <div>Zoom <strong style="color:var(--gold-deep);">543 211 2300</strong></div>
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
 </div>
 
 <div class="container">
 
   <!-- Section 1: Cover -->
   <section class="cover">
-    <div class="cover-qr-badge">★ 扫码进群</div>
+    <div class="cover-qr-badge" data-zh="★ 扫码进群" data-en="★ Scan to join group">★ 扫码进群</div>
     <img src="images/qr_live_group_20260704.jpg" class="cover-qr" alt="蜗牛AI 财富投资技术应用直播群二维码" />
     <div class="cover-top">
       <img src="images/snailai_logo.png" class="logo" alt="蜗牛AI Logo" />
@@ -1023,19 +1034,19 @@ h2.title {
     </p>
 
     <div class="meta-grid">
-      <div class="meta-item">
-        <div class="label">DATE · 时间</div>
-        <div class="value">7月4日 周六</div>
+        <div class="meta-item">
+          <div class="label" data-zh="DATE · 时间" data-en="DATE · Time">DATE · 时间</div>
+          <div class="value">7月4日 周六</div>
         <div class="sub">20:00 – 22:00 悉尼时间</div>
       </div>
-      <div class="meta-item">
-        <div class="label">HOST · 主讲</div>
-        <div class="value">Robin</div>
+        <div class="meta-item">
+          <div class="label" data-zh="HOST · 主讲" data-en="HOST · Presenter">HOST · 主讲</div>
+          <div class="value">Robin</div>
         <div class="sub">KSI CEO · 蜗牛AI 创始人</div>
       </div>
-      <div class="meta-item">
-        <div class="label">ZOOM · 会议号</div>
-        <div class="value zoom">543 211 2300</div>
+        <div class="meta-item">
+          <div class="label" data-zh="ZOOM · 会议号" data-en="ZOOM · Meeting ID">ZOOM · 会议号</div>
+          <div class="value zoom">543 211 2300</div>
         <div class="sub">扫下方二维码进直播群</div>
       </div>
     </div>
@@ -1043,17 +1054,17 @@ h2.title {
 
   <!-- Section 2: Who (was Section 3) -->
   <section>
-    <div class="section-num">ABOUT · 我是谁</div>
-    <h2 class="title">我是 <span class="accent">Robin</span></h2>
+    <div class="section-num" data-zh="ABOUT · 我是谁" data-en="ABOUT · Who am I">ABOUT · 我是谁</div>
+    <h2 class="title" data-zh="我是 <span class=&quot;accent&quot;>Robin</span>" data-en="I am <span class=&quot;accent&quot;>Robin</span>">我是 <span class="accent">Robin</span></h2>
     <div class="gold-line"></div>
     <div class="video-block">
       <a href="https://youtu.be/qIZp8pTQA3M" target="_blank" rel="noopener" class="video-link">
         <div class="video-thumb">
           <div class="play-icon">▶</div>
-          <div class="video-label">WATCH · Robin 自我介绍视频</div>
+          <div class="video-label" data-zh="WATCH · Robin 自我介绍视频" data-en="WATCH · Robin intro video">WATCH · Robin 自我介绍视频</div>
         </div>
       </a>
-      <p class="video-tip">点击跳转 YouTube 观看 · 时长 2 分钟</p>
+      <p class="video-tip" data-zh="点击跳转 YouTube 观看 · 时长 2 分钟" data-en="Tap to open YouTube · 2 min">点击跳转 YouTube 观看 · 时长 2 分钟</p>
     </div>
     <div class="profile">
       <img src="images/robin_photo.jpg" class="avatar" alt="Robin" />
@@ -1078,8 +1089,8 @@ h2.title {
 
   <!-- Section 3: Opening (was Section 2) -->
   <section class="opening">
-    <div class="section-num">OPENING · 开场</div>
-    <h2 class="title">今晚的<span class="accent">两个灵魂拷问</span></h2>
+    <div class="section-num" data-zh="OPENING · 开场" data-en="OPENING · Opening">OPENING · 开场</div>
+    <h2 class="title" data-zh="今晚的<span class=&quot;accent&quot;>两个灵魂拷问</span>" data-en="Tonight's <span class=&quot;accent&quot;>two soul-searching questions</span>">今晚的<span class="accent">两个灵魂拷问</span></h2>
     <div class="gold-line"></div>
     <p class="question">你投资<strong class="accent">股票</strong>吗？</p>
     <p class="question">你投资<strong class="accent">房产</strong>吗？</p>
@@ -1092,8 +1103,8 @@ h2.title {
 
   <!-- Section 4: Three Highlights -->
   <section>
-    <div class="section-num">HIGHLIGHTS · 今晚三大干货</div>
-    <h2 class="title">从 <span class="accent">①</span> 到 <span class="accent">③</span>，逐层递进</h2>
+    <div class="section-num" data-zh="HIGHLIGHTS · 今晚三大干货" data-en="HIGHLIGHTS · Tonight's 3 takeaways">HIGHLIGHTS · 今晚三大干货</div>
+    <h2 class="title" data-zh="从 <span class=&quot;accent&quot;>①</span> 到 <span class=&quot;accent&quot;>③</span>，逐层递进" data-en="From <span class=&quot;accent&quot;>①</span> to <span class=&quot;accent&quot;>③</span>, layer by layer">从 <span class="accent">①</span> 到 <span class="accent">③</span>，逐层递进</h2>
     <div class="gold-line"></div>
     <div class="highlights">
       <div class="highlight-card priority">
@@ -1131,9 +1142,9 @@ h2.title {
 
   <!-- Section 5: Demo Property -->
   <section class="demo">
-    <div class="section-num">DEMO · 干货 ① 现场演示</div>
-    <h2 class="title">澳洲房屋价值<span class="accent">深度调研</span></h2>
-    <p class="subtitle">从「一个 Suburb」到「一份投资决策表」—— AI 全程辅助</p>
+    <div class="section-num" data-zh="DEMO · 干货 ① 现场演示" data-en="DEMO · Takeaway ① Live demo">DEMO · 干货 ① 现场演示</div>
+    <h2 class="title" data-zh="澳洲房屋价值<span class=&quot;accent&quot;>深度调研</span>" data-en="Australian property value <span class=&quot;accent&quot;>deep research</span>">澳洲房屋价值<span class="accent">深度调研</span></h2>
+    <p class="subtitle" data-zh="从「一个 Suburb」到「一份投资决策表」—— AI 全程辅助" data-en="From 'one Suburb' to 'an investment decision sheet' — AI assists throughout">从「一个 Suburb」到「一份投资决策表」—— AI 全程辅助</p>
     <div class="gold-line"></div>
     <div class="framework">
       <div class="step">
@@ -1167,9 +1178,9 @@ h2.title {
 
   <!-- Section 6: Demo Stock Index -->
   <section class="demo">
-    <div class="section-num">DEMO · 干货 ② 现场演示</div>
-    <h2 class="title">股票<span class="accent">强度指数系统</span></h2>
-    <p class="subtitle">把技术指标、基本面、新闻情绪，转化成可量化的「强度评分」</p>
+    <div class="section-num" data-zh="DEMO · 干货 ② 现场演示" data-en="DEMO · Takeaway ② Live demo">DEMO · 干货 ② 现场演示</div>
+    <h2 class="title" data-zh="股票<span class=&quot;accent&quot;>强度指数系统</span>" data-en="Stock <span class=&quot;accent&quot;>strength index system</span>">股票<span class="accent">强度指数系统</span></h2>
+    <p class="subtitle" data-zh="把技术指标、基本面、新闻情绪，转化成可量化的「强度评分」" data-en="Turn technical indicators, fundamentals, and news sentiment into a quantifiable 'strength score'">把技术指标、基本面、新闻情绪，转化成可量化的「强度评分」</p>
     <div class="gold-line"></div>
     <div class="framework">
       <div class="step">
@@ -1203,9 +1214,9 @@ h2.title {
 
   <!-- Section 7: Demo AI Industry -->
   <section class="demo">
-    <div class="section-num">DEMO · 干货 ③ 现场演示</div>
-    <h2 class="title">AI 产业链 + <span class="accent">上市公司</span></h2>
-    <p class="subtitle">拆解产业链，定位中、港、美、澳四地投资标的</p>
+    <div class="section-num" data-zh="DEMO · 干货 ③ 现场演示" data-en="DEMO · Takeaway ③ Live demo">DEMO · 干货 ③ 现场演示</div>
+    <h2 class="title" data-zh="AI 产业链 + <span class=&quot;accent&quot;>上市公司</span>" data-en="AI industry chain + <span class=&quot;accent&quot;>listed companies</span>">AI 产业链 + <span class="accent">上市公司</span></h2>
+    <p class="subtitle" data-zh="拆解产业链，定位中、港、美、澳四地投资标的" data-en="Break down the industry chain, locate investment targets across China, HK, US, and Australia">拆解产业链，定位中、港、美、澳四地投资标的</p>
     <div class="gold-line"></div>
     <div class="framework">
       <div class="step">
@@ -1239,9 +1250,9 @@ h2.title {
 
   <!-- Section 8: 9 Scenarios -->
   <section>
-    <div class="section-num">SYSTEM · 从工具到体系</div>
-    <h2 class="title">Robin 在澳洲真实使用 AI 的 <span class="accent">9 大场景</span></h2>
-    <p class="subtitle">不只是单点工具，是一套完整的 AI 投资与生活系统</p>
+    <div class="section-num" data-zh="SYSTEM · 从工具到体系" data-en="SYSTEM · From tools to system">SYSTEM · 从工具到体系</div>
+    <h2 class="title" data-zh="Robin 在澳洲真实使用 AI 的 <span class=&quot;accent&quot;>9 大场景</span>" data-en="Robin's <span class=&quot;accent&quot;>9 real scenarios</span> using AI in Australia">Robin 在澳洲真实使用 AI 的 <span class="accent">9 大场景</span></h2>
+    <p class="subtitle" data-zh="不只是单点工具，是一套完整的 AI 投资与生活系统" data-en="Not just point tools — a complete AI investing and life system">不只是单点工具，是一套完整的 AI 投资与生活系统</p>
     <div class="gold-line"></div>
     <div class="scenarios">
       <div class="scenario"><span class="num">01</span><span class="name">谷歌全家桶 · Gemini / Gmail / 日历</span></div>
@@ -1258,21 +1269,21 @@ h2.title {
 
   <!-- Section 9: Online Course -->
   <section>
-    <div class="section-num">COURSE A · 线上课</div>
-    <h2 class="title">把 AI 真正用进 <span class="accent">澳洲生活</span></h2>
+    <div class="section-num" data-zh="COURSE A · 线上课" data-en="COURSE A · Online">COURSE A · 线上课</div>
+    <h2 class="title" data-zh="把 AI 真正用进 <span class=&quot;accent&quot;>澳洲生活</span>" data-en="Truly integrating AI into <span class=&quot;accent&quot;>Australian life</span>">把 AI 真正用进 <span class="accent">澳洲生活</span></h2>
     <div class="gold-line"></div>
     <div class="course">
       <div class="info">
-        <div class="name">澳洲华人 AI 应用<br />线上创始班（第一期）</div>
+        <div class="name"><span data-zh="澳洲华人 AI 应用" data-en="Australian-Chinese AI Application">澳洲华人 AI 应用</span><br /><span data-zh="线上创始班（第一期）" data-en="Online Founding Batch (Cohort 1)">线上创始班（第一期）</span></div>
         <div class="name-en">CLASS A · ONLINE · FOUNDING BATCH</div>
         <div class="price"><span class="currency">A$</span>599<span class="unit">AUD</span></div>
         <div class="meta">
-          <div class="meta-item"><span class="ico">⏱</span>3 个月 · 12 节课</div>
-          <div class="meta-item"><span class="ico">📅</span>每周二晚 20:30 – 22:30</div>
-          <div class="meta-item"><span class="ico">💻</span>线上直播</div>
+          <div class="meta-item" data-zh="⏱ 3 个月 · 12 节课" data-en="⏱ 3 months · 12 lessons"><span class="ico">⏱</span>3 个月 · 12 节课</div>
+          <div class="meta-item" data-zh="📅 每周二晚 20:30 – 22:30" data-en="📅 Every Tue 20:30 – 22:30"><span class="ico">📅</span>每周二晚 20:30 – 22:30</div>
+          <div class="meta-item" data-zh="💻 线上直播" data-en="💻 Online livestream"><span class="ico">💻</span>线上直播</div>
         </div>
         <div class="content">
-          <h4>核心收获 · 8 大本地场景</h4>
+          <h4 data-zh="核心收获 · 8 大本地场景" data-en="Key takeaways · 8 local scenarios">核心收获 · 8 大本地场景</h4>
           <ul>
             <li>英文邮件 / 文件处理</li>
             <li>澳洲房产基础应用</li>
@@ -1291,22 +1302,22 @@ h2.title {
 
   <!-- Section 10: Offline Course -->
   <section>
-    <div class="section-num">COURSE B · 线下课</div>
-    <h2 class="title">从工具到 <span class="accent">财富管理系统</span></h2>
+    <div class="section-num" data-zh="COURSE B · 线下课" data-en="COURSE B · Offline">COURSE B · 线下课</div>
+    <h2 class="title" data-zh="从工具到 <span class=&quot;accent&quot;>财富管理系统</span>" data-en="From tools to <span class=&quot;accent&quot;>wealth management system</span>">从工具到 <span class="accent">财富管理系统</span></h2>
     <div class="gold-line"></div>
     <div class="course">
       <div class="info">
-        <div class="name">AI 财富管理与<br />投资应用线下班</div>
+        <div class="name"><span data-zh="AI 财富管理与" data-en="AI Wealth Management &amp;">AI 财富管理与</span><br /><span data-zh="投资应用线下班" data-en="Investment Application Offline Class">投资应用线下班</span></div>
         <div class="name-en">CLASS B · OFFLINE · 北悉尼 · 首期仅招 10 人</div>
         <div class="price"><span class="currency">A$</span>1,999<span class="unit">AUD · 含线上课</span></div>
         <div class="meta">
-          <div class="meta-item"><span class="ico">⏱</span>3 个月 · 12 节课</div>
-          <div class="meta-item"><span class="ico">📅</span>每周六 13:00 – 16:00</div>
-          <div class="meta-item"><span class="ico">📍</span>北悉尼办公室</div>
-          <div class="meta-item"><span class="ico">🎯</span>仅线下 · 不直播</div>
+          <div class="meta-item" data-zh="⏱ 3 个月 · 12 节课" data-en="⏱ 3 months · 12 lessons"><span class="ico">⏱</span>3 个月 · 12 节课</div>
+          <div class="meta-item" data-zh="📅 每周六 13:00 – 16:00" data-en="📅 Every Sat 13:00 – 16:00"><span class="ico">📅</span>每周六 13:00 – 16:00</div>
+          <div class="meta-item" data-zh="📍 北悉尼办公室" data-en="📍 North Sydney office"><span class="ico">📍</span>北悉尼办公室</div>
+          <div class="meta-item" data-zh="🎯 仅线下 · 不直播" data-en="🎯 Offline only · no livestream"><span class="ico">🎯</span>仅线下 · 不直播</div>
         </div>
         <div class="content">
-          <h4>核心亮点 · 4 大系统</h4>
+          <h4 data-zh="核心亮点 · 4 大系统" data-en="Key highlights · 4 systems">核心亮点 · 4 大系统</h4>
           <ul>
             <li>AI CFO 个人财富管理系统</li>
             <li>龙虾 AI 财富管理系统</li>
@@ -1325,9 +1336,9 @@ h2.title {
 
   <!-- Section 11: Q&A -->
   <section class="qa">
-    <div class="section-num">Q&A · 互动答疑</div>
-    <h2 class="title">扫码入群 <span class="accent">一起探索</span></h2>
-    <p class="subtitle">把你的「我的 AI 刚需」告诉我，蜗牛 AI 团队将为你设计、尝试实现。</p>
+    <div class="section-num" data-zh="Q&A · 互动答疑" data-en="Q&A · Q&A Session">Q&A · 互动答疑</div>
+    <h2 class="title" data-zh="扫码入群 <span class=&quot;accent&quot;>一起探索</span>" data-en="Scan to join <span class=&quot;accent&quot;>and explore together</span>">扫码入群 <span class="accent">一起探索</span></h2>
+    <p class="subtitle" data-zh="把你的「我的 AI 刚需」告诉我，蜗牛 AI 团队将为你设计、尝试实现。" data-en="Tell us your 'my AI must-have', and the Snail AI team will design and try to implement it for you.">把你的「我的 AI 刚需」告诉我，蜗牛 AI 团队将为你设计、尝试实现。</p>
     <div class="gold-line"></div>
     <div class="qa-grid">
       <div class="left">
@@ -1335,55 +1346,73 @@ h2.title {
         <div class="channels">
           <div class="channel">
             <div class="ico">✉</div>
-            <div class="text"><strong>EMAIL · 邮件</strong>robin12300@gmail.com</div>
+            <div class="text"><strong data-zh="EMAIL · 邮件" data-en="EMAIL · Email">EMAIL · 邮件</strong>robin12300@gmail.com</div>
           </div>
           <div class="channel">
             <div class="ico">📱</div>
-            <div class="text"><strong>WECHAT · 微信联系</strong>Michael · 0430680555</div>
+            <div class="text"><strong data-zh="WECHAT · 微信联系" data-en="WECHAT · WeChat">WECHAT · 微信联系</strong>Michael · 0430680555</div>
           </div>
           <div class="channel">
             <div class="ico">📅</div>
-            <div class="text"><strong>本周六 · 直播当晚</strong>Zoom · 543 211 2300</div>
+            <div class="text"><strong data-zh="本周六 · 直播当晚" data-en="This Sat · Live night">本周六 · 直播当晚</strong>Zoom · 543 211 2300</div>
           </div>
         </div>
       </div>
       <div class="right">
         <img src="images/qr_live_group_20260704.jpg" class="qr" alt="直播群二维码" />
-        <div class="qr-label">扫码加入直播群</div>
-        <div class="qr-sub">7月4日 周六晚 8 点不见不散</div>
+        <div class="qr-label" data-zh="扫码加入直播群" data-en="Scan to join live group">扫码加入直播群</div>
+        <div class="qr-sub" data-zh="7月4日 周六晚 8 点不见不散" data-en="Sat Jul 4 8pm — see you there">7月4日 周六晚 8 点不见不散</div>
       </div>
     </div>
   </section>
 
   <!-- Section 12: Closing -->
   <section class="closing">
-    <div class="section-num" style="justify-content:center;">CLOSING · 收尾</div>
-    <div class="thanks">THANKS<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢观看</div>
-    <p class="tagline">7月4日 周六晚 8 点 · 直播分享会<strong>干货满满</strong><br />期待与你在 Zoom 相遇</p>
+    <div class="section-num" style="justify-content:center;" data-zh="CLOSING · 收尾" data-en="CLOSING · Closing">CLOSING · 收尾</div>
+    <div class="thanks">THANKS<br /><span data-zh="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢观看" data-en="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thanks for watching">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢观看</span></div>
+    <p class="tagline"><span data-zh="7月4日 周六晚 8 点 · 直播分享会<strong>干货满满</strong>" data-en="Sat Jul 4 8pm · Live share <strong>packed with value</strong>">7月4日 周六晚 8 点 · 直播分享会<strong>干货满满</strong></span><br /><span data-zh="期待与你在 Zoom 相遇" data-en="Looking forward to meeting you on Zoom">期待与你在 Zoom 相遇</span></p>
     <div class="info-bar">
-      <div class="info-item">
-        <div class="label">DATE · 时间</div>
-        <div class="value">7月4日 周六 20:00</div>
+        <div class="info-item">
+          <div class="label" data-zh="DATE · 时间" data-en="DATE · Time">DATE · 时间</div>
+          <div class="value">7月4日 周六 20:00</div>
       </div>
-      <div class="info-item">
-        <div class="label">ZOOM · 会议号</div>
-        <div class="value zoom">543 211 2300</div>
-      </div>
-      <div class="info-item">
-        <div class="label">CONTACT · 报名</div>
+        <div class="info-item">
+          <div class="label" data-zh="ZOOM · 会议号" data-en="ZOOM · Meeting ID">ZOOM · 会议号</div>
+          <div class="value zoom">543 211 2300</div>
+        </div>
+        <div class="info-item">
+          <div class="label" data-zh="CONTACT · 报名" data-en="CONTACT · Sign up">CONTACT · 报名</div>
         <div class="value">Michael 0430680555</div>
       </div>
     </div>
     <div class="qrs">
       <img src="images/qr_live_group_20260704.jpg" class="qr-mini" alt="直播群" />
       <div class="qr-text">
-        <strong>扫码进直播群</strong>
-        第一时间获取回放 + 课件 + 直播专属福利
+          <strong data-zh="扫码进直播群" data-en="Scan to join live group">扫码进直播群</strong>
+          <span data-zh="第一时间获取回放 + 课件 + 直播专属福利" data-en="Get replay, courseware &amp; live-exclusive perks first">第一时间获取回放 + 课件 + 直播专属福利</span>
       </div>
     </div>
   </section>
 
 </div>
+
+<script>
+  const LANG_KEY = 'snailai-lang';
+  function applyLang(lang) {
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.innerHTML = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+    const t = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
+    if (t) document.title = t;
+    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', () => applyLang(btn.dataset.lang)));
+  let savedLang = 'zh';
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {}
+  applyLang(savedLang);
+</script>
 
 </body>
 </html>

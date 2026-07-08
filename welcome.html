@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-title-zh="我的学堂 · 蜗牛AI 学员学堂" data-title-en="My Portal · SnailAI Student Portal">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +13,13 @@
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
       background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+
+    /* 语言切换器 */
+    .lang-switch{position:fixed;top:16px;right:16px;z-index:500;display:flex;gap:4px;
+      background:#fff;border:1px solid var(--line);border-radius:100px;padding:4px;box-shadow:var(--shadow)}
+    .lang-switch .lang-btn{font-family:inherit;font-size:13px;font-weight:600;border:none;
+      background:transparent;color:var(--ink3);padding:6px 14px;border-radius:100px;cursor:pointer;transition:.15s}
+    .lang-switch .lang-btn.active{background:var(--accent);color:#fff}
 
     /* ---- 顶部栏 ---- */
     .topbar{max-width:960px;margin:0 auto;padding:20px 24px;display:flex;align-items:center;
@@ -56,7 +63,6 @@
     .badge{position:absolute;top:16px;right:16px;background:var(--accent);
       color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
     .badge--blue{background:var(--blue)}
-    .badge--green{background:var(--green)}
 
     /* ---- 底部 ---- */
     .foot{text-align:center;color:var(--ink3);font-size:13px;padding:32px 24px;
@@ -65,16 +71,21 @@
 </head>
 <body>
 
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
   <!-- 顶栏 -->
   <div class="topbar">
-    <div class="brand">🐌 蜗牛<span>AI</span> · 学员学堂</div>
+    <div class="brand" data-zh="🐌 蜗牛AI · 学员学堂" data-en="🐌 SnailAI · Student Portal">🐌 蜗牛AI · 学员学堂</div>
     <div id="userArea"></div>
   </div>
 
   <!-- 欢迎区 -->
   <div class="hero">
     <div class="hero-avatar">👋</div>
-    <h1>欢迎回来，<span class="name" id="welcomeName">同学</span></h1>
+    <h1><span id="welcomePrefix" data-zh="欢迎回来，" data-en="Welcome back, ">欢迎回来，</span><span class="name" id="welcomeName">同学</span></h1>
     <div class="hero-role" id="roleBadge">学员</div>
     <p class="hero-sub" id="heroSub">以下是你的课程、资料与学习工具</p>
   </div>
@@ -82,11 +93,14 @@
   <!-- 动态内容 -->
   <div id="content"></div>
 
-  <div class="foot">蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI</div>
+  <div class="foot" data-zh="蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI" data-en="SnailAI Student Portal · © 2026 SnailAI">蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI</div>
 
   <script>
+    const LANG_KEY = "snailai-lang";
     const S_KEY = "snailai_api_token";
     const U_KEY = "snailai_me";
+
+    let curLang = localStorage.getItem(LANG_KEY) || 'zh';
 
     // 未登录 → 回登录页
     let token = sessionStorage.getItem(S_KEY);
@@ -94,83 +108,133 @@
     try { me = JSON.parse(sessionStorage.getItem(U_KEY) || "null"); } catch(e){}
     if (!token || !me) { location.href = "login.html"; }
 
-    const ROLE_NAME = {student:"学员", ta:"助教", instructor:"讲师"};
+    const ROLE_NAME = {
+      student:   {zh:"学员", en:"Student"},
+      ta:        {zh:"助教", en:"Teaching Assistant"},
+      instructor:{zh:"讲师", en:"Instructor"}
+    };
     const ROLE_DESC = {
-      student: "查看你的课程回顾、课件与 AI 能力进度",
-      ta: "查看全部学员能力进度，进行助教审核",
-      instructor: "查看全部学员能力进度，进行讲师终审"
+      student:   {zh:"查看你的课程回顾、课件与 AI 能力进度", en:"View your lesson recaps, courseware and AI capability progress"},
+      ta:        {zh:"查看全部学员能力进度，进行助教审核", en:"Review all students' capability progress and conduct TA verification"},
+      instructor:{zh:"查看全部学员能力进度，进行讲师终审", en:"Review all students' capability progress and conduct final instructor sign-off"}
     };
 
-    // 渲染顶部用户信息
-    document.getElementById("userArea").innerHTML =
-      `<span style="font-size:14px;color:var(--ink3)">${me.name}</span>` +
-      ` <button onclick="doLogout()" style="margin-left:10px;padding:5px 14px;border:1px solid var(--line);` +
-      `border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink2)">退出</button>`;
-
-    // 渲染欢迎区
-    document.getElementById("welcomeName").textContent = me.name.split(/\s/).pop() || me.name;
-    document.getElementById("roleBadge").textContent = ROLE_NAME[me.role] || me.role;
-    document.getElementById("heroSub").textContent = ROLE_DESC[me.role] || "欢迎来到蜗牛AI学员学堂";
-
-    // 各板块（href 为相对门户根目录的路径，带空格已编码）
-    const sections = [
+    // 各板块（href 为相对门户根目录的路径，带空格已编码）。文案双语。
+    const SECTIONS = [
       {
-        title: "我的课程",
-        sub: "每节课的章节回顾与课件下载，随时回看",
+        title: {zh:"我的课程", en:"My Courses"},
+        sub:   {zh:"每节课的章节回顾与课件下载，随时回看", en:"Chapter recaps and downloadable materials for every lesson"},
         items: [
-          { icon:"🟢", title:"AI 应用线上班", badge:null,
-            desc:"零基础到能用的 AI 应用入门。12 节课程回顾、章节要点与课件下载。",
+          { icon:"🟢", title:{zh:"AI 应用线上班", en:"AI Applications · Online"}, badge:null,
+            desc:{zh:"零基础到能用的 AI 应用入门。12 节课程回顾、章节要点与课件下载。",
+                  en:"From zero to useful AI. 12 lesson recaps, key points and downloadable courseware."},
             href:"AI%20应用线上班/", accent:true },
-          { icon:"💰", title:"AI 财富线下班", badge:null,
-            desc:"悉尼线下 · 用 AI 武装投资决策。课件、实战资料与案例。",
+          { icon:"💰", title:{zh:"AI 财富线下班", en:"AI Wealth · Offline"}, badge:null,
+            desc:{zh:"悉尼线下 · 用 AI 武装投资决策。课件、实战资料与案例。",
+                  en:"Sydney on-site · arm your investment decisions with AI. Courseware, hands-on materials and cases."},
             href:"AI%20财富线下班/" }
         ]
       },
       {
-        title: "能力 & 资料",
-        sub: "能力进度跟踪与历次分享回放",
+        title: {zh:"能力 & 资料", en:"Capabilities & Resources"},
+        sub:   {zh:"能力进度跟踪与历次分享回放", en:"Capability tracking and replays of past sessions"},
         items: [
-          { icon:"✅", title:"AI 能力清单", badge:null,
-            desc:"9 项课前准备能力进度。三色标签：学员自查 🟢 / 助教审核 🔵 / 讲师审核 🟠。",
+          { icon:"✅", title:{zh:"AI 能力清单", en:"AI Capability Checklist"}, badge:null,
+            desc:{zh:"9 项课前准备能力进度。三色标签：学员自查 🟢 / 助教审核 🔵 / 讲师审核 🟠。",
+                  en:"Progress on 9 pre-class capabilities. Three-color tags: self-check 🟢 / TA review 🔵 / instructor review 🟠."},
             href:"AI%20能力清单/", accent:true },
-          { icon:"🎤", title:"路演直播 PPT", badge:"回放",
-            desc:"历次分享会与直播的 PPT 合集，随时回看。",
+          { icon:"🎤", title:{zh:"路演直播 PPT", en:"Pitch & Livestream PPT"}, badge:{zh:"回放",en:"Replay"},
+            desc:{zh:"历次分享会与直播的 PPT 合集，随时回看。",
+                  en:"A collection of PPTs from past sharing sessions and livestreams, available anytime."},
             href:"路演直播%20PPT/" }
         ]
       },
       {
-        title: "课程大纲",
-        sub: "完整课程地图与课前准备",
+        title: {zh:"课程大纲", en:"Course Outlines"},
+        sub:   {zh:"完整课程地图与课前准备", en:"Full course map and pre-class preparation"},
         items: [
-          { icon:"📘", title:"线上课大纲", badge:null,
-            desc:"AI 澳洲应用线上课 · 完整 24 课时大纲与课前准备清单。",
+          { icon:"📘", title:{zh:"线上课大纲", en:"Online Course Outline"}, badge:null,
+            desc:{zh:"AI 澳洲应用线上课 · 完整 24 课时大纲与课前准备清单。",
+                  en:"AI Australia Applications · full 24-lesson outline and pre-class checklist."},
             href:"online-course/" },
-          { icon:"📗", title:"线下课大纲", badge:null,
-            desc:"AI 财富线下课 · 完整大纲、课前准备与报名信息。",
+          { icon:"📗", title:{zh:"线下课大纲", en:"Offline Course Outline"}, badge:null,
+            desc:{zh:"AI 财富线下课 · 完整大纲、课前准备与报名信息。",
+                  en:"AI Wealth offline class · full outline, pre-class prep and enrolment info."},
             href:"offline-course/" }
         ]
       }
     ];
 
-    // 渲染
-    const content = document.getElementById("content");
-    sections.forEach(sec => {
-      const wrap = document.createElement("div");
-      wrap.className = "section";
-      const cards = sec.items.map(c => `
-        <a class="card ${c.accent ? "card--accent" : ""}" href="${c.href}">
-          ${c.badge ? `<span class="badge ${c.badge==="回放"?"badge--blue":""}">${c.badge}</span>` : ""}
-          <div class="card-icon">${c.icon}</div>
-          <h3>${c.title}</h3>
-          <p>${c.desc}</p>
-          <div class="card-go">打开 →</div>
-        </a>`).join("");
-      wrap.innerHTML = `
-        <h2 class="section-title">${sec.title}</h2>
-        <p class="section-sub">${sec.sub}</p>
-        <div class="grid">${cards}</div>`;
-      content.appendChild(wrap);
-    });
+    const LABEL = {
+      open:   {zh:"打开", en:"Open"},
+      logout: {zh:"退出", en:"Log out"}
+    };
+
+    function t(obj){ return (obj && obj[curLang]) || (obj && obj.zh) || ""; }
+
+    // 渲染顶部用户信息
+    function renderUserArea(){
+      const btnLabel = t(LABEL.logout);
+      document.getElementById("userArea").innerHTML =
+        `<span style="font-size:14px;color:var(--ink3)">${me.name}</span>` +
+        ` <button onclick="doLogout()" style="margin-left:10px;padding:5px 14px;border:1px solid var(--line);` +
+        `border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink2)">${btnLabel}</button>`;
+    }
+
+    // 渲染欢迎区
+    function renderHero(){
+      document.getElementById("welcomeName").textContent = me.name.split(/\s/).pop() || me.name;
+      document.getElementById("roleBadge").textContent = t(ROLE_NAME[me.role] || {zh:me.role, en:me.role});
+      document.getElementById("heroSub").textContent = t(ROLE_DESC[me.role] || {zh:"欢迎来到蜗牛AI学员学堂", en:"Welcome to SnailAI Student Portal"});
+    }
+
+    // 渲染动态板块
+    function renderContent(){
+      const content = document.getElementById("content");
+      content.innerHTML = "";
+      SECTIONS.forEach(sec => {
+        const wrap = document.createElement("div");
+        wrap.className = "section";
+        const cards = sec.items.map(c => `
+          <a class="card ${c.accent ? "card--accent" : ""}" href="${c.href}">
+            ${c.badge ? `<span class="badge ${c.badge.zh==="回放"?"badge--blue":""}">${t(c.badge)}</span>` : ""}
+            <div class="card-icon">${c.icon}</div>
+            <h3>${t(c.title)}</h3>
+            <p>${t(c.desc)}</p>
+            <div class="card-go">${t(LABEL.open)} →</div>
+          </a>`).join("");
+        wrap.innerHTML = `
+          <h2 class="section-title">${t(sec.title)}</h2>
+          <p class="section-sub">${t(sec.sub)}</p>
+          <div class="grid">${cards}</div>`;
+        content.appendChild(wrap);
+      });
+    }
+
+    function applyLang(lang){
+      curLang = lang;
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-CN');
+      document.querySelectorAll('[data-zh]').forEach(el => {
+        const tx = el.getAttribute('data-' + lang);
+        if (tx !== null) el.textContent = tx;
+      });
+      const ti = document.querySelector('[data-title-zh]');
+      if (ti) document.title = ti.getAttribute('data-title-' + lang);
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+      localStorage.setItem(LANG_KEY, lang);
+      // 重新渲染 JS 动态内容
+      renderUserArea();
+      renderHero();
+      renderContent();
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang)));
+
+    // 初始渲染
+    renderUserArea();
+    renderHero();
+    renderContent();
+    applyLang(curLang);
 
     function doLogout() {
       sessionStorage.removeItem(S_KEY);

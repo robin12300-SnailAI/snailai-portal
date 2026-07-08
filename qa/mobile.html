@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-title-zh="蜗牛AI · 蜗牛问答 · 手机版" data-title-en="SnailAI · Q&A Board (Mobile)">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -146,6 +146,8 @@
       document.querySelectorAll('.lang-btn').forEach(function (b) {
         b.classList.toggle('active', b.getAttribute('data-lang') === lang);
       });
+      var _tt = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
+      if (_tt) document.title = _tt;
     }
     apply(saved);
     document.querySelectorAll('.lang-btn').forEach(function (btn) {

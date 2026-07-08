@@ -329,3 +329,12 @@ img { max-width: 100%; }
 .ss-desc { font-size: 13px; color: var(--gray-600); }
 .ss-arrow { font-size: 22px; color: var(--green-500); font-weight: 900; flex: none; transition: transform .15s; }
 .smart-sheet-card:hover .ss-arrow { transform: translateX(4px); }
+
+/* ---------- 语言切换器（中英双语） ---------- */
+.lang-switch{position:fixed;top:14px;right:14px;z-index:900;display:flex;gap:4px;
+  background:#fff;border:1px solid rgba(26,26,46,.12);border-radius:100px;padding:4px;
+  box-shadow:0 2px 8px rgba(26,26,46,.10)}
+.lang-switch .lang-btn{font-family:inherit;font-size:13px;font-weight:600;border:none;
+  background:transparent;color:#6A6A85;padding:6px 14px;border-radius:100px;cursor:pointer;transition:.15s}
+.lang-switch .lang-btn:hover{color:#1A1A2E}
+.lang-switch .lang-btn.active{background:#FF5B1F;color:#fff}

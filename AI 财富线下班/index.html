@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-title-zh="AI 财富线下班 · 蜗牛AI 学员学堂" data-title-en="AI Wealth Offline · SnailAI Portal">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="../assets/styles.css">
 </head>
 <body>
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
   <div id="nav-root"></div>
   <div id="announce-root"></div>
 
@@ -27,15 +32,19 @@
   <script src="../assets/app.js"></script>
   <script>
     requireAuth();
+    const L_ = (zh, en) => curLang === "en" ? en : zh;
     const course = COURSES.offline;
-    document.getElementById("cTitle").textContent = course.cover + " " + course.name;
-    document.getElementById("cDesc").textContent = course.desc;
+    const p = navPrefix();
 
-    /* ---------- 📋 课程目录 ---------- */
-    (function renderCatalog() {
+    function renderAll() {
+      document.getElementById("cTitle").textContent = course.cover + " " + (curLang === "en" ? (course.nameEn || course.name) : course.name);
+      document.getElementById("cDesc").textContent = curLang === "en" ? (course.descEn || course.desc) : course.desc;
+
+      /* ---------- 📋 课程目录 ---------- */
       const container = document.getElementById("catalog");
       let lessonIdx = 0;
-      let catalogHtml = `<h3 class="catalog-title">📋 课程目录（共 ${course.modules.reduce((s,m)=>s+m.lessons.length,0)} 节课）</h3><div class="catalog-list">`;
+      const total = course.modules.reduce((s, m) => s + m.lessons.length, 0);
+      let catalogHtml = `<h3 class="catalog-title">📋 ${L_("课程目录（共 " + total + " 节课）", "Course Catalog (" + total + " lessons)")}</h3><div class="catalog-list">`;
       course.modules.forEach(mod => {
         mod.lessons.forEach(ls => {
           lessonIdx++;
@@ -50,36 +59,38 @@
                 <span class="catalog-arrow">▸</span>
               </summary>
               ${hasContent ? `<div class="catalog-chapters"><ol>${chs.map(c => `<li>${c}</li>`).join("")}</ol></div>` :
-                `<div class="catalog-empty">📝 目录待更新，老师会在课前发布本节详细内容</div>`}
+                `<div class="catalog-empty">📝 ${L_("目录待更新，老师会在课前发布本节详细内容", "Syllabus pending — details will be published before class")}</div>`}
             </details>`;
         });
       });
       catalogHtml += `</div>`;
       container.innerHTML = catalogHtml;
-    })();
 
-    const p = navPrefix();
-    let html = "";
-    course.modules.forEach(mod => {
-      html += `<div class="module"><h3>${mod.title}</h3>`;
-      mod.lessons.forEach(ls => {
-        const ready = ls.slides && ls.slides.length > 0;
-        html += `
-          <a class="lesson" href="${p}lesson.html?course=offline&lesson=${ls.id}">
-            <div class="num">${ls.id.replace("l", "")}</div>
-            <div class="info">
-              <h4>${ls.title}</h4>
-              <p>${ls.desc}</p>
-            </div>
-            <div class="dur">${ls.duration}</div>
-            <div class="badge ${ready ? "ready" : ""}">${ready ? "有课件" : "资料准备中"}</div>
-          </a>`;
+      let html = "";
+      course.modules.forEach(mod => {
+        html += `<div class="module"><h3>${mod.title}</h3>`;
+        mod.lessons.forEach(ls => {
+          const ready = ls.slides && ls.slides.length > 0;
+          html += `
+            <a class="lesson" href="${p}lesson.html?course=offline&lesson=${ls.id}">
+              <div class="num">${ls.id.replace("l", "")}</div>
+              <div class="info">
+                <h4>${ls.title}</h4>
+                <p>${ls.desc}</p>
+              </div>
+              <div class="dur">${ls.duration}</div>
+              <div class="badge ${ready ? "ready" : ""}">${ready ? L_("有课件", "Slides ready") : L_("资料准备中", "Preparing")}</div>
+            </a>`;
+        });
+        html += `</div>`;
       });
-      html += `</div>`;
-    });
-    document.getElementById("modules").innerHTML = html;
+      document.getElementById("modules").innerHTML = html;
+    }
 
+    renderAll();
     initPortal("offline");
+    setLang(curLang);
+    window.addEventListener("langchange", renderAll);
   </script>
 </body>
 </html>

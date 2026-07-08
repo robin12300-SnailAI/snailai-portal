@@ -1,22 +1,32 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-title-zh="路演直播 PPT · 蜗牛AI 学员学堂" data-title-en="Pitch &amp; Live PPT · SnailAI Student Portal">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>路演直播 PPT · 蜗牛AI 学员学堂</title>
   <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+  /* Language switcher */
+  .lang-switch { position: fixed; top: 16px; right: 16px; z-index: 999; display: inline-flex; background: #fff; border: 1.5px solid rgba(0,0,0,0.1); border-radius: 100px; padding: 3px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+  .lang-btn { border: none; background: transparent; font-family: inherit; font-size: 0.85rem; font-weight: 700; color: #8a8a9a; padding: 6px 14px; border-radius: 100px; cursor: pointer; transition: all 0.2s ease; }
+  .lang-btn.active { background: #FF5B1F; color: #fff; }
+  </style>
 </head>
 <body>
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
   <div id="nav-root"></div>
   <div id="announce-root"></div>
 
   <div class="wrap">
-    <h2 class="section-title">🎤 路演 / 直播 PPT</h2>
-    <p class="section-sub">历次分享会与直播的幻灯片合集，随时回看。</p>
+    <h2 class="section-title" data-zh="🎤 路演 / 直播 PPT" data-en="🎤 Pitch &amp; Live PPT">🎤 路演 / 直播 PPT</h2>
+    <p class="section-sub" data-zh="历次分享会与直播的幻灯片合集，随时回看。" data-en="A collection of slides from past sharing sessions and livestreams — revisit anytime.">历次分享会与直播的幻灯片合集，随时回看。</p>
     <div id="list"></div>
 
-    <h2 class="section-title" style="margin-top:40px">📚 直播配套课件</h2>
-    <p class="section-sub">每场直播整理成的可学习课件：学习指南 / PDF / 配图 / NotebookLM 资料。</p>
+    <h2 class="section-title" style="margin-top:40px" data-zh="📚 直播配套课件" data-en="📚 Livestream Courseware">📚 直播配套课件</h2>
+    <p class="section-sub" data-zh="每场直播整理成的可学习课件：学习指南 / PDF / 配图 / NotebookLM 资料。" data-en="Study-ready courseware compiled from each livestream: study guides / PDFs / illustrations / NotebookLM resources.">每场直播整理成的可学习课件：学习指南 / PDF / 配图 / NotebookLM 资料。</p>
     <div id="lessons"></div>
   </div>
 
@@ -62,7 +72,7 @@
           <p style="font-size:14px;color:var(--gray-600);margin:6px 0 14px">${r.desc}</p>
           ${ytEmbedHtml(r.video, r.title)}
           <div style="margin-top:14px">
-            <a class="btn btn-primary btn-sm" href="${r.page}">📖 查看完整课件 →</a>
+            <a class="btn btn-primary btn-sm" href="${r.page}" data-zh="📖 查看完整课件 →" data-en="📖 View Full Courseware →">📖 查看完整课件 →</a>
           </div>
         </div>`;
     });
@@ -70,5 +80,22 @@
 
     initPortal("roadmap");
   </script>
+<script>
+  const LANG_KEY = 'snailai-lang';
+  function applyLang(lang) {
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.innerHTML = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+    const t = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
+    if (t) document.title = t;
+    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', () => applyLang(btn.dataset.lang)));
+  let savedLang = 'zh';
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {}
+  applyLang(savedLang);
+</script>
 </body>
 </html>

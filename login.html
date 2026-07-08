@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-title-zh="学员登录 · 蜗牛AI 学员学堂" data-title-en="Student Login · SnailAI Portal">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,27 +38,58 @@
     .spinner{display:inline-block;width:16px;height:16px;border:2.5px solid #fff;
       border-top-color:transparent;border-radius:50%;animation:.6s linear infinite spin;vertical-align:-3px;margin-right:6px}
     @keyframes spin{to{transform:rotate(360deg)}}
+    /* 语言切换器 */
+    .lang-switch{position:fixed;top:16px;right:16px;z-index:500;display:flex;gap:4px;
+      background:#fff;border:1px solid var(--line);border-radius:100px;padding:4px;box-shadow:var(--shadow)}
+    .lang-switch .lang-btn{font-family:inherit;font-size:13px;font-weight:600;border:none;
+      background:transparent;color:var(--ink3);padding:6px 14px;border-radius:100px;cursor:pointer;transition:.15s}
+    .lang-switch .lang-btn.active{background:var(--accent);color:#fff}
   </style>
 </head>
 <body>
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
   <div class="card">
     <div class="logo">🐌</div>
-    <h1>学员登录</h1>
-    <p class="sub">SnailAI 学员学堂 · 课程回顾与资料中心</p>
+    <h1 data-zh="学员登录" data-en="Student Login">学员登录</h1>
+    <p class="sub" data-zh="SnailAI 学员学堂 · 课程回顾与资料中心" data-en="SnailAI Student Portal · Course Review & Resources">SnailAI 学员学堂 · 课程回顾与资料中心</p>
 
     <form id="f" onsubmit="return doLogin(event)">
       <div class="field">
-        <label for="u">用户名</label>
-        <input id="u" type="text" placeholder="请输入用户名" autocomplete="username" required autofocus>
+        <label for="u" data-zh="用户名" data-en="Username">用户名</label>
+        <input id="u" type="text" data-ph-zh="请输入用户名" data-ph-en="Enter your username" placeholder="请输入用户名" autocomplete="username" required autofocus>
       </div>
       <div class="field">
-        <label for="p">密码</label>
-        <input id="p" type="password" placeholder="请输入密码" autocomplete="current-password" required>
+        <label for="p" data-zh="密码" data-en="Password">密码</label>
+        <input id="p" type="password" data-ph-zh="请输入密码" data-ph-en="Enter your password" placeholder="请输入密码" autocomplete="current-password" required>
       </div>
-      <button type="submit" class="btn btn-primary" id="btn">登 录</button>
+      <button type="submit" class="btn btn-primary" id="btn" data-zh="登 录" data-en="Log In">登 录</button>
       <div class="err" id="err"></div>
     </form>
   </div>
+
+  <script>
+    const LANG_KEY = "snailai-lang";
+    function setLang(lang){
+      document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'zh-CN');
+      document.querySelectorAll('[data-zh]').forEach(el => {
+        const t = el.getAttribute('data-' + lang);
+        if (t !== null) el.textContent = t;
+      });
+      document.querySelectorAll('[data-ph-zh]').forEach(el => {
+        el.setAttribute('placeholder', el.getAttribute('data-ph-' + lang));
+      });
+      const t = document.querySelector('[data-title-zh]');
+      if (t) document.title = t.getAttribute('data-title-' + lang);
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+      localStorage.setItem(LANG_KEY, lang);
+    }
+    document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+    setLang(localStorage.getItem(LANG_KEY) || 'zh');
+  </script>
 
   <script>
     const S_KEY = "snailai_api_token";
@@ -74,7 +105,8 @@
       const err = document.getElementById("err");
       err.textContent = "";
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span>登录中...';
+      const L = localStorage.getItem(LANG_KEY) || 'zh';
+      btn.innerHTML = '<span class="spinner"></span>' + (L === 'en' ? 'Signing in…' : '登录中...');
 
       try {
         const r = await fetch("/api/login", {
@@ -83,7 +115,7 @@
           body: JSON.stringify({username: u, password: p})
         });
         const d = await r.json();
-        if (!d.ok) throw new Error(d.error || "用户名或密码错误");
+        if (!d.ok) throw new Error(d.error || (L === 'en' ? "Wrong username or password" : "用户名或密码错误"));
 
         // 存共享 session key（矩阵页也读这个）
         sessionStorage.setItem(S_KEY, d.token);
@@ -92,7 +124,7 @@
       } catch(ex) {
         err.textContent = ex.message;
         btn.disabled = false;
-        btn.innerHTML = "登 录";
+        btn.innerHTML = btn.getAttribute('data-' + L);
       }
       return false;
     }

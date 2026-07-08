@@ -11,6 +11,7 @@ const COURSES = {
     name: "AI 应用线上班",
     nameEn: "AI Application · Online",
     desc: "零基础到能用的 AI 应用入门。10 课时带你用 AI 解决日常工作生活问题，建立 AI 思维。",
+    descEn: "From zero to practical AI literacy. 10 lessons to solve everyday work and life problems with AI and build an AI mindset.",
     cover: "🟢",
     basePath: "AI 应用线上班/lesson",
     modules: [
@@ -76,6 +77,7 @@ const COURSES = {
     name: "AI 财富线下班",
     nameEn: "AI Wealth · Offline (Sydney)",
     desc: "悉尼线下·用 AI 武装投资决策。从财务自动化到股票/房产 AI 分析，搭建你的个人 AI 财富工作流。",
+    descEn: "Sydney on-site · arm your investment decisions with AI. From financial automation to AI stock/property analysis, build your personal AI wealth workflow.",
     cover: "💰",
     basePath: "AI 财富线下班/lesson",
     modules: [
