@@ -31,7 +31,7 @@ function navPrefix() {
 }
 
 const NAV_ITEMS = [
-  { key: "dashboard", label: "我的学堂", file: "dashboard.html" },
+  { key: "dashboard", label: "我的学堂", file: "welcome.html" },
   { key: "online", label: "AI 应用线上班", file: "AI 应用线上班/" },
   { key: "offline", label: "AI 财富线下班", file: "AI 财富线下班/" },
   { key: "checklist", label: "AI 能力清单", file: "AI 能力清单/" },
@@ -60,7 +60,7 @@ function renderNav(active) {
 
   root.innerHTML = `
     <nav class="topnav">
-      <a class="brand" href="${p}dashboard.html">
+      <a class="brand" href="${p}welcome.html">
         <span class="logo">🐌</span><span>蜗牛AI · 学员学堂</span>
       </a>
       <div class="navlinks">${links}</div>
