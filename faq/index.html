@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ 常见问题 | 蜗牛 AI 澳洲华人应用首期培训班</title>
+<style>
+  :root {
+    --ink: #0E0E10;
+    --ink-2: #1A1A1E;
+    --ink-3: #5A5A65;
+    --paper: #FAFAF7;
+    --paper-2: #F0EFEA;
+    --paper-3: #E5E4DD;
+    --accent: #FF5B1F;
+    --accent-2: #E84A0F;
+    --accent-light: rgba(255,91,31,0.08);
+    --line: rgba(14,14,16,.12);
+    --shadow-sm: 0 1px 2px rgba(14,14,16,.04), 0 2px 8px rgba(14,14,16,.04);
+    --shadow-md: 0 4px 12px rgba(14,14,16,.06), 0 8px 28px rgba(14,14,16,.08);
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+    --sans: 'Inter','Helvetica Neue','Helvetica','Arial','PingFang SC','Microsoft YaHei UI','Noto Sans SC',sans-serif;
+    --mono: 'JetBrains Mono','SF Mono','Menlo','Consolas',monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.7;
+  }
+
+  /* ── Header / Nav ── */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 48px;
+    background: linear-gradient(180deg, rgba(250,250,247,.92) 0%, rgba(250,250,247,0) 100%);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none; color: var(--ink);
+  }
+
+  .nav-logo img { height: 38px; width: auto; }
+
+  .nav-logo span {
+    font-weight: 700; font-size: 15px;
+    letter-spacing: -0.01em;
+  }
+
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    font-size: 13px; font-weight: 600; color: var(--ink-3);
+    text-decoration: none; letter-spacing: .02em;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── Hero Section ── */
+  .hero {
+    position: relative;
+    padding: 140px 48px 80px;
+    max-width: 960px; margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: 60px; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    border-radius: 2px;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(255,91,31,.25);
+    padding: 6px 16px; border-radius: 20px;
+    margin-bottom: 28px;
+    background: var(--accent-light);
+  }
+
+  .hero h1 {
+    font-size: clamp(30px, 4.5vw, 52px);
+    font-weight: 800; line-height: 1.15;
+    letter-spacing: -.025em;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: clamp(16px, 1.8vw, 20px);
+    color: var(--ink-3);
+    font-weight: 400;
+    max-width: 640px;
+    margin: 0 auto 36px;
+    line-height: 1.6;
+  }
+
+  /* ── TOC (quick jump) ── */
+  .toc {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    max-width: 800px; margin: 0 auto 56px;
+    padding: 20px 24px;
+    background: var(--paper-2);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--line);
+  }
+
+  .toc a {
+    font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+    text-decoration: none; padding: 6px 14px;
+    border-radius: 20px;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .toc a:hover {
+    background: var(--accent); color: #fff;
+  }
+
+  /* ── Main Content ── */
+  .main {
+    max-width: 840px; margin: 0 auto;
+    padding: 0 32px 100px;
+  }
+
+  /* ── FAQ Item ── */
+  .faq-item {
+    margin-bottom: 32px;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    transition: box-shadow .3s, transform .3s;
+  }
+
+  .faq-item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .faq-q {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 28px 28px 0;
+    cursor: default;
+  }
+
+  .faq-num {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--accent); color: #fff;
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    border-radius: 50%;
+    margin-top: 2px;
+  }
+
+  .faq-q-text {
+    flex: 1;
+    font-size: clamp(17px, 2vw, 21px);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  .faq-a {
+    padding: 20px 28px 28px;
+    padding-left: 80px;
+    color: var(--ink-2);
+    font-size: clamp(14.5px, 1.55vw, 16.5px);
+    line-height: 1.85;
+  }
+
+  .faq-a p { margin-bottom: 14px; }
+  .faq-a p:last-child { margin-bottom: 0; }
+
+  .faq-a strong { color: var(--ink); font-weight: 700; }
+
+  .faq-a ul {
+    list-style: none; padding: 0; margin: 14px 0;
+  }
+
+  .faq-a ul li {
+    position: relative; padding-left: 22px; margin-bottom: 10px;
+  }
+
+  .faq-a ul li::before {
+    content: ''; position: absolute; left: 0; top: .6em;
+    width: 7px; height: 7px;
+    background: var(--accent); border-radius: 50%;
+  }
+
+  /* Highlight boxes inside answers */
+  .highlight-box {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    margin: 16px 0;
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    font-size: .96em;
+  }
+
+  .level-card {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px; margin: 18px 0;
+  }
+
+  .level-card div {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px;
+  }
+
+  .level-card strong {
+    display: block; font-size: 15px; margin-bottom: 6px;
+    color: var(--accent);
+  }
+
+  .compare-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin: 18px 0;
+  }
+
+  .compare-col {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 20px;
+  }
+
+  .compare-col.online { border-top: 3px solid var(--ink-3); }
+  .compare-col.hybrid { border-top: 3px solid var(--accent); }
+
+  .compare-col strong { display: block; font-size: 15px; margin-bottom: 8px; }
+  .compare-col.online strong { color: var(--ink-2); }
+  .compare-col.hybrid strong { color: var(--accent); }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 48px 24px 64px;
+    color: var(--ink-3);
+    font-size: 13px;
+    border-top: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+
+  .footer-logo { height: 32px; margin-bottom: 12px; opacity: .7; }
+  .footer p { margin-bottom: 4px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .nav { padding: 14px 24px; }
+    .hero { padding: 110px 24px 56px; }
+    .main { padding: 0 20px 72px; }
+    .faq-q { padding: 22px 20px 0; }
+    .faq-a { padding: 16px 20px 24px; padding-left: 20px; }
+    .faq-num { width: 30px; height: 30px; font-size: 11px; }
+    .toc { gap: 6px; padding: 14px 16px; }
+    .toc a { font-size: 11.5px; padding: 5px 11px; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .level-card { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    .nav-links { display: none; }
+  }
+
+  /* ── Scroll animations ── */
+  .faq-item {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp .5s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .faq-item:nth-child(1) { animation-delay: .05s; }
+  .faq-item:nth-child(2) { animation-delay: .1s; }
+  .faq-item:nth-child(3) { animation-delay: .15s; }
+  .faq-item:nth-child(4) { animation-delay: .2s; }
+  .faq-item:nth-child(5) { animation-delay: .25s; }
+  .faq-item:nth-child(6) { animation-delay: .3s; }
+  .faq-item:nth-child(7) { animation-delay: .35s; }
+  .faq-item:nth-child(8) { animation-delay: .4s; }
+  .faq-item:nth-child(9) { animation-delay: .45s; }
+  .faq-item:nth-child(11) { animation-delay: .55s; }
+  .faq-item:nth-child(12) { animation-delay: .60s; }
+
+  /* ── Floating Bottom Nav ── */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; justify-content: center; gap: 0;
+    background: rgba(255,255,255,.88);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--line);
+    padding: 0;
+  }
+  .bottom-nav a {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 10px 0 12px;
+    text-decoration: none; color: var(--ink-3);
+    font-size: 11px; font-weight: 500;
+    transition: color .2s;
+    position: relative;
+  }
+  .bottom-nav a.active { color: var(--accent); }
+  .bottom-nav a:hover { color: var(--accent); }
+  .bottom-nav a .bnav-icon { font-size: 20px; margin-bottom: 2px; line-height: 1; }
+  .bottom-nav a .bnav-label { letter-spacing: .02em; }
+
+  @media (min-width: 769px) {
+    .bottom-nav { display: none; }
+  }
+
+  /* ===== VERSION TAG ===== */
+  .version-tag {
+    position: fixed;
+    top: 72px;
+    left: 24px;
+    z-index: 1000;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    background: rgba(255,255,255,0.85);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    backdrop-filter: blur(8px);
+    color: var(--ink-3);
+  }
+</style>
+</head>
+<body>
+<!-- VERSION TAG -->
+<div class="version-tag">FAQ-V1.0.0 · 2026-07-06</div>
+
+<!-- ═══ Navigation ═══ -->
+<nav class="nav">
+  <a class="nav-logo" href="/">
+    <img src="../assets/snailai_logo.png" alt="蜗牛 AI Logo">
+    <span>蜗牛 AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="/online-course/" target="_blank">线上课大纲</a>
+    <a href="/offline-course/" target="_blank">线下课大纲</a>
+    <a href="#faq">常见问题</a>
+  </div>
+</nav>
+
+<!-- ═══ Hero ═══ -->
+<section class="hero" id="top">
+  <div class="hero-badge">Snail AI · FAQ</div>
+  <h1>澳洲华人 AI 应用<br><span>首期培训班</span> 常见问题</h1>
+  <p class="hero-sub">关于课程内容、学习方式、工具准备、适合人群等 12 大核心问题，一一为你解答。</p>
+
+  <div class="toc" id="toc">
+    <a href="#q1">学什么 & 能学会吗</a>
+    <a href="#q2">工具准备 & 时间安排</a>
+    <a href="#q3">线上 vs 线下+线上</a>
+    <a href="#q4">理论多吗？怕听不懂</a>
+    <a href="#q5">年龄大/电脑不熟能学吗</a>
+    <a href="#q6">三个月后达到什么程度</a>
+    <a href="#q7">适合什么样的人</a>
+    <a href="#q8">需要提前有账号吗</a>
+    <a href="#q9">有没有作业？压力大吗</a>
+    <a href="#q10">和免费视频的区别</a>
+    <a href="#q11">相信 AI</a>
+    <a href="#q12">电脑配置</a>
+  </div>
+</section>
+
+<!-- ═══ FAQ Content ═══ -->
+<main class="main" id="faq">
+
+  <!-- Q1 -->
+  <article class="faq-item" id="q1">
+    <div class="faq-q">
+      <div class="faq-num">01</div>
+      <div class="faq-q-text">我们不怎么懂 AI 的人，三个月下来能学到什么？AI 的运用能去到哪里？能不能真正学会？</div>
+    </div>
+    <div class="faq-a">
+      <p>这门课不是培养 AI 程序员，也不是教复杂技术，而是帮助你在 <strong>3 个月内把 AI 真正用进生活、工作、家庭或公司</strong>。</p>
+      <p>三个月后，你会知道 AI 能做什么、不能做什么；掌握基本的 AI 使用方法，也就是<strong>"AI 思维 + 阿拉丁神灯咒语"</strong>；学会把问题讲清楚，让 AI 给出有用结果。</p>
+      <div class="highlight-box">
+        <strong>真实场景练习包括：</strong>英文邮件、资料总结、合同初步阅读、旅行安排、健康报告理解、客户沟通、公司文件、营销内容、会议纪要等。
+      </div>
+      <p>最重要的是，你会完成几个属于自己的 <strong>AI 应用案例</strong>。目标不是变成技术专家，而是从<strong>"看热闹"</strong> 变成<strong>"真的会用"</strong>。只要每周跟着练，是可以学会的。</p>
+      <div class="highlight-box">
+        学会的标准不是懂多少理论，而是遇到真实问题时，<strong>知道怎么让 AI 帮你做出结果</strong>。
+      </div>
+    </div>
+  </article>
+
+  <!-- Q2 -->
+  <article class="faq-item" id="q2">
+    <div class="faq-q">
+      <div class="faq-num">02</div>
+      <div class="faq-q-text">如果要学，要准备的工具有哪些？学习时间具体安排是什么？</div>
+    </div>
+    <div class="faq-a">
+      <p>学习工具不复杂，第一期会从<strong>最容易上手的工具</strong>开始。</p>
+      <p><strong>建议准备：</strong></p>
+      <ul>
+        <li>一台电脑，最好是笔记本电脑</li>
+        <li>一个常用邮箱，最好是 Gmail</li>
+        <li>一个 AI 工具账号，比如 ChatGPT、Gemini、Claude</li>
+        <li>微信，用来加入学习群、接收通知、提交问题</li>
+        <li>参加线下课的同学，建议带电脑到现场</li>
+      </ul>
+      <p><strong>时间安排：</strong></p>
+      <ul>
+        <li>线上课是<strong>每周二晚上 8:30 到 10:30</strong>，两小时</li>
+        <li>线下+线上班：除了周二线上课，<strong>每周六下午 1:00 到 4:00</strong> 还有线下共创课（每月 3 次）</li>
+        <li>除了上课，建议每周再留出 <strong>1 到 2 小时</strong>练习</li>
+      </ul>
+      <div class="highlight-box">
+        <strong>时间投入参考：</strong><br>
+        线上班每周约 3–4 小时 &nbsp;|&nbsp; 线下+线上班每周约 5–7 小时
+      </div>
+      <p>如果只听不练，效果有限；如果<strong>每周拿一个真实问题来练</strong>，三个月会有明显变化。工具和场景我们都会带着做。</p>
+    </div>
+  </article>
+
+  <!-- Q3 -->
+  <article class="faq-item" id="q3">
+    <div class="faq-q">
+      <div class="faq-num">03</div>
+      <div class="faq-q-text">如果线上线下一起学，与单纯线上学的差别是什么？</div>
+    </div>
+    <div class="faq-a">
+      <p>线上班和线下+线上班的<strong>核心内容一致</strong>，都有每周二直播课、课后资料、问题卡片和学习群支持。<br>区别在于深度和互动。</p>
+      <div class="compare-grid">
+        <div class="compare-col online">
+          <strong>🖥 线上班</strong>
+          <p style="font-size:.93em;line-height:1.65;">想系统学习、时间灵活，或不方便到现场的同学。通过直播和学习群，也可以完成入门和持续跟进。</p>
+          <p style="font-size:.92em;color:var(--accent);font-weight:600;margin-top:10px;">解决："我跟着学，会用起来。"</p>
+        </div>
+        <div class="compare-col hybrid">
+          <strong>🤝 线下 + 线上</strong>
+          <p style="font-size:.93em;line-height:1.65;">更像"现场共创"。你可以带着电脑和真实问题来现场，我们一起拆解、一起做——公司文件、客户沟通、营销内容等都可以现场深入处理。</p>
+          <p style="font-size:.92em;color:var(--accent);font-weight:600;margin-top:10px;">解决："我带着自己的问题来，现场做出来。"</p>
+        </div>
+      </div>
+      <ul>
+        <li>如果只是系统入门，<strong>线上班已经足够</strong></li>
+        <li>如果希望更快上手、更深度互动，或未来想成为助教、老师、AI 应用伙伴，<strong>线下+线上班更合适</strong></li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- Q4 -->
+  <article class="faq-item" id="q4">
+    <div class="faq-q">
+      <div class="faq-num">04</div>
+      <div class="faq-q-text">这门课是不是会讲很多理论？我怕听不懂。</div>
+    </div>
+    <div class="faq-a">
+      <p><strong>不会。</strong></p>
+      <p>这门课不是传统理论课，也不是单纯工具课，而是<strong>"输出式教学"</strong>。</p>
+      <p>也就是每周从真实场景开始，看 AI 怎么解决问题，然后你回去用自己的问题练习。<br>我们不会花大量时间讲抽象概念，也不会要求大家背专业名词。</p>
+      <div class="highlight-box">
+        <strong>你会在课堂上看到：</strong><br>
+        AI 怎么写英文邮件 → AI 怎么读资料 → AI 怎么整理家庭计划<br>
+        AI 怎么分析客户问题 → AI 怎么做公司流程 → AI 怎么把复杂事情变清楚
+      </div>
+      <p>理论会有，但只是辅助。真正重要的是：<strong>你能不能用 AI 做出结果</strong>。</p>
+    </div>
+  </article>
+
+  <!-- Q5 -->
+  <article class="faq-item" id="q5">
+    <div class="faq-q">
+      <div class="faq-num">05</div>
+      <div class="faq-q-text">如果我年龄比较大，或者电脑不太熟，可以学吗？</div>
+    </div>
+    <div class="faq-a">
+      <p><strong>可以学，但前提是愿意动手试。</strong></p>
+      <p>这门课不是给技术高手准备的，而是给<strong>普通人、家庭、老板、上班族、小生意经营者</strong>准备的。</p>
+      <p>如果电脑基础不强，刚开始慢一点很正常。我们会从基础应用场景开始，不会一上来就讲复杂工具。</p>
+      <div class="highlight-box">
+        <strong>你只需要做到：</strong><br>
+        ✦ 愿意打开电脑 &nbsp;&nbsp;✦ 愿意跟着操作<br>
+        ✦ 愿意把问题讲出来 &nbsp;&nbsp;✦ 愿意每周练习一点点
+      </div>
+      <p>AI 学习不是拼技术，而是拼使用习惯。<strong>只要持续用，慢慢就会进入状态。</strong></p>
+    </div>
+  </article>
+
+  <!-- Q6 -->
+  <article class="faq-item" id="q6">
+    <div class="faq-q">
+      <div class="faq-num">06</div>
+      <div class="faq-q-text">三个月后，我能达到什么程度？</div>
+    </div>
+    <div class="faq-a">
+      <p>现实地说，三个月后不是每个人都会变成 AI 高手，但大部分认真学习的人，可以达到第一层或第二层。</p>
+      <div class="level-card">
+        <div>
+          <strong>第一层：基础会用</strong>
+          <p style="font-size:.92em;color:var(--ink-3);margin-top:4px;">用 AI 完成日常写作、翻译、总结、邮件、资料整理、旅行规划、简单决策辅助。</p>
+        </div>
+        <div>
+          <strong>第二层：场景应用</strong>
+          <p style="font-size:.92em;color:var(--ink-3);margin-top:4px;">把 AI 用到工作、家庭或公司场景里——客户跟进、会议纪要、营销文案、合同初步阅读、健康报告理解等。</p>
+        </div>
+        <div>
+          <strong>第三层：系统化使用</strong>
+          <p style="font-size:.92em;color:var(--ink-3);margin-top:4px;">少数学得快、练得多的人，可以建立自己的 AI 工作流，甚至帮助别人使用 AI。</p>
+        </div>
+      </div>
+      <p>第一期目标不是让所有人都变成专家，而是让大家<strong>真正用起来</strong>，并筛选出高质量学员、助教和未来 AI 应用伙伴。</p>
+    </div>
+  </article>
+
+  <!-- Q7 -->
+  <article class="faq-item" id="q7">
+    <div class="faq-q">
+      <div class="faq-num">07</div>
+      <div class="faq-q-text">这门课适合什么样的人？</div>
+    </div>
+    <div class="faq-a">
+      <p><strong>这门课适合：</strong></p>
+      <ul>
+        <li>想提高效率的澳洲华人</li>
+        <li>英文沟通、邮件、资料阅读有压力的人</li>
+        <li>小生意老板、企业主、管理者</li>
+        <li>想用 AI 做家庭管理、孩子教育、旅行安排、健康信息整理的人</li>
+        <li>房地产、贷款、会计、保险、法律、投资等专业服务从业者</li>
+        <li>对 AI 有兴趣，但不知道从哪里开始的人</li>
+        <li>未来想成为 AI 应用老师、助教、创业伙伴的人</li>
+      </ul>
+      <div class="highlight-box">
+        ⚠️ 不适合只想听热闹、完全不愿意练习的人。<strong>AI 一定要用，光听是不够的。</strong>
+      </div>
+    </div>
+  </article>
+
+  <!-- Q8 -->
+  <article class="faq-item" id="q8">
+    <div class="faq-q">
+      <div class="faq-num">08</div>
+      <div class="faq-q-text">我需要提前有 ChatGPT 或其他 AI 账号吗？</div>
+    </div>
+    <div class="faq-a">
+      <p><strong>如果已经有，最好。如果没有，也没关系。</strong></p>
+      <p>课程开始后，我们会告诉大家准备哪些工具，并一步步指导。</p>
+      <p><strong>基本建议：</strong></p>
+      <ul>
+        <li>准备一个常用邮箱</li>
+        <li>准备一台电脑</li>
+        <li>准备一个主流 AI 工具账号</li>
+        <li>加入学习群</li>
+        <li>按课程要求完成每周练习</li>
+      </ul>
+      <p>我们不会要求大家一开始就安装很多复杂工具。<strong>第一期会从最容易上手、最能产生效果的工具开始。</strong></p>
+    </div>
+  </article>
+
+  <!-- Q9 -->
+  <article class="faq-item" id="q9">
+    <div class="faq-q">
+      <div class="faq-num">09</div>
+      <div class="faq-q-text">课程有没有作业？会不会压力很大？</div>
+    </div>
+    <div class="faq-a">
+      <p>会有作业，但不是学校式复杂作业，而是<strong>"真实应用任务"</strong>。</p>
+      <p><strong>比如：</strong></p>
+      <ul>
+        <li>用 AI 写一封真实邮件</li>
+        <li>用 AI 整理一份资料</li>
+        <li>用 AI 做家庭旅行计划</li>
+        <li>用 AI 设计客户跟进话术</li>
+        <li>用 AI 总结一次会议</li>
+        <li>用 AI 分析一个正在考虑的问题</li>
+      </ul>
+      <div class="highlight-box">
+        作业不是考试，而是帮助你真正用起来。<br>
+        如果每周完成一个小任务，三个月下来，你会积累一批属于自己的 <strong>AI 应用案例</strong>。
+      </div>
+    </div>
+  </article>
+
+  <!-- Q10 -->
+  <article class="faq-item" id="q10">
+    <div class="faq-q">
+      <div class="faq-num">10</div>
+      <div class="faq-q-text">这门课和网上免费的 AI 视频有什么区别？</div>
+    </div>
+    <div class="faq-a">
+      <p>网上免费内容很多，但大多是<strong>碎片化的</strong>。你看完可能觉得很厉害，但回到自己的生活和工作里，还是不知道怎么用。</p>
+      <div class="highlight-box">
+        <strong>这门课的不同在于：</strong><br><br>
+        一、它是连续 <strong>3 个月的系统学习</strong><br>
+        二、它围绕<strong>澳洲华人的真实场景</strong>，不是泛泛讲工具<br>
+        三、它采用<strong>输出式教学</strong>，不是只讲理论<br>
+        四、它有直播、学习群、作业和课后资料<br>
+        五、线下+线上班可以带着真实问题来现场共创<br>
+        六、我们培养的不是"知道 AI 的人"，而是<strong>"真正会用 AI 解决问题的人"</strong>
+      </div>
+      <p>所以你学到的不是零散技巧，而是一套可以<strong>持续使用的 AI 应用能力</strong>。</p>
+    </div>
+  </article>
+
+  <!-- Q11 -->
+  <article class="faq-item" id="q11">
+    <div class="faq-q">
+      <div class="faq-num">11</div>
+      <div class="faq-q-text">我相信 AI 很厉害，但我不相信自己能学会——怎么办？</div>
+    </div>
+    <div class="faq-a">
+      <p>这个问题很真实，也很关键。它其实分两层：</p>
+      <div class="level-card">
+        <div>
+          <strong>第一层：相信 AI 能做到</strong>
+          <p style="font-size:.92em;color:var(--ink-3);margin-top:4px;">只要看过我的直播或路演，你就会相信——AI 确实能做到。现场演示不是为了炫技，而是让你亲眼看到：这些事情，AI 真的可以帮你完成。</p>
+        </div>
+        <div>
+          <strong>第二层：相信你能利用 AI 做到</strong>
+          <p style="font-size:.92em;color:var(--ink-3);margin-top:4px;">这才是真正的门槛。很多人不是不信 AI，而是不信自己。觉得"我年纪大了""我电脑不行""这个离我太远了"。</p>
+        </div>
+      </div>
+      <p><strong>但事实是——小白也能做到。</strong></p>
+      <p>你不信自己，是因为你还没被带着走过一遍。这门课的核心价值就在这里：不是教你听懂 AI，而是<strong>引导你一步一步把 AI 用出结果</strong>。我会教你方法，带着你操作，帮你解决遇到的问题。你不需要变成技术达人，只需要愿意动手试。</p>
+      <div class="highlight-box">
+        看直播，解决第一层——<strong>相信 AI</strong>。<br>
+        上课练习，解决第二层——<strong>相信你自己</strong>。
+      </div>
+    </div>
+  </article>
+
+  <!-- Q12 -->
+  <article class="faq-item" id="q12">
+    <div class="faq-q">
+      <div class="faq-num">12</div>
+      <div class="faq-q-text">我的电脑很旧，是不是需要换电脑？</div>
+    </div>
+    <div class="faq-a">
+      <p>不用急着换。现在腾讯龙虾（WorkBuddy）要求的安装配置并不高，普通的笔记本电脑基本都能跑起来。</p>
+      <p><strong>建议的做法：</strong>上课之后，由我们的助教先给你的电脑安装龙虾，根据实际运行情况得出配置结论，再决定要不要买新电脑。</p>
+      <p><strong>大多数情况下是不用买的。</strong></p>
+      <div class="level-card">
+        <div>
+          <strong>一、蜗牛 AI 的学习理念：尽量全免费</strong>
+          <p style="font-size:.92em;color:var(--ink-3);margin-top:4px;">我们做 AI 学习，核心原则是「尽量不投入」。课程学费之外，额外支出越小越好。避免「还没学会 AI，先被装备门槛劝退」。</p>
+        </div>
+        <div>
+          <strong>二、唯一必要的额外支出：腾讯 AI 算力</strong>
+          <p style="font-size:.92em;color:var(--ink-3);margin-top:4px;">整个学习过程中，我们可能会购买腾讯 AI 的算力（Token Plan），大约几百人民币左右。这就是学费以外，最基础、最必要的支出。</p>
+        </div>
+        <div>
+          <strong>三、其他支出：能省就省</strong>
+          <p style="font-size:.92em;color:var(--ink-3);margin-top:4px;">除了上面的算力之外，其他的（电脑、设备、付费工具等）最好都不要再花钱了。先用手里现有的，把课程完整跑一遍，再决定要不要升级。</p>
+        </div>
+      </div>
+      <p style="margin-top:14px;font-size:.95em;color:var(--ink-2);">💡 总结：<strong>电脑先用着，配置让助教帮你测；算力买一点点，其他能省则省。</strong>这才是蜗牛 AI 学员该有的"轻装上阵"姿势。</p>
+    </div>
+  </article>
+
+</main>
+
+<!-- ═══ Course Links ═══ -->
+<section style="max-width:760px;margin:48px auto;padding:0 24px;">
+  <h2 style="text-align:center;font-size:22px;font-weight:700;margin-bottom:24px;color:var(--ink);">📋 浏览课程大纲</h2>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
+    <a href="/online-course/" target="_blank" style="flex:1;min-width:240px;max-width:340px;padding:28px 24px;border:2px solid var(--line);border-radius:var(--r-lg);text-decoration:none;color:var(--ink);transition:border-color .2s,box-shadow .2s,transform .2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-2px)';this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.borderColor='var(--line)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+      <div style="font-size:14px;color:var(--accent);font-weight:600;margin-bottom:10px;">💻 线上课</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:8px;">线上课大纲 →</div>
+      <div style="font-size:13px;color:var(--ink-3);">12 周 · 24 课时 · 每周二晚 8:30</div>
+    </a>
+    <a href="/offline-course/" target="_blank" style="flex:1;min-width:240px;max-width:340px;padding:28px 24px;border:2px solid var(--line);border-radius:var(--r-lg);text-decoration:none;color:var(--ink);transition:border-color .2s,box-shadow .2s,transform .2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-2px)';this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.borderColor='var(--line)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+      <div style="font-size:14px;color:var(--accent);font-weight:600;margin-bottom:10px;">🤝 线下课</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:8px;">线下课大纲 →</div>
+      <div style="font-size:13px;color:var(--ink-3);">悉尼面对面 · 13 周 · 周六下午</div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer class="footer">
+  <img src="../assets/snailai_logo.png" alt="蜗牛 AI" class="footer-logo">
+  <p>© 2026 Snail AI 蜗牛 AI · 澳洲华人 AI 应用首期培训班</p>
+  <p style="opacity:.6;font-size:12px;margin-top:6px;">让每一位华人都能真正用上 AI</p>
+</footer>
+
+<!-- ═══ Mobile Bottom Nav ═══ -->
+<nav class="bottom-nav">
+  <a href="/online-course/">
+    <span class="bnav-icon">💻</span>
+    <span class="bnav-label">线上课</span>
+  </a>
+  <a href="/offline-course/">
+    <span class="bnav-icon">🤝</span>
+    <span class="bnav-label">线下课</span>
+  </a>
+  <a href="#top" class="active">
+    <span class="bnav-icon">📋</span>
+    <span class="bnav-label">FAQ</span>
+  </a>
+</nav>
+
+</body>
+</html>

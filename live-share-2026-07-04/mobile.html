@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>蜗牛AI · 财富投资技术应用直播分享会PPT · 手机版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --gold: #c9a14a;
+  --gold-bright: #d4af37;
+  --gold-deep: #a67c00;
+  --gold-soft: #f0e2bc;
+  --bg-0: #faf6ee;
+  --bg-1: #ffffff;
+  --bg-2: #f5efe2;
+  --ink: #1f1a10;
+  --ink-soft: #4a4332;
+  --ink-dim: #8a7f5c;
+  --line: rgba(201, 161, 74, 0.25);
+  --line-strong: rgba(201, 161, 74, 0.55);
+  --shadow: 0 12px 40px -10px rgba(31, 26, 16, 0.12);
+  --shadow-strong: 0 20px 60px -15px rgba(31, 26, 16, 0.18);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  scroll-behavior: smooth;
+}
+body {
+  background: var(--bg-0);
+  color: var(--ink);
+  font-family: "Noto Sans SC", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+/* === Background Texture === */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 10% 0%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 90% 100%, rgba(201, 161, 74, 0.06) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 60px;
+  position: relative;
+  z-index: 1;
+}
+
+/* === Section (each slide is a scroll section) === */
+section {
+  padding: 100px 0 80px;
+  border-bottom: 1px dashed var(--line);
+  position: relative;
+}
+section:last-of-type { border-bottom: none; }
+
+.section-num {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-num::before {
+  content: "";
+  display: inline-block;
+  width: 32px;
+  height: 1px;
+  background: var(--gold);
+}
+
+h1.title {
+  font-family: "Noto Serif SC", serif;
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+h2.title {
+  font-family: "Noto Serif SC", serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.title .accent {
+  background: linear-gradient(135deg, var(--gold-deep) 0%, var(--gold-bright) 50%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  max-width: 900px;
+  font-weight: 300;
+}
+
+.gold-line {
+  width: 72px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
+  margin: 24px 0;
+}
+
+.eyebrow-tag {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  background: var(--gold-soft);
+  color: var(--gold-deep);
+  font-family: "Inter", sans-serif;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+/* === Section 1: Cover === */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 80px;
+  padding-bottom: 80px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+.cover-qr {
+  position: absolute;
+  top: 100px;
+  right: 0;
+  width: 208px;
+  height: auto;
+  border-radius: 12px;
+  background: var(--bg-1);
+  padding: 10px;
+  box-shadow: var(--shadow-strong);
+  border: 2px solid var(--gold);
+}
+.cover-qr-badge {
+  position: absolute;
+  top: 100px;
+  right: 223px;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--gold-deep);
+  text-transform: uppercase;
+  background: var(--bg-1);
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--line-strong);
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+}
+.cover-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+.cover-top .logo {
+  width: 56px;
+  height: 56px;
+}
+.cover-top .brand {
+  font-family: "Noto Serif SC", serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.cover-top .brand-en {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.cover h1 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 96px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.cover h1 .accent {
+  background: linear-gradient(135deg, var(--gold-deep) 0%, var(--gold-bright) 50%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.cover h1 .sub-en {
+  display: block;
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ink-dim);
+  letter-spacing: 0.3em;
+  margin-top: 18px;
+  text-transform: uppercase;
+}
+.cover .lead {
+  font-size: 22px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin: 30px 0 50px;
+  max-width: 900px;
+  font-weight: 300;
+}
+.cover .lead strong {
+  color: var(--gold-deep);
+  font-weight: 500;
+}
+
+.cover .meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  padding: 32px 36px;
+  background: var(--bg-1);
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+.cover .meta-item .label {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.cover .meta-item .value {
+  font-family: "Noto Serif SC", serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.cover .meta-item .sub {
+  font-size: 14px;
+  color: var(--ink-soft);
+  font-weight: 400;
+  margin-top: 4px;
+}
+.cover .meta-item .value.zoom {
+  font-family: "Inter", sans-serif;
+  font-size: 30px;
+  color: var(--gold-deep);
+  letter-spacing: 0.08em;
+}
+
+/* === Section 2: Opening === */
+.opening .question {
+  font-family: "Noto Serif SC", serif;
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 30px 0;
+}
+.opening .question .accent {
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  position: relative;
+}
+.opening .context {
+  font-size: 18px;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  max-width: 1000px;
+  font-weight: 300;
+  margin-top: 30px;
+}
+.opening .context strong {
+  color: var(--gold-deep);
+  font-weight: 500;
+}
+
+/* === Section 2/3: Who + Opening === */
+.video-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 24px 0 12px;
+  gap: 10px;
+}
+.video-link {
+  display: block;
+  text-decoration: none;
+  width: 100%;
+  max-width: 560px;
+}
+.video-thumb {
+  background: linear-gradient(135deg, var(--gold-deep) 0%, var(--gold-bright) 50%, var(--gold) 100%);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 36px 24px;
+  text-align: center;
+  position: relative;
+  box-shadow: var(--shadow-strong);
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+.video-thumb:hover {
+  transform: translateY(-3px);
+}
+.play-icon {
+  font-size: 56px;
+  color: white;
+  margin-bottom: 8px;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.video-label {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: white;
+  text-transform: uppercase;
+}
+.video-tip {
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.profile {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-top: 40px;
+}
+.profile .avatar {
+  width: 320px;
+  height: 320px;
+  border-radius: 24px;
+  object-fit: cover;
+  border: 4px solid var(--gold);
+  box-shadow: 0 12px 40px -10px rgba(201, 161, 74, 0.4);
+}
+.profile .name {
+  font-family: "Noto Serif SC", serif;
+  font-size: 60px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 8px;
+}
+.profile .title-text {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  color: var(--ink-dim);
+  letter-spacing: 0.2em;
+  margin-bottom: 24px;
+}
+.profile .intro {
+  font-size: 17px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+.profile .intro strong {
+  color: var(--gold-deep);
+  font-weight: 500;
+}
+.profile .roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.profile .role {
+  padding: 16px 20px;
+  border-left: 3px solid var(--gold);
+  background: var(--bg-1);
+  font-size: 15px;
+  color: var(--ink-soft);
+  font-weight: 400;
+  border-radius: 0 8px 8px 0;
+  box-shadow: var(--shadow);
+}
+.profile .role strong {
+  color: var(--gold-deep);
+  display: block;
+  margin-bottom: 2px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* === Section 4: Three Highlights === */
+.highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  margin-top: 40px;
+}
+.highlight-card {
+  background: var(--bg-1);
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  padding: 36px 30px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+.highlight-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright), var(--gold));
+}
+.highlight-card .num {
+  font-family: "Inter", sans-serif;
+  font-size: 72px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+  margin-bottom: 8px;
+  font-style: italic;
+}
+.highlight-card h3 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 14px;
+  line-height: 1.25;
+}
+.highlight-card .desc {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  margin-bottom: 16px;
+  flex-grow: 1;
+}
+.highlight-card .desc strong {
+  color: var(--gold-deep);
+  font-weight: 500;
+}
+.highlight-card .key-points {
+  list-style: none;
+  padding: 16px 0 0;
+  border-top: 1px dashed var(--line);
+}
+.highlight-card .key-points li {
+  font-size: 14px;
+  color: var(--ink-soft);
+  padding: 5px 0 5px 18px;
+  position: relative;
+}
+.highlight-card .key-points li::before {
+  content: "▸";
+  color: var(--gold);
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+.highlight-card.priority {
+  background: linear-gradient(160deg, var(--gold-soft) 0%, var(--bg-1) 100%);
+  border-color: var(--gold-bright);
+}
+.highlight-card.priority::after {
+  content: "★ 重点";
+  position: absolute;
+  top: 16px; right: 16px;
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright));
+  color: white;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  font-family: "Inter", sans-serif;
+}
+
+/* === Section 5/6/7: Demo === */
+.demo .framework {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 36px 0;
+}
+.demo .step {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  position: relative;
+  transition: transform 0.2s;
+}
+.demo .step:hover {
+  transform: translateY(-4px);
+}
+.demo .step .step-num {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold-deep);
+  letter-spacing: 0.2em;
+  margin-bottom: 10px;
+}
+.demo .step h4 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.demo .step p {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.demo .screenshot-area {
+  background: linear-gradient(135deg, var(--bg-2) 0%, var(--bg-1) 100%);
+  border: 2px dashed var(--line-strong);
+  border-radius: 16px;
+  padding: 60px 40px;
+  text-align: center;
+  margin-top: 24px;
+  position: relative;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.demo .screenshot-area .icon-large {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+.demo .screenshot-area .label {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--gold-deep);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.demo .screenshot-area .placeholder {
+  font-family: "Noto Serif SC", serif;
+  font-size: 22px;
+  color: var(--ink);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.demo .screenshot-area .demo-tip {
+  font-size: 14px;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* === Section 8: Scenarios === */
+.scenarios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 36px;
+}
+.scenario {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+.scenario:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+.scenario .num {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold-deep);
+  min-width: 32px;
+  padding: 6px 10px;
+  background: var(--gold-soft);
+  border-radius: 6px;
+  text-align: center;
+}
+.scenario .name {
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* === Section 9/10: Courses === */
+.course {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+  margin-top: 40px;
+}
+.course .info .price {
+  font-family: "Noto Serif SC", serif;
+  font-size: 88px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.course .info .price .currency {
+  font-size: 32px;
+  vertical-align: top;
+  margin-right: 6px;
+}
+.course .info .price .unit {
+  font-size: 22px;
+  color: var(--ink-soft);
+  -webkit-text-fill-color: var(--ink-soft);
+  font-weight: 500;
+  margin-left: 8px;
+}
+.course .info .name {
+  font-family: "Noto Serif SC", serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 16px 0 6px;
+  line-height: 1.2;
+}
+.course .info .name-en {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  color: var(--ink-dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.course .info .meta {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.course .info .meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  padding: 8px 14px;
+  background: var(--bg-2);
+  border-radius: 8px;
+}
+.course .info .meta-item .ico {
+  color: var(--gold-deep);
+  font-size: 16px;
+}
+.course .info .content h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold-deep);
+  letter-spacing: 0.2em;
+  margin-bottom: 12px;
+  font-family: "Inter", sans-serif;
+  text-transform: uppercase;
+}
+.course .info .content ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 24px;
+}
+.course .info .content li {
+  font-size: 14px;
+  color: var(--ink-soft);
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.5;
+}
+.course .info .content li::before {
+  content: "▸";
+  color: var(--gold);
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+.course .poster {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 16px;
+  border: 3px solid var(--gold);
+  box-shadow: var(--shadow-strong);
+  justify-self: center;
+}
+
+/* === Section 11: Q&A === */
+.qa-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 60px;
+  margin-top: 40px;
+  align-items: center;
+}
+.qa .left h2 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+.qa .left h2 .accent {
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.qa .left p {
+  font-size: 17px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+.qa .left p strong {
+  color: var(--gold-deep);
+  font-weight: 500;
+}
+.qa .channels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+.qa .channel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+.qa .channel .ico {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  color: white;
+  flex-shrink: 0;
+}
+.qa .channel .text strong {
+  color: var(--gold-deep);
+  display: block;
+  margin-bottom: 2px;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+}
+.qa .channel .text {
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 500;
+}
+.qa .right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-1);
+  border: 1px solid var(--line-strong);
+  border-radius: 20px;
+  padding: 36px;
+  box-shadow: var(--shadow-strong);
+}
+.qa .right .qr {
+  width: 280px;
+  height: 280px;
+  border-radius: 12px;
+  border: 2px solid var(--gold);
+  background: white;
+  padding: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+.qa .right .qr-label {
+  margin-top: 20px;
+  font-family: "Noto Serif SC", serif;
+  font-size: 18px;
+  color: var(--gold-deep);
+  font-weight: 700;
+  text-align: center;
+}
+.qa .right .qr-sub {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+/* === Section 12: Closing === */
+.closing {
+  text-align: center;
+  padding: 100px 0 120px;
+}
+.closing .thanks {
+  font-family: "Noto Serif SC", serif;
+  font-size: 120px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold-deep) 0%, var(--gold-bright) 50%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  margin-bottom: 30px;
+}
+.closing .tagline {
+  font-size: 24px;
+  color: var(--ink-soft);
+  font-weight: 300;
+  margin-bottom: 50px;
+  line-height: 1.6;
+}
+.closing .tagline strong {
+  color: var(--gold-deep);
+  font-weight: 500;
+}
+.closing .info-bar {
+  display: inline-flex;
+  gap: 50px;
+  padding: 28px 50px;
+  background: var(--bg-1);
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  margin-top: 20px;
+  box-shadow: var(--shadow);
+}
+.closing .info-bar .info-item {
+  text-align: left;
+}
+.closing .info-bar .label {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--gold-deep);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.closing .info-bar .value {
+  font-family: "Noto Serif SC", serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.closing .info-bar .value.zoom {
+  font-family: "Inter", sans-serif;
+  font-size: 30px;
+  color: var(--gold-deep);
+  letter-spacing: 0.08em;
+}
+.closing .qrs {
+  display: flex;
+  gap: 24px;
+  margin-top: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 30px;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: var(--shadow);
+}
+.closing .qrs .qr-mini {
+  width: 100px; height: 100px;
+  border-radius: 8px;
+  border: 1.5px solid var(--gold);
+  background: white;
+  padding: 4px;
+  flex-shrink: 0;
+}
+.closing .qrs .qr-text {
+  text-align: left;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.closing .qrs .qr-text strong {
+  display: block;
+  color: var(--gold-deep);
+  font-size: 16px;
+  margin-bottom: 4px;
+  font-family: "Noto Serif SC", serif;
+  font-weight: 700;
+}
+
+/* === Top Anchor Nav (subtle) === */
+.top-nav {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow);
+}
+.top-nav .live {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.top-nav .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold-deep);
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* === Print === */
+@media print {
+  body::before { display: none; }
+  .top-nav { display: none; }
+  section { page-break-before: always; padding: 40px 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <div class="live"><span class="dot"></span><span>LIVE · 7月4日 20:00</span></div>
+  <div>Zoom <strong style="color:var(--gold-deep);">543 211 2300</strong></div>
+</div>
+
+<div class="container">
+
+  <!-- Section 1: Cover -->
+  <section class="cover">
+    <div class="cover-qr-badge">★ 扫码进群</div>
+    <img src="images/qr_live_group_20260704.jpg" class="cover-qr" alt="蜗牛AI 财富投资技术应用直播群二维码" />
+    <div class="cover-top">
+      <img src="images/snailai_logo.png" class="logo" alt="蜗牛AI Logo" />
+      <div>
+        <div class="brand">蜗牛 AI · Snail AI</div>
+        <div class="brand-en">Wealth Investing · Live Streaming</div>
+      </div>
+    </div>
+
+    <h1>蜗牛 AI<br /><span class="accent">财富投资技术应用</span><br />直播分享会
+      <span class="sub-en">SN AI · WEALTH · INVESTING · LIVE</span>
+    </h1>
+
+    <p class="lead">
+      在 AI 时代的浪潮下，让 AI 强大的分析能力与理解能力，<br />
+      全程协助你把股票投资和房产投资做得 <strong>更清楚、更系统、更高效</strong>。
+    </p>
+
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="label">DATE · 时间</div>
+        <div class="value">7月4日 周六</div>
+        <div class="sub">20:00 – 22:00 悉尼时间</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">HOST · 主讲</div>
+        <div class="value">Robin</div>
+        <div class="sub">KSI CEO · 蜗牛AI 创始人</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">ZOOM · 会议号</div>
+        <div class="value zoom">543 211 2300</div>
+        <div class="sub">扫下方二维码进直播群</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Who (was Section 3) -->
+  <section>
+    <div class="section-num">ABOUT · 我是谁</div>
+    <h2 class="title">我是 <span class="accent">Robin</span></h2>
+    <div class="gold-line"></div>
+    <div class="video-block">
+      <a href="https://youtu.be/qIZp8pTQA3M" target="_blank" rel="noopener" class="video-link">
+        <div class="video-thumb">
+          <div class="play-icon">▶</div>
+          <div class="video-label">WATCH · Robin 自我介绍视频</div>
+        </div>
+      </a>
+      <p class="video-tip">点击跳转 YouTube 观看 · 时长 2 分钟</p>
+    </div>
+    <div class="profile">
+      <img src="images/robin_photo.jpg" class="avatar" alt="Robin" />
+      <div>
+        <div class="name">Robin · 罗斌</div>
+        <div class="title-text">SN AI · FOUNDER · CEO</div>
+        <p class="intro">
+          一个正在把 AI 用进 <strong>个人、家庭和公司</strong> 的实践者。<br />
+          持续探索 AI 在投资与内容生产中在澳洲的真实应用。
+        </p>
+        <div class="roles">
+          <div class="role"><strong>KSI 悉尼土地投资</strong>CEO</div>
+          <div class="role"><strong>蜗牛 AI</strong>创始人</div>
+          <div class="role"><strong>AI 应用系统</strong>实践者</div>
+          <div class="role"><strong>澳洲华人 AI</strong>应用传播者</div>
+          <div class="role"><strong>企业主视角</strong>AI 应用教练</div>
+          <div class="role"><strong>GOLF</strong>Killara & Bonnie Doon</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Opening (was Section 2) -->
+  <section class="opening">
+    <div class="section-num">OPENING · 开场</div>
+    <h2 class="title">今晚的<span class="accent">两个灵魂拷问</span></h2>
+    <div class="gold-line"></div>
+    <p class="question">你投资<strong class="accent">股票</strong>吗？</p>
+    <p class="question">你投资<strong class="accent">房产</strong>吗？</p>
+    <p class="context">
+      在 AI 时代的浪潮下，<strong>AI 已经可以凭借它强大的分析能力和理解能力</strong>，<br />
+      全程协助你把股票投资和房产投资做得 <strong>更清楚、更系统、更高效</strong>。<br /><br />
+      今晚，我会现场展示 <strong>三大真实应用场景</strong>，把 AI 真正带入你的投资决策。
+    </p>
+  </section>
+
+  <!-- Section 4: Three Highlights -->
+  <section>
+    <div class="section-num">HIGHLIGHTS · 今晚三大干货</div>
+    <h2 class="title">从 <span class="accent">①</span> 到 <span class="accent">③</span>，逐层递进</h2>
+    <div class="gold-line"></div>
+    <div class="highlights">
+      <div class="highlight-card priority">
+        <div class="num">01</div>
+        <h3>澳洲房屋价值调研</h3>
+        <p class="desc">用 AI 深度调研澳洲房屋的<strong>现有价值</strong>和<strong>未来投资价值</strong>，覆盖 suburb、人口、租金、回报。</p>
+        <ul class="key-points">
+          <li>Suburb 画像 + 人口数据</li>
+          <li>Section 32 合同秒读</li>
+          <li>租金回报 + 投资决策表</li>
+        </ul>
+      </div>
+      <div class="highlight-card">
+        <div class="num">02</div>
+        <h3>股票投资 · 含 AI 产业链</h3>
+        <p class="desc">用 AI 搭建<strong>股票强度指数系统</strong>，拆解 <strong>AI 产业链</strong>，筛选<strong>中、港、美、澳</strong>四国上市公司。</p>
+        <ul class="key-points">
+          <li>股票强度指数 + 自动化信号</li>
+          <li>AI 产业链：算力 / 模型 / 应用</li>
+          <li>4 国上市公司名单现场筛选</li>
+        </ul>
+      </div>
+      <div class="highlight-card">
+        <div class="num">03</div>
+        <h3>我的个人财富管理专家系统</h3>
+        <p class="desc"><strong>My Financial Advisor Expert</strong> —— 把个人的所有财富系统<strong>全部集合统一</strong>，按天一步步指导、共同设立计划、共同前进。</p>
+        <ul class="key-points">
+          <li>收入 · 支出 · 各种投资 · 贷款</li>
+          <li>未来财务计划 · 资产配置</li>
+          <li>每日 AI 指导 · 统一专家视角</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Demo Property -->
+  <section class="demo">
+    <div class="section-num">DEMO · 干货 ① 现场演示</div>
+    <h2 class="title">澳洲房屋价值<span class="accent">深度调研</span></h2>
+    <p class="subtitle">从「一个 Suburb」到「一份投资决策表」—— AI 全程辅助</p>
+    <div class="gold-line"></div>
+    <div class="framework">
+      <div class="step">
+        <div class="step-num">STEP 01</div>
+        <h4>Suburb 画像</h4>
+        <p>人口 · 收入 · 学区 · 交通</p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 02</div>
+        <h4>合同速读</h4>
+        <p>Section 32 关键条款</p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 03</div>
+        <h4>市场对标</h4>
+        <p>近期成交 + 趋势</p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 04</div>
+        <h4>投资决策</h4>
+        <p>回报率 + 风险评估</p>
+      </div>
+    </div>
+    <div class="screenshot-area">
+      <div class="icon-large">🏠</div>
+      <div class="label">LIVE DEMO · 现场演示</div>
+      <div class="placeholder">AI 调研工具实操画面</div>
+      <div class="demo-tip">Robin 现场演示：输入一个 Suburb，AI 输出完整投资调研报告</div>
+    </div>
+  </section>
+
+  <!-- Section 6: Demo Stock Index -->
+  <section class="demo">
+    <div class="section-num">DEMO · 干货 ② 现场演示</div>
+    <h2 class="title">股票<span class="accent">强度指数系统</span></h2>
+    <p class="subtitle">把技术指标、基本面、新闻情绪，转化成可量化的「强度评分」</p>
+    <div class="gold-line"></div>
+    <div class="framework">
+      <div class="step">
+        <div class="step-num">DATA 01</div>
+        <h4>价格数据</h4>
+        <p>K 线 + 技术指标</p>
+      </div>
+      <div class="step">
+        <div class="step-num">DATA 02</div>
+        <h4>财报数据</h4>
+        <p>AI 读财报 + 摘要</p>
+      </div>
+      <div class="step">
+        <div class="step-num">DATA 03</div>
+        <h4>新闻情绪</h4>
+        <p>AI 新闻解读 + 情绪</p>
+      </div>
+      <div class="step">
+        <div class="step-num">SIGNAL</div>
+        <h4>强度评分</h4>
+        <p>每日自动化信号</p>
+      </div>
+    </div>
+    <div class="screenshot-area">
+      <div class="icon-large">📈</div>
+      <div class="label">LIVE DEMO · 现场演示</div>
+      <div class="placeholder">股票强度指数系统实操画面</div>
+      <div class="demo-tip">Robin 现场演示：输入一只股票，AI 输出强度评分 + 操作建议</div>
+    </div>
+  </section>
+
+  <!-- Section 7: Demo AI Industry -->
+  <section class="demo">
+    <div class="section-num">DEMO · 干货 ③ 现场演示</div>
+    <h2 class="title">AI 产业链 + <span class="accent">上市公司</span></h2>
+    <p class="subtitle">拆解产业链，定位中、港、美、澳四地投资标的</p>
+    <div class="gold-line"></div>
+    <div class="framework">
+      <div class="step">
+        <div class="step-num">LAYER 01</div>
+        <h4>算力层</h4>
+        <p>芯片 · 服务器 · 云计算</p>
+      </div>
+      <div class="step">
+        <div class="step-num">LAYER 02</div>
+        <h4>模型层</h4>
+        <p>大模型 · 多模态 · 工具</p>
+      </div>
+      <div class="step">
+        <div class="step-num">LAYER 03</div>
+        <h4>应用层</h4>
+        <p>行业应用 · 端侧 AI</p>
+      </div>
+      <div class="step">
+        <div class="step-num">TARGETS</div>
+        <h4>上市公司</h4>
+        <p>中港美澳 4 地筛选</p>
+      </div>
+    </div>
+    <div class="screenshot-area">
+      <div class="icon-large">🌐</div>
+      <div class="label">LIVE DEMO · 现场演示</div>
+      <div class="placeholder">AI 产业链 + 上市公司名单实操</div>
+      <div class="demo-tip">Robin 现场演示：用 AI 工具筛选出每个产业链的代表性上市公司</div>
+    </div>
+  </section>
+
+  <!-- Section 8: 9 Scenarios -->
+  <section>
+    <div class="section-num">SYSTEM · 从工具到体系</div>
+    <h2 class="title">Robin 在澳洲真实使用 AI 的 <span class="accent">9 大场景</span></h2>
+    <p class="subtitle">不只是单点工具，是一套完整的 AI 投资与生活系统</p>
+    <div class="gold-line"></div>
+    <div class="scenarios">
+      <div class="scenario"><span class="num">01</span><span class="name">谷歌全家桶 · Gemini / Gmail / 日历</span></div>
+      <div class="scenario"><span class="num">02</span><span class="name">法律合同审核 · NotebookLM</span></div>
+      <div class="scenario"><span class="num">03</span><span class="name">浏览器 AI · Chrome Gemini / ChatGPT Atlas</span></div>
+      <div class="scenario"><span class="num">04</span><span class="name">房地产报告 · KSI 投资必备</span></div>
+      <div class="scenario"><span class="num">05</span><span class="name">WorkBuddy · 做文件 / KGC / 推荐信</span></div>
+      <div class="scenario"><span class="num">06</span><span class="name">我的健康 · 扁平足 / 血液检查</span></div>
+      <div class="scenario"><span class="num">07</span><span class="name">营销 · 土地 CRM</span></div>
+      <div class="scenario"><span class="num">08</span><span class="name">AI 音乐 · Mureka / 小铃铛 Mac App</span></div>
+      <div class="scenario"><span class="num">09</span><span class="name">投资 · 股票强度指数 AI 系统</span></div>
+    </div>
+  </section>
+
+  <!-- Section 9: Online Course -->
+  <section>
+    <div class="section-num">COURSE A · 线上课</div>
+    <h2 class="title">把 AI 真正用进 <span class="accent">澳洲生活</span></h2>
+    <div class="gold-line"></div>
+    <div class="course">
+      <div class="info">
+        <div class="name">澳洲华人 AI 应用<br />线上创始班（第一期）</div>
+        <div class="name-en">CLASS A · ONLINE · FOUNDING BATCH</div>
+        <div class="price"><span class="currency">A$</span>599<span class="unit">AUD</span></div>
+        <div class="meta">
+          <div class="meta-item"><span class="ico">⏱</span>3 个月 · 12 节课</div>
+          <div class="meta-item"><span class="ico">📅</span>每周二晚 20:30 – 22:30</div>
+          <div class="meta-item"><span class="ico">💻</span>线上直播</div>
+        </div>
+        <div class="content">
+          <h4>核心收获 · 8 大本地场景</h4>
+          <ul>
+            <li>英文邮件 / 文件处理</li>
+            <li>澳洲房产基础应用</li>
+            <li>股票投资基础应用</li>
+            <li>孩子学习辅导</li>
+            <li>效率提升 / 会议纪要</li>
+            <li>AI 内容创作 · 图 / 音乐 / 视频</li>
+            <li>AI 工具安装 · 龙虾系统</li>
+            <li>3 个月实现 AI 顿悟</li>
+          </ul>
+        </div>
+      </div>
+      <img src="images/poster_599.jpg" class="poster" alt="线上课 599 澳元海报" />
+    </div>
+  </section>
+
+  <!-- Section 10: Offline Course -->
+  <section>
+    <div class="section-num">COURSE B · 线下课</div>
+    <h2 class="title">从工具到 <span class="accent">财富管理系统</span></h2>
+    <div class="gold-line"></div>
+    <div class="course">
+      <div class="info">
+        <div class="name">AI 财富管理与<br />投资应用线下班</div>
+        <div class="name-en">CLASS B · OFFLINE · 北悉尼 · 首期仅招 10 人</div>
+        <div class="price"><span class="currency">A$</span>1,999<span class="unit">AUD · 含线上课</span></div>
+        <div class="meta">
+          <div class="meta-item"><span class="ico">⏱</span>3 个月 · 12 节课</div>
+          <div class="meta-item"><span class="ico">📅</span>每周六 13:00 – 16:00</div>
+          <div class="meta-item"><span class="ico">📍</span>北悉尼办公室</div>
+          <div class="meta-item"><span class="ico">🎯</span>仅线下 · 不直播</div>
+        </div>
+        <div class="content">
+          <h4>核心亮点 · 4 大系统</h4>
+          <ul>
+            <li>AI CFO 个人财富管理系统</li>
+            <li>龙虾 AI 财富管理系统</li>
+            <li>AI 澳洲房产深度分析</li>
+            <li>AI 股票与资产配置风控</li>
+            <li>Section 32 合同秒读</li>
+            <li>Suburb 投资决策表</li>
+            <li>股票强度指数系统</li>
+            <li>长期使用 + 复盘流程</li>
+          </ul>
+        </div>
+      </div>
+      <img src="images/poster_1999.jpg" class="poster" alt="线下课 1999 澳元海报" />
+    </div>
+  </section>
+
+  <!-- Section 11: Q&A -->
+  <section class="qa">
+    <div class="section-num">Q&A · 互动答疑</div>
+    <h2 class="title">扫码入群 <span class="accent">一起探索</span></h2>
+    <p class="subtitle">把你的「我的 AI 刚需」告诉我，蜗牛 AI 团队将为你设计、尝试实现。</p>
+    <div class="gold-line"></div>
+    <div class="qa-grid">
+      <div class="left">
+        <p>把你想交给 AI 自动完成的<strong>真实场景任务</strong>告诉我，<br />最好是「我的 AI 刚需」。</p>
+        <div class="channels">
+          <div class="channel">
+            <div class="ico">✉</div>
+            <div class="text"><strong>EMAIL · 邮件</strong>robin12300@gmail.com</div>
+          </div>
+          <div class="channel">
+            <div class="ico">📱</div>
+            <div class="text"><strong>WECHAT · 微信联系</strong>Michael · 0430680555</div>
+          </div>
+          <div class="channel">
+            <div class="ico">📅</div>
+            <div class="text"><strong>本周六 · 直播当晚</strong>Zoom · 543 211 2300</div>
+          </div>
+        </div>
+      </div>
+      <div class="right">
+        <img src="images/qr_live_group_20260704.jpg" class="qr" alt="直播群二维码" />
+        <div class="qr-label">扫码加入直播群</div>
+        <div class="qr-sub">7月4日 周六晚 8 点不见不散</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 12: Closing -->
+  <section class="closing">
+    <div class="section-num" style="justify-content:center;">CLOSING · 收尾</div>
+    <div class="thanks">THANKS<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢观看</div>
+    <p class="tagline">7月4日 周六晚 8 点 · 直播分享会<strong>干货满满</strong><br />期待与你在 Zoom 相遇</p>
+    <div class="info-bar">
+      <div class="info-item">
+        <div class="label">DATE · 时间</div>
+        <div class="value">7月4日 周六 20:00</div>
+      </div>
+      <div class="info-item">
+        <div class="label">ZOOM · 会议号</div>
+        <div class="value zoom">543 211 2300</div>
+      </div>
+      <div class="info-item">
+        <div class="label">CONTACT · 报名</div>
+        <div class="value">Michael 0430680555</div>
+      </div>
+    </div>
+    <div class="qrs">
+      <img src="images/qr_live_group_20260704.jpg" class="qr-mini" alt="直播群" />
+      <div class="qr-text">
+        <strong>扫码进直播群</strong>
+        第一时间获取回放 + 课件 + 直播专属福利
+      </div>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

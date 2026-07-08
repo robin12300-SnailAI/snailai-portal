@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蜗牛AI · AI澳洲应用线上课</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root {
+    --accent: #FF5B1F;
+    --accent-light: #FF8A5C;
+    --accent-dark: #E04A10;
+    --ink: #1A1A2E;
+    --ink-light: #4A4A6A;
+    --ink-muted: #8A8AA0;
+    --paper: #FCFCFA;
+    --paper-warm: #FFF9F5;
+    --surface: #FFFFFF;
+    --border: rgba(26,26,46,0.08);
+    --border-strong: rgba(26,26,46,0.14);
+    --shadow-sm: 0 1px 3px rgba(26,26,46,0.05);
+    --shadow-md: 0 4px 16px rgba(26,26,46,0.07);
+    --shadow-lg: 0 8px 32px rgba(26,26,46,0.1);
+    --r-sm: 8px;
+    --r-md: 12px;
+    --r-lg: 16px;
+    --r-xl: 20px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans SC', 'Inter', -apple-system, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ===== LANG SWITCH ===== */
+  .lang-switch {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 1000;
+    display: flex;
+    gap: 0;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--border-strong);
+    border-radius: 100px;
+    padding: 3px;
+    backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .lang-btn {
+    padding: 6px 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    cursor: pointer;
+    border-radius: 100px;
+    transition: all 0.25s ease;
+    letter-spacing: 0.02em;
+  }
+
+  .lang-btn.active {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 2px 8px rgba(255,91,31,0.25);
+  }
+
+  .lang-btn:hover:not(.active) {
+    color: var(--ink);
+  }
+
+  /* ===== VERSION TAG ===== */
+  .version-tag {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 1000;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+    background: rgba(255,255,255,0.85);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #FFF9F5 0%, #FCFCFA 50%, #FFF5EE 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 80px 40px 60px;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(255,91,31,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 900px;
+  }
+
+  /* ===== HERO LOGO ===== */
+  .hero-logo {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 24px;
+    display: block;
+    filter: drop-shadow(0 6px 18px rgba(255, 200, 100, 0.25));
+    animation: logoFloat 4s ease-in-out infinite;
+  }
+
+  @keyframes logoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,91,31,0.08);
+    border: 1px solid rgba(255,91,31,0.22);
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent-dark);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .hero-badge .dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 5vw, 4.2rem);
+    font-weight: 900;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 .accent { color: var(--accent); }
+
+  /* ===== HERO QUOTE (金句) ===== */
+  .hero-quote {
+    max-width: 720px;
+    margin: 0 auto 36px;
+    padding: 24px 32px;
+    background: #FFFFFF;
+    border: 1px solid rgba(255,91,31,0.2);
+    border-left: 4px solid var(--accent);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(26,26,46,0.06);
+    text-align: left;
+    position: relative;
+  }
+
+  .hero-quote::before {
+    content: '\201C';
+    position: absolute;
+    top: -10px;
+    left: 18px;
+    font-size: 3.5rem;
+    color: var(--accent);
+    font-weight: 900;
+    line-height: 1;
+    font-family: Georgia, serif;
+  }
+
+  .hero-quote .quote-main {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.65;
+    margin-bottom: 12px;
+    letter-spacing: 0.01em;
+  }
+
+  .hero-quote .quote-main em {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 800;
+  }
+
+  .hero-quote .quote-sub {
+    font-size: clamp(0.85rem, 1.3vw, 0.95rem);
+    color: var(--ink-light);
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  .hero-quote .quote-cta {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: clamp(0.88rem, 1.3vw, 1rem);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+
+  .hero .subtitle {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: var(--ink-light);
+    font-weight: 400;
+    margin-bottom: 40px;
+    letter-spacing: 0.02em;
+  }
+
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .hero-meta-item { text-align: center; }
+
+  .hero-meta-item .label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-muted);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .hero-meta-item .value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .hero-meta-item .value.accent-color { color: var(--accent); }
+
+  /* ===== SECTIONS ===== */
+  .section {
+    padding: 80px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(255,91,31,0.07);
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .section-desc {
+    font-size: 1.02rem;
+    color: var(--ink-light);
+    margin-top: 12px;
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ===== PREP CARDS ===== */
+  .prep-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .prep-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.35s ease;
+  }
+
+  .prep-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .prep-card .icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-md);
+    background: linear-gradient(135deg, rgba(255,91,31,0.08), rgba(255,138,92,0.06));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 18px;
+  }
+
+  .prep-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+
+  .prep-card p {
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    line-height: 1.6;
+  }
+
+  .prep-card .steps {
+    list-style: none;
+    margin-top: 14px;
+  }
+
+  .prep-card .steps li {
+    padding: 7px 0;
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .prep-card .steps li:last-child { border-bottom: none; }
+
+  .prep-card .steps li .num {
+    min-width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ===== VIDEO PREP CARD (4小时预习视频) ===== */
+  .prep-card--video {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFF9F5 100%);
+    border: 2px solid var(--accent);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(255,91,31,0.1);
+  }
+
+  .prep-card--video::before {
+    content: '🎬';
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 2.4rem;
+    opacity: 0.18;
+  }
+
+  .prep-card--video .icon {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: white;
+    font-size: 1.5rem;
+  }
+
+  .prep-card--video h3 {
+    font-size: 1.18rem;
+    color: var(--accent-dark);
+  }
+
+  .video-tag {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: white;
+    background: var(--accent);
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .video-cta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 18px;
+    padding: 14px 18px;
+    background: var(--ink);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--r-md);
+    font-family: inherit;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(26,26,46,0.15);
+  }
+
+  .video-cta:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255,91,31,0.3);
+  }
+
+  .video-cta .play-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    transition: background 0.3s ease;
+  }
+
+  .video-cta:hover .play-icon {
+    background: white;
+    color: var(--accent);
+  }
+
+  .video-cta-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .video-cta-text strong {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .video-cta-text small {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.65);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+
+  .video-cta:hover .video-cta-text small {
+    color: rgba(255,255,255,0.85);
+  }
+
+  .video-cta .video-arrow {
+    font-size: 1.2rem;
+    color: var(--accent-light);
+    font-weight: 700;
+    transition: transform 0.3s ease;
+  }
+
+  .video-cta:hover .video-arrow {
+    color: white;
+    transform: translateX(4px);
+  }
+
+  /* ===== COMMUNITY QR (加入学习社群) ===== */
+  .community-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 16px;
+    padding: 14px;
+    background: linear-gradient(135deg, #FFF5EE 0%, #FFE8DC 100%);
+    border: 1px solid rgba(255,91,31,0.18);
+    border-radius: var(--r-md);
+  }
+
+  .community-qr img {
+    width: 160px;
+    height: 160px;
+    border-radius: 8px;
+    background: white;
+    padding: 4px;
+    box-shadow: 0 2px 8px rgba(26,26,46,0.08);
+  }
+
+  .community-qr p {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    color: var(--accent-dark);
+    font-weight: 600;
+  }
+
+  /* ===== FEATURED PREP CARD (AI 刚需挖掘) ===== */
+  .prep-card--featured {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #FFF5EE 0%, #FFE8DC 100%);
+    border: 2px solid rgba(255,91,31,0.18);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .prep-card--featured::before {
+    content: '★';
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 1.5rem;
+    color: var(--accent);
+    opacity: 0.4;
+  }
+
+  .prep-card--featured .icon {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: white;
+    font-size: 1.5rem;
+  }
+
+  .prep-card--featured h3 {
+    font-size: 1.18rem;
+    color: var(--accent-dark);
+  }
+
+  .featured-tag {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: white;
+    background: var(--accent);
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .featured-content {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 24px;
+    margin-top: 18px;
+    align-items: stretch;
+  }
+
+  .featured-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .featured-step {
+    display: flex;
+    gap: 12px;
+    background: white;
+    padding: 14px 16px;
+    border-radius: var(--r-sm);
+    border: 1px solid rgba(255,91,31,0.08);
+  }
+
+  .featured-step .step-num {
+    min-width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: white;
+    font-size: 0.78rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  .featured-step h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .featured-step p {
+    font-size: 0.82rem;
+    color: var(--ink-light);
+    line-height: 1.5;
+  }
+
+  .featured-video-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 7px 14px;
+    background: var(--accent);
+    color: white !important;
+    text-decoration: none !important;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: all 0.25s ease;
+  }
+
+  .featured-video-link:hover {
+    background: var(--accent-dark);
+    transform: translateX(2px);
+  }
+
+  .featured-video-link .play-mini {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: white;
+    color: var(--accent);
+    font-size: 0.55rem;
+    flex-shrink: 0;
+  }
+
+  .featured-video-link .link-arrow {
+    font-weight: 700;
+  }
+
+  .featured-qr {
+    background: white;
+    border: 1px solid rgba(255,91,31,0.12);
+    border-radius: var(--r-md);
+    padding: 18px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .qr-placeholder {
+    width: 160px;
+    height: 160px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    background: white;
+    border: 1px solid rgba(26,26,46,0.12);
+    box-shadow: 0 2px 8px rgba(26,26,46,0.05);
+  }
+
+  .qr-placeholder img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .featured-qr h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .featured-qr p {
+    font-size: 0.78rem;
+    color: var(--ink-light);
+  }
+
+  @media (max-width: 720px) {
+    .featured-content {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ===== MODULE CARDS ===== */
+  .module {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 44px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.35s ease;
+  }
+
+  .module:hover { box-shadow: var(--shadow-lg); }
+
+  .module-number {
+    position: absolute;
+    top: 28px;
+    right: 36px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: rgba(255,91,31,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .module-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: white;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    padding: 5px 14px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+  }
+
+  .module h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .module .module-summary {
+    font-size: 0.92rem;
+    color: var(--ink-light);
+    margin-bottom: 24px;
+    max-width: 640px;
+  }
+
+  .lessons {
+    display: grid;
+    gap: 14px;
+  }
+
+  .lesson {
+    background: var(--paper-warm);
+    border: 1px solid rgba(255,91,31,0.05);
+    border-radius: var(--r-md);
+    padding: 22px 24px;
+    transition: all 0.3s ease;
+  }
+
+  .lesson:hover {
+    border-color: rgba(255,91,31,0.18);
+    background: #FFF5EE;
+    transform: translateX(4px);
+  }
+
+  .lesson-new {
+    border-left: 3px solid var(--accent);
+  }
+
+  .lesson-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .lesson-num {
+    min-width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: white;
+    font-size: 0.78rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  .lesson-header h3 {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .lesson-new-badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: white;
+    background: var(--accent);
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-left: 8px;
+  }
+
+  .lesson-topics {
+    list-style: none;
+    display: grid;
+    gap: 5px;
+  }
+
+  .lesson-topics li {
+    font-size: 0.86rem;
+    color: var(--ink-light);
+    padding-left: 18px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .lesson-topics li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-light);
+  }
+
+  .lesson-outcome {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(255,91,31,0.12);
+    font-size: 0.8rem;
+    color: var(--accent-dark);
+    font-weight: 600;
+  }
+
+  .lesson-outcome::before { content: '\1F3AF '; }
+
+  /* ===== OUTCOMES ===== */
+  .outcomes-section {
+    background: linear-gradient(135deg, #FFF9F5 0%, #FFF5EE 100%);
+    color: var(--ink);
+    padding: 80px 40px;
+  }
+
+  .outcomes-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .outcomes-section .section-tag {
+    background: rgba(255,91,31,0.1);
+    color: var(--accent-dark);
+  }
+
+  .outcomes-section .section-title { color: var(--ink); }
+  .outcomes-section .section-desc { color: var(--ink-light); }
+
+  .outcomes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 44px;
+  }
+
+  .outcome-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 26px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+  }
+
+  .outcome-card:hover {
+    border-color: rgba(255,91,31,0.3);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .outcome-card .emoji {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .outcome-card h3 {
+    font-size: 1.02rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+
+  .outcome-card p {
+    font-size: 0.86rem;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+
+  /* ===== RESULT ===== */
+  .result-card {
+    background: linear-gradient(135deg, #FFF5EE 0%, #FFE8DC 100%);
+    border: 2px solid rgba(255,91,31,0.12);
+    border-radius: var(--r-xl);
+    padding: 44px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+  }
+
+  .result-card h2 {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  .result-card .highlight { color: var(--accent); }
+
+  .result-card > p {
+    font-size: 1rem;
+    color: var(--ink-light);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.75;
+  }
+
+  .result-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 28px;
+    text-align: left;
+  }
+
+  .result-item {
+    background: white;
+    padding: 18px;
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .result-item .icon { font-size: 1.3rem; margin-bottom: 6px; display: block; }
+
+  .result-item h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+
+  .result-item p {
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    margin: 0;
+  }
+
+  /* ===== CTA ===== */
+  .cta-section {
+    background: linear-gradient(135deg, #FFF9F5 0%, #FFF5EE 50%, #FFE8DC 100%);
+    padding: 80px 40px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+
+  .cta-inner {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .cta-section h2 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+
+  .cta-section p {
+    font-size: 1.05rem;
+    color: var(--ink-light);
+    margin-bottom: 28px;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: white;
+    padding: 15px 38px;
+    border-radius: 100px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 6px 22px rgba(255,91,31,0.28);
+    transition: all 0.3s ease;
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(255,91,31,0.38);
+  }
+
+  .cta-poster {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    border-radius: var(--r-lg);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    transition: transform 0.3s ease;
+  }
+  .cta-poster:hover {
+    transform: scale(1.02);
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: var(--paper-warm);
+    border-top: 1px solid var(--border);
+    padding: 36px 40px;
+    text-align: center;
+  }
+
+  .footer-logo {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 16px;
+    display: block;
+    opacity: 0.92;
+  }
+
+  .footer p {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .footer .brand {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,91,31,0.15), transparent);
+    margin: 48px auto;
+    max-width: 600px;
+  }
+
+  /* ── Top Navigation ── */
+  .top-nav {
+    display: flex; justify-content: center; align-items: center; gap: 28px;
+    padding: 12px 24px;
+    background: rgba(10,10,13,.04);
+    border-bottom: 1px solid rgba(14,14,16,.08);
+    font-family: var(--sans);
+  }
+  .top-nav a {
+    font-size: 13px; font-weight: 600; color: var(--ink-3);
+    text-decoration: none; letter-spacing: .02em;
+    transition: color .2s;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .top-nav a:hover { color: var(--accent); }
+  .top-nav a.current { color: var(--accent); pointer-events: none; }
+  .top-nav .nav-sep { color: var(--line); font-size: 10px; }
+
+  /* ── Mobile Bottom Nav ── */
+  .mobile-bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    z-index: 100;
+    display: none;
+    background: rgba(255,255,255,.9);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(14,14,16,.08);
+  }
+  .mobile-bottom-nav a {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 10px 0 12px;
+    text-decoration: none; color: var(--ink-3);
+    font-size: 11px; font-weight: 500;
+    transition: color .2s;
+  }
+  .mobile-bottom-nav a.active { color: var(--accent); }
+  .mobile-bottom-nav a .mbn-icon { font-size: 20px; margin-bottom: 2px; line-height: 1; }
+
+  @media (max-width: 768px) {
+    .top-nav { display: none; }
+    .mobile-bottom-nav { display: flex; }
+    body { padding-bottom: 64px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== TOP NAV ===== -->
+<nav class="top-nav">
+  <a href="#" class="current">💻 AI澳洲应用线上课</a>
+  <span class="nav-sep">|</span>
+  <a href="/offline-course/" target="_blank">🤝 线下课大纲</a>
+  <span class="nav-sep">|</span>
+  <a href="/faq/" target="_blank">FAQ 常见问题</a>
+</nav>
+
+<!-- LANG SWITCH -->
+<div class="lang-switch">
+  <button class="lang-btn active" onclick="setLang('zh')" data-lang="zh">中文</button>
+  <button class="lang-btn" onclick="setLang('en')" data-lang="en">EN</button>
+</div>
+
+<!-- VERSION TAG -->
+<div class="version-tag">V2.15 · 2026-07-05</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-content">
+    <img src="../assets/snailai_logo.png" alt="蜗牛AI Logo" class="hero-logo">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      <span data-zh="2026 年 7 月 · 悉尼" data-en="July 2026 · Sydney">2026 年 7 月 · 悉尼</span>
+    </div>
+    <h1 data-zh="蜗牛AI <span class='accent'>AI澳洲应用线上课</span><br>完整大纲" data-en="SnailAI <span class='accent'>AI Australia App Online Course</span><br>Full Syllabus">蜗牛AI <span class="accent">AI澳洲应用线上课</span><br>完整大纲</h1>
+
+    <div class="hero-quote">
+      <div class="quote-main" data-zh="打败你的不是 AI，是<em>会使用 AI 的人</em>。<br>AI 不是你的对手，而是你的机甲。" data-en="AI won't replace you. A <em>person using AI</em> will.<br>AI is not your rival — it's your exosuit.">打败你的不是 AI，是<em>会使用 AI 的人</em>。<br>AI 不是你的对手，而是你的机甲。</div>
+      <div class="quote-sub" data-zh="就像变形金刚穿上机甲就变得超级强大 — 在这个时代，你不用 AI，有的是其他人用 AI。<br>不主动学习的人，会被 AI 时代悄悄淘汰。" data-en="Just like a Transformer becomes super-powered in its exosuit — in this era, if you don't use AI, someone else will.<br>Those who don't choose to learn will be quietly left behind.">就像变形金刚穿上机甲就变得超级强大 — 在这个时代，你不用 AI，有的是其他人用 AI。<br>不主动学习的人，会被 AI 时代悄悄淘汰。</div>
+      <div class="quote-cta" data-zh="→ 主动选择学习 AI，成为 AI 时代的先行者" data-en="→ Choose to learn AI. Become a pioneer of the AI era.">→ 主动选择学习 AI，成为 AI 时代的先行者</div>
+    </div>
+
+    <p class="subtitle" data-zh="学习 · 应用 · 享受 · 投资 — 24 个真实 AI 工作流落地分享" data-en="Learn · Apply · Enjoy · Invest — 24 Real AI Workflow Implementations">学习 · 应用 · 享受 · 投资 — 24 个真实 AI 工作流落地分享</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="label" data-zh="开课时间" data-en="START DATE">开课时间</div>
+        <div class="value accent-color" data-zh="7月7日 周二" data-en="Jul 7, Tue">7月7日 周二</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label" data-zh="上课时段" data-en="TIME SLOT">上课时段</div>
+        <div class="value" data-zh="晚 8:30 – 10:30" data-en="8:30 – 10:30 PM">晚 8:30 – 10:30</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label" data-zh="课程周期" data-en="DURATION">课程周期</div>
+        <div class="value" data-zh="7月7日 → 9月26日" data-en="Jul 7 → Sep 26">7月7日 → 9月26日</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label" data-zh="总课时" data-en="TOTAL">总课时</div>
+        <div class="value" data-zh="12 周 · 24 课时" data-en="12 Wks · 24 Lessons">12 周 · 24 课时</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 课前准备 ===== -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-tag" data-zh="课前准备" data-en="PRE-COURSE">课前准备</span>
+    <h2 class="section-title" data-zh="开课前，你需要准备好这些" data-en="Get Ready Before Day One">开课前，你需要准备好这些</h2>
+    <p class="section-desc" data-zh="确保一切就绪，第一节课就能直接上手实操，不浪费一分钟" data-en="Make sure everything is set up so you can start hands-on from the very first class">确保一切就绪，第一节课就能直接上手实操，不浪费一分钟</p>
+  </div>
+
+  <div class="prep-grid">
+    <div class="prep-card prep-card--video">
+      <span class="video-tag" data-zh="必看 · 4 小时" data-en="REQUIRED · 4 HRS">必看 · 4 小时</span>
+      <div class="icon">🎬</div>
+      <h3 data-zh="必看 4 小时预习视频" data-en="Required 4-Hour Prep Video">必看 4 小时预习视频</h3>
+      <p data-zh="开课前的核心准备：每位学员都必须看完这个 4 小时的预习视频。视频会建立你的 AI 基础认知，让正式课程事半功倍。" data-en="Critical pre-class prep: every student must watch this 4-hour video. It builds your AI foundation, so the live course is twice as effective.">开课前的核心准备：每位学员都必须看完这个 4 小时的预习视频。视频会建立你的 AI 基础认知，让正式课程事半功倍。</p>
+      <a href="https://www.youtube.com/watch?v=--Qcfa5Kwbo" target="_blank" rel="noopener" class="video-cta">
+        <span class="play-icon" aria-hidden="true">▶</span>
+        <span class="video-cta-text">
+          <strong data-zh="点击观看完整视频" data-en="Watch the Full Video">点击观看完整视频</strong>
+          <small data-zh="YouTube · 4 小时预习课" data-en="YouTube · 4-hour prep session">YouTube · 4 小时预习课</small>
+        </span>
+        <span class="video-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div class="prep-card prep-card--featured">
+      <span class="featured-tag" data-zh="V2 新增 · 课前必做" data-en="NEW · REQUIRED">V2 新增 · 课前必做</span>
+      <div class="icon">💎</div>
+      <h3 data-zh="深度挖掘你的 AI 刚需（3 个）" data-en="Discover Your Top 3 AI Needs">深度挖掘你的 AI 刚需（3 个）</h3>
+      <p data-zh="开课前最重要的一步：每位学员都要挖掘出属于自己的 3 个 AI 刚需。带着问题来上课，效率翻倍。" data-en="The most important pre-class task: every student must identify their top 3 AI needs. Come to class with real problems — your efficiency will double.">开课前最重要的一步：每位学员都要挖掘出属于自己的 3 个 AI 刚需。带着问题来上课，效率翻倍。</p>
+
+      <div class="featured-content">
+        <div class="featured-steps">
+          <div class="featured-step">
+            <div class="step-num">1</div>
+            <div>
+              <h4 data-zh="请看视频：什么是 AI 刚需？" data-en="Watch the video: What is an AI need?">请看视频：什么是 AI 刚需？</h4>
+              <p data-zh="视频详细解释了 AI 刚需的定义，并提供 6 个挖掘维度，帮你系统性地找到自己的真实需求。" data-en="The video explains what an AI need is in detail, and provides 6 dimensions to help you systematically identify your real needs.">视频详细解释了 AI 刚需的定义，并提供 6 个挖掘维度，帮你系统性地找到自己的真实需求。</p>
+              <a href="https://youtu.be/NZag6CZ0PHA" target="_blank" rel="noopener" class="featured-video-link">
+                <span class="play-mini" aria-hidden="true">▶</span>
+                <span data-zh="点击观看" data-en="Watch Now">点击观看</span>
+                <span class="link-arrow" aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="featured-step">
+            <div class="step-num">2</div>
+            <div>
+              <h4 data-zh="扫码填写：提交你的 3 个 AI 刚需" data-en="Scan QR: Submit your 3 AI needs">扫码填写：提交你的 3 个 AI 刚需</h4>
+              <p data-zh="用微信扫右侧二维码，填写你的 3 个 AI 刚需（工作 / 生活 / 投资 / 学习等任意维度）。讲师会基于此提前备课。" data-en="Scan the QR on the right with WeChat and submit your 3 AI needs (work / life / investment / study, etc.). The instructor will prepare lessons based on your input.">用微信扫右侧二维码，填写你的 3 个 AI 刚需（工作 / 生活 / 投资 / 学习等任意维度）。讲师会基于此提前备课。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="featured-qr">
+          <div class="qr-placeholder"><img src="../assets/qr_ai_needs.png" alt="AI 刚需填写二维码"></div>
+          <h4 data-zh="扫码填写 3 个 AI 刚需" data-en="Scan to submit 3 AI needs">扫码填写 3 个 AI 刚需</h4>
+          <p data-zh="微信扫码 · 1 分钟完成" data-en="Scan via WeChat · 1 min to complete">微信扫码 · 1 分钟完成</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="prep-card">
+      <div class="icon">🤖</div>
+      <h3 data-zh="安装 WorkBuddy（腾讯版AI助手）" data-en="Install WorkBuddy (Tencent AI Assistant)">安装 WorkBuddy（腾讯版AI助手）</h3>
+      <p data-zh="蜗牛AI课程的指定AI助手工具，支持自动化、技能调用与企业微信集成" data-en="The designated AI assistant for this course — supports automation, skill invocation, and WeCom integration">蜗牛AI课程的指定AI助手工具，支持自动化、技能调用与企业微信集成</p>
+      <ul class="steps">
+        <li><span class="num">1</span><span data-zh="前往腾讯云下载 WorkBuddy 客户端" data-en="Download WorkBuddy client from Tencent Cloud">前往腾讯云下载 WorkBuddy 客户端</span></li>
+        <li><span class="num">2</span><span data-zh="使用微信账号登录并完成激活" data-en="Sign in with WeChat and activate">使用微信账号登录并完成激活</span></li>
+        <li><span class="num">3</span><span data-zh="确认能正常对话，安装技能，并且调用技能和专家进行简单对话，例如怎么使用你？" data-en="Confirm the conversation works, install skills, and try calling a skill or expert with a simple question like 'How do I use you?'">确认能正常对话，安装技能，并且调用技能和专家进行简单对话，例如怎么使用你？</span></li>
+        <li><span class="num">4</span><span data-zh="参加 WorkBuddy 成长计划，赢取越多越好积分（赢积分的同时熟悉功能）" data-en="Join the WorkBuddy Growth Plan to earn points — the more the better (earn points while learning the features)">参加 WorkBuddy 成长计划，赢取越多越好积分（赢积分的同时熟悉功能）</span></li>
+      </ul>
+    </div>
+
+    <div class="prep-card">
+      <div class="icon">🦞</div>
+      <h3 data-zh="配置「龙虾」" data-en="Set Up "Lobster"">配置「龙虾」</h3>
+      <p data-zh="为你的AI助手建立专属记忆，让它真正成为懂你的智能搭档" data-en="Build a personalized memory for your AI assistant so it truly understands you">为你的AI助手建立专属记忆，让它真正成为懂你的智能搭档</p>
+      <ul class="steps">
+        <li><span class="num">1</span><span data-zh="给龙虾介绍做自我介绍：姓名，性别，年龄，职业，兴趣爱好，以及做事风格等" data-en="Introduce yourself to Lobster: name, gender, age, profession, hobbies, working style, etc.">给龙虾介绍做自我介绍：姓名，性别，年龄，职业，兴趣爱好，以及做事风格等</span></li>
+        <li><span class="num">2</span><span data-zh="龙虾助理设置：企业微信和微信都要设置好" data-en="Set up the Lobster assistant: configure both WeCom and WeChat">龙虾助理设置：企业微信和微信都要设置好</span></li>
+        <li><span class="num">3</span><span data-zh="在电脑里面创建一个文件夹，起名《龙虾文件夹》" data-en="Create a folder on your computer named Lobster Folder">在电脑里面创建一个文件夹，起名《龙虾文件夹》</span></li>
+        <li><span class="num">4</span><span data-zh="安装微信输入法：手机和电脑同时安装，然后设置右边 Shift 按键为 AI 录音转文字" data-en="Install WeChat Keyboard on both phone and computer, then set right Shift key as AI voice-to-text">安装微信输入法：手机和电脑同时安装，然后设置右边 Shift 按键为 AI 录音转文字</span></li>
+        <li><span class="num">5</span><span data-zh="调试电脑 Zoom 语音和共享成功使用，方便直播课堂分享" data-en="Test Zoom audio and screen sharing on computer for live class broadcasting">调试电脑 Zoom 语音和共享成功使用，方便直播课堂分享</span></li>
+      </ul>
+    </div>
+
+    <div class="prep-card">
+      <div class="icon">💬</div>
+      <h3 data-zh="加入蜗牛AI学习社群" data-en="Join the SnailAI Community">加入蜗牛AI学习社群</h3>
+      <ul class="steps">
+        <li><span class="num">1</span><span data-zh="扫码加入蜗牛AI线上课微信群" data-en="Scan QR to join the SnailAI WeChat group">扫码加入蜗牛AI线上课微信群</span></li>
+        <li><span class="num">2</span><span data-zh="添加"蜗牛 AI"官方客服企业微信号（非常重要！课前课中课后有任何通知和事情，都是小蜗牛来服务你）" data-en='Add the official "Snail AI" customer service on WeCom (Very important! Little Snail will serve you before, during, and after the course with all notifications and matters)'>添加"蜗牛 AI"官方客服企业微信号（非常重要！课前课中课后有任何通知和事情，都是小蜗牛来服务你）</span></li>
+      </ul>
+      <div class="community-qr">
+        <img src="../assets/qr_community.jpg" alt="蜗牛AI学习社群永久群二维码">
+        <p data-zh="微信扫码 · 加入社群" data-en="Scan via WeChat · Join the community">微信扫码 · 加入社群</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 详细课程大纲 ===== -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-tag" data-zh="课程大纲" data-en="SYLLABUS">课程大纲</span>
+    <h2 class="section-title" data-zh="6 大模块 · 24 课时 · 从入门到精通" data-en="6 Modules · 24 Lessons · From Beginner to Expert">6 大模块 · 24 课时 · 从入门到精通</h2>
+    <p class="section-desc" data-zh="每节课都有实战任务，学完就能用在工作和生活中" data-en="Every lesson includes hands-on tasks you can immediately apply">每节课都有实战任务，学完就能用在工作和生活中</p>
+  </div>
+
+  <!-- 模块一 -->
+  <div class="module">
+    <div class="module-number">01</div>
+    <span class="module-tag" data-zh="模块一" data-en="MODULE 1">模块一</span>
+    <h2 data-zh="AI 认知觉醒" data-en="AI Awareness Awakening">AI 认知觉醒</h2>
+    <p class="module-summary" data-zh="从零开始理解大模型，建立输出式学习思维，完成你与 AI 的第一次深度对话" data-en="Understand large models from scratch, build output-driven learning mindset, and have your first deep conversation with AI">从零开始理解大模型，建立输出式学习思维，完成你与 AI 的第一次深度对话</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">01</span>
+          <h3 data-zh="AI 是什么，不是什么" data-en="What AI Is and Isn't">AI 是什么，不是什么</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="大模型（ChatGPT / Claude / Gemini）的本质区别" data-en="Core differences between large models (ChatGPT / Claude / Gemini)">大模型（ChatGPT / Claude / Gemini）的本质区别</li>
+          <li data-zh="AI 的能力边界 — 能做什么，不能做什么" data-en="AI capability boundaries — what it can and can't do">AI 的能力边界 — 能做什么，不能做什么</li>
+          <li data-zh="破除误区：AI 不是搜索引擎，不是万能神" data-en="Busting myths: AI is not a search engine, not omnipotent">破除误区：AI 不是搜索引擎，不是万能神</li>
+          <li data-zh="任正非的"2% vs 98%"论 — AI应用的本质" data-en="Ren Zhengfei's "2% vs 98%" — the essence of AI application">任正非的"2% vs 98%"论 — AI应用的本质</li>
+          <li data-zh="实战：第一次正确地和 AI 对话" data-en="Practice: Your first correct conversation with AI">实战：第一次正确地和 AI 对话</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：能独立判断"这个问题该不该问AI"，并完成第一次有效对话" data-en="Goal: Independently judge "should I ask AI this?" and complete your first effective conversation">目标：能独立判断"这个问题该不该问AI"，并完成第一次有效对话</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">02</span>
+          <h3 data-zh="AI 时代的新哲学 — 输出式学习" data-en="New Philosophy of the AI Era — Output-Driven Learning">AI 时代的新哲学 — 输出式学习</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh=""授人以鱼不如授人以渔"在 AI 时代的全新改写" data-en="Rewriting "teach a man to fish" for the AI era">"授人以鱼不如授人以渔"在 AI 时代的全新改写</li>
+          <li data-zh="边用边学 > 先学后用 — 为什么不懂才是对的" data-en="Learn by doing > Learn before doing — why not knowing is the point">边用边学 > 先学后用 — 为什么不懂才是对的</li>
+          <li data-zh=""你的不懂恰恰是 AI 存在的意义"" data-en=""Your not-knowing is precisely why AI exists"">"你的不懂恰恰是 AI 存在的意义"</li>
+          <li data-zh="实战：用 AI 学一个你完全不懂的东西" data-en="Practice: Use AI to learn something you know nothing about">实战：用 AI 学一个你完全不懂的东西</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：克服"不懂不敢用"的心理障碍，体验输出式学习的威力" data-en="Goal: Overcome the "I don't know enough to use it" barrier and experience the power of output-driven learning">目标：克服"不懂不敢用"的心理障碍，体验输出式学习的威力</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块二 -->
+  <div class="module">
+    <div class="module-number">02</div>
+    <span class="module-tag" data-zh="模块二" data-en="MODULE 2">模块二</span>
+    <h2 data-zh="基础工具实战" data-en="Essential AI Tools in Practice">基础工具实战</h2>
+    <p class="module-summary" data-zh="逐一掌握 ChatGPT、Claude、Gemini、NotebookLM、AI输入法五大刚需工具" data-en="Master the five essential tools: ChatGPT, Claude, Gemini, NotebookLM, and AI Input Method">逐一掌握 ChatGPT、Claude、Gemini、NotebookLM、AI输入法五大刚需工具</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">03</span>
+          <h3 data-zh="ChatGPT 正确使用姿势" data-en="Using ChatGPT Correctly">ChatGPT 正确使用姿势</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="从"问答题"变"选择题" — 核心思维转变" data-en="From "open questions" to "multiple choice" — a mindset shift">从"问答题"变"选择题" — 核心思维转变</li>
+          <li data-zh="提示词基本结构：角色 + 任务 + 约束" data-en="Prompt structure: Role + Task + Constraints">提示词基本结构：角色 + 任务 + 约束</li>
+          <li data-zh="为什么要避免让 AI "总结"（信息压缩的坑）" data-en="Why you should avoid asking AI to "summarize" (the compression trap)">为什么要避免让 AI "总结"（信息压缩的坑）</li>
+          <li data-zh="实战：让 ChatGPT 帮你写一段文字、分析一个产品" data-en="Practice: Have ChatGPT write text and analyze a product">实战：让 ChatGPT 帮你写一段文字、分析一个产品</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：掌握提示词三要素，能写出结构化提示词并获得高质量输出" data-en="Goal: Master the 3 elements of prompt engineering and produce structured, high-quality prompts">目标：掌握提示词三要素，能写出结构化提示词并获得高质量输出</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">04</span>
+          <h3 data-zh="AI 输入法与语音工具" data-en="AI Input Methods & Voice Tools">AI 输入法与语音工具</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="豆包输入法悬浮窗模式使用（苹果手机设置）" data-en="Doubao Input Method floating toolbar setup (iOS)">豆包输入法悬浮窗模式使用（苹果手机设置）</li>
+          <li data-zh="语音转文字：Plaud AI / 其他转写工具" data-en="Voice-to-text: Plaud AI and other transcription tools">语音转文字：Plaud AI / 其他转写工具</li>
+          <li data-zh="AI 时代不需要记笔记 — 用语音和 AI 对话做日记" data-en="No need for notes in the AI era — use voice conversations with AI as your journal">AI 时代不需要记笔记 — 用语音和 AI 对话做日记</li>
+          <li data-zh="实战：用语音和 AI 做一次对话，生成今日总结" data-en="Practice: Voice-chat with AI to generate a daily summary">实战：用语音和 AI 做一次对话，生成今日总结</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：能用语音输入高效与AI交互，建立"语音+AI"的日常记录习惯" data-en="Goal: Efficiently interact with AI via voice, build a daily "voice + AI" journaling habit">目标：能用语音输入高效与AI交互，建立"语音+AI"的日常记录习惯</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">05</span>
+          <h3 data-zh="Gemini 与 Google 全家桶基础" data-en="Gemini & Google Ecosystem Basics">Gemini 与 Google 全家桶基础</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="Gemini 侧边栏使用与 Chrome Gemini 集成" data-en="Gemini sidebar and Chrome integration">Gemini 侧边栏使用与 Chrome Gemini 集成</li>
+          <li data-zh="Google Drive / Calendar / Tasks 基础联动" data-en="Google Drive / Calendar / Tasks basic integration">Google Drive / Calendar / Tasks 基础联动</li>
+          <li data-zh="Gemini 记忆功能（5个文件导入，建立个人档案）" data-en="Gemini memory (import 5 files, build personal profile)">Gemini 记忆功能（5个文件导入，建立个人档案）</li>
+          <li data-zh="实战：让 Gemini 帮你读一份 Google Drive 里的文件" data-en="Practice: Have Gemini read a file from your Google Drive">实战：让 Gemini 帮你读一份 Google Drive 里的文件</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：搭建谷歌AI私人助理，实现文档/日历/任务的智能联动" data-en="Goal: Set up a Google AI personal assistant with smart document/calendar/task integration">目标：搭建谷歌AI私人助理，实现文档/日历/任务的智能联动</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">06</span>
+          <h3 data-zh="AI 文档与内容处理" data-en="AI Document & Content Processing">AI 文档与内容处理</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="NotebookLM 使用：上传资料 → AI 帮你总结" data-en="NotebookLM: Upload files → AI summarizes them">NotebookLM 使用：上传资料 → AI 帮你总结</li>
+          <li data-zh="PDF 扫描件处理：图片 PDF 变可编辑文字" data-en="PDF scanning: Convert image PDFs to editable text">PDF 扫描件处理：图片 PDF 变可编辑文字</li>
+          <li data-zh="Word / PDF 文档生成基础" data-en="Word / PDF document generation basics">Word / PDF 文档生成基础</li>
+          <li data-zh="实战：上传一份合同 PDF，让 AI 帮你提取关键条款" data-en="Practice: Upload a contract PDF and extract key clauses with AI">实战：上传一份合同 PDF，让 AI 帮你提取关键条款</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：能用AI快速处理各类文档，从信息海洋中精准提取关键内容" data-en="Goal: Quickly process documents with AI, extracting key content from information overload">目标：能用AI快速处理各类文档，从信息海洋中精准提取关键内容</div>
+      </div>
+      <div class="lesson lesson-new">
+        <div class="lesson-header">
+          <span class="lesson-num">07</span>
+          <h3 data-zh="WorkBuddy 连接一切" data-en="WorkBuddy Connects Everything">WorkBuddy 连接一切</h3>
+          <span class="lesson-new-badge" data-zh="V2 重构" data-en="UPDATED">V2 重构</span>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="链接你的邮件、日历、任务、硬盘、相片等" data-en="Connect your email, calendar, tasks, drive, photos, and more">链接你的邮件、日历、任务、硬盘、相片等</li>
+          <li data-zh="注册 GitHub，链接 GitHub，设立第一个仓库，同步你的项目代码给助教和讲师" data-en="Register GitHub, link it, create your first repo, and sync your project code with TAs and instructors">注册 GitHub，链接 GitHub，设立第一个仓库，同步你的项目代码给助教和讲师</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：让 WorkBuddy 接入你的工作流与协作生态" data-en="Goal: Plug WorkBuddy into your workflow and collaboration ecosystem">目标：让 WorkBuddy 接入你的工作流与协作生态</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块三 -->
+  <div class="module">
+    <div class="module-number">03</div>
+    <span class="module-tag" data-zh="模块三" data-en="MODULE 3">模块三</span>
+    <h2 data-zh="生活场景应用" data-en="AI for Daily Life">生活场景应用</h2>
+    <p class="module-summary" data-zh="邮件、购物、内容创作、音乐视频 — 用 AI 解决你每天遇到的真实问题" data-en="Email, shopping, content creation, music & video — AI solves your real daily problems">邮件、购物、内容创作、音乐视频 — 用 AI 解决你每天遇到的真实问题</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">08</span>
+          <h3 data-zh="AI 与邮件、日常信息处理" data-en="AI for Email & Daily Information">AI 与邮件、日常信息处理</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="ChatGPT 浏览器插件使用（快速读懂帮助文档、说明书）" data-en="ChatGPT browser extension (quickly understand docs & manuals)">ChatGPT 浏览器插件使用（快速读懂帮助文档、说明书）</li>
+          <li data-zh="邮件处理：让 AI 帮你起草回复、翻译、提炼要点" data-en="Email: AI drafts replies, translates, extracts key points">邮件处理：让 AI 帮你起草回复、翻译、提炼要点</li>
+          <li data-zh="微信 / 企业微信里的 AI 使用（元宝使用、分享）" data-en="AI in WeChat / WeCom (Yuanbao integration & sharing)">微信 / 企业微信里的 AI 使用（元宝使用、分享）</li>
+          <li data-zh="实战：用 AI 处理一封英文邮件" data-en="Practice: Process an English email with AI">实战：用 AI 处理一封英文邮件</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：邮件处理效率提升 3 倍，再也不怕英文邮件" data-en="Goal: 3x email efficiency, never fear English emails again">目标：邮件处理效率提升 3 倍，再也不怕英文邮件</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">09</span>
+          <h3 data-zh="AI 与购物、生活决策" data-en="AI for Shopping & Life Decisions">AI 与购物、生活决策</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="ChatGPT 浏览器助力亚马逊购物（筛选、比价、看评论）" data-en="ChatGPT browser helps Amazon shopping (filter, compare, review)">ChatGPT 浏览器助力亚马逊购物（筛选、比价、看评论）</li>
+          <li data-zh="利用"围兜方式"筛选产品质量（30天退货政策利用）" data-en="The "bib method" for product quality screening (30-day returns)">利用"围兜方式"筛选产品质量（30天退货政策利用）</li>
+          <li data-zh="AI 辅助购买决策：列出优缺点、生成对比表" data-en="AI-assisted decisions: pros/cons lists, comparison tables">AI 辅助购买决策：列出优缺点、生成对比表</li>
+          <li data-zh="实战：用 AI 帮你选一款空气净化器" data-en="Practice: Use AI to choose an air purifier">实战：用 AI 帮你选一款空气净化器</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：买东西不再纠结，AI 帮你做理性决策" data-en="Goal: No more shopping indecision — AI helps you decide rationally">目标：买东西不再纠结，AI 帮你做理性决策</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">10</span>
+          <h3 data-zh="AI 与内容创作入门" data-en="AI for Content Creation Basics">AI 与内容创作入门</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="用 AI 写短视频脚本（结构：钩子 + 内容 + 结尾）" data-en="AI-written short video scripts (Hook + Content + Ending)">用 AI 写短视频脚本（结构：钩子 + 内容 + 结尾）</li>
+          <li data-zh="用 AI 生成图片（文生图提示词入门）" data-en="AI image generation (text-to-image prompt basics)">用 AI 生成图片（文生图提示词入门）</li>
+          <li data-zh="用 AI 做简单视频（Runway / Pika 入门）" data-en="Simple AI video (Runway / Pika basics)">用 AI 做简单视频（Runway / Pika 入门）</li>
+          <li data-zh="实战：生成一条30秒的 AI 介绍短视频脚本" data-en="Practice: Generate a 30-second AI intro video script">实战：生成一条30秒的 AI 介绍短视频脚本</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：能独立用AI完成从文案到图片到视频的内容创作全流程" data-en="Goal: Complete the full content creation pipeline — copy, images, video — independently with AI">目标：能独立用AI完成从文案到图片到视频的内容创作全流程</div>
+      </div>
+      <div class="lesson lesson-new">
+        <div class="lesson-header">
+          <span class="lesson-num">11</span>
+          <h3 data-zh="AI 音乐与娱乐创作" data-en="AI Music & Entertainment Creation">AI 音乐与娱乐创作</h3>
+          <span class="lesson-new-badge" data-zh="V2 新增" data-en="NEW">V2 新增</span>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="Moises.ai 使用：AI 人声分离、卡拉OK伴奏制作" data-en="Moises.ai: AI vocal separation, karaoke backing tracks">Moises.ai 使用：AI 人声分离、卡拉OK伴奏制作</li>
+          <li data-zh="Suno / Udio 入门：用AI生成原创音乐" data-en="Suno / Udio basics: Generate original music with AI">Suno / Udio 入门：用AI生成原创音乐</li>
+          <li data-zh="AI 在聚会、亲子、社交场景的创意玩法" data-en="Creative AI uses for parties, family time, and social gatherings">AI 在聚会、亲子、社交场景的创意玩法</li>
+          <li data-zh="实战：用AI制作一首专属背景音乐" data-en="Practice: Create a custom background music track with AI">实战：用AI制作一首专属背景音乐</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：轻松用AI创作音乐和娱乐内容，提升生活趣味" data-en="Goal: Easily create music and entertainment with AI, adding fun to daily life">目标：轻松用AI创作音乐和娱乐内容，提升生活趣味</div>
+      </div>
+      <div class="lesson lesson-new">
+        <div class="lesson-header">
+          <span class="lesson-num">12</span>
+          <h3 data-zh="AI 视频创作实战" data-en="AI Video Creation in Practice">AI 视频创作实战</h3>
+          <span class="lesson-new-badge" data-zh="V2 新增" data-en="NEW">V2 新增</span>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="可灵 AI 文生视频：从文字描述到视频生成" data-en="Kling AI text-to-video: From text descriptions to video generation">可灵 AI 文生视频：从文字描述到视频生成</li>
+          <li data-zh="剪映+AI：智能字幕、自动剪辑、一键成片" data-en="CapCut + AI: Smart subtitles, auto-editing, one-click production">剪映+AI：智能字幕、自动剪辑、一键成片</li>
+          <li data-zh="Runway Gen-3：专业级别的视频特效生成" data-en="Runway Gen-3: Professional-grade video effects generation">Runway Gen-3：专业级别的视频特效生成</li>
+          <li data-zh="实战：用AI工具完成一支完整短视频" data-en="Practice: Produce a complete short video using AI tools">实战：用AI工具完成一支完整短视频</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：掌握AI视频创作全流程，从文字到成品视频一键制作" data-en="Goal: Master the AI video creation pipeline — from text to finished video">目标：掌握AI视频创作全流程，从文字到成品视频一键制作</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块四 -->
+  <div class="module">
+    <div class="module-number">04</div>
+    <span class="module-tag" data-zh="模块四" data-en="MODULE 4">模块四</span>
+    <h2 data-zh="AI 工作流设计" data-en="AI Workflow Design">AI 工作流设计</h2>
+    <p class="module-summary" data-zh="双AI协作执行、提示词工程进阶、AI记忆系统 — 让AI真正成为你的智能团队" data-en="Dual-AI collaboration, advanced prompt engineering, AI memory systems — make AI your intelligent team">双AI协作执行、提示词工程进阶、AI记忆系统 — 让AI真正成为你的智能团队</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">13</span>
+          <h3 data-zh="双AI 执行模式 — 让 AI 协作干活" data-en="Dual-AI Execution — Let AI Collaborate">双AI 执行模式 — 让 AI 协作干活</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="总体指导AI（ChatGPT）+ 执行AI（WorkBuddy/Claude）" data-en="Director AI (ChatGPT) + Executor AI (WorkBuddy/Claude)">总体指导AI（ChatGPT）+ 执行AI（WorkBuddy/Claude）</li>
+          <li data-zh="为什么 ChatGPT 适合做"主管"，WorkBuddy 适合做"助理"" data-en="Why ChatGPT is the "manager" and WorkBuddy is the "assistant"">为什么 ChatGPT 适合做"主管"，WorkBuddy 适合做"助理"</li>
+          <li data-zh="完整工作流演示：从创意到成品的全链路" data-en="Full workflow demo: From idea to finished product">完整工作流演示：从创意到成品的全链路</li>
+          <li data-zh="实战：设计一个双AI协作的任务" data-en="Practice: Design a dual-AI collaboration task">实战：设计一个双AI协作的任务</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：掌握双AI协作模式，能根据任务类型灵活调度不同AI" data-en="Goal: Master dual-AI collaboration, flexibly deploy different AIs based on task types">目标：掌握双AI协作模式，能根据任务类型灵活调度不同AI</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">14</span>
+          <h3 data-zh="提示词工程 — 让 AI 听懂人话" data-en="Prompt Engineering — Make AI Understand You">提示词工程 — 让 AI 听懂人话</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="高质量提示词的构成要素（咒语解析）" data-en="Components of high-quality prompts (spell anatomy)">高质量提示词的构成要素（咒语解析）</li>
+          <li data-zh="从喜欢的模板提取提示词：Gemini生成 → ChatGPT分析 → 升级提示词" data-en="Extract prompts from templates: Gemini generates → ChatGPT analyzes → Upgrade prompt">从喜欢的模板提取提示词：Gemini生成 → ChatGPT分析 → 升级提示词</li>
+          <li data-zh="负面提示词的使用技巧" data-en="Negative prompt techniques">负面提示词的使用技巧</li>
+          <li data-zh="实战：为你最常用的一个任务写一段高质量提示词" data-en="Practice: Write a high-quality prompt for your most common task">实战：为你最常用的一个任务写一段高质量提示词</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：能独立编写高质量提示词，让AI输出精准匹配你的需求" data-en="Goal: Write high-quality prompts that make AI output precisely match your needs">目标：能独立编写高质量提示词，让AI输出精准匹配你的需求</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">15</span>
+          <h3 data-zh="AI 记忆系统 — 让 AI 认识你" data-en="AI Memory System — Make AI Know You">AI 记忆系统 — 让 AI 认识你</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="USER.md / MEMORY.md 的作用与设计原则" data-en="Purpose and design principles of USER.md / MEMORY.md">USER.md / MEMORY.md 的作用与设计原则</li>
+          <li data-zh="短期记忆（日志）与长期记忆（档案）的分层管理" data-en="Layered management: Short-term (logs) vs Long-term (profiles)">短期记忆（日志）与长期记忆（档案）的分层管理</li>
+          <li data-zh="如何把 ChatGPT/Gemini 的记忆迁移到 WorkBuddy" data-en="How to migrate ChatGPT/Gemini memory to WorkBuddy">如何把 ChatGPT/Gemini 的记忆迁移到 WorkBuddy</li>
+          <li data-zh="实战：为你的AI助手建立一份完整的记忆档案" data-en="Practice: Build a complete memory profile for your AI assistant">实战：为你的AI助手建立一份完整的记忆档案</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：你的AI助手能记住你的喜好、历史和上下文，越用越懂你" data-en="Goal: Your AI assistant remembers your preferences, history, and context — gets smarter over time">目标：你的AI助手能记住你的喜好、历史和上下文，越用越懂你</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块五 -->
+  <div class="module">
+    <div class="module-number">05</div>
+    <span class="module-tag" data-zh="模块五" data-en="MODULE 5">模块五</span>
+    <h2 data-zh="自动化与技能开发" data-en="Automation & Skill Development">自动化与技能开发</h2>
+    <p class="module-summary" data-zh="让AI每天自动帮你干活，把重复工作变成一键执行" data-en="Let AI work for you automatically — turn repetitive tasks into one-click actions">让AI每天自动帮你干活，把重复工作变成一键执行</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">16</span>
+          <h3 data-zh="WorkBuddy 自动化基础" data-en="WorkBuddy Automation Basics">WorkBuddy 自动化基础</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="自动化（Automation）是什么，不是什么" data-en="What automation is and isn't">自动化（Automation）是什么，不是什么</li>
+          <li data-zh="设置自动化任务（每日运行、定时触发）" data-en="Set up automated tasks (daily, scheduled)">设置自动化任务（每日运行、定时触发）</li>
+          <li data-zh="长期记忆设置 — 让自动化机器人记住它在哪" data-en="Long-term memory setup for automation bots">长期记忆设置 — 让自动化机器人记住它在哪</li>
+          <li data-zh="实战：设置一个每日邮件检查自动化" data-en="Practice: Set up a daily email check automation">实战：设置一个每日邮件检查自动化</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：能创建定时自动化任务，让AI每天按时帮你做事" data-en="Goal: Create scheduled automations so AI works for you on time daily">目标：能创建定时自动化任务，让AI每天按时帮你做事</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">17</span>
+          <h3 data-zh="自定义技能开发" data-en="Custom Skill Development">自定义技能开发</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="什么是技能（Skill）— 给AI安装"专业模块"" data-en="What is a Skill — install "professional modules" for AI">什么是技能（Skill）— 给AI安装"专业模块"</li>
+          <li data-zh="系统级技能 vs 项目级技能的区别" data-en="System-level vs project-level skills">系统级技能 vs 项目级技能的区别</li>
+          <li data-zh="用轻量级格式（MD + JSON）创建技能" data-en="Create skills using lightweight MD + JSON format">用轻量级格式（MD + JSON）创建技能</li>
+          <li data-zh="实战：创建一个简单的"购买清单"技能" data-en="Practice: Create a simple "Shopping List" skill">实战：创建一个简单的"购买清单"技能</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：能把常用工作流封装成技能，一键调用无需重复输入" data-en="Goal: Package common workflows as skills — one-click invocation, no repeated input">目标：能把常用工作流封装成技能，一键调用无需重复输入</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">18</span>
+          <h3 data-zh="企业微信机器人 — 让 AI 推送到手机" data-en="WeCom Bot — AI Pushes to Your Phone">企业微信机器人 — 让 AI 推送到手机</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="企业微信群通知机器人的添加与管理" data-en="Add and manage WeCom group notification bots">企业微信群通知机器人的添加与管理</li>
+          <li data-zh="如何设置提醒、每日报告" data-en="Set up reminders and daily reports">如何设置提醒、每日报告</li>
+          <li data-zh="实战：设置一个每日任务提醒推送到企业微信" data-en="Practice: Set up a daily task reminder push to WeCom">实战：设置一个每日任务提醒推送到企业微信</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：AI的输出能实时推送到你的手机，不遗漏任何重要信息" data-en="Goal: AI output is pushed to your phone in real time — never miss important info">目标：AI的输出能实时推送到你的手机，不遗漏任何重要信息</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">19</span>
+          <h3 data-zh="邮件自动化高级" data-en="Advanced Email Automation">邮件自动化高级</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="Gmail API 配置（OAuth方式，不用IMAP）" data-en="Gmail API OAuth setup (no IMAP needed)">Gmail API 配置（OAuth方式，不用IMAP）</li>
+          <li data-zh="邮件分类、附件自动下载、内容提取" data-en="Email classification, auto-download attachments, content extraction">邮件分类、附件自动下载、内容提取</li>
+          <li data-zh="创建"电子邮件自动化"技能" data-en="Create an "Email Automation" skill">创建"电子邮件自动化"技能</li>
+          <li data-zh="实战：设置一个自动处理特定邮件的自动化" data-en="Practice: Set up automation to process specific emails">实战：设置一个自动处理特定邮件的自动化</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：邮箱实现半自动化管理，重要邮件自动分类和处理" data-en="Goal: Semi-automated inbox — important emails auto-classified and processed">目标：邮箱实现半自动化管理，重要邮件自动分类和处理</div>
+      </div>
+      <div class="lesson lesson-new">
+        <div class="lesson-header">
+          <span class="lesson-num">20</span>
+          <h3 data-zh="企业微信智能表格与二维码传播" data-en="WeCom Smart Tables & QR Code Sharing">企业微信智能表格与二维码传播</h3>
+          <span class="lesson-new-badge" data-zh="V2 新增" data-en="NEW">V2 新增</span>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="企业微信智能表格实战：任务管理 / CRM / 财务追踪" data-en="WeCom Smart Tables: Task management / CRM / Financial tracking">企业微信智能表格实战：任务管理 / CRM / 财务追踪</li>
+          <li data-zh="二维码生成 + CloudStudio 链接：让AI成果一键传播" data-en="QR code generation + CloudStudio links: Share AI outputs with one click">二维码生成 + CloudStudio 链接：让AI成果一键传播</li>
+          <li data-zh="实战：用智能表格搭建一个简单的客户追踪表" data-en="Practice: Build a simple client tracking table with Smart Tables">实战：用智能表格搭建一个简单的客户追踪表</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：掌握企业微信智能表格的使用，能快速分发AI生成的成果" data-en="Goal: Master WeCom Smart Tables and quickly distribute AI-generated outputs">目标：掌握企业微信智能表格的使用，能快速分发AI生成的成果</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块六 -->
+  <div class="module">
+    <div class="module-number">06</div>
+    <span class="module-tag" data-zh="模块六" data-en="MODULE 6">模块六</span>
+    <h2 data-zh="澳洲专业应用与毕业" data-en="Australia-Specific Applications & Graduation">澳洲专业应用与毕业</h2>
+    <p class="module-summary" data-zh="整合所学，设计你自己的 AI 工作法，完成毕业项目答辩" data-en="Integrate everything, design your AI workflow, and complete the graduation project">整合所学，设计你自己的 AI 工作法，完成毕业项目答辩</p>
+    <div class="lessons">
+      <div class="lesson lesson-new">
+        <div class="lesson-header">
+          <span class="lesson-num">21</span>
+          <h3 data-zh="AI 与澳洲报税实操" data-en="AI for Australian Tax Filing">AI 与澳洲报税实操</h3>
+          <span class="lesson-new-badge" data-zh="V2 新增" data-en="NEW">V2 新增</span>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="AI 辅助整理报税材料：收入、支出、抵扣项分类" data-en="AI-assisted tax prep: Income, expenses, deduction categorization">AI 辅助整理报税材料：收入、支出、抵扣项分类</li>
+          <li data-zh="MYOB / Xero 与 AI 结合：智能记账与对账" data-en="MYOB / Xero + AI: Smart bookkeeping & reconciliation">MYOB / Xero 与 AI 结合：智能记账与对账</li>
+          <li data-zh="ATO 规则查询辅助：用AI理解澳洲税法要点" data-en="ATO rule lookup: Use AI to understand Australian tax law basics">ATO 规则查询辅助：用AI理解澳洲税法要点</li>
+          <li data-zh="实战：用AI整理一份年度报税准备清单" data-en="Practice: Use AI to prepare an annual tax checklist">实战：用AI整理一份年度报税准备清单</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：能独立用AI辅助完成澳洲报税前的材料准备全流程" data-en="Goal: Independently use AI to prepare all materials before filing Australian tax">目标：能独立用AI辅助完成澳洲报税前的材料准备全流程</div>
+      </div>
+      <div class="lesson lesson-new">
+        <div class="lesson-header">
+          <span class="lesson-num">22</span>
+          <h3 data-zh="银行对账与费用分析" data-en="Bank Reconciliation & Expense Analysis">银行对账与费用分析</h3>
+          <span class="lesson-new-badge" data-zh="V2 新增" data-en="NEW">V2 新增</span>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="OCR / PDF扫描件处理：银行对账单自动识别" data-en="OCR / PDF scanning: Auto-recognize bank statements">OCR / PDF扫描件处理：银行对账单自动识别</li>
+          <li data-zh="AI 辅助费用分类与异常支出检测" data-en="AI-assisted expense categorization & anomaly detection">AI 辅助费用分类与异常支出检测</li>
+          <li data-zh="ABS 数据查询：用AI快速获取澳洲统计局数据" data-en="ABS data queries: Use AI to access Australian Bureau of Statistics data">ABS 数据查询：用AI快速获取澳洲统计局数据</li>
+          <li data-zh="实战：上传银行PDF，让AI自动分类并生成月度支出报告" data-en="Practice: Upload bank PDF, let AI auto-classify and generate monthly expense report">实战：上传银行PDF，让AI自动分类并生成月度支出报告</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：掌握AI辅助财务分析流程，自动生成清晰的收支报告" data-en="Goal: Master AI-assisted financial analysis, auto-generate clear income/expense reports">目标：掌握AI辅助财务分析流程，自动生成清晰的收支报告</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">23</span>
+          <h3 data-zh="专业场景深度应用" data-en="Deep Application in Professional Scenarios">专业场景深度应用</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="AI 与 CRM、人脉管理系统搭建" data-en="AI for CRM & contact management systems">AI 与 CRM、人脉管理系统搭建</li>
+          <li data-zh="AI 与内容生产体系（课件、视频、课程）" data-en="AI for content production (courseware, video, courses)">AI 与内容生产体系（课件、视频、课程）</li>
+          <li data-zh="澳洲房产AI应用：土地价格监控与投资分析" data-en="AI for Australian property: Land price monitoring & investment analysis">澳洲房产AI应用：土地价格监控与投资分析</li>
+          <li data-zh="实战：选择一个专业场景，设计完整AI解决方案" data-en="Practice: Pick a professional scenario and design a complete AI solution">实战：选择一个专业场景，设计完整AI解决方案</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：能在你最关心的专业领域搭建完整的AI工作流" data-en="Goal: Build a complete AI workflow in your area of professional interest">目标：能在你最关心的专业领域搭建完整的AI工作流</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">24</span>
+          <h3 data-zh="建立你自己的 AI 工作法 · 毕业答辩" data-en="Build Your Own AI Method · Graduation Defense">建立你自己的 AI 工作法 · 毕业答辩</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="回顾全部核心方法与思维模型" data-en="Review all core methods and mental models">回顾全部核心方法与思维模型</li>
+          <li data-zh="设计个人 AI 工作流蓝图（从问题出发 → AI协作 → 自动化执行）" data-en="Design your personal AI workflow blueprint (Problem → AI Collaboration → Automation)">设计个人 AI 工作流蓝图（从问题出发 → AI协作 → 自动化执行）</li>
+          <li data-zh="未来 3 个月 AI 学习行动计划" data-en="3-month AI learning action plan">未来 3 个月 AI 学习行动计划</li>
+          <li data-zh="实战：毕业项目展示与答辩" data-en="Practice: Graduation project presentation & defense">实战：毕业项目展示与答辩</li>
+          <li data-zh="班级所有成员合作完成班级网站（团队协作 + Git 实战）" data-en="All class members collaborate to complete the class website (teamwork + Git practice)">班级所有成员合作完成班级网站（团队协作 + Git 实战）</li>
+          <li data-zh="毕业项目落地：将你在课程中设计的 AI 工作流在实际工作和生活中部署运行，讲师持续跟进指导" data-en="Graduation project implementation: Deploy and run the AI workflows you designed during the course in real work and life, with continuous instructor follow-up">毕业项目落地：将你在课程中设计的 AI 工作流在实际工作和生活中部署运行，讲师持续跟进指导</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：独立设计并运行属于你自己的AI工作体系，顺利毕业" data-en="Goal: Independently design and run your own AI workflow system and graduate">目标：独立设计并运行属于你自己的AI工作体系，顺利毕业</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 学习目标 ===== -->
+<section class="outcomes-section">
+  <div class="outcomes-inner">
+    <div class="section-header">
+      <span class="section-tag" data-zh="学习目标" data-en="LEARNING OUTCOMES">学习目标</span>
+      <h2 class="section-title" data-zh="12 周后，你将获得什么" data-en="What You'll Gain After 12 Weeks">12 周后，你将获得什么</h2>
+      <p class="section-desc" data-zh="不只是"学会用AI"，而是真正用AI改变你的工作和生活方式" data-en="Not just "learning to use AI" — but truly transforming how you work and live">不只是"学会用AI"，而是真正用AI改变你的工作和生活方式</p>
+    </div>
+
+    <div class="outcomes-grid">
+      <div class="outcome-card">
+        <span class="emoji">🧠</span>
+        <h3 data-zh="AI 思维觉醒" data-en="AI Mindset Awakening">AI 思维觉醒</h3>
+        <p data-zh="从"不懂不敢用"到"不懂正好用AI"，建立输出式学习思维" data-en="From "too scared to use" to "not knowing is the perfect reason to use AI"">从"不懂不敢用"到"不懂正好用AI"，建立输出式学习思维</p>
+      </div>
+      <div class="outcome-card">
+        <span class="emoji">⚡</span>
+        <h3 data-zh="效率暴增 3-10 倍" data-en="3-10x Efficiency Boost">效率暴增 3-10 倍</h3>
+        <p data-zh="邮件、文档、购物、创作 — 每个日常场景都有AI加持" data-en="Email, documents, shopping, content creation — AI empowers every daily scenario">邮件、文档、购物、创作 — 每个日常场景都有AI加持</p>
+      </div>
+      <div class="outcome-card">
+        <span class="emoji">🤖</span>
+        <h3 data-zh="专属 AI 助理" data-en="Personal AI Assistant">专属 AI 助理</h3>
+        <p data-zh="搭建懂你的个性化AI系统，有记忆、有技能、能自动执行" data-en="Build a personalized AI system that knows you — with memory, skills, and automation">搭建懂你的个性化AI系统，有记忆、有技能、能自动执行</p>
+      </div>
+      <div class="outcome-card">
+        <span class="emoji">🔧</span>
+        <h3 data-zh="自定义工作流" data-en="Custom Workflows">自定义工作流</h3>
+        <p data-zh="设计你自己领域的工作流，把重复劳动变成自动化流程" data-en="Design workflows for your field — turn repetitive work into automated processes">设计你自己领域的工作流，把重复劳动变成自动化流程</p>
+      </div>
+      <div class="outcome-card">
+        <span class="emoji">📱</span>
+        <h3 data-zh="全平台联动" data-en="Cross-Platform Integration">全平台联动</h3>
+        <p data-zh="手机、电脑、邮件、日历、企业微信 — AI无处不在" data-en="Phone, computer, email, calendar, WeCom — AI is everywhere">手机、电脑、邮件、日历、企业微信 — AI无处不在</p>
+      </div>
+      <div class="outcome-card">
+        <span class="emoji">🎓</span>
+        <h3 data-zh="蜗牛AI 毕业认证" data-en="SnailAI Graduation Certificate">蜗牛AI 毕业认证</h3>
+        <p data-zh="完成毕业项目答辩，获得蜗牛AI官方结业证书" data-en="Complete the graduation project defense and earn your official SnailAI certificate">完成毕业项目答辩，获得蜗牛AI官方结业证书</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 预期成果 ===== -->
+<section class="section">
+  <div class="result-card">
+    <h2 data-zh="课程结束时，你将<span class='highlight'>真正拥有</span>这些" data-en="By Course End, You'll <span class='highlight'>Truly Own</span> These">课程结束时，你将<span class="highlight">真正拥有</span>这些</h2>
+    <p data-zh="每一项都不是纸上谈兵，而是你在课堂上一手搭建的真实系统" data-en="Every item below is a real system you'll build with your own hands in class">每一项都不是纸上谈兵，而是你在课堂上一手搭建的真实系统</p>
+
+    <div class="result-items">
+      <div class="result-item">
+        <span class="icon">✅</span>
+        <h4 data-zh="个人 AI 档案" data-en="Personal AI Profile">个人 AI 档案</h4>
+        <p data-zh="USER.md + MEMORY.md，AI真正认识你" data-en="USER.md + MEMORY.md — AI truly knows you">USER.md + MEMORY.md，AI真正认识你</p>
+      </div>
+      <div class="result-item">
+        <span class="icon">✅</span>
+        <h4 data-zh="3+ 自定义技能" data-en="3+ Custom Skills">3+ 自定义技能</h4>
+        <p data-zh="购买清单、邮件处理、内容创作等一键执行" data-en="Shopping list, email processing, content creation — one click">购买清单、邮件处理、内容创作等一键执行</p>
+      </div>
+      <div class="result-item">
+        <span class="icon">✅</span>
+        <h4 data-zh="2+ 自动化任务" data-en="2+ Automation Tasks">2+ 自动化任务</h4>
+        <p data-zh="每日邮件检查、企业微信推送等定时执行" data-en="Daily email check, WeCom push — scheduled execution">每日邮件检查、企业微信推送等定时执行</p>
+      </div>
+      <div class="result-item">
+        <span class="icon">✅</span>
+        <h4 data-zh="个人 AI 工作流蓝图" data-en="Personal AI Workflow Blueprint">个人 AI 工作流蓝图</h4>
+        <p data-zh="你所在领域的完整AI解决方案设计" data-en="Complete AI solution design for your field">你所在领域的完整AI解决方案设计</p>
+      </div>
+      <div class="result-item">
+        <span class="icon">✅</span>
+        <h4 data-zh="双AI 协作模式" data-en="Dual-AI Collaboration">双AI 协作模式</h4>
+        <p data-zh="ChatGPT + WorkBuddy 的黄金搭档组合" data-en="The golden duo: ChatGPT + WorkBuddy">ChatGPT + WorkBuddy 的黄金搭档组合</p>
+      </div>
+      <div class="result-item">
+        <span class="icon">✅</span>
+        <h4 data-zh="蜗牛AI 毕业证书" data-en="SnailAI Certificate">蜗牛AI 毕业证书</h4>
+        <p data-zh="官方认证你的 AI 应用能力" data-en="Official certification of your AI application skills">官方认证你的 AI 应用能力</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 后续环节 ===== -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-tag" data-zh="后续环节" data-en="NEXT STEPS">后续环节</span>
+    <h2 class="section-title" data-zh="毕业不是终点，而是新的起点" data-en="Graduation Is Not the End, But a New Beginning">毕业不是终点，而是新的起点</h2>
+    <p class="section-desc" data-zh="蜗牛AI 旗舰版持续陪伴你升级 AI 能力" data-en="SnailAI Premium continues to level up your AI skills">蜗牛AI 旗舰版持续陪伴你升级 AI 能力</p>
+  </div>
+
+  <div class="prep-grid">
+    <div class="prep-card">
+      <div class="icon">🚀</div>
+      <h3 data-zh="毕业项目落地" data-en="Graduation Project Deployment">毕业项目落地</h3>
+      <p data-zh="将你在课程中设计的 AI 工作流在实际工作和生活中部署运行，讲师持续跟进指导" data-en="Deploy the AI workflows you designed in class to your real work and life, with ongoing instructor support">将你在课程中设计的 AI 工作流在实际工作和生活中部署运行，讲师持续跟进指导</p>
+    </div>
+    <div class="prep-card">
+      <div class="icon">🤝</div>
+      <h3 data-zh="蜗牛AI 旗舰版" data-en="SnailAI Premium">蜗牛AI 旗舰版</h3>
+      <p data-zh="加入旗舰版社区，获取最新 AI 产品内测资格、高级技能模板、1对1顾问服务" data-en="Join the Premium community — get early access to new AI products, advanced skill templates, and 1-on-1 consulting">加入旗舰版社区，获取最新 AI 产品内测资格、高级技能模板、1对1顾问服务</p>
+    </div>
+    <div class="prep-card">
+      <div class="icon">🌍</div>
+      <h3 data-zh="实践开拓" data-en="Explore & Expand">实践开拓</h3>
+      <p data-zh="参与悉尼线下 AI 应用沙龙、企业 AI 咨询项目，将 AI 应用从个人拓展到商业场景" data-en="Join Sydney AI meetups, enterprise consulting projects — scale AI from personal to commercial use">参与悉尼线下 AI 应用沙龙、企业 AI 咨询项目，将 AI 应用从个人拓展到商业场景</p>
+    </div>
+    <div class="prep-card">
+      <div class="icon">📚</div>
+      <h3 data-zh="持续学习路径" data-en="Continuous Learning Path">持续学习路径</h3>
+      <p data-zh="输式学习社区、每日 AI 新闻简报、月度技能更新 — AI 在进化，你也在进化" data-en="Output-driven learning community, daily AI news digest, monthly skill updates — as AI evolves, so do you">输式学习社区、每日 AI 新闻简报、月度技能更新 — AI 在进化，你也在进化</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ LINK ===== -->
+<section class="section faq-link-section">
+  <div class="section-header">
+    <span class="section-tag" data-zh="常见问题" data-en="FAQ">常见问题</span>
+    <h2 class="section-title" data-zh="有问题？来这里找答案" data-en="Got Questions? Find Answers Here">有问题？来这里找答案</h2>
+    <p class="section-desc" data-zh="11 大核心问题，为你扫清报名前的所有顾虑" data-en="11 core questions to clear all your doubts before enrolling">11 大核心问题，为你扫清报名前的所有顾虑</p>
+  </div>
+  <div class="prep-grid" style="max-width:100%;justify-content:center;">
+    <a href="/faq/" target="_blank" class="prep-card" style="text-decoration:none;cursor:pointer;max-width:400px;margin:0 auto;">
+      <div class="icon">📋</div>
+      <h3 data-zh="查看 FAQ 常见问题 →" data-en="View FAQ →">查看 FAQ 常见问题 →</h3>
+      <p data-zh="课程适合谁？零基础能学吗？和免费视频有什么区别？… 及更多热门问题" data-en="Who is this for? Can beginners learn? Difference from free videos? … and more">课程适合谁？零基础能学吗？和免费视频有什么区别？… 及更多热门问题</p>
+    </a>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2 data-zh="🦞 立即加入蜗牛AI线上课" data-en="🦞 Join SnailAI Online Course Now">🦞 立即加入蜗牛AI线上课</h2>
+    <p data-zh="7月7日开课 · 每周二晚 8:30 – 10:30 · 仅限澳洲华人" data-en="Starts Jul 7 · Every Tue 8:30 – 10:30 PM · Exclusive for Australian Chinese">7月7日开课 · 每周二晚 8:30 – 10:30 · 仅限澳洲华人</p>
+    <img src="../assets/poster_online_enroll.jpg" alt="蜗牛AI线上课报名海报" class="cta-poster">
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <img src="../assets/snailai_logo.png" alt="蜗牛AI Logo" class="footer-logo">
+  <div style="margin-bottom:12px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap;">
+    <a href="/online-course/" style="color:var(--accent);text-decoration:none;font-weight:600;" data-zh="线上课大纲" data-en="Online Course">线上课大纲</a>
+    <a href="/offline-course/" style="color:var(--accent);text-decoration:none;font-weight:600;" data-zh="线下课大纲" data-en="Offline Course">线下课大纲</a>
+    <a href="/faq/" style="color:var(--accent);text-decoration:none;font-weight:600;" data-zh="FAQ 常见问题" data-en="FAQ">FAQ 常见问题</a>
+    <a href="/live-share-2026-07-04/" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:600;" data-zh="直播分享会PPT" data-en="Live Share PPT">直播分享会PPT</a>
+    <a href="/snailai-pitch-2026/" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:600;" data-zh="技术澳洲应用大全PPT" data-en="Tech Application PPT">技术澳洲应用大全PPT</a>
+  </div>
+  <p data-zh="© 2026 <span class='brand'>蜗牛AI</span> · 澳洲华人AI应用私享会 · 学习 · 应用 · 享受 · 投资" data-en="© 2026 <span class='brand'>SnailAI</span> · Australian Chinese AI Community · Learn · Apply · Enjoy · Invest">© 2026 <span class="brand">蜗牛AI</span> · 澳洲华人AI应用私享会 · 学习 · 应用 · 享受 · 投资</p>
+</footer>
+
+<script>
+function setLang(lang) {
+  document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.querySelectorAll('[data-zh][data-en]').forEach(el => {
+    el.innerHTML = el.getAttribute('data-' + lang);
+  });
+  localStorage.setItem('snailai-lang', lang);
+}
+
+// Init from localStorage or default zh
+(function() {
+  const saved = localStorage.getItem('snailai-lang');
+  setLang(saved || 'zh');
+})();
+
+// ===== Mobile Bottom Nav =====
+document.addEventListener('DOMContentLoaded', function() {
+  const nav = document.createElement('nav');
+  nav.className = 'mobile-bottom-nav';
+  nav.innerHTML = `
+    <a href="#" class="active"><span class="mbn-icon">💻</span>线上课</a>
+    <a href="/offline-course/"><span class="mbn-icon">🤝</span>线下课</a>
+    <a href="/faq/"><span class="mbn-icon">📋</span>FAQ</a>
+  `;
+  document.body.appendChild(nav);
+});
+</script>
+
+</body>
+</html>

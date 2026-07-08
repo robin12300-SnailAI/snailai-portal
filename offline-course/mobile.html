@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>蜗牛AI · AI澳洲财富线下课</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================
+     蜗牛AI AI澳洲财富线下课 V2 · 移动端
+     风格：Editorial Premium（杂志学术）
+     全浅色背景
+     ============================================ */
+  :root {
+    --bg-paper:     #F5EFE3;
+    --bg-cream:     #FAF6EE;
+    --bg-ivory:     #FFFDF7;
+    --bg-deep:      #EBE2D0;
+    --bg-rule:      #D9CFB8;
+
+    --ink:          #1F1A14;
+    --ink-soft:     #3D352B;
+    --ink-mute:     #6B6258;
+    --ink-light:    #998E80;
+    --ink-faint:    #BFB4A0;
+
+    --gold:         #B08738;
+    --gold-bright:  #D4A24A;
+    --gold-soft:    #E8C97A;
+
+    --rule:         rgba(176,135,56,0.28);
+    --rule-soft:    rgba(31,26,20,0.10);
+    --rule-faint:   rgba(31,26,20,0.05);
+
+    --shadow-sm: 0 1px 2px rgba(31,26,20,0.04);
+    --shadow-md: 0 4px 14px rgba(31,26,20,0.06);
+
+    --r-sm: 4px;
+    --r-md: 8px;
+    --r-lg: 14px;
+    --r-xl: 20px;
+
+    --font-display-en: 'Cormorant Garamond', 'Noto Serif SC', Georgia, serif;
+    --font-display-zh: 'Noto Serif SC', 'Cormorant Garamond', Georgia, serif;
+    --font-body:       'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+    --font-body-zh:    'Noto Sans SC', 'Inter', -apple-system, sans-serif;
+    --font-mono:       'JetBrains Mono', 'Menlo', monospace;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: var(--font-body-zh);
+    background: var(--bg-paper);
+    color: var(--ink);
+    line-height: 1.7;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(31,26,20,0.025) 1px, transparent 0);
+    background-size: 24px 24px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  img, svg { display: block; }
+
+  /* ===== TOP NAV (fixed, visible links) ===== */
+  .topnav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    background: rgba(245,239,227,0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .topnav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+  }
+  .topnav-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .topnav-logo {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    display: block;
+  }
+  .topnav-brand span {
+    font-family: var(--font-display-zh);
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .topnav-links {
+    display: flex;
+    border-top: 1px solid var(--rule-soft);
+  }
+  .topnav-links a {
+    flex: 1;
+    text-align: center;
+    padding: 11px 0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink-mute);
+    text-decoration: none;
+    border-left: 1px solid var(--rule-soft);
+  }
+  .topnav-links a:first-child { border-left: none; }
+  .topnav-links a.active { color: var(--gold); }
+  .topnav-links a:active { background: var(--bg-deep); }
+  .lang-switch {
+    display: flex;
+    gap: 2px;
+    background: var(--bg-deep);
+    border-radius: 100px;
+    padding: 2px;
+    border: 1px solid var(--rule-soft);
+  }
+  .lang-btn {
+    background: transparent;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-family: inherit;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--ink-mute);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .lang-btn.active {
+    background: var(--ink);
+    color: var(--bg-paper);
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    padding: 100px 20px 36px;
+    position: relative;
+  }
+  .hero-masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 14px;
+    margin-bottom: 28px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .hero-masthead span {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--ink-mute);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .hero-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-family: var(--font-display-zh);
+    font-size: 2.4rem;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+  .hero-deck {
+    font-family: var(--font-display-en);
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    line-height: 1.45;
+    margin-bottom: 24px;
+  }
+  .hero-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .hero-meta-item {
+    padding: 14px 12px;
+    border-right: 1px solid var(--rule-soft);
+  }
+  .hero-meta-item:nth-child(2n) { border-right: none; }
+  .hero-meta-item .label {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .hero-meta-item .value {
+    font-family: var(--font-display-en);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .hero-meta-item .value.gold { color: var(--gold); }
+  .hero-meta-item .value.zh {
+    font-family: var(--font-display-zh);
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  /* ===== SECTIONS ===== */
+  .section {
+    padding: 44px 20px;
+    position: relative;
+  }
+  .section + .section { padding-top: 16px; }
+
+  .section-header { margin-bottom: 28px; }
+  .section-header.center { text-align: center; }
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--gold);
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: var(--font-display-zh);
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .section-rule {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin: 14px 0 12px;
+  }
+  .section-rule.center { margin: 14px auto 12px; }
+  .section-deck {
+    font-family: var(--font-display-en);
+    font-size: 0.95rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  /* ===== INTRO ===== */
+  .intro-quote {
+    border-left: 2px solid var(--gold);
+    padding: 6px 0 6px 16px;
+    margin: 20px 0;
+  }
+  .intro-quote p {
+    font-family: var(--font-display-zh);
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .intro-quote cite {
+    display: block;
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-style: normal;
+    color: var(--ink-mute);
+    letter-spacing: 0.08em;
+  }
+  .intro-body p {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+    line-height: 1.7;
+  }
+  .intro-body p strong {
+    color: var(--ink);
+    font-weight: 700;
+    background: linear-gradient(transparent 65%, rgba(212,162,74,0.25) 65%);
+    padding: 0 2px;
+  }
+  .intro-pillars {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule-soft);
+    margin-top: 20px;
+    border: 1px solid var(--rule-soft);
+  }
+  .intro-pillar {
+    background: var(--bg-cream);
+    padding: 14px 16px;
+  }
+  .intro-pillar .num {
+    font-family: var(--font-display-en);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .intro-pillar .label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-top: 4px;
+  }
+  .intro-pillar p {
+    font-size: 0.72rem;
+    color: var(--ink-mute);
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+
+  /* ===== WHY ===== */
+  .why-band {
+    background: var(--bg-deep);
+    border-top: 1px solid var(--rule-soft);
+    border-bottom: 1px solid var(--rule-soft);
+    padding: 36px 0;
+  }
+  .why-band .section { padding: 0 20px; }
+  .stat-row {
+    display: grid;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .stat-cell {
+    padding: 20px 16px;
+    text-align: center;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .stat-cell:last-child { border-bottom: none; }
+  .stat-cell .num {
+    font-family: var(--font-display-en);
+    font-size: 2.6rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat-cell
+  .stat-cell .num .unit { font-size: 1rem; color: var(--ink-mute); margin-left: 2px; }
+  .stat-cell .label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ink-mute);
+    margin-top: 8px;
+  }
+  .stat-cell p {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  .why-cards {
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .why-card {
+    background: var(--bg-cream);
+    border: 1px solid var(--rule-soft);
+    padding: 20px;
+  }
+  .why-card .num {
+    font-family: var(--font-display-en);
+    font-size: 2rem;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .why-card h3 {
+    font-family: var(--font-display-zh);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .why-card p {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  /* ===== MINDSET ===== */
+  .mindset-grid {
+    display: grid;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .mindset-cell {
+    background: var(--bg-ivory);
+    padding: 22px 18px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .mindset-cell:last-child { border-bottom: none; }
+  .mindset-cell .label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .mindset-cell h3 {
+    font-family: var(--font-display-zh);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .mindset-cell p {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .mindset-cell .example {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--rule);
+    font-size: 0.72rem;
+    color: var(--ink-mute);
+    font-style: italic;
+  }
+
+  /* ===== METHOD ===== */
+  .method-band {
+    background: var(--bg-deep);
+    border-top: 1px solid var(--rule-soft);
+    border-bottom: 1px solid var(--rule-soft);
+    padding: 36px 0;
+  }
+  .method-band .section { padding: 0 20px; }
+  /* === Live Demos · 三大现场演示 === */
+  .live-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .live-card {
+    background: var(--bg-cream);
+    border: 1px solid var(--rule-soft);
+    border-top: 3px solid var(--ink);
+    padding: 26px 22px 22px;
+    position: relative;
+  }
+  .live-card.highlight {
+    background: linear-gradient(180deg, #FAF1D9 0%, #F5E8C2 100%);
+    border: 1.5px solid var(--gold);
+    border-top: 3px solid var(--gold);
+  }
+  .live-card .badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: var(--ink);
+    color: var(--gold);
+    font-family: var(--font-display-en);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+  }
+  .live-card .num {
+    font-family: var(--font-display-en);
+    font-size: 2.6rem;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+.live-card h3 {
+    font-family: var(--font-display-zh);
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.35;
+    margin-bottom: 10px;
+  }
+  .live-card p {
+    font-size: 0.84rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 14px;
+    border-top: 1px dashed var(--rule);
+    padding-top: 14px;
+  }
+  .live-card .live-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .live-card .live-steps li {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    padding: 5px 0 5px 16px;
+    position: relative;
+  }
+  .live-card .live-steps li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 3px;
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .method-steps {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 24px;
+    border-top: 1px solid var(--ink);
+  }
+  .method-step {
+    background: var(--bg-cream);
+    padding: 22px 18px;
+    border-right: 1px solid var(--rule-soft);
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .method-step:nth-child(2n) { border-right: none; }
+  .method-step:nth-last-child(-n+2) { border-bottom: none; }
+  .method-step .num {
+    font-family: var(--font-display-en);
+    font-size: 2.4rem;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .method-step h4 {
+    font-family: var(--font-display-zh);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .method-step p {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .method-quote {
+    margin: 32px auto 0;
+    text-align: center;
+    padding: 22px 0;
+    border-top: 1px solid var(--gold);
+    border-bottom: 1px solid var(--gold);
+  }
+  .method-quote p {
+    font-family: var(--font-display-zh);
+    font-size: 1.05rem;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .method-quote
+  .method-quote cite {
+    display: block;
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-style: normal;
+    color: var(--ink-mute);
+    letter-spacing: 0.08em;
+  }
+
+  /* ===== TOOLS ===== */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule-soft);
+    border: 1px solid var(--rule-soft);
+  }
+  .tool-cell {
+    background: var(--bg-cream);
+    padding: 18px 16px;
+  }
+  .tool-cell .icon {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: var(--gold);
+  }
+  .tool-cell .name {
+    font-family: var(--font-display-en);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .tool-cell .role {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 4px 0 8px;
+  }
+  .tool-cell p {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* ===== PREP ===== */
+  .prep-grid {
+    display: grid;
+    border-top: 1px solid var(--ink);
+  }
+  .prep-card {
+    background: var(--bg-ivory);
+    padding: 20px 18px;
+    border-bottom: 1px solid var(--rule-soft);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+  }
+  .prep-card .num {
+    font-family: var(--font-display-en);
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+    font-style: italic;
+  }
+  .prep-card h3 {
+    font-family: var(--font-display-zh);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .prep-card p {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .prep-card ol { list-style: none; }
+  .prep-card ol li {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    padding: 5px 0 5px 20px;
+    position: relative;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+  .prep-card ol li:last-child { border-bottom: none; }
+  .prep-card ol li::before {
+    content: attr(data-step);
+    position: absolute;
+    left: 0; top: 5px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  /* ===== TIMELINE ===== */
+  .timeline { margin-top: 12px; }
+  .timeline-row {
+    display: grid;
+    grid-template-columns: 90px 28px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .timeline-row:last-child { border-bottom: none; }
+  .timeline-date {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+  }
+  .timeline-date .week {
+    display: block;
+    font-size: 0.55rem;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-top: 2px;
+  }
+  .timeline-marker {
+    position: relative;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 4px;
+  }
+  .timeline-marker::before {
+    content: '';
+    position: absolute;
+    top: 10px; bottom: -18px;
+    left: 50%;
+    width: 1px;
+    background: var(--rule);
+  }
+  .timeline-row:last-child .timeline-marker::before { display: none; }
+  .timeline-marker .dot {
+    width: 10px; height: 10px;
+    background: var(--bg-paper);
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+  }
+  .timeline-row:first-child .timeline-marker .dot {
+    background: var(--gold);
+  }
+  .timeline-content h3 {
+    font-family: var(--font-display-zh);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .timeline-content p {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* ===== CURRICULUM / MODULE ===== */
+  .module {
+    background: var(--bg-ivory);
+    border: 1px solid var(--ink);
+    padding: 22px 18px;
+    margin-bottom: 16px;
+  }
+  .module-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 18px;
+  }
+  .module-no {
+    font-family: var(--font-display-en);
+    font-size: 2.6rem;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--gold);
+    line-height: 0.9;
+  }
+  .module-title {
+    font-family: var(--font-display-zh);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .module-tag {
+    display: none;
+  }
+  .module-summary {
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+  .lessons {
+    display: grid;
+    gap: 1px;
+    background: var(--rule-soft);
+    border: 1px solid var(--rule-soft);
+  }
+  .lesson {
+    background: var(--bg-ivory);
+    padding: 18px 16px;
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 12px;
+  }
+  .lesson .lesson-num {
+    font-family: var(--font-display-en);
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .lesson-body h3 {
+    font-family: var(--font-display-zh);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .lesson-topics {
+    list-style: none;
+    display: grid;
+    gap: 3px;
+    margin-bottom: 10px;
+  }
+  .lesson-topics li {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .lesson-topics li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 7px;
+    width: 4px; height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+  .lesson-outcome {
+    font-size: 0.74rem;
+    color: var(--gold);
+    font-weight: 600;
+    padding-top: 8px;
+    border-top: 1px dashed var(--rule);
+  }
+  .lesson-outcome::before { content: '◆ '; }
+
+  /* ===== SCENARIOS ===== */
+  .scenarios-band {
+    background: var(--bg-deep);
+    border-top: 1px solid var(--rule-soft);
+    border-bottom: 1px solid var(--rule-soft);
+    padding: 36px 0;
+  }
+  .scenarios-band .section { padding: 0 20px; }
+  .scenarios-grid {
+    display: grid;
+    border-top: 1px solid var(--ink);
+    margin-top: 24px;
+  }
+  .scenario-card {
+    background: var(--bg-cream);
+    padding: 18px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .scenario-card:last-child { border-bottom: none; }
+  .scenario-card .icon {
+    font-size: 1.2rem;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .scenario-card h3 {
+    font-family: var(--font-display-zh);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .scenario-card p {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .scenario-card .scene {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-top: 1px dashed var(--rule);
+    padding-top: 8px;
+  }
+
+  /* ===== OUTCOMES ===== */
+  .outcomes-grid {
+    display: grid;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .outcome-card {
+    padding: 20px 16px;
+    background: var(--bg-ivory);
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .outcome-card:last-child { border-bottom: none; }
+  .outcome-card .icon {
+    font-size: 1.3rem;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .outcome-card h3 {
+    font-family: var(--font-display-zh);
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .outcome-card p {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* ===== PRICING ===== */
+  .pricing-grid {
+    display: grid;
+    margin-top: 24px;
+    border-top: 1px solid var(--ink);
+  }
+  .price-card {
+    background: var(--bg-ivory);
+    padding: 24px 20px;
+    border-bottom: 1px solid var(--rule-soft);
+    position: relative;
+  }
+  .price-card.featured {
+    background: var(--bg-deep);
+    border: 2px solid var(--gold);
+    margin: 8px 0;
+  }
+  .price-card.featured::before {
+    content: 'Most Popular';
+    position: absolute;
+    top: -12px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: var(--bg-paper);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 12px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .price-card .tier {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .price-card .name {
+    font-family: var(--font-display-zh);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .price-card .desc {
+    font-size: 0.78rem;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  .price-card .price {
+    font-family: var(--font-display-en);
+    font-size: 2.6rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .price-card .price .currency {
+    font-size: 1.1rem;
+    vertical-align: top;
+    margin-right: 2px;
+    color: var(--gold);
+  }
+  .price-card .price-note {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .price-card ul {
+    list-style: none;
+    border-top: 1px solid var(--rule-soft);
+    padding-top: 14px;
+  }
+  .price-card ul li {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    padding: 6px 0 6px 20px;
+    position: relative;
+    line-height: 1.4;
+  }
+  .price-card ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0; top: 6px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .price-bundle {
+    margin-top: 20px;
+    padding: 18px 16px;
+    background: var(--bg-deep);
+    border-left: 3px solid var(--gold);
+  }
+  .price-bundle h4 {
+    font-family: var(--font-display-zh);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .price-bundle p {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .price-bundle .discount {
+    font-family: var(--font-display-en);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  /* ===== FOLLOW-UP ===== */
+  .followup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--ink);
+  }
+  .followup-card {
+    background: var(--bg-ivory);
+    padding: 20px 16px;
+    border-right: 1px solid var(--rule-soft);
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .followup-card:nth-child(2n) { border-right: none; }
+  .followup-card:nth-last-child(-n+2) { border-bottom: none; }
+  .followup-card .icon {
+    font-size: 1.2rem;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .followup-card h3 {
+    font-family: var(--font-display-zh);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .followup-card p {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* ===== CTA ===== */
+  .cta-section {
+    text-align: center;
+    padding: 48px 20px;
+    background: var(--bg-deep);
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .cta-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .cta-title {
+    font-family: var(--font-display-zh);
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+  .cta-deck {
+    font-family: var(--font-display-en);
+    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--ink);
+    color: var(--bg-paper);
+    padding: 14px 32px;
+    font-family: var(--font-body-zh);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    transition: all .3s;
+  }
+  .cta-btn::after { content: '→'; }
+
+  .cta-poster {
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    border-radius: var(--r-lg);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+    margin-top: 8px;
+  }
+  .cta-meta {
+    margin-top: 18px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: var(--bg-paper);
+    padding: 36px 20px 24px;
+    border-top: 1px solid var(--ink);
+  }
+  .footer-brand {
+    margin-bottom: 24px;
+  }
+  .footer-brand .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .footer-brand .logo-icon { width: 28px; height: 28px; }
+  .footer-brand .logo-img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .footer-brand .logo-text {
+    font-family: var(--font-display-zh);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .footer-brand .logo-text small {
+    display: block;
+    font-family: var(--font-display-en);
+    font-size: 0.58rem;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-style: italic;
+    margin-top: 1px;
+  }
+  .footer-brand p {
+    font-size: 0.82rem;
+    color: var(--ink-mute);
+    line-height: 1.6;
+  }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 18px 0;
+    border-top: 1px solid var(--rule-soft);
+    border-bottom: 1px solid var(--rule-soft);
+    margin-bottom: 18px;
+  }
+  .footer-col h4 {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    padding: 3px 0;
+  }
+  .footer-col ul li a { color: inherit; text-decoration: none; }
+  .footer-bottom {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+  }
+
+  /* ===== Decorative ===== */
+  .dropcap::first-letter {
+    font-family: var(--font-display-en);
+    font-size: 2.4rem;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--gold);
+    float: left;
+    line-height: 0.9;
+    margin: 4px 8px 0 0;
+  }
+
+  /* ===== VERSION TAG ===== */
+  .version-tag {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    top: auto;
+    left: auto;
+    z-index: 1000;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    background: rgba(255,255,255,0.85);
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid var(--line, rgba(14,14,16,.12));
+    backdrop-filter: blur(8px);
+    color: var(--ink-3, #5A5A65);
+  }
+</style>
+</head>
+<body>
+<!-- VERSION TAG -->
+<div class="version-tag">V1.0.0 · 2026-07-05</div>
+
+<!-- ====================== TOP NAV ====================== -->
+<nav class="topnav">
+  <div class="topnav-bar">
+    <a class="topnav-brand" href="/mobile.html">
+      <img class="topnav-logo" src="../assets/snailai_logo.png" alt="蜗牛AI · Snail AI">
+      <span>蜗牛AI</span>
+    </a>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </div>
+  <div class="topnav-links">
+    <a href="../online-course/mobile.html">线上课</a>
+    <a href="../offline-course/mobile.html" class="active">线下课</a>
+    <a href="../faq/mobile.html">FAQ</a>
+  </div>
+</nav>
+
+<!-- ====================== HERO ====================== -->
+<section class="hero" id="top">
+  <div class="hero-masthead">
+    <span data-zh="VOL. 02 · JULY" data-en="VOL. 02 · JULY">VOL. 02 · JULY</span>
+    <span data-zh="SNAILAI · WEALTH" data-en="SNAILAI · WEALTH">SNAILAI · WEALTH</span>
+  </div>
+  <div class="hero-kicker" data-zh="2026 夏季 · 悉尼线下" data-en="SYDNEY · SUMMER 2026">2026 夏季 · 悉尼线下</div>
+  <h1 class="hero-title">
+    <span data-zh="用 AI" data-en="Arm Your">用 AI</span><br>
+    <span data-zh="武装投资" data-en="Investing">武装投资<br>
+    <span data-zh="决策" data-en="Decisions">决策</span>
+  </h1>
+  <p class="hero-deck" data-zh="13 周面对面实战 · 一套可落地的 AI 投资系统。" data-en="13 weeks of hands-on practice. A complete AI investing system.">13 周面对面实战 · 一套可落地的 AI 投资系统。</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="label" data-zh="首课" data-en="FIRST">首课</div>
+      <div class="value gold zh" data-zh="7月11日 周六" data-en="SAT JUL 11">7月11日 周六</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label" data-zh="时段" data-en="TIME">时段</div>
+      <div class="value" data-zh="1:00 – 4:00 PM" data-en="1:00 – 4:00 PM">1:00 – 4:00 PM</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label" data-zh="周期" data-en="DURATION">周期</div>
+      <div class="value" data-zh="7/11 → 10/3" data-en="JUL 11 → OCT 3">7/11 → 10/3</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="label" data-zh="总课时" data-en="TOTAL">总课时</div>
+      <div class="value gold" data-zh="13 周" data-en="13 WEEKS">13 周</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== INTRO ====================== -->
+<section class="section" id="intro">
+  <div class="section-header">
+    <div class="section-num" data-zh="I · 学院" data-en="I · INSTITUTE">I · 学院</div>
+    <h2 class="section-title" data-zh="关于蜗牛AI" data-en="About SnailAI">关于蜗牛AI</h2>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="intro-quote">
+    <p data-zh=""AI 重在应用，不重在发明。我们要把 AI 融入每一个真实环节里，才叫 AI 化。"" data-en='"AI is about application, not invention. Real AI means weaving models into real workflows."'>"AI 重在应用，不重在发明。我们要把 AI 融入每一个真实环节里，才叫 AI 化。"</p>
+    <cite data-zh="— 蜗牛AI 创始理念" data-en="— SNAILAI MANIFESTO">— 蜗牛AI 创始理念</cite>
+  </div>
+
+  <div class="intro-body dropcap">
+    <p data-zh="蜗牛AI 是面向澳洲华人的 AI 应用私享会。我们做四件事：让零基础接触 AI；培养本地 AI 老师；孵化 AI 原生创业；搭建企业级 AI 应用。" data-en="SnailAI is a private learning community for Chinese Australians. We do four things: bring newcomers to AI; train local AI instructors; incubate native-AI ventures; and build enterprise-grade AI applications.">蜗牛AI 是面向澳洲华人的 AI 应用私享会。我们做四件事：让零基础接触 AI；培养本地 AI 老师；孵化 AI 原生创业；搭建企业级 AI 应用。</p>
+    <p data-zh="AI 时代改变的不只是工具，而是授人以鱼不如授人以渔的千古哲学。加入线下课，所有已建好的技能（澳洲报税、房产、CRM、录音转写）都可以直接调用。" data-en="AI changes more than tools — it rewrites the proverb about giving a man a fish. With our offline course, every built skill is yours to invoke.">AI 时代改变的不只是工具，而是授人以鱼不如授人以渔的千古哲学。加入线下课，所有已建好的技能（澳洲报税、房产、CRM、录音转写）都可以直接调用。</p>
+    <p data-zh="在 WorkBuddy 这个唯一的连接器上，AI 是大脑，龙虾是四肢 — 我们不重复造轮子，让已有工具真的为你工作。" data-en="On WorkBuddy — the single most important connector — AI is the brain, the Lobster is the limbs.">在 WorkBuddy 这个唯一的连接器上，AI 是大脑，龙虾是四肢 — 我们不重复造轮子，让已有工具真的为你工作。</p>
+  </div>
+
+  <div class="intro-pillars">
+    <div class="intro-pillar">
+      <div class="num">01</div>
+      <div class="label" data-zh="从无到有" data-en="From Zero">从无到有</div>
+      <p data-zh="零基础建立 AI 思维" data-en="Build AI mindset from zero.">零基础建立 AI 思维</p>
+    </div>
+    <div class="intro-pillar">
+      <div class="num">02</div>
+      <div class="label" data-zh="培养老师" data-en="Teachers">培养老师</div>
+      <p data-zh="培养本地 AI 教师" data-en="Grow local AI instructors.">培养本地 AI 教师</p>
+    </div>
+    <div class="intro-pillar">
+      <div class="num">03</div>
+      <div class="label" data-zh="孵化创业" data-en="Incubate">孵化创业</div>
+      <p data-zh="3–5 年内催生 AI 创业" data-en="Nurture AI ventures.">3–5 年内催生 AI 创业</p>
+    </div>
+    <div class="intro-pillar">
+      <div class="num">04</div>
+      <div class="label" data-zh="企业应用" data-en="Enterprise">企业应用</div>
+      <p data-zh="为澳洲企业搭 AI 工作流" data-en="Build AI workflows for AU.">为澳洲企业搭 AI 工作流</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== WHY ====================== -->
+<div class="why-band">
+  <div class="section">
+    <div class="section-header center">
+      <div class="section-num" data-zh="WHY · 为什么要学" data-en="WHY">WHY · 为什么要学</div>
+      <h2 class="section-title" data-zh="AI + 投资 = 杠杆" data-en="AI + Investing = Leverage">AI + 投资 = 杠杆</h2>
+      <p class="section-deck" data-zh="散户最大的敌人是信息差与情绪。" data-en="Retail's enemies: information asymmetry & emotion.">散户最大的敌人是信息差与情绪。</p>
+    </div>
+    <div class="stat-row">
+      <div class="stat-cell">
+        <div class="num">80<span class="unit">%</span></div>
+        <div class="label" data-zh="EMOTION" data-en="EMOTION">EMOTION</div>
+        <p data-zh="散户亏损的主因是情绪化决策。" data-en="Most retail losses come from emotion.">散户亏损的主因是情绪化决策。</p>
+      </div>
+      <div class="stat-cell">
+        <div class="num">24<span class="unit">/7</span></div>
+        <div class="label" data-zh="ALWAYS ON" data-en="ALWAYS ON">ALWAYS ON</div>
+        <p data-zh="AI 监控从不休息。" data-en="AI monitoring never sleeps.">AI 监控从不休息。</p>
+      </div>
+      <div class="stat-cell">
+        <div class="num">10<span class="unit">x</span></div>
+        <div class="label" data-zh="SPEED" data-en="SPEED">SPEED</div>
+        <p data-zh="AI 读研报速度 10 倍以上。" data-en="AI reads research 10× faster.">AI 读研报速度 10 倍以上。</p>
+      </div>
+    </div>
+    <div class="why-cards">
+      <div class="why-card">
+        <div class="num">01</div>
+        <h3 data-zh="数据驱动决策" data-en="Data-Driven Decisions">数据驱动决策</h3>
+        <p data-zh="AI 自动抓取数据、分析财报、监控异动。" data-en="AI pulls data, parses earnings, flags anomalies.">AI 自动抓取数据、分析财报、监控异动。</p>
+      </div>
+      <div class="why-card">
+        <div class="num">02</div>
+        <h3 data-zh="自动化执行" data-en="Automated Discipline">自动化执行</h3>
+        <p data-zh="让 AI 替你纪律操盘，不追涨不割肉。" data-en="Let AI enforce discipline — no panic, no greed.">让 AI 替你纪律操盘，不追涨不割肉。</p>
+      </div>
+      <div class="why-card">
+        <div class="num">03</div>
+        <h3 data-zh="消除信息差" data-en="Closing the Gap">消除信息差</h3>
+        <p data-zh="投行才有的量化能力，现在你也能拥有。" data-en="Quant-grade analysis, now yours.">投行才有的量化能力，现在你也能拥有。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== LIVE DEMOS · 三大现场演示 ====================== -->
+<div class="method-band" id="demos">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num" data-zh="HIGHLIGHTS · 今晚三大干货" data-en="HIGHLIGHTS · THREE LIVE DEMOS">HIGHLIGHTS · 今晚三大干货</div>
+      <h2 class="section-title" data-zh="从 ① 到 ③，逐层递进" data-en="From ① to ③, Layer by Layer">从 ① 到 ③，逐层递进</h2>
+      <div class="section-rule"></div>
+      <p class="section-deck" data-zh="从单点调研到完整专家系统 — Robin 在澳洲的真实投资实践。" data-en="Single-point research to full expert system — Robin's real practice in AU.">从单点调研到完整专家系统 — Robin 在澳洲的真实投资实践。</p>
+    </div>
+    <div class="live-grid">
+      <div class="live-card highlight">
+        <div class="badge" data-zh="★ 重点" data-en="★ HIGHLIGHT">★ 重点</div>
+        <div class="num">01</div>
+        <h3 data-zh="澳洲房屋价值调研" data-en="AU Property Research">澳洲房屋价值调研</h3>
+        <p data-zh="用 AI 深度调研澳洲房屋的现有价值和未来投资价值，覆盖 suburb、人口、租金、回报。" data-en="AI research on property value & investment — suburb, demographics, rent, ROI.">用 AI 深度调研澳洲房屋的现有价值和未来投资价值，覆盖 suburb、人口、租金、回报。</p>
+        <ul class="live-steps">
+          <li data-zh="Suburb 画像 + 人口数据" data-en="Suburb profile + demographics">Suburb 画像 + 人口数据</li>
+          <li data-zh="Section 32 合同秒读" data-en="Section 32 instant scan">Section 32 合同秒读</li>
+          <li data-zh="租金回报 + 投资决策表" data-en="Rent yield + decision table">租金回报 + 投资决策表</li>
+        </ul>
+      </div>
+      <div class="live-card">
+        <div class="num">02</div>
+        <h3 data-zh="股票投资 · 含 AI 产业链" data-en="Stocks · + AI Chain">股票投资 · 含 AI 产业链</h3>
+        <p data-zh="用 AI 搭建股票强度指数系统，拆解 AI 产业链，筛选中、港、美、澳四国上市公司。" data-en="AI stock RS index + AI chain deconstruction + 4-market screen.">用 AI 搭建股票强度指数系统，拆解 AI 产业链，筛选中、港、美、澳四国上市公司。</p>
+        <ul class="live-steps">
+          <li data-zh="股票强度指数 + 自动化信号" data-en="RS index + auto signal">股票强度指数 + 自动化信号</li>
+          <li data-zh="AI 产业链：算力 / 模型 / 应用" data-en="AI chain: compute / model / app">AI 产业链：算力 / 模型 / 应用</li>
+          <li data-zh="4 国上市公司名单现场筛选" data-en="4-market screen live">4 国上市公司名单现场筛选</li>
+        </ul>
+      </div>
+      <div class="live-card">
+        <div class="num">03</div>
+        <h3 data-zh="我的个人财富管理专家系统" data-en="My Wealth Expert">我的个人财富管理专家系统</h3>
+        <p data-zh="My Financial Advisor Expert — 把个人的所有财富系统全部集合统一，按天一步步指导、共同设立计划、共同前进。" data-en="My Financial Advisor Expert — unify, co-plan, co-march, daily AI.">My Financial Advisor Expert — 把个人的所有财富系统全部集合统一，按天一步步指导、共同设立计划、共同前进。</p>
+        <ul class="live-steps">
+          <li data-zh="收入 · 支出 · 各种投资 · 贷款" data-en="Income · Expenses · Investments · Loans">收入 · 支出 · 各种投资 · 贷款</li>
+          <li data-zh="未来财务计划 · 资产配置" data-en="Future plan · asset allocation">未来财务计划 · 资产配置</li>
+          <li data-zh="每日 AI 指导 · 统一专家视角" data-en="Daily AI · one expert view">每日 AI 指导 · 统一专家视角</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== MINDSET ====================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num" data-zh="III · 思维" data-en="III · MINDSET">III · 思维</div>
+    <h2 class="section-title" data-zh="这门课不只是工具" data-en="More than tools">这门课不只是工具</h2>
+    <div class="section-rule"></div>
+    <p class="section-deck" data-zh="讲底层逻辑，不只讲工具。" data-en="Logic over buttons.">讲底层逻辑，不只讲工具。</p>
+  </div>
+  <div class="mindset-grid">
+    <div class="mindset-cell">
+      <div class="label" data-zh="双 AI 模式" data-en="DUAL-AI">双 AI 模式</div>
+      <h3 data-zh="ChatGPT 是主管，WorkBuddy 是助理" data-en="ChatGPT manages; WorkBuddy operates">ChatGPT 是主管，WorkBuddy 是助理</h3>
+      <p data-zh="先在 ChatGPT 厘清思路、生成提示词；再让 WorkBuddy 执行；结果回喂 ChatGPT 审核。" data-en="Plan in ChatGPT, execute in WorkBuddy, review in ChatGPT.">先在 ChatGPT 厘清思路、生成提示词；再让 WorkBuddy 执行；结果回喂 ChatGPT 审核。</p>
+      <div class="example" data-zh="// 一场 3 小时视频工序压到 30 分钟" data-en="// 3-hour workflow → 30 minutes">// 一场 3 小时视频工序压到 30 分钟</div>
+    </div>
+    <div class="mindset-cell">
+      <div class="label" data-zh="输出式学习" data-en="LEARN BY DOING">输出式学习</div>
+      <h3 data-zh="边用边学" data-en="Use it to learn it">边用边学</h3>
+      <p data-zh="带着你生活中最烦的事去找 AI 解决，做完一件再做下一件 — 一周后你已经是另一个人。" data-en="Bring the most annoying thing in your life to AI, finish it. A week later you are someone else.">带着你生活中最烦的事去找 AI 解决，做完一件再做下一件 — 一周后你已经是另一个人。</p>
+      <div class="example" data-zh="// 输入式=看懂 AI；输出式=让 AI 做完事" data-en="// Input = understand. Output = ship.">// 输入式=看懂 AI；输出式=让 AI 做完事</div>
+    </div>
+    <div class="mindset-cell">
+      <div class="label" data-zh="问 AI 的习惯" data-en="ASK-FIRST">问 AI 的习惯</div>
+      <h3 data-zh="越不懂越需要 AI" data-en="The less you know, the more you need AI">越不懂越需要 AI</h3>
+      <p data-zh="你越不懂，AI 存在的意义就越大。" data-en="Your ignorance is the AI's reason to exist.">你越不懂，AI 存在的意义就越大。</p>
+      <div class="example" data-zh="// 现场用企业微信智能表格收集问题" data-en="// In class: real problems via WeCom form.">// 现场用企业微信智能表格收集问题</div>
+    </div>
+    <div class="mindset-cell">
+      <div class="label" data-zh="轻量格式" data-en="LIGHTWEIGHT">轻量格式</div>
+      <h3 data-zh="让龙虾用 MD + JSON" data-en="Keep AI output in MD + JSON">让龙虾用 MD + JSON</h3>
+      <p data-zh="Office 动辄上百 KB；MD+JSON 几 KB。轻量省钱、好读、好调用。" data-en="Office sheets weigh hundreds of KB. MD+JSON weigh a few KB.">Office 动辄上百 KB；MD+JSON 几 KB。轻量省钱、好读、好调用。</p>
+      <div class="example" data-zh="// 推荐栈：MD + JSON + SQLite" data-en="// Stack: MD + JSON + SQLite.">// 推荐栈：MD + JSON + SQLite</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== METHOD ====================== -->
+<div class="method-band" id="method">
+  <div class="section">
+    <div class="section-header center">
+      <div class="section-num" data-zh="IV · 方法论" data-en="IV · METHOD">IV · 方法论</div>
+      <h2 class="section-title" data-zh="做 AI 项目的四件套" data-en="The Four-Part Method">做 AI 项目的四件套</h2>
+      <div class="section-rule center"></div>
+    </div>
+    <div class="method-steps">
+      <div class="method-step">
+        <div class="num">01</div>
+        <h4 data-zh="任务描述" data-en="Task Brief">任务描述</h4>
+        <p data-zh="像坐在老师对面讲清来龙去脉。" data-en="Tell the full story.">像坐在老师对面讲清来龙去脉。</p>
+      </div>
+      <div class="method-step">
+        <div class="num">02</div>
+        <h4 data-zh="工作流" data-en="Workflow">工作流</h4>
+        <p data-zh="截图、流程图、参考样例。" data-en="Screenshots, flows, samples.">截图、流程图、参考样例。</p>
+      </div>
+      <div class="method-step">
+        <div class="num">03</div>
+        <h4 data-zh="结果模板" data-en="Result">结果模板</h4>
+        <p data-zh="先定义输出格式，AI 不乱跑。" data-en="Define the output up-front.">先定义输出格式，AI 不乱跑。</p>
+      </div>
+      <div class="method-step">
+        <div class="num">04</div>
+        <h4 data-zh="手动再自动化" data-en="Manual First">手动再自动化</h4>
+        <p data-zh="先手动跑通，再设定时任务。" data-en="Manual first, schedule second.">先手动跑通，再设定时任务。</p>
+      </div>
+    </div>
+    <div class="method-quote">
+      <p data-zh="同一台语言发动机，先说把模糊想法变成流，再写把流变成结构。" data-en="Same engine: speak first → flow, then write → structure.">同一台语言发动机，先说把模糊想法变成流，再写把流变成结构。</p>
+      <cite data-zh="— 蜗牛AI 教学心法" data-en="— SNAILAI PEDAGOGY">— 蜗牛AI 教学心法</cite>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== TOOLS ====================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num" data-zh="V · 工具栈" data-en="V · STACK">V · 工具栈</div>
+    <h2 class="section-title" data-zh="你的投资 AI 团队" data-en="Your AI Investing Team">你的投资 AI 团队</h2>
+    <div class="section-rule"></div>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-cell">
+      <div class="icon">🤖</div>
+      <div class="name">WorkBuddy</div>
+      <div class="role" data-zh="连接器" data-en="CONNECTOR">连接器</div>
+      <p data-zh="唯一的连接器，调度所有技能与自动化。" data-en="The single connector.">唯一的连接器，调度所有技能与自动化。</p>
+    </div>
+    <div class="tool-cell">
+      <div class="icon">🧠</div>
+      <div class="name">ChatGPT</div>
+      <div class="role" data-zh="战略主管" data-en="STRATEGIST">战略主管</div>
+      <p data-zh="理清思路、生成提示词、做质量审核。" data-en="Strategy, prompts, QA.">理清思路、生成提示词、做质量审核。</p>
+    </div>
+    <div class="tool-cell">
+      <div class="icon">💎</div>
+      <div class="name">Gemini</div>
+      <div class="role" data-zh="记忆大脑" data-en="MEMORY">记忆大脑</div>
+      <p data-zh="5GB 记忆跨会话保留 — 最懂你。" data-en="5GB memory across sessions.">5GB 记忆跨会话保留 — 最懂你。</p>
+    </div>
+    <div class="tool-cell">
+      <div class="icon">🐉</div>
+      <div class="name">元宝 / 龙虾</div>
+      <div class="role" data-zh="执行手脚" data-en="OPERATOR">执行手脚</div>
+      <p data-zh="中文友好，企业微信集成最深。" data-en="Native Chinese, WeCom-first.">中文友好，企业微信集成最深。</p>
+    </div>
+    <div class="tool-cell">
+      <div class="icon">📚</div>
+      <div class="name">NotebookLM</div>
+      <div class="role" data-zh="知识库" data-en="KNOWLEDGE">知识库</div>
+      <p data-zh="批量导入研报，结构化摘要。" data-en="Batch research → structured notes.">批量导入研报，结构化摘要。</p>
+    </div>
+    <div class="tool-cell">
+      <div class="icon">📈</div>
+      <div class="name">Wind / iFinD</div>
+      <div class="role" data-zh="数据终端" data-en="DATA">数据终端</div>
+      <p data-zh="实时行情、财务、研报库。" data-en="Real-time quotes, financials.">实时行情、财务、研报库。</p>
+    </div>
+    <div class="tool-cell">
+      <div class="icon">🎙</div>
+      <div class="name">Plaud AI</div>
+      <div class="role" data-zh="录音转写" data-en="VOICE">录音转写</div>
+      <p data-zh="会议、电话自动转写并提取信息。" data-en="Meetings, calls, transcribe.">会议、电话自动转写并提取信息。</p>
+    </div>
+    <div class="tool-cell">
+      <div class="icon">⚙️</div>
+      <div class="name">MCP 连接器</div>
+      <div class="role" data-zh="生态扩展" data-en="EXTEND">生态扩展</div>
+      <p data-zh="Zoom、Gmail、GitHub 任意接入。" data-en="Zoom, Gmail, GitHub, more.">Zoom、Gmail、GitHub 任意接入。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== PREP ====================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num" data-zh="VI · 准备" data-en="VI · PREP">VI · 准备</div>
+    <h2 class="section-title" data-zh="开课前准备好" data-en="Get ready before day one">开课前准备好</h2>
+    <div class="section-rule"></div>
+  </div>
+  <div class="prep-grid">
+    <div class="prep-card">
+      <div class="num">01</div>
+      <div>
+        <h3 data-zh="安装 WorkBuddy" data-en="Install WorkBuddy">安装 WorkBuddy</h3>
+        <p data-zh="课程核心工具。" data-en="Core tool.">课程核心工具。</p>
+        <ol>
+          <li data-step="01" data-zh="腾讯云下载客户端" data-en="Download from Tencent">腾讯云下载客户端</li>
+          <li data-step="02" data-zh="微信登录激活" data-en="Sign in via WeChat">微信登录激活</li>
+          <li data-step="03" data-zh="发"你好"测试" data-en='Send "hello" test'>发"你好"测试</li>
+        </ol>
+      </div>
+    </div>
+    <div class="prep-card">
+      <div class="num">02</div>
+      <div>
+        <h3 data-zh="配置龙虾档案" data-en="Lobster Profile">配置龙虾档案</h3>
+        <p data-zh="为投资 AI 建立专属记忆。" data-en="Build your AI memory profile.">为投资 AI 建立专属记忆。</p>
+        <ol>
+          <li data-step="01" data-zh="创建 USER.md 投资偏好" data-en="Create USER.md">创建 USER.md 投资偏好</li>
+          <li data-step="02" data-zh="创建 MEMORY.md 投资纪律" data-en="Create MEMORY.md">创建 MEMORY.md 投资纪律</li>
+          <li data-step="03" data-zh="测试 AI 读取档案" data-en="Test AI read">测试 AI 读取档案</li>
+        </ol>
+      </div>
+    </div>
+    <div class="prep-card">
+      <div class="num">03</div>
+      <div>
+        <h3 data-zh="开通数据订阅" data-en="Subscribe Data">开通数据订阅</h3>
+        <p data-zh="量化分析模块将使用。" data-en="For quant modules.">量化分析模块将使用。</p>
+        <ol>
+          <li data-step="01" data-zh="ChatGPT Plus" data-en="ChatGPT Plus">ChatGPT Plus</li>
+          <li data-step="02" data-zh="参加线上课增加AI基础应用知识" data-en="Online course: foundational AI skills">参加线上课增加AI基础应用知识</li>
+          <li data-step="03" data-zh="腾讯云 Token Plan" data-en="Tencent Token">腾讯云 Token Plan</li>
+        </ol>
+      </div>
+    </div>
+    <div class="prep-card">
+      <div class="num">04</div>
+      <div>
+        <h3 data-zh="硬件准备" data-en="Hardware">硬件准备</h3>
+        <p data-zh="笔记本 + Chrome + 微信群。" data-en="Laptop + Chrome + group.">笔记本 + Chrome + 微信群。</p>
+        <ol>
+          <li data-step="01" data-zh="笔记本 + 充电器" data-en="Laptop + charger">笔记本 + 充电器</li>
+          <li data-step="02" data-zh="Chrome 浏览器" data-en="Latest Chrome">Chrome 浏览器</li>
+          <li data-step="03" data-zh="加入蜗牛AI 微信群" data-en="Join WeChat group">加入蜗牛AI 微信群</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== TIMELINE ====================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num" data-zh="VII · 时间" data-en="VII · TIMELINE">VII · 时间</div>
+    <h2 class="section-title" data-zh="13 周线下旅程" data-en="13 Weeks of Action">13 周线下旅程</h2>
+    <div class="section-rule"></div>
+    <p class="section-deck" data-zh="每周六下午 1:00 – 4:00" data-en="Saturdays 1:00 – 4:00 PM">每周六下午 1:00 – 4:00</p>
+  </div>
+  <div class="timeline">
+    <div class="timeline-row">
+      <div class="timeline-date" data-zh="7月11日" data-en="JUL 11"><span class="week" data-zh="W1" data-en="W1">W1</span>7月11日</div>
+      <div class="timeline-marker"><span class="dot"></span></div>
+      <div class="timeline-content">
+        <h3 data-zh="模块一 · AI 投资思维" data-en="Module I · Mindset">模块一 · AI 投资思维</h3>
+        <p data-zh="重塑投资思维，搭建第一个 AI 助手。" data-en="Re-frame investing with AI.">重塑投资思维，搭建第一个 AI 助手。</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-date" data-zh="7月18–25" data-en="JUL 18–25"><span class="week" data-zh="W2-3" data-en="W2-3">W2-3</span>7月18–25</div>
+      <div class="timeline-marker"><span class="dot"></span></div>
+      <div class="timeline-content">
+        <h3 data-zh="模块二 · 数据与市场洞察" data-en="Module II · Data & Insight">模块二 · 数据与市场洞察</h3>
+        <p data-zh="AI 抓数据、读财报、追踪行业。" data-en="Pull data, parse filings.">AI 抓数据、读财报、追踪行业。</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-date" data-zh="8/1–8/8" data-en="AUG 1–8"><span class="week" data-zh="W4-5" data-en="W4-5">W4-5</span>8/1–8/8</div>
+      <div class="timeline-marker"><span class="dot"></span></div>
+      <div class="timeline-content">
+        <h3 data-zh="模块三 · AI 量化分析" data-en="Module III · Quant">模块三 · AI 量化分析</h3>
+        <p data-zh="技术指标到强度指数的 AI 系统。" data-en="Technicals to RS scoring.">技术指标到强度指数的 AI 系统。</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-date" data-zh="8月15–29" data-en="AUG 15–29"><span class="week" data-zh="W6-8" data-en="W6-8">W6-8</span>8月15–29</div>
+      <div class="timeline-marker"><span class="dot"></span></div>
+      <div class="timeline-content">
+        <h3 data-zh="模块四 · 自动化交易系统" data-en="Module IV · Automation">模块四 · 自动化交易系统</h3>
+        <p data-zh="让 AI 自动监控、分析、推送信号。" data-en="Auto monitor, analyze, push.">让 AI 自动监控、分析、推送信号。</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-date" data-zh="9/5–9/19" data-en="SEP 5–19"><span class="week" data-zh="W9-11" data-en="W9-11">W9-11</span>9/5–9/19</div>
+      <div class="timeline-marker"><span class="dot"></span></div>
+      <div class="timeline-content">
+        <h3 data-zh="模块五 · 澳洲本地投资" data-en="Module V · AU Markets">模块五 · 澳洲本地投资</h3>
+        <p data-zh="房产、ASX、外汇实战。" data-en="Property, ASX, FX.">房产、ASX、外汇实战。</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-date" data-zh="9/26–10/3" data-en="SEP 26–OCT 3"><span class="week" data-zh="W12-13" data-en="W12-13">W12-13</span>9/26–10/3</div>
+      <div class="timeline-marker"><span class="dot"></span></div>
+      <div class="timeline-content">
+        <h3 data-zh="模块六 · 落地与毕业" data-en="Module VI · Capstone">模块六 · 落地与毕业</h3>
+        <p data-zh="设计个人 AI 投资系统，毕业答辩。" data-en="Capstone design & defense.">设计个人 AI 投资系统，毕业答辩。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== CURRICULUM ====================== -->
+<section class="section" id="curriculum">
+  <div class="section-header">
+    <div class="section-num" data-zh="VIII · 大纲" data-en="VIII · SYLLABUS">VIII · 大纲</div>
+    <h2 class="section-title" data-zh="6 大模块 · 18 课时" data-en="Six Modules · 18 Sessions">6 大模块 · 18 课时</h2>
+    <div class="section-rule"></div>
+    <p class="section-deck" data-zh="每周三小时线下面对面" data-en="Three in-person hours a week">每周三小时线下面对面</p>
+  </div>
+
+  <!-- 模块一 -->
+  <div class="module">
+    <div class="module-header">
+      <div class="module-no">01</div>
+      <div class="module-title" data-zh="AI 投资思维重塑" data-en="Re-shaping Mindset">AI 投资思维重塑</div>
+    </div>
+    <p class="module-summary" data-zh="用 AI 重新定义投资方法论。" data-en="Re-imagine investing through AI.">用 AI 重新定义投资方法论。</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-num">01</div>
+        <div class="lesson-body">
+          <h3 data-zh="投资本质与 AI 角色" data-en="Essence & AI's Role">投资本质与 AI 角色</h3>
+          <ul class="lesson-topics">
+            <li data-zh="为什么散户总是亏？" data-en="Why retail loses">为什么散户总是亏？</li>
+            <li data-zh="AI 在投资中的三大价值" data-en="AI's three values">AI 在投资中的三大价值</li>
+            <li data-zh="AI 不能替你做什么？" data-en="AI's limits">AI 不能替你做什么？</li>
+            <li data-zh="实战：分析一只你关注的股票" data-en="Lab: analyze a stock">实战：分析一只你关注的股票</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="建立 AI 辅助投资认知框架" data-en="Sound mental model">建立 AI 辅助投资认知框架</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">02</div>
+        <div class="lesson-body">
+          <h3 data-zh="搭建 AI 投资助手" data-en="Build Your AI Assistant">搭建 AI 投资助手</h3>
+          <ul class="lesson-topics">
+            <li data-zh="WorkBuddy 投资场景配置" data-en="Configure WorkBuddy">WorkBuddy 投资场景配置</li>
+            <li data-zh="为投资 AI 建立专属档案" data-en="Build profile">为投资 AI 建立专属档案</li>
+            <li data-zh="ChatGPT vs Gemini vs WorkBuddy" data-en="Pick the right model">ChatGPT vs Gemini vs WorkBuddy</li>
+            <li data-zh="实战：每日市场简报助手" data-en="Lab: daily briefing">实战：每日市场简报助手</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="拥有专属 AI 投资助手" data-en="Your own assistant">拥有专属 AI 投资助手</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块二 -->
+  <div class="module">
+    <div class="module-header">
+      <div class="module-no">02</div>
+      <div class="module-title" data-zh="数据获取与市场洞察" data-en="Data & Insight">数据获取与市场洞察</div>
+    </div>
+    <p class="module-summary" data-zh="像机构一样获取信息。" data-en="Get institutional-grade info.">像机构一样获取信息。</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-num">03</div>
+        <div class="lesson-body">
+          <h3 data-zh="AI 研报与财报速读" data-en="AI Earnings Speed-Read">AI 研报与财报速读</h3>
+          <ul class="lesson-topics">
+            <li data-zh="10 分钟读完年度财报" data-en="10-min annual report">10 分钟读完年度财报</li>
+            <li data-zh="NotebookLM 批量摘要" data-en="NotebookLM summary">NotebookLM 批量摘要</li>
+            <li data-zh="关键指标提取" data-en="Extract key metrics">关键指标提取</li>
+            <li data-zh="实战：澳洲上市公司财报" data-en="Lab: ASX filing">实战：澳洲上市公司财报</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="10 分钟掌握公司核心财务" data-en="10-min mastery">10 分钟掌握公司核心财务</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">04</div>
+        <div class="lesson-body">
+          <h3 data-zh="市场监控与异动" data-en="Monitoring & Alerts">市场监控与异动</h3>
+          <ul class="lesson-topics">
+            <li data-zh="AI 搭建个人监控系统" data-en="Personal monitor">AI 搭建个人监控系统</li>
+            <li data-zh="自选股异动推送" data-en="Watchlist alerts">自选股异动推送</li>
+            <li data-zh="行业轮动信号" data-en="Sector rotation">行业轮动信号</li>
+            <li data-zh="实战：5 只自选股监控" data-en="Lab: 5 stocks">实战：5 只自选股监控</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="不盯盘也知道异动" data-en="Spot without staring">不盯盘也知道异动</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">05</div>
+        <div class="lesson-body">
+          <h3 data-zh="AI 新闻与情绪" data-en="News & Sentiment">AI 新闻与情绪</h3>
+          <ul class="lesson-topics">
+            <li data-zh="AI 抓取解读财经新闻" data-en="Auto-fetch news">AI 抓取解读财经新闻</li>
+            <li data-zh="市场情绪指数" data-en="Sentiment index">市场情绪指数</li>
+            <li data-zh="事件驱动策略" data-en="Event-driven">事件驱动策略</li>
+            <li data-zh="实战：小型情绪分析系统" data-en="Lab: sentiment system">实战：小型情绪分析系统</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="用 AI 读取市场情绪" data-en="Read the mood">用 AI 读取市场情绪</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块三 -->
+  <div class="module">
+    <div class="module-header">
+      <div class="module-no">03</div>
+      <div class="module-title" data-zh="AI 量化分析实战" data-en="Quant in Practice">AI 量化分析实战</div>
+    </div>
+    <p class="module-summary" data-zh="用 AI 构建数据分析与选股系统。" data-en="AI screening & data systems.">用 AI 构建数据分析与选股系统。</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-num">06</div>
+        <div class="lesson-body">
+          <h3 data-zh="股票强度指数 AI" data-en="RS AI System">股票强度指数 AI</h3>
+          <ul class="lesson-topics">
+            <li data-zh="相对与绝对强度" data-en="Relative vs absolute">相对与绝对强度</li>
+            <li data-zh="AI 强度指数评分" data-en="AI scoring">AI 强度指数评分</li>
+            <li data-zh="全市场筛选强势股" data-en="Screen leaders">全市场筛选强势股</li>
+            <li data-zh="实战：打分自动化" data-en="Lab: auto-score">实战：打分自动化</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="拥有自己的 AI 选股引擎" data-en="Personal screener">拥有自己的 AI 选股引擎</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">07</div>
+        <div class="lesson-body">
+          <h3 data-zh="基本面 AI 分析" data-en="Fundamentals with AI">基本面 AI 分析</h3>
+          <ul class="lesson-topics">
+            <li data-zh="财务健康度评分" data-en="Health score">财务健康度评分</li>
+            <li data-zh="行业对比" data-en="Sector compare">行业对比</li>
+            <li data-zh="PE / PB / DCF 自动化" data-en="Auto valuation">PE / PB / DCF 自动化</li>
+            <li data-zh="实战：5 只股票评级" data-en="Lab: rate 5">实战：5 只股票评级</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="5 分钟全面基本面" data-en="5-min mastery">5 分钟全面基本面</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块四 -->
+  <div class="module">
+    <div class="module-header">
+      <div class="module-no">04</div>
+      <div class="module-title" data-zh="自动化策略与交易" data-en="Automated Trading">自动化策略与交易</div>
+    </div>
+    <p class="module-summary" data-zh="把投资纪律写成代码。" data-en="Encode your discipline.">把投资纪律写成代码。</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-num">08</div>
+        <div class="lesson-body">
+          <h3 data-zh="策略的 AI 表达" data-en="Strategy in AI">策略的 AI 表达</h3>
+          <ul class="lesson-topics">
+            <li data-zh="交易逻辑 → AI 策略" data-en="Logic → AI">交易逻辑 → AI 策略</li>
+            <li data-zh="参数化：止损/止盈/仓位" data-en="Parameterize">参数化：止损/止盈/仓位</li>
+            <li data-zh="多策略组合" data-en="Combine">多策略组合</li>
+            <li data-zh="实战：写一个 AI 策略" data-en="Lab: write one">实战：写一个 AI 策略</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="逻辑变自动化" data-en="Logic → automation">逻辑变自动化</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">09</div>
+        <div class="lesson-body">
+          <h3 data-zh="策略回测与优化" data-en="Backtest & Optimize">策略回测与优化</h3>
+          <ul class="lesson-topics">
+            <li data-zh="什么是策略回测" data-en="What is backtest">什么是策略回测</li>
+            <li data-zh="夏普/最大回撤" data-en="Sharpe/drawdown">夏普/最大回撤</li>
+            <li data-zh="避免过拟合陷阱" data-en="Avoid overfit">避免过拟合陷阱</li>
+            <li data-zh="实战：回测 + 性能报告" data-en="Lab: backtest">实战：回测 + 性能报告</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="上线前先过回测" data-en="Survive the backtest">上线前先过回测</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">10</div>
+        <div class="lesson-body">
+          <h3 data-zh="每日信号推送" data-en="Daily Signal Push">每日信号推送</h3>
+          <ul class="lesson-topics">
+            <li data-zh="WorkBuddy 自动化任务" data-en="WorkBuddy auto">WorkBuddy 自动化任务</li>
+            <li data-zh="企业微信/Telegram 通道" data-en="WeCom/Telegram">企业微信/Telegram 通道</li>
+            <li data-zh="信号分级" data-en="Signal tiers">信号分级</li>
+            <li data-zh="实战：设置每日推送" data-en="Lab: daily push">实战：设置每日推送</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="每天自动收到 AI 信号" data-en="AI signals each morning">每天自动收到 AI 信号</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">11</div>
+        <div class="lesson-body">
+          <h3 data-zh="风控系统搭建" data-en="Risk-Control System">风控系统搭建</h3>
+          <ul class="lesson-topics">
+            <li data-zh="AI 仓位管理" data-en="AI sizing">AI 仓位管理</li>
+            <li data-zh="止损止盈自动化" data-en="Auto stops">止损止盈自动化</li>
+            <li data-zh="黑天鹅 AI 熔断" data-en="Black-swan CB">黑天鹅 AI 熔断</li>
+            <li data-zh="实战：完整交易系统" data-en="Lab: full system">实战：完整交易系统</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="AI 严格执行纪律" data-en="AI enforces">AI 严格执行纪律</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块五 -->
+  <div class="module">
+    <div class="module-header">
+      <div class="module-no">05</div>
+      <div class="module-title" data-zh="澳洲本地投资" data-en="AU Markets in Practice">澳洲本地投资</div>
+    </div>
+    <p class="module-summary" data-zh="针对澳洲市场的 AI 投资实战。" data-en="AI investing for Australian markets.">针对澳洲市场的 AI 投资实战。</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-num">12</div>
+        <div class="lesson-body">
+          <h3 data-zh="AI 澳洲房产" data-en="AI AU Property">AI 澳洲房产</h3>
+          <ul class="lesson-topics">
+            <li data-zh="拍卖数据与趋势" data-en="Auction data">拍卖数据与趋势</li>
+            <li data-zh="区域对比" data-en="Suburb compare">区域对比</li>
+            <li data-zh="贷款策略 AI 优化" data-en="Loan optimize">贷款策略 AI 优化</li>
+            <li data-zh="实战：悉尼三区性价比" data-en="Lab: 3 suburbs">实战：悉尼三区性价比</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="数据驱动的房产决策" data-en="Data-driven property">数据驱动的房产决策</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">13</div>
+        <div class="lesson-body">
+          <h3 data-zh="ASX 投资策略" data-en="ASX Strategy">ASX 投资策略</h3>
+          <ul class="lesson-topics">
+            <li data-zh="ASX 规则与税费" data-en="ASX rules">ASX 规则与税费</li>
+            <li data-zh="蓝筹 vs 成长股" data-en="Blue-chip vs growth">蓝筹 vs 成长股</li>
+            <li data-zh="股息再投资" data-en="DRP">股息再投资</li>
+            <li data-zh="实战：ASX 监控评分" data-en="Lab: ASX monitor">实战：ASX 监控评分</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="ASX 上的 AI 辅助" data-en="ASX co-pilot">ASX 上的 AI 辅助</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">14</div>
+        <div class="lesson-body">
+          <h3 data-zh="外汇与跨境" data-en="FX & Cross-Border">外汇与跨境</h3>
+          <ul class="lesson-topics">
+            <li data-zh="AUD/CNY/USD 趋势" data-en="AUD/CNY/USD">AUD/CNY/USD 趋势</li>
+            <li data-zh="跨境转账时机" data-en="FX timing">跨境转账时机</li>
+            <li data-zh="港美 A 股机会" data-en="HK/US/A">港美 A 股机会</li>
+            <li data-zh="实战：汇率监控自动化" data-en="Lab: FX auto">实战：汇率监控自动化</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="跨境资金 AI 优化" data-en="AI-optimized FX">跨境资金 AI 优化</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">15</div>
+        <div class="lesson-body">
+          <h3 data-zh="税务优化" data-en="Tax Optimization">税务优化</h3>
+          <ul class="lesson-topics">
+            <li data-zh="CGT AI 计算" data-en="CGT compute">CGT AI 计算</li>
+            <li data-zh="费用自动归类" data-en="Auto-categorize">费用自动归类</li>
+            <li data-zh="负扣税策略" data-en="Negative-gearing">负扣税策略</li>
+            <li data-zh="实战：年度税务摘要" data-en="Lab: tax summary">实战：年度税务摘要</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="报季不再头疼" data-en="Tax season, easy">报季不再头疼</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块六 -->
+  <div class="module">
+    <div class="module-header">
+      <div class="module-no">06</div>
+      <div class="module-title" data-zh="投资体系落地与毕业" data-en="Capstone & Graduation">投资体系落地与毕业</div>
+    </div>
+    <p class="module-summary" data-zh="整合所有模块，完成毕业答辩。" data-en="Integrate & defend.">整合所有模块，完成毕业答辩。</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-num">16</div>
+        <div class="lesson-body">
+          <h3 data-zh="个人 AI 投资系统" data-en="Personal AI System">个人 AI 投资系统</h3>
+          <ul class="lesson-topics">
+            <li data-zh="数据→分析→信号→风控" data-en="Wire the chain">数据→分析→信号→风控</li>
+            <li data-zh="投资仪表盘" data-en="Dashboard">投资仪表盘</li>
+            <li data-zh="系统压力测试" data-en="Stress test">系统压力测试</li>
+            <li data-zh="实战：v1.0 上线" data-en="Lab: v1.0">实战：v1.0 上线</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="可运行的 AI 投资系统" data-en="Runnable system">可运行的 AI 投资系统</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">17</div>
+        <div class="lesson-body">
+          <h3 data-zh="毕业答辩" data-en="Capstone Defense">毕业答辩</h3>
+          <ul class="lesson-topics">
+            <li data-zh="13 周回顾" data-en="13-week retro">13 周回顾</li>
+            <li data-zh="项目实战演示" data-en="Live demo">项目实战演示</li>
+            <li data-zh="6 个月行动计划" data-en="6-month plan">6 个月行动计划</li>
+          </ul>
+          <div class="lesson-outcome" data-zh="带着完整系统毕业" data-en="Graduate ready">带着完整系统毕业</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== SCENARIOS ====================== -->
+<div class="scenarios-band" id="scenarios">
+  <div class="section">
+    <div class="section-header center">
+      <div class="section-num" data-zh="IX · 真实场景" data-en="IX · REAL CASES">IX · 真实场景</div>
+      <h2 class="section-title" data-zh="Robin 在澳洲真实使用 AI 的 9 大场景" data-en="9 Real Ways Robin Uses AI in Australia">Robin 在澳洲真实使用 AI 的 9 大场景</h2>
+      <div class="section-rule center"></div>
+    </div>
+    <div class="scenarios-grid">
+      <div class="scenario-card">
+        <div class="icon">🏦</div>
+        <h3 data-zh="18 个银行账户对账" data-en="18 Bank Accounts">18 个银行账户对账</h3>
+        <p data-zh="分析过去 3 个月对账单：异常、重复扣账、季度趋势。" data-en="3 months, 18 accounts, anomalies & duplicates.">分析过去 3 个月对账单：异常、重复扣账、季度趋势。</p>
+        <div class="scene" data-zh="SKILL: AU-EXPENSE" data-en="SKILL: AU-EXPENSE">SKILL: AU-EXPENSE</div>
+      </div>
+      <div class="scenario-card">
+        <div class="icon">📑</div>
+        <h3 data-zh="GST 发票自动" data-en="GST Invoices">GST 发票自动</h3>
+        <p data-zh="Marketing 服务类发票批量生成与归档。" data-en="Batch-generate and file GST invoices.">Marketing 服务类发票批量生成与归档。</p>
+        <div class="scene" data-zh="SKILL: GST-INVOICE" data-en="SKILL: GST-INVOICE">SKILL: GST-INVOICE</div>
+      </div>
+      <div class="scenario-card">
+        <div class="icon">📞</div>
+        <h3 data-zh="英文电话逐字稿" data-en="English Calls">英文电话逐字稿</h3>
+        <p data-zh="英文电话留言录屏、转文字、ChatGPT 翻译。" data-en="Record, transcribe, translate.">英文电话留言录屏、转文字、ChatGPT 翻译。</p>
+        <div class="scene" data-zh="VOICE-TEXT-TRANSLATE" data-en="VOICE-TEXT-TRANSLATE">VOICE-TEXT-TRANSLATE</div>
+      </div>
+      <div class="scenario-card">
+        <div class="icon">🏠</div>
+        <h3 data-zh="土地 CRM 全自动" data-en="Land CRM">土地 CRM 全自动</h3>
+        <p data-zh="录音提取 → 智能表格 → 微信提醒。" data-en="Audio → smart sheet → reminders.">录音提取 → 智能表格 → 微信提醒。</p>
+        <div class="scene" data-zh="SKILL: LAND-CRM" data-en="SKILL: LAND-CRM">SKILL: LAND-CRM</div>
+      </div>
+      <div class="scenario-card">
+        <div class="icon">🛒</div>
+        <h3 data-zh="亚马逊购物助手" data-en="Amazon Assistant">亚马逊购物助手</h3>
+        <p data-zh="跨页对比参数、价格、评价 — 30 秒做决策。" data-en="Cross-compare in 30 seconds.">跨页对比参数、价格、评价 — 30 秒做决策。</p>
+        <div class="scene" data-zh="CHATGPT BROWSER" data-en="CHATGPT BROWSER">CHATGPT BROWSER</div>
+      </div>
+      <div class="scenario-card">
+        <div class="icon">🎵</div>
+        <h3 data-zh="AI 音乐" data-en="AI Music">AI 音乐</h3>
+        <p data-zh="Mureka 作曲 → 剪映出 MV。" data-en="Mureka song → CapCut MV.">Mureka 作曲 → 剪映出 MV。</p>
+        <div class="scene" data-zh="MUREKA + CAPCUT" data-en="MUREKA + CAPCUT">MUREKA + CAPCUT</div>
+      </div>
+      <div class="scenario-card">
+        <div class="icon">📝</div>
+        <h3 data-zh="合同审核" data-en="Contract Review">合同审核</h3>
+        <p data-zh="NotebookLM 提取关键条款、风险点。" data-en="NotebookLM extracts clauses & risks.">NotebookLM 提取关键条款、风险点。</p>
+        <div class="scene" data-zh="NOTEBOOKLM" data-en="NOTEBOOKLM">NOTEBOOKLM</div>
+      </div>
+      <div class="scenario-card">
+        <div class="icon">📊</div>
+        <h3 data-zh="投资仪表盘" data-en="Investing Dashboard">投资仪表盘</h3>
+        <p data-zh="强度指数 + 早间推送到企业微信。" data-en="RS scoring + morning WeCom push.">强度指数 + 早间推送到企业微信。</p>
+        <div class="scene" data-zh="MAC MINI + WORKBUDDY" data-en="MAC MINI + WB">MAC MINI + WORKBUDDY</div>
+      </div>
+      <div class="scenario-card">
+        <div class="icon">📰</div>
+        <h3 data-zh="每日 AI 播报" data-en="Daily AI News">每日 AI 播报</h3>
+        <p data-zh="元宝深度播报 24h AI/国际/澳洲新闻。" data-en="Yuanbao 24h news briefing.">元宝深度播报 24h AI/国际/澳洲新闻。</p>
+        <div class="scene" data-zh="YUANBAO DAILY" data-en="YUANBAO DAILY">YUANBAO DAILY</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== OUTCOMES ====================== -->
+<section class="section">
+  <div class="section-header center">
+    <div class="section-num" data-zh="X · 收获" data-en="X · GAINS">X · 收获</div>
+    <h2 class="section-title" data-zh="13 周后你将拥有" data-en="After 13 weeks, you truly own">13 周后你将拥有</h2>
+    <div class="section-rule center"></div>
+  </div>
+  <div class="outcomes-grid">
+    <div class="outcome-card">
+      <div class="icon">🧠</div>
+      <h3 data-zh="投资认知升级" data-en="Sharper Mind">投资认知升级</h3>
+      <p data-zh="情绪化 → 数据驱动，告别拍脑袋。" data-en="From gut to data-driven.">情绪化 → 数据驱动，告别拍脑袋。</p>
+    </div>
+    <div class="outcome-card">
+      <div class="icon">📊</div>
+      <h3 data-zh="AI 分析引擎" data-en="AI Engine">AI 分析引擎</h3>
+      <p data-zh="自动分析财报、技术面、市场情绪。" data-en="Auto earnings, technicals, sentiment.">自动分析财报、技术面、市场情绪。</p>
+    </div>
+    <div class="outcome-card">
+      <div class="icon">🤖</div>
+      <h3 data-zh="自动交易信号" data-en="Auto Signals">自动交易信号</h3>
+      <p data-zh="每日推送到手机，不错过关键窗口。" data-en="Daily push to phone.">每日推送到手机，不错过关键窗口。</p>
+    </div>
+    <div class="outcome-card">
+      <div class="icon">🛡</div>
+      <h3 data-zh="风控纪律系统" data-en="Risk System">风控纪律系统</h3>
+      <p data-zh="AI 帮你止损止盈，永不偏离策略。" data-en="AI enforces stops.">AI 帮你止损止盈，永不偏离策略。</p>
+    </div>
+    <div class="outcome-card">
+      <div class="icon">🇦🇺</div>
+      <h3 data-zh="澳洲市场实战" data-en="AU Mastery">澳洲市场实战</h3>
+      <p data-zh="房产、ASX、外汇全链路实操。" data-en="Property, ASX, FX.">房产、ASX、外汇全链路实操。</p>
+    </div>
+    <div class="outcome-card">
+      <div class="icon">📜</div>
+      <h3 data-zh="毕业认证" data-en="Certificate">毕业认证</h3>
+      <p data-zh="完成答辩，获蜗牛AI 结业证书。" data-en="SnailAI certificate.">完成答辩，获蜗牛AI 结业证书。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== PRICING ====================== -->
+<section class="section" id="pricing">
+  <div class="section-header center">
+    <div class="section-num" data-zh="XI · 报名" data-en="XI · ENROL">XI · 报名</div>
+    <h2 class="section-title" data-zh="线上线下双通道" data-en="Online + Offline Paths">线上线下双通道</h2>
+    <div class="section-rule center"></div>
+    <p class="section-deck" data-zh="先线上入门，再线下深耕。" data-en="Start online, go deep offline.">先线上入门，再线下深耕。</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="tier" data-zh="COURSE A · ONLINE" data-en="COURSE A · ONLINE">COURSE A · ONLINE</div>
+      <div class="name" data-zh="线上创始班" data-en="Online · Founding Batch">线上创始班</div>
+      <p class="desc" data-zh="把 AI 真正用进澳洲生活 · 8 大本地场景 · 3 个月实现 AI 顿悟。" data-en="AI in your Australian life · 8 local scenarios · 3 months to AI enlightenment.">把 AI 真正用进澳洲生活 · 8 大本地场景 · 3 个月实现 AI 顿悟。</p>
+      <div class="price"><span class="currency">A$</span>599</div>
+      <div class="price-note" data-zh="AUD · 3 个月 · 12 节课" data-en="AUD · 3 MO · 12 CLASSES">AUD · 3 个月 · 12 节课</div>
+      <ul>
+        <li data-zh="英文邮件 / 文件处理" data-en="Email & doc automation">英文邮件 / 文件处理</li>
+        <li data-zh="澳洲房产基础应用" data-en="AU property basics">澳洲房产基础应用</li>
+        <li data-zh="股票投资基础应用" data-en="Stock investing basics">股票投资基础应用</li>
+        <li data-zh="孩子学习辅导" data-en="Kids' tutoring with AI">孩子学习辅导</li>
+        <li data-zh="效率提升 / 会议纪要" data-en="Productivity & meeting notes">效率提升 / 会议纪要</li>
+        <li data-zh="AI 内容创作 · 图 / 音乐 / 视频" data-en="AI content: image, music, video">AI 内容创作 · 图 / 音乐 / 视频</li>
+        <li data-zh="AI 工具安装 · 龙虾系统" data-en="Tool setup · Lobster system">AI 工具安装 · 龙虾系统</li>
+        <li data-zh="3 个月实现 AI 顿悟" data-en="3 months to AI enlightenment">3 个月实现 AI 顿悟</li>
+      </ul>
+    </div>
+
+    <div class="price-card featured">
+      <div class="tier" data-zh="COURSE B · OFFLINE · 首期仅招 10 人" data-en="COURSE B · OFFLINE · FIRST 10 ONLY">COURSE B · OFFLINE · 首期仅招 10 人</div>
+      <div class="name" data-zh="AI 财富管理线下班" data-en="AI Wealth Offline · North Sydney">AI 财富管理线下班</div>
+      <p class="desc" data-zh="从工具到财富管理系统 · 4 大系统 · 含线上课。" data-en="From tools to wealth systems · 4 systems · includes online course.">从工具到财富管理系统 · 4 大系统 · 含线上课。</p>
+      <div class="price"><span class="currency">A$</span>1,999</div>
+      <div class="price-note" data-zh="AUD · 含线上课 · 3 个月 · 12 节课 · 北悉尼" data-en="AUD · INCL ONLINE · 3 MO · 12 CLASSES · NORTH SYDNEY">AUD · 含线上课 · 3 个月 · 12 节</div>
+      <ul>
+        <li data-zh="AI CFO 个人财富管理系统" data-en="AI CFO personal wealth system">AI CFO 个人财富管理系统</li>
+        <li data-zh="龙虾 AI 财富管理系统" data-en="Lobster AI wealth system">龙虾 AI 财富管理系统</li>
+        <li data-zh="AI 澳洲房产深度分析" data-en="AI AU property deep analysis">AI 澳洲房产深度分析</li>
+        <li data-zh="AI 股票与资产配置风控" data-en="AI stock & asset risk control">AI 股票与资产配置风控</li>
+        <li data-zh="Section 32 合同秒读" data-en="Section 32 instant scan">Section 32 合同秒读</li>
+        <li data-zh="Suburb 投资决策表" data-en="Suburb investment decision table">Suburb 投资决策表</li>
+        <li data-zh="股票强度指数系统" data-en="Stock Strength Index system">股票强度指数系统</li>
+        <li data-zh="长期使用 + 复盘流程" data-en="Long-term use & review process">长期使用 + 复盘流程</li>
+      </ul>
+    </div>
+  </div>
+  <div class="price-bundle">
+    <h4 data-zh="组合报名优惠" data-en="Bundle Discount">组合报名优惠</h4>
+    <p data-zh="线上 + 线下同时报名享 9 折。" data-en="Online + Offline: 10% off.">线上 + 线下同时报名享 9 折。</p>
+    <div class="discount" data-zh="SAVE 10%" data-en="SAVE 10%">SAVE 10%</div>
+  </div>
+</section>
+
+<!-- ====================== FOLLOW-UP ====================== -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num" data-zh="XII · 之后" data-en="XII · AFTER">XII · 之后</div>
+    <h2 class="section-title" data-zh="毕业之后，继续升级" data-en="After graduation, keep going">毕业之后，继续升级</h2>
+    <div class="section-rule"></div>
+  </div>
+  <div class="followup-grid">
+    <div class="followup-card">
+      <div class="icon">🚀</div>
+      <h3 data-zh="实盘运行" data-en="Go Live">实盘运行</h3>
+      <p data-zh="课堂系统投入实盘。" data-en="Course system live.">课堂系统投入实盘。</p>
+    </div>
+    <div class="followup-card">
+      <div class="icon">🤝</div>
+      <h3 data-zh="学员社群" data-en="Alumni">学员社群</h3>
+      <p data-zh="策略模板 + 实战复盘。" data-en="Strategy templates + reviews.">策略模板 + 实战复盘。</p>
+    </div>
+    <div class="followup-card">
+      <div class="icon">🌍</div>
+      <h3 data-zh="悉尼沙龙" data-en="Sydney Salon">悉尼沙龙</h3>
+      <p data-zh="每月线下分享与圈子拓展。" data-en="Monthly meetup & network.">每月线下分享与圈子拓展。</p>
+    </div>
+    <div class="followup-card">
+      <div class="icon">📈</div>
+      <h3 data-zh="策略迭代" data-en="Iteration">策略迭代</h3>
+      <p data-zh="月度更新与回测报告。" data-en="Monthly updates & reports.">月度更新与回测报告。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== CTA ====================== -->
+<section class="cta-section">
+  <div class="cta-kicker" data-zh="ENROL · 2026 SUMMER" data-en="ENROL · SUMMER 2026">ENROL · 2026 SUMMER</div>
+  <h2 class="cta-title" data-zh="报名蜗牛AI 财富投资线下课 V2" data-en="Join the SnailAI Wealth Course · V2">报名蜗牛AI 财富投资线下课 V2</h2>
+  <p class="cta-deck" data-zh="7月11日开课 · 悉尼面对面" data-en="Starts July 11 · In-person Sydney">7月11日开课 · 悉尼面对面</p>
+  <img src="../assets/poster_offline_enroll.jpg" alt="蜗牛AI线下课报名海报" class="cta-poster">
+  <div class="cta-meta" data-zh="24 SEATS · A$999 · 13 WEEKS" data-en="24 SEATS · A$999 · 13 WEEKS">24 SEATS · A$999 · 13 WEEKS</div>
+</section>
+
+<!-- ====================== FOOTER ====================== -->
+<footer class="footer">
+  <div class="footer-brand">
+    <div class="logo">
+      <img class="logo-img" src="../assets/snailai_logo.png" alt="蜗牛AI · Snail AI" data-zh-alt="蜗牛AI 官方 Logo" data-en-alt="SnailAI Official Logo">
+      <div class="logo-text" data-zh="蜗牛AI" data-en="SnailAI">蜗牛AI<small data-zh="SNAIL AI · OFFLINE COURSE" data-en="SNAIL AI · OFFLINE COURSE">SNAIL AI · OFFLINE COURSE</small></div>
+    </div>
+    <p data-zh="让 AI 真正为你工作 — 学习 · 应用 · 享受 · 投资" data-en="Make AI truly work for you — Learn · Apply · Enjoy · Invest">让 AI 真正为你工作 — 学习 · 应用 · 享受 · 投资</p>
+  </div>
+
+  <div class="footer-cols">
+    <div class="footer-col">
+      <h4 data-zh="课程" data-en="COURSES">课程</h4>
+      <ul>
+        <li><a href="#curriculum" data-zh="线下课 V2" data-en="Offline V2">线下课 V2</a></li>
+        <li><a href="#pricing" data-zh="入门班" data-en="Starter">入门班</a></li>
+        <li><a href="#pricing" data-zh="基础班" data-en="Core">基础班</a></li>
+        <li><a href="#pricing" data-zh="线下课" data-en="Offline">线下课</a></li>
+        <li><a href="/live-share-2026-07-04/" target="_blank" data-zh="直播分享会PPT" data-en="Live Share PPT">直播分享会PPT</a></li>
+        <li><a href="/snailai-pitch-2026/" target="_blank" data-zh="技术澳洲应用大全PPT" data-en="Tech Application PPT">技术澳洲应用大全PPT</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 data-zh="联系" data-en="CONTACT">联系</h4>
+      <ul>
+        <li data-zh="微信：snailai_au" data-en="WeChat: snailai_au">微信：snailai_au</li>
+        <li><a href="mailto:hello@snailai.au" data-zh="hello@snailai.au" data-en="hello@snailai.au">hello@snailai.au</a></li>
+        <li data-zh="悉尼，新南威尔士" data-en="Sydney, NSW">悉尼，新南威尔士</li>
+        <li><a href="#" data-zh="立即报名" data-en="Enrol">立即报名</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div data-zh="© 2026 SNAILAI · ALL RIGHTS RESERVED" data-en="© 2026 SNAILAI · ALL RIGHTS RESERVED">© 2026 SNAILAI · ALL RIGHTS RESERVED</div>
+    <div data-zh="MADE IN SYDNEY" data-en="MADE IN SYDNEY">MADE IN SYDNEY</div>
+  </div>
+</footer>
+
+<script>
+  // ====== BILINGUAL SWITCHER ======
+  (function() {
+    const STORAGE_KEY = 'snailai-lang';
+    const buttons = document.querySelectorAll('.lang-btn');
+    const saved = localStorage.getItem(STORAGE_KEY) || 'zh';
+
+    function applyLang(lang) {
+      document.documentElement.lang = (lang === 'zh' ? 'zh-CN' : 'en');
+      document.querySelectorAll('[data-zh]').forEach(el => {
+        const v = el.getAttribute('data-' + lang);
+        if (v !== null && v !== undefined) el.textContent = v;
+      });
+      const t = document.querySelector('title');
+      if (t) {
+        t.textContent = (lang === 'zh')
+          ? '蜗牛AI · AI澳洲财富线下课'
+          : 'SnailAI · AI Wealth Investing Course';
+      }
+      buttons.forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+      localStorage.setItem(STORAGE_KEY, lang);
+    }
+
+    buttons.forEach(b => {
+      b.addEventListener('click', () => applyLang(b.dataset.lang));
+    });
+
+    applyLang(saved);
+  })();
+
+  // ====== SMOOTH SCROLL ======
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id === '#' || id.length < 2) return;
+      const target = document.querySelector(id);
+      if (target) {
+        e.preventDefault();
+        const top = target.getBoundingClientRect().top + window.pageYOffset - 60;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

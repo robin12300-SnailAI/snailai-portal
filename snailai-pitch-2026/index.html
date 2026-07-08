@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>蜗牛AI · 澳洲华人AI应用私享会 · 2026-06-20</title>
+<style>
+:root{
+  --ink:#0E0E10;--ink-2:#1A1A1E;--ink-3:#5A5A65;
+  --paper:#FAFAF7;--paper-2:#F0EFEA;--paper-3:#E5E4DD;
+  --accent:#FF5B1F;--accent-2:#E84A0F;
+  --line:rgba(14,14,16,.12);
+  --line-dark:rgba(250,250,247,.18);
+  --shadow-sm:0 1px 2px rgba(14,14,16,.04),0 2px 8px rgba(14,14,16,.04);
+  --shadow-md:0 2px 4px rgba(14,14,16,.06),0 8px 24px rgba(14,14,16,.06);
+  --shadow-lg:0 4px 12px rgba(14,14,16,.08),0 20px 48px rgba(14,14,16,.10);
+  --r-sm:6px;--r-md:10px;--r-lg:16px;--r-xl:24px;
+  --mono:'JetBrains Mono','SF Mono','Menlo','Consolas',monospace;
+  --sans:'Inter','Helvetica Neue','Helvetica','Arial','PingFang SC','Microsoft YaHei UI','Noto Sans SC',sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+* html,body{width:100%;overflow-x:hidden;background:var(--paper);color:var(--ink);font-family:var(--sans);font-weight:400;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+.deck{width:100%;counter-reset:slide-num}
+.slide{position:relative;min-height:100vh;opacity:1;pointer-events:auto;counter-increment:slide-num;scroll-margin-top:0}
+.slide::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,var(--accent) 30%,var(--accent-2) 50%,var(--accent) 70%,transparent 100%);opacity:.5;z-index:50}
+.slide.active{opacity:1;pointer-events:auto}
+.slide::after{content:counter(slide-num);position:absolute;right:40px;top:28px;z-index:999;font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--ink-3);pointer-events:none;font-weight:600;font-variant-numeric:tabular-nums}
+.slide.theme-dark::after{color:rgba(250,250,247,.5)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);padding:80px 80px 112px;gap:24px;align-content:start;align-items:start;max-width:1480px;margin:0 auto;width:100%}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-2);font-weight:700;display:flex;align-items:center;gap:12px}
+.kicker::before{content:'';width:24px;height:1.5px;background:var(--accent)}
+.t-meta{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.t-cat{font-family:var(--sans);font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--ink)}
+.h-hero{font-family:var(--sans);font-weight:700;font-size:min(6vw,10vh);line-height:.96;letter-spacing:-.028em;color:var(--ink)}
+.h-statement{font-family:var(--sans);font-weight:700;font-size:min(7.5vw,13vh);line-height:.94;letter-spacing:-.032em;color:var(--ink)}
+.h-xl{font-family:var(--sans);font-weight:700;font-size:min(4.5vw,7.5vh);line-height:1.06;letter-spacing:-.022em;color:var(--ink)}
+.h-md{font-family:var(--sans);font-weight:600;font-size:min(2.8vw,4.8vh);line-height:1.2;color:var(--ink)}
+.h-sm{font-family:var(--sans);font-weight:700;font-size:min(1.8vw,2.8vh);line-height:1.32;color:var(--ink)}
+.lead{font-family:var(--sans);font-weight:500;font-size:min(1.9vw,3.5vh);line-height:1.46;color:var(--ink)}
+.body{font-family:var(--sans);font-weight:400;font-size:min(1.3vw,2.3vh);line-height:1.55;color:var(--ink)}
+.mono{font-family:var(--mono);font-weight:600;font-size:min(.9vw,1.5vh);letter-spacing:.04em}
+.accent{color:var(--accent)}
+.chrome-min{position:fixed;left:0;right:0;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:20px 40px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);pointer-events:none;font-weight:600;background:linear-gradient(180deg,rgba(250,250,247,.85) 0%,rgba(250,250,247,0) 100%);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.chrome-min .logo{height:18px}
+.theme-light{background:var(--paper);color:var(--ink);background-image:radial-gradient(circle at 50% 0%,rgba(255,91,31,.015) 0%,transparent 60%)}
+.theme-dark{background:var(--ink);color:var(--paper);background-image:radial-gradient(circle at 50% 100%,rgba(255,91,31,.04) 0%,transparent 50%)}
+.theme-paper{background:var(--paper-2);color:var(--ink)}
+.theme-accent{background:var(--accent);color:var(--ink)}
+.hairline{height:1px;background:var(--hairline,var(--ink));width:100%}
+.frame{border:1px solid var(--ink);padding:28px;border-radius:var(--r-md);box-shadow:var(--shadow-sm)}
+.card-fill{background:var(--paper-2);padding:28px;border:1px solid var(--line);border-radius:var(--r-md);box-shadow:var(--shadow-sm)}
+.card-ink{background:var(--ink);color:var(--paper);padding:28px;border-radius:var(--r-md);box-shadow:var(--shadow-md)}
+.card-accent{background:var(--accent);color:var(--ink);padding:28px;border-radius:var(--r-md);box-shadow:var(--shadow-md)}
+.card-outlined{background:transparent;padding:28px;border:1px solid var(--ink);border-radius:var(--r-md)}
+.list{list-style:none;display:flex;flex-direction:column;gap:14px}
+.list li{font-family:var(--sans);font-weight:400;font-size:min(1.4vw,2.3vh);line-height:1.5;color:var(--ink);display:flex;gap:14px;align-items:flex-start;padding-left:20px;position:relative}
+.list li::before{content:'';position:absolute;left:0;top:.7em;width:6px;height:6px;background:var(--accent);border-radius:50%}
+.list-light li{color:var(--paper)}
+.list-light li::before{background:var(--accent)}
+.split-7-5{display:grid;grid-template-columns:7fr 5fr;gap:32px;align-items:start;width:100%}
+.split-6-6{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;width:100%}
+.split-2-9{display:grid;grid-template-columns:2fr 9fr;gap:40px;align-items:start;width:100%}
+.split-9-3{display:grid;grid-template-columns:9fr 3fr;gap:40px;align-items:start;width:100%}
+.bar-row{display:grid;grid-template-columns:120px 1fr 60px;gap:14px;align-items:center;margin:10px 0}
+.bar-track{height:10px;background:var(--paper-3);position:relative;overflow:hidden;border-radius:5px}
+.bar-fill{position:absolute;left:0;top:0;bottom:0;background:var(--ink);border-radius:5px;transition:width 1s var(--ease)}
+.bar-fill.acc{background:linear-gradient(90deg,var(--accent) 0%,var(--accent-2) 100%)}
+.bar-val{font-family:var(--mono);font-size:11px;font-weight:600;text-align:right}
+.nb{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;padding:5px 10px;border:1px solid var(--ink);color:var(--ink);text-transform:uppercase;border-radius:3px}
+.nb-fill{background:var(--ink);color:var(--paper)}
+.nb-acc{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+.nb-w{border-color:rgba(255,255,255,.5);color:inherit}
+.dot-mat{position:absolute;inset:0;background-image:radial-gradient(circle,currentColor 1px,transparent 1.4px);background-size:24px 24px;opacity:.06;pointer-events:none;color:var(--ink)}
+.ring-mat{position:absolute;width:340px;height:340px;border:1px solid currentColor;border-radius:50%;opacity:.25;pointer-events:none}
+[data-anim]{opacity:1;transform:none}
+.cover{display:grid;grid-template-rows:auto 1fr auto;padding:56px 64px 72px;min-height:100vh;position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 80% 50%,rgba(255,91,31,.06) 0%,transparent 70%);pointer-events:none;z-index:0}
+.cover>*{position:relative;z-index:1}
+.cover .top{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-2);display:flex;justify-content:space-between;align-items:flex-start;font-weight:600}
+.cover .logo{height:42px;width:auto}
+.cover .body{position:relative}
+.cover .title{font-family:var(--sans);font-weight:800;font-size:min(9vw,15.3vh);line-height:.92;letter-spacing:-.042em;color:var(--ink)}
+.cover .title em{font-style:normal;color:var(--accent);position:relative;display:inline-block}
+.cover .title em::after{content:'';position:absolute;left:-4%;right:-4%;bottom:.08em;height:.12em;background:var(--accent);opacity:.18;z-index:-1;border-radius:2px}
+.cover .sub{font-family:var(--sans);font-weight:500;font-size:min(2vw,3.4vh);line-height:1.4;color:var(--ink);max-width:760px;margin-top:32px;opacity:.78}
+.cover .bot{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-2);display:flex;justify-content:space-between;align-items:flex-end;font-weight:600;padding-top:24px;border-top:1px solid var(--line)}
+.cover .qr{position:absolute;right:3.5%;top:50%;transform:translateY(-50%);width:230px;height:230px;display:grid;place-items:center;background:transparent;padding:0;border-radius:0;box-shadow:none;border:none}
+.cover .qr img{width:100%;height:100%;object-fit:contain;border-radius:0}
+.cover .brand{position:absolute;right:26%;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;z-index:2}
+.cover .brand img.snail{height:200px;width:auto;mix-blend-mode:normal;filter:drop-shadow(0 4px 12px rgba(0,0,0,.06))}
+.cover .brand .stack{display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1;text-align:center}
+.cover .brand .zh{font-family:var(--sans);font-weight:800;font-size:14px;letter-spacing:.06em;color:var(--ink)}
+.cover .brand .en{font-family:var(--mono);font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.cover .sponsor-line{position:absolute;left:64px;bottom:24px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);font-weight:600;z-index:3;display:flex;align-items:center;gap:8px}
+.cover .sponsor-line::before{content:'';width:8px;height:8px;background:var(--accent);border-radius:50%}
+.robin-photo{aspect-ratio:3/4;background:var(--paper-2);border:1px solid var(--ink);overflow:hidden;position:relative;max-width:340px;border-radius:var(--r-md);box-shadow:var(--shadow-md)}
+.robin-photo::after{content:'';position:absolute;inset:0;border:1px dashed var(--ink-3);margin:10px;pointer-events:none;border-radius:var(--r-md)}
+.anx-row{display:grid;grid-template-columns:240px 1fr 80px;gap:18px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:min(1vw,1.7vh)}
+.anx-bar{height:18px;background:var(--ink);position:relative;border-radius:3px;overflow:hidden}
+.anx-row.acc .anx-bar{background:linear-gradient(90deg,var(--accent) 0%,var(--accent-2) 100%)}
+.divider{display:grid;grid-template-rows:auto 1fr auto;padding:56px 64px 72px;background:var(--ink);color:var(--paper);min-height:100vh;position:relative;overflow:hidden}
+.divider::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 80%,rgba(255,91,31,.08) 0%,transparent 50%);pointer-events:none}
+.divider::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent) 0%,var(--accent-2) 100%)}
+.divider>*{position:relative;z-index:1}
+.divider .top{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:.6;display:flex;justify-content:space-between;font-weight:600}
+.divider .title-wrap{display:grid;grid-template-columns:1fr 1.1fr;align-items:end;align-content:end;gap:32px;padding-bottom:18px}
+.divider .num{font-family:var(--sans);font-weight:200;font-size:min(18vw,28vh);line-height:.86;letter-spacing:-.04em;opacity:.95;color:transparent;-webkit-text-stroke:1.5px rgba(250,250,247,.4);text-stroke:1.5px rgba(250,250,247,.4)}
+.divider .ttl{font-family:var(--sans);font-weight:200;font-size:min(6vw,10vh);line-height:.98;letter-spacing:-.03em}
+.divider .bot{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:.6;display:flex;justify-content:space-between;align-items:flex-end;font-weight:600;padding-top:20px;border-top:1px solid var(--line-dark)}
+.app-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
+.app-card{aspect-ratio:1/1;background:var(--paper);border:1px solid var(--ink);padding:18px;position:relative;display:flex;flex-direction:column;justify-content:space-between;transition:all .3s var(--ease);overflow:hidden;border-radius:var(--r-md);box-shadow:var(--shadow-sm)}
+.app-card:hover{background:var(--ink);color:var(--paper);transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--ink)}
+.app-card .icon{width:36px;height:36px;display:grid;place-items:center;border:1px solid currentColor;border-radius:6px}
+.app-card .ic{display:grid;grid-template-columns:1fr 1fr;gap:2px;width:18px;height:18px}
+.app-card .ic i{background:currentColor;display:block}
+.app-card .nm{font-family:var(--sans);font-weight:500;font-size:13px;line-height:1.2}
+.app-card .nm b{font-weight:700}
+.app-card .sub{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-top:4px}
+.app-card .tag{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:8px;letter-spacing:.16em;opacity:.5}
+.app-card.acc{background:var(--accent);color:var(--ink);border-color:var(--accent)}
+.scen-side{display:grid;grid-template-columns:1fr 1.4fr;gap:36px;align-items:start}
+.scen-stamp{aspect-ratio:1/1;border:1px solid var(--ink);background:var(--paper-2);display:grid;place-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);position:relative;max-width:280px;border-radius:var(--r-md)}
+.scen-stamp::before{content:'';position:absolute;inset:12px;border:1px dashed var(--ink-3);border-radius:var(--r-sm)}
+.qr-stage{display:grid;grid-template-rows:1fr auto;padding:56px 64px 72px;background:var(--accent);color:var(--ink);min-height:100vh;position:relative;overflow:hidden}
+.qr-stage::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--ink) 0%,var(--ink) 100%)}
+.qr-stage .hero{position:relative;display:grid;grid-template-columns:1.1fr 1fr;align-items:center;gap:56px}
+.qr-stage .qr-big{background:var(--paper);border:1px solid var(--ink);padding:36px;display:flex;flex-direction:column;align-items:center;gap:14px;border-radius:var(--r-md);box-shadow:var(--shadow-lg)}
+.qr-stage .qr-big img{width:100%;max-width:380px;aspect-ratio:1/1;object-fit:contain;border-radius:var(--r-sm)}
+.qr-stage .qr-big .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:700}
+.qr-stage .stage-b{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;padding-top:20px;border-top:1px solid rgba(14,14,16,.15)}
+.interact{display:grid;grid-template-rows:auto 1fr auto;padding:56px 64px 72px;background:var(--ink);color:var(--paper);min-height:100vh;position:relative;overflow:hidden}
+.interact::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(255,91,31,.06) 0%,transparent 50%);pointer-events:none}
+.interact>*{position:relative;z-index:1}
+.interact .body{display:grid;grid-template-columns:1.1fr 1fr;gap:72px;align-content:center;align-items:center}
+.interact .q-list{font-family:var(--sans);font-weight:200;font-size:min(3.4vw,5.4vh);line-height:1.2;letter-spacing:-.018em}
+.interact .q-list .q{position:relative;padding-left:56px;margin:14px 0}
+.interact .q-list .q .n{position:absolute;left:0;top:.12em;font-family:var(--mono);font-size:min(1.4vw,2.4vh);font-weight:700;color:var(--accent);letter-spacing:.05em}
+.interact .ribbon{border:1px solid var(--accent);padding:28px 32px;display:flex;flex-direction:column;gap:14px;border-radius:var(--r-md);background:rgba(255,91,31,.05);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.interact .ribbon .h{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.interact .ribbon .t{font-family:var(--sans);font-weight:300;font-size:min(1.3vw,2.2vh);line-height:1.45;opacity:.92}
+.closing{display:grid;grid-template-rows:1fr auto;padding:56px 64px 72px;background:var(--accent);color:var(--ink);min-height:100vh;position:relative;overflow:hidden}
+.closing::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--ink) 0%,var(--ink) 100%)}
+.closing .msg{position:relative;display:grid;align-content:center;align-items:center}
+.closing .big{font-family:var(--sans);font-weight:200;font-size:min(11vw,18vh);line-height:.94;letter-spacing:-.04em}
+.closing .small{font-family:var(--sans);font-weight:300;font-size:min(1.5vw,2.6vh);line-height:1.45;margin-top:36px;max-width:760px;color:var(--ink-2)}
+.closing .row{display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;padding-top:24px;border-top:1px solid rgba(14,14,16,.15)}
+.closing .row img{height:32px;filter:brightness(0)}
+.idx{position:fixed;inset:0;z-index:300;background:var(--ink);color:var(--paper);padding:64px 80px;display:none;overflow:auto}
+.idx.on{display:block}
+.idx h2{font-family:var(--sans);font-weight:200;font-size:48px;letter-spacing:-.02em;margin-bottom:36px}
+.idx .grid{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.idx .cell{aspect-ratio:16/10;background:#1A1A1E;border:1px solid #2A2A2E;display:flex;align-items:flex-end;padding:14px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-family:var(--mono);cursor:pointer;transition:all .2s var(--ease);border-radius:var(--r-sm)}
+.idx .cell:hover,.idx .cell.on{background:var(--accent);color:var(--ink);transform:translateY(-2px);border-color:var(--accent)}
+.idx .cell b{font-size:12px;letter-spacing:.05em}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- ========== 1 · 封面 ========== -->
+<section class="slide theme-light" data-n="1">
+    <div class="cover">
+      <div class="top">
+        <span></span>
+        <span>Snail AI · 2026 / 06 / 20 · Sydney</span>
+      </div>
+      <div class="brand">
+        <img src="images/snailai_logo.png" class="snail" loading="lazy" decoding="async" alt="蜗牛AI">
+      </div>
+      <div class="body">
+        <h1 class="title">蜗牛 <em>AI</em><br>首次澳洲华人<br>应用私享会</h1>
+        <p class="sub">学习 · 应用 · 享受 · 投资 — 真实 AI 工作流落地分享<br>一个专为澳洲华人打造的 AI 进化圈子</p>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+          <div class="qr"><img src="images/qr_live_event_v4.png" loading="lazy" decoding="async" alt="现场群二维码"></div>
+          <div style="font-family:var(--sans);font-size:22px;font-weight:800;color:var(--ink);letter-spacing:.06em">请加入现场微信群</div>
+        </div>
+      </div>
+      <div class="bot">
+        <span>主办 · 蜗牛 AI &nbsp;·&nbsp; 主讲 · Robin</span>
+        <span>扫码入群 · 2:00 PM · 6.20</span>
+      </div>
+      <div class="sponsor-line">KSI 悉尼土地投资 · 独家冠名赞助</div>
+    </div>
+  </section>
+  <!-- ========== 2 · 第一环节 ========== -->
+  <section class="slide theme-dark" data-n="2">
+    <div class="divider">
+      <div class="top">
+        <span>Snail AI · 2026</span>
+        <span>Chapter 01 · Robin</span>
+      </div>
+      <div class="title-wrap">
+        <div class="num">01</div>
+        <div>
+          <div class="ttl">第一环节</div>
+        </div>
+      </div>
+      <div class="bot">
+        <span>Robin · 主讲</span>
+        <span>5 min</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== 3 · 介绍 Robin ========== -->
+<section class="slide theme-light" data-n="3">
+    <div class="grid">
+      <div class="col-12" style="grid-column:1/13;display:flex;justify-content:space-between;align-items:flex-end">
+        <span class="kicker">01 · Speaker</span>
+        <span class="t-meta">5 min</span>
+      </div>
+      <div style="grid-column:1/13;display:grid;grid-template-columns:1fr 2fr;gap:48px;align-items:start;margin-top:18px">
+        <div class="robin-photo" data-anim>
+          <img src="images/robin_photo.jpg" loading="lazy" decoding="async" alt="Robin" style="width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+        <div>
+          <h1 class="h-hero" data-anim>我是 <em style="font-style:normal;color:var(--accent)">Robin</em></h1>
+          <p class="lead" data-anim style="margin-top:14px;line-height:1.5">一个正在把 <b>AI</b> 用进个人、家庭和公司的实践者</p>
+          <div class="hairline" data-anim style="margin-top:20px;width:80px"></div>
+          <p class="body" data-anim style="margin-top:16px;line-height:1.6;color:var(--ink)">KSI 悉尼土地投资 CEO / 蜗牛 AI 创始人 /<br>AI 应用系统实践者 / 澳洲华人 AI 应用传播者 /<br>企业主视角的 AI 应用教练</p>
+          <div class="hairline" data-anim style="margin-top:18px;width:50px;opacity:.4"></div>
+          <p class="body" data-anim style="margin-top:12px;line-height:1.5;color:var(--ink-2);font-size:min(.9vw,1.5vh)"><span class="nb" style="display:inline-block;margin-right:8px">GOLF</span> 高尔夫爱好者，Killara Golf Club &amp; Bonnie Doon Club 会员</p>
+          <div class="hairline" data-anim style="margin-top:18px;width:50px;opacity:.4"></div>
+          <p class="lead" data-anim style="margin-top:14px;line-height:1.45">持续探索 AI 在<b>个人、家庭、公司、投资和内容生产</b><br>中在澳洲的真实应用</p>
+          <div class="hairline" data-anim style="margin-top:18px;width:50px;opacity:.4"></div>
+          <p class="body" data-anim style="margin-top:12px;color:var(--accent);font-weight:600;font-size:min(1vw,1.7vh);line-height:1.4">希望帮助更多澳洲华人低成本、高效率地用上 AI</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <!-- ========== 4 · 蜗牛AI团队介绍 ========== -->
+  <section class="slide theme-light" data-n="4">
+    <div style="display:grid;grid-template-rows:auto 1fr auto;padding:56px 64px 64px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">03 · Team</span>
+        <span class="t-meta">团队介绍</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;width:100%">
+        <div style="text-align:center">
+          <h1 class="h-xl" style="color:var(--ink)">蜗牛AI <span style="color:var(--accent)">团队介绍</span></h1>
+          <p class="lead" style="margin-top:10px;color:var(--ink-2)">澳大利亚悉尼 · 中国深圳</p>
+        </div>
+
+        <!-- 上下两区域：澳洲2人 / 中国3人，对称平衡 -->
+        <div style="display:grid;grid-template-rows:auto auto;gap:28px;width:100%;max-width:1080px">
+
+          <!-- ========== 澳洲团队（2人） ========== -->
+          <div style="background:#fff;border-radius:18px;padding:28px 32px;border:1px solid var(--ink-2);box-shadow:0 4px 20px rgba(0,0,0,.05)">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed var(--ink-2)">
+              <span style="font-size:32px;line-height:1">🇦🇺</span>
+              <div>
+                <div style="font-size:11px;color:var(--ink-3);letter-spacing:.18em;text-transform:uppercase;font-weight:700">Australia</div>
+                <div style="font-size:18px;font-weight:700;color:var(--ink);margin-top:2px">悉尼团队 · 澳大利亚成员</div>
+              </div>
+              <div style="margin-left:auto;font-size:11px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.1em">2 MEMBERS</div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+              <!-- 罗斌 Robin -->
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+                <img src="images/qr_robin.JPG" loading="lazy" decoding="async" alt="Robin罗斌 微信二维码"
+                     style="width:100%;max-width:200px;height:auto;aspect-ratio:888/1233;object-fit:contain;border-radius:8px;background:#fff">
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:var(--ink)">Robin罗斌</div>
+                  <div style="font-size:11px;color:var(--ink-3);margin-top:2px;font-family:var(--mono);letter-spacing:.08em">主理人 · 澳大利亚</div>
+                </div>
+              </div>
+              <!-- Michael -->
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+                <img src="images/qr_michael.jpg" loading="lazy" decoding="async" alt="Michael郭宇辰 微信二维码"
+                     style="width:100%;max-width:200px;height:auto;aspect-ratio:1083/1464;object-fit:contain;border-radius:8px;background:#fff">
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:var(--ink)">Michael郭宇辰</div>
+                  <div style="font-size:11px;color:var(--ink-3);margin-top:2px;font-family:var(--mono);letter-spacing:.08em">讲师 · 澳大利亚 悉尼</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========== 中国团队（3人） ========== -->
+          <div style="background:#fff;border-radius:18px;padding:28px 32px;border:1px solid var(--ink-2);box-shadow:0 4px 20px rgba(0,0,0,.05)">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed var(--ink-2)">
+              <span style="font-size:32px;line-height:1">🇨🇳</span>
+              <div>
+                <div style="font-size:11px;color:var(--ink-3);letter-spacing:.18em;text-transform:uppercase;font-weight:700">China</div>
+                <div style="font-size:18px;font-weight:700;color:var(--ink);margin-top:2px">深圳支持团队 · 中国成员</div>
+              </div>
+              <div style="margin-left:auto;font-size:11px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.1em">3 MEMBERS</div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+              <!-- 蒋培 -->
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+                <img src="images/qr_jiangpei.png" loading="lazy" decoding="async" alt="James蒋培 企业微信二维码"
+                     style="width:100%;max-width:160px;height:auto;aspect-ratio:1080/2348;object-fit:contain;border-radius:8px;background:#fff">
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:var(--ink)">James 蒋培</div>
+                  <div style="font-size:11px;color:var(--ink-3);margin-top:2px;font-family:var(--mono);letter-spacing:.08em">企业微信 · AI 工具支持</div>
+                </div>
+              </div>
+              <!-- 谢锦 -->
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+                <img src="images/qr_xiejin.png" loading="lazy" decoding="async" alt="Jason谢锦 蜗牛AI 企业微信二维码"
+                     style="width:100%;max-width:160px;height:auto;aspect-ratio:1152/2256;object-fit:contain;border-radius:8px;background:#fff">
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:var(--ink)">Jason 谢锦</div>
+                  <div style="font-size:11px;color:var(--ink-3);margin-top:2px;font-family:var(--mono);letter-spacing:.08em">蜗牛AI · 远程支持</div>
+                </div>
+              </div>
+              <!-- 吴清 -->
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+                <img src="images/qr_wuqing.png" loading="lazy" decoding="async" alt="Sean吴清 企业微信二维码"
+                     style="width:100%;max-width:160px;height:auto;aspect-ratio:1206/2622;object-fit:contain;border-radius:8px;background:#fff">
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:var(--ink)">Sean 吴清</div>
+                  <div style="font-size:11px;color:var(--ink-3);margin-top:2px;font-family:var(--mono);letter-spacing:.08em">企业微信 · 算力答疑</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;align-items:flex-end">
+        <img src="images/snailai_logo.png" loading="lazy" decoding="async" alt="蜗牛AI" style="height:36px;width:auto;opacity:.5">
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 5 · 为什么要做这个分享 ========== -->
+<section class="slide theme-light" data-n="5">
+    <div class="grid">
+      <div style="grid-column:1/13;display:flex;justify-content:space-between;align-items:flex-end">
+        <span class="kicker">02 · Why this</span>
+        <span class="t-meta">Purpose</span>
+      </div>
+      <div style="grid-column:1/13;margin-top:18px">
+        <h1 class="h-xl" data-anim>我为什么要做这个 <em style="font-style:normal;color:var(--accent)">分享</em></h1>
+        <p class="lead" data-anim style="margin-top:18px;max-width:780px">我不是为了教大家「几个 AI 工具」。<br>我更关心的是 — <b>AI 如何真正进入我们的生活</b></p>
+      </div>
+      <div style="grid-column:1/13;margin-top:36px">
+        <div class="split-7-5" data-anim>
+          <div class="card-fill">
+            <div class="t-cat" style="margin-bottom:14px">Purpose · 我关心的是什么</div>
+            <ul class="list" data-anim style="margin-top:4px">
+              <li><b>AI 如何真正进入</b>我们的生活、家庭和公司</li>
+              <li><b>普通人如何用 AI</b>提高效率、降低焦虑、改善决策</li>
+              <li><b>企业主如何用 AI</b>改造工作流程</li>
+              <li><b>澳洲华人如何不要错过</b>这一轮生产力变化</li>
+            </ul>
+          </div>
+          <div class="card-ink">
+            <div class="t-cat" style="margin-bottom:12px;color:var(--accent)">Goal · 目标</div>
+            <div class="h-md" style="color:var(--paper);margin-bottom:12px">3 个月 · 10 个 AI 应用高手</div>
+            <div class="body" style="color:var(--paper);opacity:.85">构建一个澳洲华人 AI 爱好者的圈子<br>一起学习 AI · 应用 AI · 享受 AI · 投资 AI · 一起玩 AI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 6 · 焦虑图 ========== -->
+<section class="slide theme-light" data-n="6">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">03 · The Anxious Curve</span>
+        <span class="t-meta">焦虑图</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px">
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">焦虑图</h1>
+        <div style="width:100%;max-width:1152px">
+          <img src="images/焦虑图1.JPG" style="width:100%;height:auto;display:block;object-fit:contain;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);margin:0 auto" loading="lazy" decoding="async" alt="焦虑图">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 7 · 早期图 ========== -->
+<section class="slide theme-light" data-n="7">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">04 · Early Adoption</span>
+        <span class="t-meta">早期图</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px">
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">早期图</h1>
+        <div style="width:43%;max-width:500px">
+          <img src="images/早期图.JPG" style="width:100%;height:auto;display:block;object-fit:contain;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);margin:0 auto" loading="lazy" decoding="async" alt="早期图">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 9 · AI 澳洲应用互动环节（同第34页） ========== -->
+  <section class="slide theme-light" data-n="8">
+    <div style="display:grid;grid-template-rows:auto 1fr auto;padding:48px 64px 64px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">05 · Interactive</span>
+        <span class="t-meta">互动环节</span>
+      </div>
+
+      <!-- 顶部 Email 醒目标语 -->
+      <div style="display:flex;justify-content:center;margin-bottom:8px">
+        <div style="background:linear-gradient(135deg,var(--accent) 0%,#ff8a5b 100%);color:#fff;padding:18px 36px;border-radius:14px;box-shadow:0 8px 28px rgba(255,91,31,.32);text-align:center;max-width:1080px">
+          <div style="font-size:min(3.4vw,5.6vh);font-weight:900;line-height:1.18;letter-spacing:.01em">把你的资料发给我的 Email：<span style="color:#fff;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px">robin12300@gmail.com</span></div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-content:center">
+        <!-- 左侧：用户填写 -->
+        <div style="text-align:center">
+          <div style="font-size:min(2.4vw,3.8vh);font-weight:800;color:var(--ink);line-height:1.15;margin-bottom:18px">你想把什么场景的任务<br>交给 <span style="color:var(--accent)">AI 自动完成</span></div>
+          <div style="font-size:14px;color:var(--ink-3);margin-bottom:20px">最好是「我的 AI 刚需」</div>
+          <div style="display:inline-block;background:#fff;border-radius:12px;padding:14px;border:2px solid var(--ink-2);box-shadow:0 4px 20px rgba(0,0,0,.08)">
+            <img src="images/qr_ai_need.png" loading="lazy" decoding="async" alt="扫码填写AI刚需" style="width:140px;height:140px;object-fit:cover;border-radius:4px">
+          </div>
+          <div style="font-size:13px;color:var(--accent);font-weight:600;margin-top:10px">📱 扫码填写「我的 AI 刚需」</div>
+        </div>
+        <!-- 右侧：团队服务说明 -->
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:24px">
+          <div>
+            <div style="font-size:min(2vw,3.2vh);font-weight:800;color:var(--ink);line-height:1.2;margin-bottom:14px">蜗牛 AI 团队<br><span style="color:var(--accent)">为你设计和尝试实现</span></div>
+            <div style="font-size:15px;color:var(--ink-2);line-height:1.7">
+              <div style="margin-bottom:10px;display:flex;gap:10px">
+                <span style="color:var(--accent);font-weight:700">▸</span>
+                <span>基于你提交的「AI 刚需」进行需求分析</span>
+              </div>
+              <div style="margin-bottom:10px;display:flex;gap:10px">
+                <span style="color:var(--accent);font-weight:700">▸</span>
+                <span>设计符合澳洲本地场景的 AI 解决方案</span>
+              </div>
+              <div style="margin-bottom:10px;display:flex;gap:10px">
+                <span style="color:var(--accent);font-weight:700">▸</span>
+                <span>现场或远程为你实现原型并演示效果</span>
+              </div>
+              <div style="display:flex;gap:10px">
+                <span style="color:var(--accent);font-weight:700">▸</span>
+                <span>提供后续配置支持与一对一培训</span>
+              </div>
+            </div>
+          </div>
+          <div style="background:linear-gradient(135deg,var(--ink) 0%,#1a1a1e 100%);border-radius:12px;padding:18px 22px;color:#fff">
+            <div style="font-size:13px;opacity:.7;margin-bottom:6px">💡 现场示范</div>
+            <div style="font-size:15px;font-weight:700;line-height:1.5">Robin AI 澳洲应用教练<br>现场用 AI 处理你的真实问题</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.7">
+        <span>蜗牛AI · 2026 / 06 / 20</span>
+        <span>互动环节 · Sydney</span>
+      </div>
+    </div>
+  </section>
+
+  
+
+<!-- ========== 8 · 12 应用场景 网格 ========== -->
+<section class="slide theme-light" data-n="9">
+    <div class="grid">
+      <div style="grid-column:1/13;display:flex;justify-content:space-between;align-items:flex-end">
+        <span class="kicker">04 · 9 Workflows</span>
+        <span class="t-meta">9 真实场景</span>
+      </div>
+      <div style="grid-column:1/13;margin-top:10px">
+        <h1 class="h-xl" data-anim>Robin 在澳洲是如何<br><em style="font-style:normal;color:var(--accent)">使用 AI 的</em></h1>
+      </div>
+      <div style="grid-column:1/13;margin-top:18px" data-anim>
+        <div class="app-grid">
+          <div class="app-card acc"><div><div class="icon"><div class="ic"><i></i><i></i><i></i><i></i></div></div></div><div><div class="nm"><b>谷歌全家桶</b></div><div class="sub">Gemini · Gmail · 日历 · 任务 · 谷歌 AI 私人助理</div><span class="tag">01</span></div></div>
+          <div class="app-card"><div><div class="icon"><div class="ic"><i></i><i></i><i></i><i></i></div></div></div><div><div class="nm"><b>法律合同审核</b></div><div class="sub">NotebookLM</div><span class="tag">02</span></div></div>
+          <div class="app-card"><div><div class="icon"><div class="ic"><i></i><i></i><i></i><i></i></div></div></div><div><div class="nm"><b>ChatGPT Atlas</b></div><div class="sub">浏览器 · 帮你找东西</div><span class="tag">03</span></div></div>
+          <div class="app-card"><div><div class="icon"><div class="ic"><i></i><i></i><i></i><i></i></div></div></div><div><div class="nm"><b>房地产报告</b></div><div class="sub">KSI 投资必备</div><span class="tag">04</span></div></div>
+          <div class="app-card"><div><div class="icon"><div class="ic"><i></i><i></i><i></i><i></i></div></div></div><div><div class="nm"><b>WorkBuddy</b></div><div class="sub">做文件 · KGC · 推荐信</div><span class="tag">05</span></div></div>
+          <div class="app-card"><div><div class="icon"><div class="ic"><i></i><i></i><i></i><i></i></div></div></div><div><div class="nm"><b>我的健康</b></div><div class="sub">扁平足 · 血液检查报告</div><span class="tag">06</span></div></div>
+          <div class="app-card"><div><div class="icon"><div class="ic"><i></i><i></i><i></i><i></i></div></div></div><div><div class="nm"><b>营销</b></div><div class="sub">土地 CRM</div><span class="tag">07</span></div></div>
+          <div class="app-card"><div><div class="icon"><div class="ic"><i></i><i></i><i></i><i></i></div></div></div><div><div class="nm"><b>AI 音乐</b></div><div class="sub">Mureka · 小铃铛 Mac App</div><span class="tag">08</span></div></div>
+          <div class="app-card"><div><div class="icon"><div class="ic"><i></i><i></i><i></i><i></i></div></div></div><div><div class="nm"><b>投资</b></div><div class="sub">股票 强度指数 AI 系统</div><span class="tag">09</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- ========== 10 · 谷歌全家桶 ========== -->
+<section class="slide theme-light" data-n="10">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">01 · Google Workspace</span>
+        <span class="t-meta">谷歌全家桶</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">谷歌全家桶</h1>
+        
+
+        <div class="body" style="text-align:center;color:var(--ink-2)">Gemini · Gmail · 日历 · 任务 · 谷歌 AI 私人助理</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 11 · 法律合同审核 ========== -->
+<section class="slide theme-light" data-n="11">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">02 · Legal Review</span>
+        <span class="t-meta">法律合同审核</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">法律合同审核</h1>
+        
+
+        <div class="body" style="text-align:center;color:var(--ink-2)">NotebookLM</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 12 · Chrome Gemini / ChatGPT Atlas ========== -->
+  <section class="slide theme-light" data-n="12">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">03 · Browser AI</span>
+        <span class="t-meta">浏览器 AI 双雄</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;width:100%">
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">Chrome <em style="font-style:normal;color:var(--accent)">Gemini</em> &nbsp;·&nbsp; ChatGPT <em style="font-style:normal;color:var(--accent)">Atlas</em></h1>
+        <div class="body" style="text-align:center;color:var(--ink-2)">浏览器 · 帮你找东西</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 13 · 房地产报告 ========== -->
+<section class="slide theme-light" data-n="13">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">04 · Real Estate Report</span>
+        <span class="t-meta">房地产报告</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">房地产报告</h1>
+        
+
+        <div class="body" style="text-align:center;color:var(--ink-2)">KSI 投资必备</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 14 · WorkBuddy ========== -->
+<section class="slide theme-light" data-n="14">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">05 · WorkBuddy</span>
+        <span class="t-meta">做文件 · KGC · 推荐信</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">WorkBuddy</h1>
+        
+
+        <div class="body" style="text-align:center;color:var(--ink-2)">做文件 · KGC · 推荐信</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 15 · 我的健康 ========== -->
+<section class="slide theme-light" data-n="15">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">06 · My Health</span>
+        <span class="t-meta">我的健康</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">我的健康</h1>
+        
+
+        <div class="body" style="text-align:center;color:var(--ink-2)">扁平足 · 血液检查报告</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 16 · 营销 ========== -->
+<section class="slide theme-light" data-n="16">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">07 · Marketing</span>
+        <span class="t-meta">营销</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">营销</h1>
+        
+
+        <div class="body" style="text-align:center;color:var(--ink-2)">土地 CRM</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 17 · 投资 ========== -->
+<section class="slide theme-light" data-n="17">
+  <div style="display:grid;grid-template-rows:auto 1fr auto;padding:48px 64px 64px;min-height:100vh;gap:24px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <span class="kicker">09 · Investment</span>
+      <span class="t-meta">投资</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;width:100%">
+      <div style="text-align:center">
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">投资</h1>
+        <div style="margin-top:16px;font-size:min(2.6vw,4.6vh);font-weight:700;color:var(--accent);letter-spacing:.04em">股票 <span style="color:var(--ink)">强度指数</span> <span style="color:var(--accent)">AI 系统</span></div>
+      </div>
+
+      <!-- 两张老系统截图 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;width:100%;max-width:1080px;align-items:start">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+          <div style="background:#fff;border-radius:10px;padding:10px;border:1px solid var(--ink-2);box-shadow:0 6px 20px rgba(0,0,0,.10)">
+            <img src="images/old_system_1.png" loading="lazy" decoding="async" alt="老系统一 · 盟威软件快速开发平台 - 股票价格对比表" style="width:100%;height:auto;display:block;border-radius:4px">
+          </div>
+          <div style="display:inline-block;background:var(--ink);color:var(--paper);padding:6px 16px;border-radius:4px;font-size:13px;font-weight:700;letter-spacing:.05em">老系统 一</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+          <div style="background:#fff;border-radius:10px;padding:10px;border:1px solid var(--ink-2);box-shadow:0 6px 20px rgba(0,0,0,.10)">
+            <img src="images/old_system_2.png" loading="lazy" decoding="async" alt="老系统二 · 盟威软件快速开发平台 - 股票数据导入" style="width:100%;height:auto;display:block;border-radius:4px">
+          </div>
+          <div style="display:inline-block;background:var(--ink);color:var(--paper);padding:6px 16px;border-radius:4px;font-size:13px;font-weight:700;letter-spacing:.05em">老系统 二</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;align-items:flex-end">
+      <span class="t-meta">从老系统 → 股票强度指数 AI 系统</span>
+    </div>
+  </div>
+</section>
+
+  <!-- ========== 18 · AI 音乐 ========== -->
+<section class="slide theme-light" data-n="18">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">08 · AI Music</span>
+        <span class="t-meta">AI 音乐</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
+        <h1 class="h-statement" style="color:var(--ink);text-align:center;letter-spacing:.02em">AI 音乐</h1>
+        <div class="body" style="text-align:center;color:var(--ink-2)">Mureka · 小铃铛 Mac App</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 19 · 如何学习：输出式学习 ========== -->
+<section class="slide theme-light" data-n="19">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">How to Learn</span>
+        <span class="t-meta">学习方法</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%">
+        <div style="width:90%;max-width:1000px;margin:0 auto">
+          <img src="images/输出式学习.jpg" style="width:100%;height:auto;display:block;object-fit:contain;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.10);margin:0 auto" loading="lazy" decoding="async" alt="输出式学习 VS 输入式学习">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== 20 · 学徒制：学习什么 ========== -->
+<section class="slide theme-light" data-n="20">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">What to Learn</span>
+        <span class="t-meta">学徒制 · 学习什么</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%">
+        <div style="width:90%;max-width:1000px;margin:0 auto">
+          <img src="images/学习什么.jpg" style="width:100%;height:auto;display:block;object-fit:contain;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.10);margin:0 auto" loading="lazy" decoding="async" alt="学徒制学习什么：AI思维 + 阿拉丁神灯咒语">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+    <!-- ========== 21 · AI能力进化路径 ========== -->
+<section class="slide theme-light" data-n="21">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">AI Evolution Path</span>
+        <span class="t-meta">3个月进化路径</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%">
+        <div style="width:92%;max-width:1100px;margin:0 auto">
+          <img src="images/AI进化路径.jpg" style="width:100%;height:auto;display:block;object-fit:contain;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.10);margin:0 auto" loading="lazy" decoding="async" alt="3个月AI能力进化路径：从个人到公司">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== 22 · AI顿悟 ========== -->
+<section class="slide theme-light" data-n="22">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">AI Enlightenment</span>
+        <span class="t-meta">AI顿悟</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%">
+        <div style="width:92%;max-width:1100px;margin:0 auto">
+          <img src="images/AI顿悟.jpg" style="width:100%;height:auto;display:block;object-fit:contain;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.10);margin:0 auto" loading="lazy" decoding="async" alt="AI顿悟：突变式的觉醒">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== 23 · 线上课：AI 澳洲本地应用课 ========== -->
+  <section class="slide theme-light" data-n="23">
+    <div style="display:flex;flex-direction:column;padding:48px 56px 48px;min-height:100vh;gap:18px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">Course A · Online</span>
+        <span class="t-meta">线上班 · $599</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:36px;flex:1;align-content:start">
+        <div>
+          <div style="font-size:11px;letter-spacing:.2em;color:var(--accent);font-weight:700;margin-bottom:6px">CLASS A · ONLINE</div>
+          <h1 class="h-statement" style="color:var(--ink);line-height:1.08;font-size:min(4vw,6.4vh);margin:0 0 12px">AI 澳洲<br><span style="color:var(--accent)">本地应用课</span></h1>
+          <p class="body" style="color:var(--ink-2);font-size:min(1.2vw,2.1vh);line-height:1.55;margin:0 0 18px">面向澳洲本地生活、学习、工作和基础投资场景，把 AI 真正用到日常事务中。</p>
+          <div style="background:var(--ink);color:var(--paper);padding:16px 20px;border-radius:10px">
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px 18px">
+              <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:700">周期</div><div style="font-size:14px;margin-top:2px">3 个月 · 12 节课</div></div>
+              <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:700">时间</div><div style="font-size:14px;margin-top:2px">每周二晚 8:30–10:30</div></div>
+              <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:700">形式</div><div style="font-size:14px;margin-top:2px">线上直播</div></div>
+              <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:700">学费</div><div style="font-size:18px;font-weight:900;color:var(--accent);font-family:var(--mono);margin-top:2px">AUD $599</div></div>
+            </div>
+          </div>
+          <div style="margin-top:14px;font-size:11px;color:var(--ink-3);line-height:1.55;padding:10px 12px;border-left:2px solid var(--accent);background:var(--paper-2);border-radius:0 6px 6px 0">学员可以<strong>复训 1 次</strong>；<strong>免费带 3 人</strong>试听 1 节课</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin-bottom:4px">主要内容 · 8 节课</div>
+          <div style="font-size:13px;color:var(--ink);line-height:1.5;padding:8px 12px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 6px 6px 0"><strong>1 · 英文邮件处理</strong><br><span style="color:var(--ink-3);font-size:12px">学校·银行·保险·政府·中介·客户邮件</span></div>
+          <div style="font-size:13px;color:var(--ink);line-height:1.5;padding:8px 12px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 6px 6px 0"><strong>2 · 澳洲英文文件阅读</strong><br><span style="color:var(--ink-3);font-size:12px">整理重点·待办·待确认问题</span></div>
+          <div style="font-size:13px;color:var(--ink);line-height:1.5;padding:8px 12px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 6px 6px 0"><strong>3 · 澳洲房产基础应用</strong><br><span style="color:var(--ink-3);font-size:12px">suburb 查询·资料整理·中介信息</span></div>
+          <div style="font-size:13px;color:var(--ink);line-height:1.5;padding:8px 12px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 6px 6px 0"><strong>4 · 股票投资基础应用</strong><br><span style="color:var(--ink-3);font-size:12px">公司新闻·公告·财报摘要</span></div>
+          <div style="font-size:13px;color:var(--ink);line-height:1.5;padding:8px 12px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 6px 6px 0"><strong>5 · 孩子学习辅导</strong><br><span style="color:var(--ink-3);font-size:12px">英语·数学·写作·阅读·学习计划</span></div>
+          <div style="font-size:13px;color:var(--ink);line-height:1.5;padding:8px 12px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 6px 6px 0"><strong>6 · 效率提升</strong><br><span style="color:var(--ink-3);font-size:12px">客户沟通·会议纪要·日常工作流</span></div>
+          <div style="font-size:13px;color:var(--ink);line-height:1.5;padding:8px 12px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 6px 6px 0"><strong>7 · AI 内容创作</strong><br><span style="color:var(--ink-3);font-size:12px">图·音乐·视频·文案·短视频</span></div>
+          <div style="font-size:13px;color:var(--ink);line-height:1.5;padding:8px 12px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 6px 6px 0"><strong>8 · AI 工具安装使用</strong><br><span style="color:var(--ink-3);font-size:12px">终极武器·龙虾系统</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 24 · 线下课：AI 财富管理与投资应用 ========== -->
+  <section class="slide theme-light" data-n="24">
+    <div style="display:flex;flex-direction:column;padding:48px 56px 48px;min-height:100vh;gap:18px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">Course B · Offline</span>
+        <span class="t-meta">线下班 · $1,999</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:36px;flex:1;align-content:start">
+        <div>
+          <div style="font-size:11px;letter-spacing:.2em;color:var(--accent);font-weight:700;margin-bottom:6px">CLASS B · OFFLINE</div>
+          <h1 class="h-statement" style="color:var(--ink);line-height:1.08;font-size:min(3.6vw,5.8vh);margin:0 0 12px">AI 财富管理<br><span style="color:var(--accent)">与投资应用</span><br><span style="font-size:0.6em;color:var(--ink-3);font-weight:500">线下班</span></h1>
+          <p class="body" style="color:var(--ink-2);font-size:min(1.2vw,2.1vh);line-height:1.55;margin:0 0 18px">高阶线下课程，重点围绕个人财富管理、AI 房产分析、AI 股票投资研究、个人 CFO AI 系统和龙虾 AI 财富管理系统搭建。</p>
+          <div style="background:var(--ink);color:var(--paper);padding:16px 20px;border-radius:10px">
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px 18px">
+              <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:700">周期</div><div style="font-size:14px;margin-top:2px">3 个月 · 12 节课</div></div>
+              <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:700">时间</div><div style="font-size:14px;margin-top:2px">每周六 13:00–16:00</div></div>
+              <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:700">地点</div><div style="font-size:14px;margin-top:2px">北悉尼办公室</div></div>
+              <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:700">形式</div><div style="font-size:14px;margin-top:2px">仅线下，不直播</div></div>
+              <div style="grid-column:1/3"><div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:700">学费</div><div style="font-size:18px;font-weight:900;color:var(--accent);font-family:var(--mono);margin-top:2px">AUD $1,999 &nbsp;<span style="font-size:11px;color:rgba(250,250,247,.65);font-weight:500">（报名线下班赠送线上课）</span></div></div>
+            </div>
+          </div>
+          <div style="margin-top:14px;font-size:11px;color:var(--ink-3);line-height:1.55;padding:10px 12px;border-left:2px solid var(--accent);background:var(--paper-2);border-radius:0 6px 6px 0">不构成个性化投资建议；不承诺收益；不代客理财；不接受资金委托；不操作学员账户</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin-bottom:2px">主要内容 · 12 节课</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <div style="font-size:12px;color:var(--ink);line-height:1.4;padding:7px 10px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0"><strong>1 财富管理框架</strong></div>
+            <div style="font-size:12px;color:var(--ink);line-height:1.4;padding:7px 10px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0"><strong>2 个人 CFO AI</strong></div>
+            <div style="font-size:12px;color:var(--ink);line-height:1.4;padding:7px 10px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0"><strong>3 龙虾系统安装</strong></div>
+            <div style="font-size:12px;color:var(--ink);line-height:1.4;padding:7px 10px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0"><strong>4 龙虾财富管理</strong></div>
+            <div style="font-size:12px;color:var(--ink);line-height:1.4;padding:7px 10px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0"><strong>5 房产深度分析</strong></div>
+            <div style="font-size:12px;color:var(--ink);line-height:1.4;padding:7px 10px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0"><strong>6 合同文件阅读</strong></div>
+            <div style="font-size:12px;color:var(--ink);line-height:1.4;padding:7px 10px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0"><strong>7 投资决策表</strong></div>
+            <div style="font-size:12px;color:var(--ink);line-height:1.4;padding:7px 10px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0"><strong>8 股票研究系统</strong></div>
+            <div style="font-size:12px;color:var(--ink);line-height:1.4;padding:7px 10px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0"><strong>9 强度指数入门</strong></div>
+            <div style="font-size:12px;color:var(--ink);line-height:1.4;padding:7px 10px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0"><strong>10 投资复盘系统</strong></div>
+            <div style="font-size:12px;color:var(--ink);line-height:1.4;padding:7px 10px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0"><strong>11 资产配置风控</strong></div>
+            <div style="font-size:12px;color:var(--ink);line-height:1.4;padding:7px 10px;background:#fff;border:1px solid var(--ink-2);border-left:3px solid var(--accent);border-radius:0 5px 5px 0"><strong>12 长期使用流程</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- ========== 25 · 课程时间与费用 ========== -->
+<section class="slide theme-light" data-n="25">
+    <div style="display:flex;flex-direction:column;padding:36px 48px 32px;min-height:100vh;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">Course · Pricing</span>
+        <span class="t-meta">课程时间与费用</span>
+      </div>
+      <div style="text-align:center">
+        <h1 style="font-family:var(--sans);font-weight:800;color:var(--ink);font-size:min(3.6vw,5.6vh);line-height:1.12;margin:0 0 6px;letter-spacing:-.01em">学习课程：<br><span style="color:var(--accent)">3 个月 · 12 节课</span></h1>
+        <p class="body" style="text-align:center;color:var(--ink-2);max-width:780px;margin:0 auto;font-size:min(1vw,1.7vh)">线上班专注本地应用，线下班专注财富管理 + 投资。报名线下班赠送线上课。</p>
+      </div>
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1080px;margin:0 auto;flex:1;align-content:start">
+        <!-- 线上班 CLASS A -->
+        <div style="background:#fff;border-radius:14px;padding:20px 22px;border:2px solid var(--ink-2);box-shadow:0 6px 24px rgba(0,0,0,.06);position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:12px">
+          <div>
+            <div style="position:absolute;top:12px;right:12px;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:10px;letter-spacing:.15em;padding:4px 10px;border-radius:4px;font-weight:700">CLASS A</div>
+            <div style="font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:4px">Online</div>
+            <div style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-.01em;line-height:1.2;margin-bottom:10px">AI 澳洲<br><span style="color:var(--accent)">本地应用课</span></div>
+            <div style="background:var(--paper-2);border-radius:8px;padding:10px 12px;margin-bottom:10px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:12px;color:var(--ink)">
+                <div><span style="color:var(--ink-3);font-family:var(--mono);font-size:9px;letter-spacing:.1em">周期</span><div style="font-weight:700;margin-top:1px">3 个月 · 12 节</div></div>
+                <div><span style="color:var(--ink-3);font-family:var(--mono);font-size:9px;letter-spacing:.1em">时间</span><div style="font-weight:700;margin-top:1px">周二 20:30–22:30</div></div>
+                <div><span style="color:var(--ink-3);font-family:var(--mono);font-size:9px;letter-spacing:.1em">形式</span><div style="font-weight:700;margin-top:1px">线上直播</div></div>
+                <div><span style="color:var(--ink-3);font-family:var(--mono);font-size:9px;letter-spacing:.1em">核心</span><div style="font-weight:700;margin-top:1px">本地生活·工作</div></div>
+              </div>
+            </div>
+            <div style="font-size:12px;color:var(--ink-2);line-height:1.5;margin-bottom:10px">
+              <span style="font-weight:700;color:var(--ink)">主要内容：</span>英文邮件 · 英文文件 · 房产基础 · 股票基础 · 孩子辅导 · 效率提升 · AI 创作 · 工具安装
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;padding-top:8px;border-top:1px solid var(--ink-2)">
+              <div>
+                <div style="font-size:30px;font-weight:900;color:var(--accent);letter-spacing:-.03em;font-family:var(--mono);line-height:1">$599</div>
+                <div style="font-size:9px;color:var(--ink-3);font-family:var(--mono);margin-top:1px">AUD</div>
+              </div>
+              <div style="text-align:right;font-size:10px;color:var(--ink-3);line-height:1.4">复训 1 次<br>免费带 3 人试听</div>
+            </div>
+          </div>
+          <!-- CLASS A 群二维码（底部，对齐左侧） -->
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ink-2);display:flex;align-items:center;gap:12px">
+            <div style="width:80px;height:80px;background:#fff;padding:4px;border-radius:6px;border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <img src="images/qr_class_a_v4.png" loading="lazy" decoding="async" alt="CLASS A 报名二维码" style="width:72px;height:72px;object-fit:contain;display:block">
+            </div>
+            <div style="font-size:11px;color:var(--ink-2);line-height:1.4">
+              <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:2px">扫码报名 · CLASS A</div>
+              AI 澳洲本地应用课<br>用微信或企业微信扫码
+            </div>
+          </div>
+        </div>
+
+        <!-- 线下班 CLASS B -->
+        <div style="background:var(--ink);border-radius:14px;padding:20px 22px;box-shadow:0 8px 32px rgba(255,91,31,.22);position:relative;color:var(--paper);display:flex;flex-direction:column;justify-content:space-between;gap:12px">
+          <div>
+            <div style="position:absolute;top:12px;right:12px;background:var(--accent);color:var(--ink);font-family:var(--mono);font-size:10px;letter-spacing:.15em;padding:4px 10px;border-radius:4px;font-weight:700">CLASS B</div>
+            <div style="font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:4px">Offline</div>
+            <div style="font-size:20px;font-weight:800;color:var(--paper);letter-spacing:-.01em;line-height:1.2;margin-bottom:10px">AI 财富管理<br><span style="color:var(--accent)">与投资应用 · 线下班</span></div>
+            <div style="background:rgba(250,250,247,.06);border-radius:8px;padding:10px 12px;margin-bottom:10px;border:1px solid rgba(250,250,247,.12)">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:12px;color:var(--paper)">
+                <div><span style="color:rgba(250,250,247,.55);font-family:var(--mono);font-size:9px;letter-spacing:.1em">周期</span><div style="font-weight:700;margin-top:1px">3 个月 · 12 节</div></div>
+                <div><span style="color:rgba(250,250,247,.55);font-family:var(--mono);font-size:9px;letter-spacing:.1em">时间</span><div style="font-weight:700;margin-top:1px">周六 13:00–16:00</div></div>
+                <div><span style="color:rgba(250,250,247,.55);font-family:var(--mono);font-size:9px;letter-spacing:.1em">地点</span><div style="font-weight:700;margin-top:1px">北悉尼办公室</div></div>
+                <div><span style="color:rgba(250,250,247,.55);font-family:var(--mono);font-size:9px;letter-spacing:.1em">形式</span><div style="font-weight:700;margin-top:1px">仅线下</div></div>
+              </div>
+            </div>
+            <div style="font-size:12px;color:rgba(250,250,247,.85);line-height:1.5;margin-bottom:10px">
+              <span style="font-weight:700;color:var(--accent)">主要内容：</span>财富框架 · CFO AI · 龙虾系统 · 房产深度分析 · 合同阅读 · 投资决策表 · 股票研究 · 强度指数 · 复盘系统 · 资产配置
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;padding-top:8px;border-top:1px solid rgba(250,250,247,.15)">
+              <div>
+                <div style="font-size:30px;font-weight:900;color:var(--accent);letter-spacing:-.03em;font-family:var(--mono);line-height:1">$1,999</div>
+                <div style="font-size:9px;color:rgba(250,250,247,.55);font-family:var(--mono);margin-top:1px">AUD · 含线上课</div>
+              </div>
+              <div style="text-align:right;font-size:10px;color:rgba(250,250,247,.65);line-height:1.4">不构成投资建议<br>不代客理财</div>
+            </div>
+          </div>
+          <!-- CLASS B 群二维码（底部，对齐左侧） -->
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(250,250,247,.15);display:flex;align-items:center;gap:12px">
+            <div style="width:80px;height:80px;background:#fff;padding:4px;border-radius:6px;border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <img src="images/qr_class_b_v4.png" loading="lazy" decoding="async" alt="CLASS B 报名二维码" style="width:72px;height:72px;object-fit:contain;display:block">
+            </div>
+            <div style="font-size:11px;color:rgba(250,250,247,.85);line-height:1.4">
+              <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:2px">扫码报名 · CLASS B</div>
+              AI 财富管理·线下班<br>用微信或企业微信扫码
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- ========== 26 · 第二环节 ========== -->
+  <section class="slide theme-dark" data-n="26">
+    <div class="divider">
+      <div class="top">
+        <span>Snail AI · 2026</span>
+        <span>Chapter 02 · Michael Guo</span>
+      </div>
+      <div class="title-wrap">
+        <div class="num">02</div>
+        <div>
+          <div class="ttl">第二环节</div>
+        </div>
+      </div>
+      <div class="bot">
+        <span>Michael Guo · KSI Speaker</span>
+        <span>15 min</span>
+      </div>
+    </div>
+  </section>
+
+<!-- ========== 27 · Michael Guo 个人介绍 ========== -->
+<section class="slide theme-light" data-n="27">
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:0;min-height:100vh;padding:64px 80px 72px;align-items:center">
+      <!-- 左侧：个人照片 -->
+      <div style="display:flex;align-items:flex-start;justify-content:flex-end;padding-right:48px">
+        <div style="position:relative">
+          <img src="images/michael_guo.jpg" loading="lazy" decoding="async" alt="Michael Guo"
+               style="width:320px;height:auto;object-fit:cover;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.14);display:block">
+          <div style="position:absolute;bottom:-10px;left:-10px;width:100%;height:100%;border-radius:16px;border:2px solid var(--accent);z-index:-1;opacity:.35"></div>
+        </div>
+      </div>
+
+      <!-- 右侧：个人信息 -->
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:28px;padding-left:24px;max-width:560px">
+
+        <!-- 姓名 + 英文名 -->
+        <div>
+          <h1 style="font-family:var(--sans);font-weight:800;font-size:min(42px,5.5vh);line-height:1.08;letter-spacing:-.02em;color:var(--ink)">Michael Guo</h1>
+          <div style="margin-top:6px;font-family:var(--mono);font-size:13px;letter-spacing:.15em;color:var(--ink-3);text-transform:uppercase;font-weight:500">郭宇辰 / KSI Speaker</div>
+        </div>
+
+        <!-- 分隔线 -->
+        <div style="width:56px;height:3px;background:var(--accent);border-radius:2px"></div>
+
+        <!-- 卡片：职业身份 -->
+        <div style="background:#fff;border-radius:12px;padding:22px 28px;border:1px solid var(--ink-2);box-shadow:0 2px 12px rgba(0,0,0,.04)">
+          <div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink-3);text-transform:uppercase;margin-bottom:8px;font-weight:600">Professional</div>
+          <div style="font-size:19px;font-weight:700;color:var(--ink);line-height:1.4">KSI 悉尼土地投资<span style="color:var(--ink-3);font-weight:400;margin:0 4px">｜</span>客户总监</div>
+        </div>
+
+        <!-- 卡片：AI 标签 -->
+        <div style="background:linear-gradient(135deg,#fff9f5 0%,#fff 100%);border-radius:12px;padding:22px 28px;border-left:4px solid var(--accent)">
+          <div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin-bottom:10px;font-weight:600">AI Identity</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <span style="display:inline-block;background:var(--accent);color:#fff;font-size:13px;font-weight:600;padding:5px 14px;border-radius:20px;letter-spacing:.02em">AI 爱好者</span>
+            <span style="display:inline-block;background:var(--accent);color:#fff;font-size:13px;font-weight:600;padding:5px 14px;border-radius:20px;letter-spacing:.02em">AI 学习者</span>
+            <span style="display:inline-block;background:var(--accent);color:#fff;font-size:13px;font-weight:600;padding:5px 14px;border-radius:20px;letter-spacing:.02em">澳洲华人 AI 应用探索者</span>
+          </div>
+        </div>
+
+        <!-- 家庭角色 + 理念（合并展示） -->
+        <div style="background:var(--paper-2);border-radius:12px;padding:22px 28px;border:1px solid rgba(0,0,0,.06)">
+          <div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink-3);text-transform:uppercase;margin-bottom:10px;font-weight:600">Personal</div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span style="font-size:22px;line-height:1">👨‍👧‍👧</span>
+            <span style="font-size:17px;font-weight:700;color:var(--ink)">2 个女儿的奶爸</span>
+          </div>
+          <div style="font-size:14px;color:var(--ink-2);line-height:1.65;border-left:3px solid var(--accent);padding-left:14px">
+            相信陪伴、成长与教育，是最值得长期投资的事业
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  
+
+  <!-- ========== 28 · KSI 封面 ========== -->
+<section class="slide theme-dark" data-n="28">
+    <div style="display:grid;grid-template-rows:1fr auto;padding:64px 64px 96px;min-height:100vh;background:linear-gradient(160deg,#1a3a2a 0%,#2d5a3f 60%,#1a4a2a 100%)">
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px">
+        <div style="font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px">KSI Investments · 悉尼土地银行</div>
+        <h1 style="font-size:min(7vw,12vh);font-weight:800;color:#fff;text-align:center;letter-spacing:-.03em;line-height:.92">KSI 悉尼<br>土地投资</h1>
+        <p style="font-size:min(1.8vw,3vh);color:rgba(255,255,255,.7);text-align:center;max-width:640px;line-height:1.5">分享悉尼未来30年的财富增长机会</p>
+        <div style="display:flex;gap:40px;margin-top:32px;flex-wrap:wrap;justify-content:center">
+          <div style="text-align:center">
+            <div style="font-size:min(2.8vw,4.5vh);font-weight:800;color:#6bdf8a">10+年</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:4px">土地投资经验</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:min(2.8vw,4.5vh);font-weight:800;color:#6bdf8a">13个</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:4px">土地项目布局</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:min(2.8vw,4.5vh);font-weight:800;color:#6bdf8a">10倍+</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:4px">早期项目历史涨幅</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:min(2.8vw,4.5vh);font-weight:800;color:#6bdf8a">数百</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:4px">家庭参与投资</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.35)">
+        <span>Sydney Land Banking</span>
+        <span>一般信息，不构成金融建议；过往表现不代表未来回报</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== 29 · Bradfield 与西悉尼国际机场 ========== -->
+<section class="slide theme-light" data-n="29">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;padding:64px 64px 96px;min-height:100vh;align-items:center">
+      <div>
+        <div style="font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:16px">01 · Infrastructure</div>
+        <h1 style="font-size:min(4.5vw,7.5vh);font-weight:700;color:var(--ink);line-height:1.05;letter-spacing:-.02em">Bradfield<br><span style="color:#2d5a3f">与西悉尼<br>国际机场</span></h1>
+        <div style="margin-top:28px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:6px;height:6px;background:#2d5a3f;border-radius:50%;margin-top:7px;flex-shrink:0"></div>
+            <div style="font-size:min(1.3vw,2.2vh);color:var(--ink-2);line-height:1.5">百年新城 · 澳洲全新城市</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:6px;height:6px;background:#2d5a3f;border-radius:50%;margin-top:7px;flex-shrink:0"></div>
+            <div style="font-size:min(1.3vw,2.2vh);color:var(--ink-2);line-height:1.5">第三CBD · 2026 新机场正式运营</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:6px;height:6px;background:#2d5a3f;border-radius:50%;margin-top:7px;flex-shrink:0"></div>
+            <div style="font-size:min(1.3vw,2.2vh);color:var(--ink-2);line-height:1.5">悉尼未来增长极 · 人口与产业双驱动</div>
+          </div>
+        </div>
+        <div style="margin-top:32px;padding:16px 20px;background:#f0f4f0;border-radius:8px;border-left:4px solid #2d5a3f">
+          <div style="font-size:13px;color:var(--ink-2);line-height:1.6">核心逻辑：机场带动人口与产业，Bradfield 承接就业与城市功能，周边土地成为长期增长载体。</div>
+          <div style="font-size:11px;color:var(--ink-3);margin-top:8px">资料来源：NSW Government Bradfield City Centre；Western Sydney Airport</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="width:100%;aspect-ratio:4/3;background:#e8ece8;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.10)">
+          <img src="images/image2.png" style="width:100%;height:100%;object-fit:cover" alt="西悉尼国际机场效果图" loading="lazy" decoding="async">
+        </div>
+        <div style="width:100%;aspect-ratio:4/3;background:#e8ece8;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.10)">
+          <img src="images/image7.png" style="width:100%;height:100%;object-fit:cover" alt="Bradfield 核心规划图" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== 30 · 为什么选择 KSI ========== -->
+<section class="slide theme-light" data-n="30">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px">02 · Why KSI</div>
+          <h1 style="font-size:min(4.5vw,7.5vh);font-weight:700;color:var(--ink);line-height:1.05;letter-spacing:-.02em">为什么<br><span style="color:#2d5a3f">选择 KSI</span></h1>
+        </div>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">土地投资经验 · 项目筛选 · 团队实力</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:36px;align-content:start">
+        <div style="background:#f0f4f0;border-radius:12px;padding:32px 28px;border-left:4px solid #2d5a3f">
+          <div style="font-size:15px;font-weight:700;color:#2d5a3f;margin-bottom:12px">10+ 年专注悉尼土地投资</div>
+          <div style="font-size:14px;color:var(--ink-2);line-height:1.6">不是只看地图，更重要的是团队、经验和项目筛选能力。</div>
+        </div>
+        <div style="background:#f0f4f0;border-radius:12px;padding:32px 28px;border-left:4px solid #2d5a3f">
+          <div style="font-size:15px;font-weight:700;color:#2d5a3f;margin-bottom:12px">累计布局 13 个土地项目</div>
+          <div style="font-size:14px;color:var(--ink-2);line-height:1.6">Rossmore · Bradfield · 持续深耕，最早项目历史涨幅超过 10 倍。</div>
+        </div>
+        <div style="background:#f0f4f0;border-radius:12px;padding:32px 28px;border-left:4px solid #2d5a3f">
+          <div style="font-size:15px;font-weight:700;color:#2d5a3f;margin-bottom:12px">数百个家庭参与投资</div>
+          <div style="font-size:14px;color:var(--ink-2);line-height:1.6">上百个家庭通过 SMSF 参与土地投资，共同分享悉尼增长红利。</div>
+        </div>
+        <div style="background:#f0f4f0;border-radius:12px;padding:32px 28px;border-left:4px solid #2d5a3f">
+          <div style="font-size:15px;font-weight:700;color:#2d5a3f;margin-bottom:12px">一句话总结</div>
+          <div style="font-size:14px;color:var(--ink-2);line-height:1.6">买地不难，难的是持续选对区域、选对阶段、选对团队。</div>
+        </div>
+      </div>
+      <div style="margin-top:auto;padding-top:24px;font-size:11px;color:var(--ink-3);display:flex;justify-content:space-between">
+        <span>KSI 13号地项目资料 / Bradfield 核心规划图</span>
+        <span>一般信息，不构成金融建议</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== 31 · SMSF 财富升级方案 ========== -->
+<section class="slide theme-dark" data-n="31">
+    <div style="display:grid;grid-template-rows:auto 1fr auto;padding:64px 64px 96px;min-height:100vh;background:linear-gradient(160deg,#1a3a2a 0%,#2d5a3f 100%)">
+      <div>
+        <div style="font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px">03 · SMSF Strategy</div>
+        <h1 style="font-size:min(4.5vw,7.5vh);font-weight:700;color:#fff;line-height:1.05;letter-spacing:-.02em">SMSF<br><span style="color:#6bdf8a">财富升级方案</span></h1>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px">
+        <div style="display:flex;align-items:center;gap:0;width:100%;max-width:900px;justify-content:center;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 28px;background:rgba(255,255,255,.08);border-radius:12px;border:1px solid rgba(255,255,255,.12)">
+            <div style="font-size:28px">💰</div>
+            <div style="font-size:14px;font-weight:700;color:#fff">养老金</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.5)">Industrial Super</div>
+          </div>
+          <div style="font-size:24px;color:rgba(255,255,255,.4);padding:0 16px">→</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 28px;background:rgba(255,255,255,.08);border-radius:12px;border:1px solid rgba(255,255,255,.12)">
+            <div style="font-size:28px">🏠</div>
+            <div style="font-size:14px;font-weight:700;color:#fff">SMSF</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.5)">家庭共同管理</div>
+          </div>
+          <div style="font-size:24px;color:rgba(255,255,255,.4);padding:0 16px">→</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 28px;background:rgba(255,255,255,.08);border-radius:12px;border:1px solid rgba(255,255,255,.12)">
+            <div style="font-size:28px">🌏</div>
+            <div style="font-size:14px;font-weight:700;color:#fff">土地资产</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.5)">长期增长资产</div>
+          </div>
+          <div style="font-size:24px;color:rgba(255,255,255,.4);padding:0 16px">→</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 28px;background:rgba(255,255,255,.08);border-radius:12px;border:1px solid rgba(255,255,255,.12)">
+            <div style="font-size:28px">📈</div>
+            <div style="font-size:14px;font-weight:700;color:#fff">长期增长</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.5)">税务规划</div>
+          </div>
+          <div style="font-size:24px;color:rgba(255,255,255,.4);padding:0 16px">→</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 28px;background:rgba(107,223,138,.15);border-radius:12px;border:1px solid rgba(107,223,138,.3)">
+            <div style="font-size:28px">🎯</div>
+            <div style="font-size:14px;font-weight:700;color:#6bdf8a">退休财富</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.5)">下一代传承</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;width:100%;max-width:900px">
+          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:20px;text-align:center;border:1px solid rgba(255,255,255,.08)">
+            <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:8px">盘活养老金</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.5">不只是被动放在传统工业基金，家庭可主动配置长期资产</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:20px;text-align:center;border:1px solid rgba(255,255,255,.08)">
+            <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:8px">税务优势</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.5">养老金阶段税率较低，退休阶段可享受更优税务待遇</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:20px;text-align:center;border:1px solid rgba(255,255,255,.08)">
+            <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:8px">家庭共同投资</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.5">夫妻及成年子女可共同成立SMSF，形成家庭财富管理平台</div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,.3);display:flex;justify-content:space-between">
+        <span>SMSF相关安排需由持牌会计师、税务或财务顾问根据个人情况提供建议</span>
+        <span>KSI Investments</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== 32 · 当前投资机会 ========== -->
+<section class="slide theme-light" data-n="32">
+    <div style="display:grid;grid-template-rows:auto 1fr;padding:64px 64px 96px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px">04 · Opportunities</div>
+          <h1 style="font-size:min(4.5vw,7.5vh);font-weight:700;color:var(--ink);line-height:1.05;letter-spacing:-.02em">当前<br><span style="color:#2d5a3f">投资机会</span></h1>
+        </div>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">6号地 · 13号地 · 份额有限</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:36px;align-content:start">
+        <!-- 6号地 -->
+        <div style="background:linear-gradient(160deg,#f0f4f0 0%,#e4ece4 100%);border-radius:16px;padding:36px 32px;border:1px solid #d0dcd0;position:relative;overflow:hidden">
+          <div style="position:absolute;top:16px;right:20px;font-family:var(--mono);font-size:11px;color:#2d5a3f;font-weight:700;background:rgba(45,90,63,.08);padding:4px 12px;border-radius:20px">入门级</div>
+          <div style="font-size:13px;font-weight:700;color:#2d5a3f;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">6号地 · Rossmore</div>
+          <h2 style="font-size:min(2.8vw,4.5vh);font-weight:800;color:#1a3a2a;line-height:1.1;margin-bottom:16px">2万澳元<br>起投</h2>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:5px;height:5px;background:#2d5a3f;border-radius:50%;margin-top:7px;flex-shrink:0"></div>
+              <div style="font-size:13px;color:#2d5a3f;line-height:1.5">适合首次投资客户</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:5px;height:5px;background:#2d5a3f;border-radius:50%;margin-top:7px;flex-shrink:0"></div>
+              <div style="font-size:13px;color:#2d5a3f;line-height:1.5">适合SMSF小额资金配置</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:5px;height:5px;background:#2d5a3f;border-radius:50%;margin-top:7px;flex-shrink:0"></div>
+              <div style="font-size:13px;color:#2d5a3f;line-height:1.5">剩余份额有限</div>
+            </div>
+          </div>
+        </div>
+        <!-- 13号地 -->
+        <div style="background:linear-gradient(160deg,#1a3a2a 0%,#2d5a3f 100%);border-radius:16px;padding:36px 32px;border:1px solid #1a3a2a;position:relative;overflow:hidden">
+          <div style="position:absolute;top:16px;right:20px;font-family:var(--mono);font-size:11px;color:#6bdf8a;font-weight:700;background:rgba(107,223,138,.12);padding:4px 12px;border-radius:20px">SMSF首选</div>
+          <div style="font-size:13px;font-weight:700;color:#6bdf8a;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">13号地 · Bradfield</div>
+          <h2 style="font-size:min(2.8vw,4.5vh);font-weight:800;color:#fff;line-height:1.1;margin-bottom:16px">10万澳元<br>起投</h2>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:5px;height:5px;background:#6bdf8a;border-radius:50%;margin-top:7px;flex-shrink:0"></div>
+              <div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.5">适合家庭长期资产配置</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:5px;height:5px;background:#6bdf8a;border-radius:50%;margin-top:7px;flex-shrink:0"></div>
+              <div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.5">适合高净值客户</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:5px;height:5px;background:#6bdf8a;border-radius:50%;margin-top:7px;flex-shrink:0"></div>
+              <div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.5">份额即将满额</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:32px;padding:16px 24px;background:#fff3cd;border-radius:8px;border-left:4px solid #d4a24e;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div style="font-size:14px;font-weight:700;color:#7a4a00">本轮募集进入最后阶段 · 6号地与13号地剩余份额有限</div>
+        <div style="font-size:12px;color:#7a4a00">项目门槛与份额状态以最新认购文件和KSI确认为准</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 33 · 第三环节 ========== -->
+  <section class="slide theme-dark" data-n="33">
+    <div class="divider">
+      <div class="top">
+        <span>Snail AI · 2026</span>
+        <span>Chapter 03 · Interactive</span>
+      </div>
+      <div class="title-wrap">
+        <div class="num">03</div>
+        <div>
+          <div class="ttl">第三环节</div>
+        </div>
+      </div>
+      <div class="bot">
+        <span>互动 · 问答 · 交流</span>
+        <span>30 min</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 34 · 考试 ========== -->
+  <section class="slide theme-dark" data-n="34">
+    <div class="divider">
+      <div class="top">
+        <span>Snail AI · 2026</span>
+        <span>Chapter 04 · Exam</span>
+      </div>
+      <div class="title-wrap">
+        <div class="num">04</div>
+        <div>
+          <div class="ttl">考试</div>
+        </div>
+      </div>
+      <div class="bot">
+        <span>蜗牛AI · 课程结业</span>
+        <span>5 min</span>
+      </div>
+    </div>
+  </section>
+
+  
+
+<!-- ========== 35 · AI 澳洲应用互动环节 ========== -->
+  <section class="slide theme-light" data-n="35">
+    <div style="display:grid;grid-template-rows:auto 1fr auto;padding:48px 64px 64px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">05 · Interactive</span>
+        <span class="t-meta">互动环节</span>
+      </div>
+
+      <!-- 顶部 Email 醒目标语 -->
+      <div style="display:flex;justify-content:center;margin-bottom:8px">
+        <div style="background:linear-gradient(135deg,var(--accent) 0%,#ff8a5b 100%);color:#fff;padding:18px 36px;border-radius:14px;box-shadow:0 8px 28px rgba(255,91,31,.32);text-align:center;max-width:1080px">
+          <div style="font-size:min(3.4vw,5.6vh);font-weight:900;line-height:1.18;letter-spacing:.01em">把你的资料发给我的 Email：<span style="color:#fff;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px">robin12300@gmail.com</span></div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-content:center">
+        <!-- 左侧：用户填写 -->
+        <div style="text-align:center">
+          <div style="font-size:min(2.4vw,3.8vh);font-weight:800;color:var(--ink);line-height:1.15;margin-bottom:18px">你想把什么场景的任务<br>交给 <span style="color:var(--accent)">AI 自动完成</span></div>
+          <div style="font-size:14px;color:var(--ink-3);margin-bottom:20px">最好是「我的 AI 刚需」</div>
+          <div style="display:inline-block;background:#fff;border-radius:12px;padding:14px;border:2px solid var(--ink-2);box-shadow:0 4px 20px rgba(0,0,0,.08)">
+            <img src="images/qr_ai_need.png" loading="lazy" decoding="async" alt="扫码填写AI刚需" style="width:140px;height:140px;object-fit:cover;border-radius:4px">
+          </div>
+          <div style="font-size:13px;color:var(--accent);font-weight:600;margin-top:10px">📱 扫码填写「我的 AI 刚需」</div>
+        </div>
+        <!-- 右侧：团队服务说明 -->
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:24px">
+          <div>
+            <div style="font-size:min(2vw,3.2vh);font-weight:800;color:var(--ink);line-height:1.2;margin-bottom:14px">蜗牛 AI 团队<br><span style="color:var(--accent)">为你设计和尝试实现</span></div>
+            <div style="font-size:15px;color:var(--ink-2);line-height:1.7">
+              <div style="margin-bottom:10px;display:flex;gap:10px">
+                <span style="color:var(--accent);font-weight:700">▸</span>
+                <span>基于你提交的「AI 刚需」进行需求分析</span>
+              </div>
+              <div style="margin-bottom:10px;display:flex;gap:10px">
+                <span style="color:var(--accent);font-weight:700">▸</span>
+                <span>设计符合澳洲本地场景的 AI 解决方案</span>
+              </div>
+              <div style="margin-bottom:10px;display:flex;gap:10px">
+                <span style="color:var(--accent);font-weight:700">▸</span>
+                <span>现场或远程为你实现原型并演示效果</span>
+              </div>
+              <div style="display:flex;gap:10px">
+                <span style="color:var(--accent);font-weight:700">▸</span>
+                <span>提供后续配置支持与一对一培训</span>
+              </div>
+            </div>
+          </div>
+          <div style="background:linear-gradient(135deg,var(--ink) 0%,#1a1a1e 100%);border-radius:12px;padding:18px 22px;color:#fff">
+            <div style="font-size:13px;opacity:.7;margin-bottom:6px">💡 现场示范</div>
+            <div style="font-size:15px;font-weight:700;line-height:1.5">Robin AI 澳洲应用教练<br>现场用 AI 处理你的真实问题</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.7">
+        <span>蜗牛AI · 2026 / 06 / 20</span>
+        <span>互动环节 · Sydney</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 36 · 报名海报（最终版） ========== -->
+  <section class="slide theme-light" data-n="36">
+    <div style="display:grid;grid-template-rows:auto 1fr auto;padding:32px 32px 40px;min-height:100vh">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">报名海报 · Final</span>
+        <span class="t-meta">Enrollment</span>
+      </div>
+      <div style="display:grid;grid-template-columns:auto 1fr auto 1fr auto;gap:18px;align-items:center;width:100%;max-width:1280px;margin:0 auto">
+        <!-- 左侧二维码：Class A 线上班报名 -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+          <div style="background:#fff;padding:10px;border-radius:12px;border:2px solid var(--ink);box-shadow:0 6px 20px rgba(0,0,0,.12)">
+            <img src="images/qr_class_a_v4.png" loading="lazy" decoding="async" alt="Class A 线上班报名二维码" style="width:150px;height:150px;object-fit:contain;display:block">
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:13px;font-weight:700;color:var(--ink);margin-top:2px">CLASS A</div>
+            <div style="font-size:10px;color:var(--ink-3);margin-top:2px;font-family:var(--mono);letter-spacing:.06em">$599</div>
+          </div>
+        </div>
+
+        <!-- 中间左侧海报：线上班 -->
+        <div style="background:#fff;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.12);overflow:hidden;border:1px solid var(--ink-2)">
+          <img src="images/poster_class_a_final.png" loading="lazy" decoding="async" alt="线上课程报名海报" style="width:100%;height:auto;display:block">
+        </div>
+
+        <!-- 中间分隔 -->
+        <div style="width:1px;height:60%;background:var(--ink-2);opacity:.3"></div>
+
+        <!-- 中间右侧海报：线下班 -->
+        <div style="background:#fff;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.12);overflow:hidden;border:1px solid var(--ink-2)">
+          <img src="images/poster_class_b_final.png" loading="lazy" decoding="async" alt="金数据线下班报名海报" style="width:100%;height:auto;display:block">
+        </div>
+
+        <!-- 右侧二维码：Class B 线下班报名 -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+          <div style="background:#fff;padding:10px;border-radius:12px;border:2px solid var(--accent);box-shadow:0 6px 20px rgba(255,91,31,.18)">
+            <img src="images/qr_class_b_v4.png" loading="lazy" decoding="async" alt="Class B 线下班报名二维码" style="width:150px;height:150px;object-fit:contain;display:block">
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:13px;font-weight:700;color:var(--ink);margin-top:2px">CLASS B</div>
+            <div style="font-size:10px;color:var(--accent);margin-top:2px;font-family:var(--mono);letter-spacing:.06em;font-weight:700">$1,999</div>
+          </div>
+        </div>
+      </div>
+      <h1 class="h-md" style="color:var(--ink);text-align:center;margin-top:14px">第一期课程 <span style="color:var(--accent)">报名海报</span></h1>
+    </div>
+  </section>
+
+  <!-- ========== 37 · 课程时间与费用（同第25页） ========== -->
+<section class="slide theme-light" data-n="37">
+    <div style="display:flex;flex-direction:column;padding:36px 48px 32px;min-height:100vh;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="kicker">Course · Pricing</span>
+        <span class="t-meta">课程时间与费用</span>
+      </div>
+      <div style="text-align:center">
+        <h1 style="font-family:var(--sans);font-weight:800;color:var(--ink);font-size:min(3.6vw,5.6vh);line-height:1.12;margin:0 0 6px;letter-spacing:-.01em">学习课程：<br><span style="color:var(--accent)">3 个月 · 12 节课</span></h1>
+        <p class="body" style="text-align:center;color:var(--ink-2);max-width:780px;margin:0 auto;font-size:min(1vw,1.7vh)">线上班专注本地应用，线下班专注财富管理 + 投资。报名线下班赠送线上课。</p>
+      </div>
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1080px;margin:0 auto;flex:1;align-content:start">
+        <!-- 线上班 CLASS A -->
+        <div style="background:#fff;border-radius:14px;padding:20px 22px;border:2px solid var(--ink-2);box-shadow:0 6px 24px rgba(0,0,0,.06);position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:12px">
+          <div>
+            <div style="position:absolute;top:12px;right:12px;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:10px;letter-spacing:.15em;padding:4px 10px;border-radius:4px;font-weight:700">CLASS A</div>
+            <div style="font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:4px">Online</div>
+            <div style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-.01em;line-height:1.2;margin-bottom:10px">AI 澳洲<br><span style="color:var(--accent)">本地应用课</span></div>
+            <div style="background:var(--paper-2);border-radius:8px;padding:10px 12px;margin-bottom:10px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:12px;color:var(--ink)">
+                <div><span style="color:var(--ink-3);font-family:var(--mono);font-size:9px;letter-spacing:.1em">周期</span><div style="font-weight:700;margin-top:1px">3 个月 · 12 节</div></div>
+                <div><span style="color:var(--ink-3);font-family:var(--mono);font-size:9px;letter-spacing:.1em">时间</span><div style="font-weight:700;margin-top:1px">周二 20:30–22:30</div></div>
+                <div><span style="color:var(--ink-3);font-family:var(--mono);font-size:9px;letter-spacing:.1em">形式</span><div style="font-weight:700;margin-top:1px">线上直播</div></div>
+                <div><span style="color:var(--ink-3);font-family:var(--mono);font-size:9px;letter-spacing:.1em">核心</span><div style="font-weight:700;margin-top:1px">本地生活·工作</div></div>
+              </div>
+            </div>
+            <div style="font-size:12px;color:var(--ink-2);line-height:1.5;margin-bottom:10px">
+              <span style="font-weight:700;color:var(--ink)">主要内容：</span>英文邮件 · 英文文件 · 房产基础 · 股票基础 · 孩子辅导 · 效率提升 · AI 创作 · 工具安装
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;padding-top:8px;border-top:1px solid var(--ink-2)">
+              <div>
+                <div style="font-size:30px;font-weight:900;color:var(--accent);letter-spacing:-.03em;font-family:var(--mono);line-height:1">$599</div>
+                <div style="font-size:9px;color:var(--ink-3);font-family:var(--mono);margin-top:1px">AUD</div>
+              </div>
+              <div style="text-align:right;font-size:10px;color:var(--ink-3);line-height:1.4">复训 1 次<br>免费带 3 人试听</div>
+            </div>
+          </div>
+          <!-- CLASS A 群二维码（底部，对齐左侧） -->
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ink-2);display:flex;align-items:center;gap:12px">
+            <div style="width:80px;height:80px;background:#fff;padding:4px;border-radius:6px;border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <img src="images/qr_class_a_v4.png" loading="lazy" decoding="async" alt="CLASS A 报名二维码" style="width:72px;height:72px;object-fit:contain;display:block">
+            </div>
+            <div style="font-size:11px;color:var(--ink-2);line-height:1.4">
+              <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:2px">扫码报名 · CLASS A</div>
+              AI 澳洲本地应用课<br>用微信或企业微信扫码
+            </div>
+          </div>
+        </div>
+
+        <!-- 线下班 CLASS B -->
+        <div style="background:var(--ink);border-radius:14px;padding:20px 22px;box-shadow:0 8px 32px rgba(255,91,31,.22);position:relative;color:var(--paper);display:flex;flex-direction:column;justify-content:space-between;gap:12px">
+          <div>
+            <div style="position:absolute;top:12px;right:12px;background:var(--accent);color:var(--ink);font-family:var(--mono);font-size:10px;letter-spacing:.15em;padding:4px 10px;border-radius:4px;font-weight:700">CLASS B</div>
+            <div style="font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:4px">Offline</div>
+            <div style="font-size:20px;font-weight:800;color:var(--paper);letter-spacing:-.01em;line-height:1.2;margin-bottom:10px">AI 财富管理<br><span style="color:var(--accent)">与投资应用 · 线下班</span></div>
+            <div style="background:rgba(250,250,247,.06);border-radius:8px;padding:10px 12px;margin-bottom:10px;border:1px solid rgba(250,250,247,.12)">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:12px;color:var(--paper)">
+                <div><span style="color:rgba(250,250,247,.55);font-family:var(--mono);font-size:9px;letter-spacing:.1em">周期</span><div style="font-weight:700;margin-top:1px">3 个月 · 12 节</div></div>
+                <div><span style="color:rgba(250,250,247,.55);font-family:var(--mono);font-size:9px;letter-spacing:.1em">时间</span><div style="font-weight:700;margin-top:1px">周六 13:00–16:00</div></div>
+                <div><span style="color:rgba(250,250,247,.55);font-family:var(--mono);font-size:9px;letter-spacing:.1em">地点</span><div style="font-weight:700;margin-top:1px">北悉尼办公室</div></div>
+                <div><span style="color:rgba(250,250,247,.55);font-family:var(--mono);font-size:9px;letter-spacing:.1em">形式</span><div style="font-weight:700;margin-top:1px">仅线下</div></div>
+              </div>
+            </div>
+            <div style="font-size:12px;color:rgba(250,250,247,.85);line-height:1.5;margin-bottom:10px">
+              <span style="font-weight:700;color:var(--accent)">主要内容：</span>财富框架 · CFO AI · 龙虾系统 · 房产深度分析 · 合同阅读 · 投资决策表 · 股票研究 · 强度指数 · 复盘系统 · 资产配置
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;padding-top:8px;border-top:1px solid rgba(250,250,247,.15)">
+              <div>
+                <div style="font-size:30px;font-weight:900;color:var(--accent);letter-spacing:-.03em;font-family:var(--mono);line-height:1">$1,999</div>
+                <div style="font-size:9px;color:rgba(250,250,247,.55);font-family:var(--mono);margin-top:1px">AUD · 含线上课</div>
+              </div>
+              <div style="text-align:right;font-size:10px;color:rgba(250,250,247,.65);line-height:1.4">不构成投资建议<br>不代客理财</div>
+            </div>
+          </div>
+          <!-- CLASS B 群二维码（底部，对齐左侧） -->
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(250,250,247,.15);display:flex;align-items:center;gap:12px">
+            <div style="width:80px;height:80px;background:#fff;padding:4px;border-radius:6px;border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <img src="images/qr_class_b_v4.png" loading="lazy" decoding="async" alt="CLASS B 报名二维码" style="width:72px;height:72px;object-fit:contain;display:block">
+            </div>
+            <div style="font-size:11px;color:rgba(250,250,247,.85);line-height:1.4">
+              <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:2px">扫码报名 · CLASS B</div>
+              AI 财富管理·线下班<br>用微信或企业微信扫码
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- ========== 35 · 考试（重复页-末尾）-待删除 ========== -->
+
+</div>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蜗牛 AI · 助教天地（手机版）</title>
+<meta name="description" content="蜗牛 AI 助教天地：教学资料库与学员通讯录，供助教查询与维护。">
+<link rel="icon" type="image/png" href="/assets/snailai_logo.png">
+<style>
+  :root {
+    --ink: #1A1A2E;
+    --ink-2: #2A2A40;
+    --ink-3: #6A6A85;
+    --paper: #FCFCFA;
+    --paper-2: #F5F4EE;
+    --paper-3: #E8E7E0;
+    --accent: #FF5B1F;
+    --accent-2: #E84A0F;
+    --accent-light: rgba(255,91,31,0.08);
+    --accent-warm: #FFF5EE;
+    --gold: #D4A547;
+    --line: rgba(26,26,46,0.08);
+    --shadow-sm: 0 1px 3px rgba(26,26,46,0.04), 0 2px 8px rgba(26,26,46,0.04);
+    --shadow-md: 0 4px 16px rgba(26,26,46,0.08);
+    --shadow-lg: 0 12px 36px rgba(26,26,46,0.12);
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+    --sans: 'Inter','Helvetica Neue','Helvetica','Arial','PingFang SC','Microsoft YaHei UI','Noto Sans SC',sans-serif;
+    --mono: 'JetBrains Mono','SF Mono','Menlo','Consolas',monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ===== Nav (mobile: logo + lang only) ===== */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 20px;
+    background: linear-gradient(180deg, rgba(252,252,250,.96) 0%, rgba(252,252,250,.85) 100%);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .nav-logo img { height: 30px; width: auto; }
+  .nav-logo span { font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
+  .lang-switch { display: inline-flex; gap: 4px; border: 1px solid var(--line); border-radius: 100px; padding: 3px; }
+  .lang-btn { border: none; background: transparent; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--ink-3); padding: 4px 10px; border-radius: 100px; transition: all .2s; }
+  .lang-btn.active { background: var(--ink); color: #fff; }
+
+  /* ===== Login Gate ===== */
+  .login-gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 90px 18px 40px; }
+  .login-card {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-xl);
+    padding: 40px 26px; max-width: 400px; width: 100%; box-shadow: var(--shadow-md); text-align: center;
+  }
+  .login-icon { font-size: 48px; }
+  .login-card h1 { font-size: 22px; margin: 12px 0 6px; letter-spacing: -0.01em; }
+  .login-card > p { color: var(--ink-3); font-size: 14px; margin-bottom: 24px; }
+  .login-card input {
+    width: 100%; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-md);
+    font-size: 16px; margin-bottom: 12px; font-family: var(--sans); background: var(--paper); color: var(--ink);
+  }
+  .login-card input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+  .login-card button {
+    width: 100%; padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: var(--r-md);
+    font-size: 16px; font-weight: 700; cursor: pointer; transition: background .2s;
+  }
+  .login-card button:hover { background: var(--accent-2); }
+  .login-hint { font-size: 13px; min-height: 18px; margin-top: 10px; color: var(--accent); }
+  .login-default { font-size: 12px; color: var(--ink-3); margin-top: 16px; }
+
+  /* ===== Teacher World ===== */
+  .teacher-world { max-width: 560px; margin: 0 auto; padding: 90px 18px 60px; }
+  .tw-head { text-align: center; margin-bottom: 36px; }
+  .tw-head .tw-badge { display: inline-block; background: var(--accent-light); color: var(--accent); font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 100px; margin-bottom: 14px; }
+  .tw-head h1 { font-size: 30px; letter-spacing: -0.02em; }
+  .tw-head p { color: var(--ink-3); margin-top: 8px; font-size: 14px; }
+  .tw-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  .tw-card {
+    display: block; text-decoration: none; color: var(--ink); background: var(--paper);
+    border: 1px solid var(--line); border-radius: var(--r-lg); padding: 26px 22px; transition: all .25s; box-shadow: var(--shadow-sm);
+  }
+  .tw-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .tw-icon { font-size: 38px; margin-bottom: 12px; }
+  .tw-card h3 { font-size: 19px; margin-bottom: 6px; }
+  .tw-card p { color: var(--ink-3); font-size: 13px; }
+
+  /* ===== Legend (AI 能力清单 项目说明) ===== */
+  .tw-legend { margin-top: 28px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 22px 20px; box-shadow: var(--shadow-sm); }
+  .tw-legend .lg-head { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .tw-legend .lg-head .lg-ico { font-size: 18px; }
+  .tw-legend .lg-head h2 { font-size: 16px; letter-spacing: -0.01em; }
+  .tw-legend .lg-head .lg-sub { font-size: 11px; color: var(--ink-3); font-weight: 500; margin-left: auto; text-align: right; }
+  .tw-legend ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 11px; }
+  .tw-legend li { display: flex; gap: 12px; align-items: flex-start; font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+  .tw-legend li .badge {
+    flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-weight: 700; font-size: 13px;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(255,91,31,.25);
+  }
+  .tw-legend li .lg-text { padding-top: 2px; }
+  .tw-legend .lg-note { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); font-size: 12px; color: var(--ink-3); line-height: 1.6; }
+  .tw-go { display: inline-block; margin-top: 14px; color: var(--accent); font-weight: 700; font-size: 14px; }
+  .tw-placeholder {
+    display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+    border: 1px dashed var(--line); background: var(--paper-2);
+  }
+  .tw-placeholder h3 { color: var(--ink-3); }
+  .tw-placeholder p { color: var(--ink-3); }
+
+  /* ===== Footer ===== */
+  .footer { text-align: center; padding: 36px 20px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
+  .footer img { height: 26px; margin-bottom: 10px; }
+  .footer .links { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin: 12px 0; }
+  .footer .links a { color: var(--ink-3); text-decoration: none; font-size: 13px; }
+  .footer .links a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo">
+    <span data-zh="蜗牛 AI" data-en="Snail AI">蜗牛 AI</span>
+  </a>
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+</nav>
+
+<!-- ===== Login Gate ===== -->
+<section class="login-gate" id="loginGate">
+  <div class="login-card">
+    <div class="login-icon">🦞</div>
+    <h1 data-zh="助教登录" data-en="Teacher Login">助教登录</h1>
+    <p data-zh="请输入助教口令，进入助教天地" data-en="Enter the teacher passcode to enter the Teacher Hub">请输入助教口令，进入助教天地</p>
+    <input type="password" id="passInput" data-zh-ph="请输入口令" data-en-ph="Enter passcode" placeholder="请输入口令">
+    <button id="loginBtn" data-zh="进入助教天地" data-en="Enter Hub">进入助教天地</button>
+    <p class="login-hint" id="loginHint"></p>
+  </div>
+</section>
+
+<!-- ===== Teacher World (hidden until login) ===== -->
+<section class="teacher-world" id="teacherWorld" style="display:none">
+  <div class="tw-head">
+    <span class="tw-badge" data-zh="助教专属" data-en="Teacher Only">助教专属</span>
+    <h1 data-zh="助教天地" data-en="Teacher Hub">助教天地</h1>
+    <p data-zh="教学资料与学员通讯录，一站直达" data-en="Teaching materials & student contacts, all in one place">教学资料与学员通讯录，一站直达</p>
+  </div>
+  <div class="tw-grid">
+    <a class="tw-card" href="https://docs.qq.com/smartsheet/DRUFGbHRMVHJtamhs?_t=1783498468065&nlc=1&tab=t00i2h&viewId=v2JKhc" target="_blank" rel="noopener">
+      <div class="tw-icon">📇</div>
+      <h3 data-zh="蜗牛AI通讯录" data-en="SnailAI Contacts">蜗牛AI通讯录</h3>
+      <p data-zh="腾讯文档智能表格 · 可查询、修改、填写" data-en="Tencent Docs smart sheet · query, edit, fill">腾讯文档智能表格 · 可查询、修改、填写</p>
+      <span class="tw-go" data-zh="打开智能表格 →" data-en="Open sheet →">打开智能表格 →</span>
+    </a>
+    <a class="tw-card" href="/AI%20能力清单/" target="_blank" rel="noopener">
+      <div class="tw-icon">📋</div>
+      <h3 data-zh="AI 能力清单" data-en="AI Skill Checklist">AI 能力清单</h3>
+      <p data-zh="蜗牛AI 云端数据库 · 学员自查 / 助教审核 / 讲师审核" data-en="SnailAI cloud DB · self-check / TA review / instructor review">蜗牛AI 云端数据库 · 学员自查 / 助教审核 / 讲师审核</p>
+      <span class="tw-go" data-zh="打开能力清单 →" data-en="Open checklist →">打开能力清单 →</span>
+    </a>
+    <div class="tw-card tw-placeholder">
+      <div class="tw-icon">📚</div>
+      <h3 data-zh="教学资料库" data-en="Teaching Library">教学资料库</h3>
+      <p data-zh="待补充链接（联系 Robin 添加）" data-en="Link pending (ask Robin to add)">待补充链接（联系 Robin 添加）</p>
+    </div>
+  </div>
+
+  <div class="tw-legend">
+    <div class="lg-head">
+      <span class="lg-ico">📋</span>
+      <h2 data-zh="AI 能力清单 · 项目说明" data-en="AI Skill Checklist · Key">AI 能力清单 · 项目说明</h2>
+      <span class="lg-sub" data-zh="列头 ①~⑨ 对应如下" data-en="Cols ①~⑨:">列头 ①~⑨ 对应如下</span>
+    </div>
+    <ol>
+      <li><span class="badge">①</span><span class="lg-text">前往腾讯云下载 WorkBuddy 客户端</span></li>
+      <li><span class="badge">②</span><span class="lg-text">使用微信账号登录并完成激活</span></li>
+      <li><span class="badge">③</span><span class="lg-text">确认能正常对话，安装技能，并且调用技能和专家进行简单对话，例如怎么使用你？</span></li>
+      <li><span class="badge">④</span><span class="lg-text">参加 WorkBuddy 成长计划，赢取越多越好积分（赢积分的同时熟悉功能）</span></li>
+      <li><span class="badge">⑤</span><span class="lg-text">给龙虾介绍做自我介绍：姓名，性别，年龄，职业，兴趣爱好，以及做事风格等</span></li>
+      <li><span class="badge">⑥</span><span class="lg-text">龙虾助理设置：企业微信和微信都要设置好</span></li>
+      <li><span class="badge">⑦</span><span class="lg-text">在电脑里面创建一个文件夹，起名《龙虾文件夹》</span></li>
+      <li><span class="badge">⑧</span><span class="lg-text">安装微信输入法：手机和电脑同时安装，然后设置右边 Shift 按键为 AI 录音转文字</span></li>
+      <li><span class="badge">⑨</span><span class="lg-text">调试电脑 Zoom 语音和共享成功使用，方便直播课堂分享</span></li>
+    </ol>
+    <p class="lg-note" data-zh="每列可分别勾选 学员自查 / 助教审核 / 讲师审核（绿、蓝、橙三色标签）。" data-en="Each column can be checked for self-check / TA review / instructor review (green, blue, orange tags).">每列可分别勾选 学员自查 / 助教审核 / 讲师审核（绿、蓝、橙三色标签）。</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo">
+  <p data-zh="© 2026 蜗牛 AI · 澳洲华人AI 应用教育学院" data-en="© 2026 Snail AI · Australian Chinese AI Education Institute">© 2026 蜗牛 AI · 澳洲华人AI 应用教育学院</p>
+  <div class="links">
+    <a href="/online-course/" data-zh="线上课" data-en="Online">线上课</a>
+    <a href="/offline-course/" data-zh="线下课" data-en="Offline">线下课</a>
+    <a href="/faq/" data-zh="FAQ" data-en="FAQ">FAQ</a>
+    <a href="/qa/" data-zh="蜗牛问答" data-en="Q&A">蜗牛问答</a>
+  </div>
+</footer>
+
+<script>
+  // ===== Language switcher =====
+  const LANG_KEY = 'snailai-lang';
+  function applyLang(lang) {
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
+    });
+    document.querySelectorAll('[data-zh-ph]').forEach(el => {
+      el.placeholder = el.getAttribute('data-' + lang + '-ph') || el.getAttribute('data-zh-ph');
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+  });
+  let savedLang = 'zh';
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {}
+  applyLang(savedLang);
+
+  // ===== Teacher login gate =====
+  const PASSWORD = 'snailai2026';
+  const gate = document.getElementById('loginGate');
+  const world = document.getElementById('teacherWorld');
+  const input = document.getElementById('passInput');
+  const btn = document.getElementById('loginBtn');
+  const hint = document.getElementById('loginHint');
+
+  function tryLogin() {
+    if (input.value === PASSWORD) {
+      gate.style.display = 'none';
+      world.style.display = 'block';
+      try { sessionStorage.setItem('ta-auth', '1'); } catch(e) {}
+    } else {
+      hint.textContent = (document.documentElement.lang === 'zh') ? '口令错误，请重试' : 'Incorrect passcode';
+      input.value = '';
+      input.focus();
+    }
+  }
+  btn.addEventListener('click', tryLogin);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+  try {
+    if (sessionStorage.getItem('ta-auth') === '1') {
+      gate.style.display = 'none';
+      world.style.display = 'block';
+    }
+  } catch(e) {}
+</script>
+
+</body>
+</html>

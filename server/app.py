@@ -31,7 +31,10 @@ from flask import Flask, request, jsonify, send_from_directory
 
 BASE = Path(__file__).resolve().parent.parent          # 官网学生登录/
 SERVER_DIR = Path(__file__).resolve().parent           # 官网学生登录/server/
-DB_PATH = SERVER_DIR / "snailai.db"
+# 数据库路径：Render 上挂 Persistent Disk 时设 DB_PATH=/data/snailai.db，
+# 本地开发默认放在 server/ 目录下。确保父目录存在。
+DB_PATH = Path(os.environ.get("DB_PATH", str(SERVER_DIR / "snailai.db")))
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 PORT = int(os.environ.get("PORT", "5000"))
 HOST = os.environ.get("HOST", "0.0.0.0")
 # 允许跨域的来源（GitHub Pages 主站等）。生产可改为你的域名。
@@ -383,19 +386,26 @@ def api_put_check(username, cap_id):
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve(path):
+    # 根路径 -> 官网首页（已合并为 repo 根 index.html）
     if not path:
-        return send_from_directory(BASE, "login.html")
+        return send_from_directory(BASE, "index.html")
     target = (BASE / path).resolve()
     # 防目录穿越
-    if BASE in target.parents or target == BASE:
-        if target.is_dir():
-            idx = target / "index.html"
-            if idx.is_file():
-                return send_from_directory(BASE, path.rstrip("/") + "/index.html")
-        elif target.is_file():
-            return send_from_directory(BASE, path)
-    # SPA 回退到登录页
-    return send_from_directory(BASE, "login.html")
+    if BASE not in target.parents and target != BASE:
+        return send_from_directory(BASE, "index.html")
+    # 目录 -> index.html
+    if target.is_dir():
+        idx = target / "index.html"
+        if idx.is_file():
+            return send_from_directory(BASE, path.rstrip("/") + "/index.html")
+        return send_from_directory(BASE, "404.html"), 404
+    # 无扩展名链接自动补 .html（兼容 GitHub Pages 风格，如 /faq/mobile）
+    if not target.exists() and target.with_suffix(".html").is_file():
+        return send_from_directory(BASE, path + ".html")
+    if target.is_file():
+        return send_from_directory(BASE, path)
+    # 404
+    return send_from_directory(BASE, "404.html"), 404
 
 
 # 模块加载时即初始化数据库：gunicorn 以模块方式导入时也会执行，

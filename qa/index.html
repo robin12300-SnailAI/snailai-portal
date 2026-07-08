@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>蜗牛AI · 蜗牛问答</title>
+<meta name="description" content="蜗牛问答 — 蜗牛 AI 学员专属问答看板。学生提问，老师回答，同学互助评论。" />
+<style>
+  :root {
+    --ink: #1A1A2E;
+    --ink-2: #2A2A40;
+    --ink-3: #6A6A85;
+    --paper: #FCFCFA;
+    --paper-2: #F5F4EE;
+    --accent: #FF5B1F;
+    --accent-2: #E84A0F;
+    --accent-light: rgba(255,91,31,0.08);
+    --accent-warm: #FFF5EE;
+    --line: rgba(26,26,46,0.08);
+    --shadow-sm: 0 1px 3px rgba(26,26,46,0.04), 0 2px 8px rgba(26,26,46,0.04);
+    --shadow-md: 0 4px 16px rgba(26,26,46,0.08);
+    --r-md: 10px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+    --maxw: 1080px;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ===== NAV ===== */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+    background: rgba(252,252,250,0.85);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; }
+  .nav-logo img { height: 34px; width: auto; }
+  .nav-links { display: flex; align-items: center; gap: 22px; }
+  .nav-links a { font-size: 14px; font-weight: 600; color: var(--ink-3); transition: color .2s ease; }
+  .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+  .lang-switch { display: flex; gap: 4px; border: 1px solid var(--line); border-radius: 100px; padding: 3px; }
+  .lang-btn { border: none; background: transparent; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--ink-3); padding: 5px 10px; border-radius: 100px; transition: all .2s ease; }
+  .lang-btn.active { background: var(--ink); color: white; }
+
+  /* ===== HERO ===== */
+  .qa-hero { max-width: var(--maxw); margin: 0 auto; padding: 64px 24px 32px; text-align: center; }
+  .qa-tag {
+    display: inline-block; font-size: 13px; font-weight: 700; color: var(--accent);
+    background: var(--accent-light); padding: 6px 14px; border-radius: 100px; margin-bottom: 20px;
+  }
+  .qa-hero h1 { font-size: 2.4rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
+  .qa-hero h1 .accent { color: var(--accent); }
+  .qa-hero p { max-width: 620px; margin: 18px auto 0; color: var(--ink-3); font-size: 1.05rem; }
+
+  /* ===== GUIDELINES CARD ===== */
+  .guidelines {
+    max-width: 760px; margin: 8px auto 0; padding: 22px 26px;
+    background: white; border: 1px solid var(--line); border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
+  }
+  .guidelines h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .guidelines ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .guidelines li { display: flex; gap: 10px; font-size: 0.94rem; color: var(--ink-2); }
+  .guidelines li .dot { color: var(--accent); font-weight: 800; flex-shrink: 0; }
+
+  /* ===== BOARD ===== */
+  .board { max-width: 860px; margin: 36px auto 0; padding: 0 24px 80px; }
+  .board-label { font-size: 13px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+  .giscus-wrap {
+    background: white; border: 1px solid var(--line); border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm); padding: 8px; overflow: hidden;
+  }
+  .giscus-note { font-size: 0.85rem; color: var(--ink-3); text-align: center; padding: 30px 16px; }
+  .giscus-note code { background: var(--paper-2); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; }
+
+  /* ===== FOOTER ===== */
+  .footer { text-align: center; padding: 40px 24px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 0.85rem; }
+  .footer a { color: var(--accent); font-weight: 600; margin: 0 8px; }
+  .footer img { height: 30px; margin-bottom: 14px; }
+
+  @media (max-width: 768px) {
+    .qa-hero { padding: 40px 18px 20px; }
+    .qa-hero h1 { font-size: 1.7rem; }
+    .nav-links { gap: 14px; }
+    .nav-links a { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo">
+    <span>蜗牛 AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="/#team">团队</a>
+    <a href="/#services">服务</a>
+    <a href="/#schedule">课程表</a>
+    <a href="/#videos">视频</a>
+    <a href="/faq/">FAQ</a>
+    <a href="/#all-links">链接大全</a>
+    <a href="/qa/" class="active">蜗牛问答</a>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </div>
+</nav>
+
+<header class="qa-hero">
+  <span class="qa-tag">💬 学员专属问答看板</span>
+  <h1>蜗牛<span class="accent">问答</span></h1>
+  <p data-zh="学生提问，老师回答，同学互助评论。把学习路上的每一个卡点，变成大家一起进步的机会。" data-en="Students ask, teachers answer, peers comment. Turn every learning hurdle into shared progress.">学生提问，老师回答，同学互助评论。把学习路上的每一个卡点，变成大家一起进步的机会。</p>
+</header>
+
+<section class="guidelines">
+  <h3>📌 使用公约</h3>
+  <ul>
+    <li><span class="dot">·</span><span data-zh="提问前先搜索，避免重复问题" data-en="Search before posting to avoid duplicates">提问前先搜索，避免重复问题</span></li>
+    <li><span class="dot">·</span><span data-zh="描述清楚：你做了什么、卡在哪、想要什么结果" data-en="Be specific: what you did, where you're stuck, what you want">描述清楚：你做了什么、卡在哪、想要什么结果</span></li>
+    <li><span class="dot">·</span><span data-zh="友善讨论，互相帮助，禁止广告与攻击" data-en="Be kind, help each other, no ads or attacks">友善讨论，互相帮助，禁止广告与攻击</span></li>
+  </ul>
+</section>
+
+<section class="board">
+  <div class="board-label" data-zh="问答区" data-en="Q&A Board">问答区</div>
+  <div class="giscus-wrap">
+    <!-- Giscus 评论区：启用步骤见部署说明。repo-id / category-id 为占位符，需在 giscus.app 安装后替换 -->
+    <div class="giscus-note" id="giscus-loading">
+      评论区加载中… 若长时间不显示，请确认仓库已开启 <code>Discussions</code> 并已安装 Giscus App。
+    </div>
+    <script src="https://giscus.app/client.js"
+            data-repo="robin12300-SnailAI/robin12300-SnailAI.github.io"
+            data-repo-id="R_kgDOTOPGsQ"
+            data-category="Q&A"
+            data-category-id="DIC_kwDOTOPGsc4DAqHJ"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="top"
+            data-theme="light"
+            data-lang="zh-CN"
+            data-loading="lazy"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+</section>
+
+<footer class="footer">
+  <img src="/assets/snailai_logo.png" alt="蜗牛 AI">
+  <div>
+    <a href="/online-course/">线上课</a>
+    <a href="/offline-course/">线下课</a>
+    <a href="/faq/">FAQ</a>
+    <a href="/#all-links">链接大全</a>
+  </div>
+  <p style="margin-top:12px;">© 2026 蜗牛 AI · 澳洲华人 AI 应用教育学院</p>
+</footer>
+
+<script>
+  // 语言切换（与官网一致）
+  (function () {
+    var saved = localStorage.getItem('snailai-lang') || 'zh';
+    function apply(lang) {
+      document.querySelectorAll('[data-zh]').forEach(function (el) {
+        el.textContent = el.getAttribute(lang === 'zh' ? 'data-zh' : 'data-en');
+      });
+      document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      document.querySelectorAll('.lang-btn').forEach(function (b) {
+        b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+      });
+    }
+    apply(saved);
+    document.querySelectorAll('.lang-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var lang = btn.getAttribute('data-lang');
+        localStorage.setItem('snailai-lang', lang);
+        apply(lang);
+      });
+    });
+    // Giscus 加载后移除占位提示
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () {
+        var g = document.querySelector('.giscus, .giscus-frame');
+        if (g) { var n = document.getElementById('giscus-loading'); if (n) n.style.display = 'none'; }
+      }, 2500);
+    });
+  })();
+</script>
+
+</body>
+</html>

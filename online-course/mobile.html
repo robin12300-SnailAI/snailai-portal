@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>蜗牛AI · AI澳洲应用线上课</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root {
+    --accent: #FF5B1F;
+    --accent-light: #FF8A5C;
+    --accent-dark: #E04A10;
+    --ink: #1A1A2E;
+    --ink-light: #4A4A6A;
+    --ink-muted: #8A8AA0;
+    --paper: #FCFCFA;
+    --paper-warm: #FFF9F5;
+    --surface: #FFFFFF;
+    --border: rgba(26,26,46,0.08);
+    --border-strong: rgba(26,26,46,0.14);
+    --shadow-sm: 0 1px 3px rgba(26,26,46,0.05);
+    --shadow-md: 0 4px 16px rgba(26,26,46,0.07);
+    --r-sm: 10px;
+    --r-md: 14px;
+    --r-lg: 18px;
+    --r-xl: 22px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Noto Sans SC', 'Inter', -apple-system, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    overflow-x: hidden;
+    font-size: 15px;
+  }
+
+  /* ===== LANG SWITCH ===== */
+  .lang-switch {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 1000;
+    display: flex;
+    gap: 0;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--border-strong);
+    border-radius: 100px;
+    padding: 2px;
+    backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .lang-btn {
+    padding: 5px 14px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    cursor: pointer;
+    border-radius: 100px;
+    transition: all 0.25s ease;
+  }
+
+  .lang-btn.active {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 2px 6px rgba(255,91,31,0.25);
+  }
+
+  /* ===== VERSION TAG ===== */
+  .version-tag {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    top: auto;
+    left: auto;
+    z-index: 1000;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+    background: rgba(255,255,255,0.85);
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+  }
+
+  /* ===== TOP NAV (fixed, visible links) ===== */
+  .topnav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    background: rgba(252,252,250,0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topnav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+  }
+  .topnav-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .topnav-logo {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    display: block;
+  }
+  .topnav-brand span {
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+  }
+  .topnav .lang-switch {
+    position: static;
+    top: auto; right: auto; left: auto;
+    z-index: auto;
+    background: var(--surface);
+    border-color: var(--border-strong);
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .topnav-links {
+    display: flex;
+    border-top: 1px solid var(--border);
+  }
+  .topnav-links a {
+    flex: 1;
+    text-align: center;
+    padding: 11px 0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+    text-decoration: none;
+    border-left: 1px solid var(--border);
+  }
+  .topnav-links a:first-child { border-left: none; }
+  .topnav-links a.active { color: var(--accent); }
+  .topnav-links a:active { background: var(--accent-light); }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: linear-gradient(135deg, #FFF9F5 0%, #FCFCFA 50%, #FFF5EE 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 100px 20px 40px;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -30%;
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(255,91,31,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  /* ===== HERO LOGO ===== */
+  .hero-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 16px;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(255, 200, 100, 0.25));
+    animation: logoFloat 4s ease-in-out infinite;
+  }
+
+  @keyframes logoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,91,31,0.08);
+    border: 1px solid rgba(255,91,31,0.22);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--accent-dark);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero-badge .dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero h1 {
+    font-size: 1.9rem;
+    font-weight: 900;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 .accent { color: var(--accent); }
+
+  /* ===== HERO QUOTE (金句) ===== */
+  .hero-quote {
+    margin: 0 0 20px;
+    padding: 16px 16px 14px;
+    background: #FFFFFF;
+    border: 1px solid rgba(255,91,31,0.2);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(26,26,46,0.05);
+    text-align: left;
+    position: relative;
+  }
+
+  .hero-quote::before {
+    content: '\201C';
+    position: absolute;
+    top: -8px;
+    left: 12px;
+    font-size: 2.6rem;
+    color: var(--accent);
+    font-weight: 900;
+    line-height: 1;
+    font-family: Georgia, serif;
+  }
+
+  .hero-quote .quote-main {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.55;
+    margin-bottom: 8px;
+  }
+
+  .hero-quote .quote-main em {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 800;
+  }
+
+  .hero-quote .quote-sub {
+    font-size: 0.76rem;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+
+  .hero-quote .quote-cta {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .hero .subtitle {
+    font-size: 0.9rem;
+    color: var(--ink-light);
+    font-weight: 400;
+    margin-bottom: 24px;
+  }
+
+  .hero-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .hero-meta-item { text-align: center; }
+
+  .hero-meta-item .label {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-muted);
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .hero-meta-item .value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .hero-meta-item .value.accent-color { color: var(--accent); }
+
+  /* ===== SECTIONS ===== */
+  .section {
+    padding: 44px 18px;
+    max-width: 100%;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(255,91,31,0.07);
+    padding: 5px 12px;
+    border-radius: 100px;
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+
+  .section-desc {
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    margin-top: 6px;
+  }
+
+  /* ===== PREP CARDS ===== */
+  .prep-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .prep-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .prep-card .icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(255,91,31,0.08), rgba(255,138,92,0.06));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+
+  .prep-card h3 {
+    font-size: 0.98rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+
+  .prep-card p {
+    font-size: 0.82rem;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+
+  .prep-card .steps {
+    list-style: none;
+    margin-top: 10px;
+  }
+
+  .prep-card .steps li {
+    padding: 6px 0;
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .prep-card .steps li:last-child { border-bottom: none; }
+
+  .prep-card .steps li .num {
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 0.6rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ===== VIDEO PREP CARD (4小时预习视频) ===== */
+  .prep-card--video {
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFF9F5 100%);
+    border: 2px solid var(--accent);
+    padding: 20px 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(255,91,31,0.1);
+  }
+
+  .prep-card--video::before {
+    content: '🎬';
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 2rem;
+    opacity: 0.18;
+  }
+
+  .prep-card--video .icon {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: white;
+    font-size: 1.2rem;
+  }
+
+  .prep-card--video h3 {
+    font-size: 1.05rem;
+    color: var(--accent-dark);
+  }
+
+  .video-tag {
+    display: inline-block;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: white;
+    background: var(--accent);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+
+  .video-cta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--ink);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--r-md);
+    font-family: inherit;
+    box-shadow: 0 3px 12px rgba(26,26,46,0.12);
+  }
+
+  .video-cta:active {
+    background: var(--accent);
+  }
+
+  .video-cta .play-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+  }
+
+  .video-cta-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .video-cta-text strong {
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .video-cta-text small {
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.65);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+
+  .video-cta .video-arrow {
+    font-size: 1rem;
+    color: var(--accent-light);
+    font-weight: 700;
+  }
+
+  /* ===== COMMUNITY QR (加入学习社群) ===== */
+  .community-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 12px;
+    padding: 12px;
+    background: linear-gradient(135deg, #FFF5EE 0%, #FFE8DC 100%);
+    border: 1px solid rgba(255,91,31,0.18);
+    border-radius: var(--r-sm);
+  }
+
+  .community-qr img {
+    width: 140px;
+    height: 140px;
+    border-radius: 6px;
+    background: white;
+    padding: 4px;
+    box-shadow: 0 2px 6px rgba(26,26,46,0.08);
+  }
+
+  .community-qr p {
+    margin-top: 6px;
+    font-size: 0.74rem;
+    color: var(--accent-dark);
+    font-weight: 600;
+  }
+
+  /* ===== FEATURED PREP CARD (AI 刚需挖掘) ===== */
+  .prep-card--featured {
+    background: linear-gradient(135deg, #FFF5EE 0%, #FFE8DC 100%);
+    border: 2px solid rgba(255,91,31,0.18);
+    padding: 20px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .prep-card--featured::before {
+    content: '★';
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    font-size: 1.3rem;
+    color: var(--accent);
+    opacity: 0.4;
+  }
+
+  .prep-card--featured .icon {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: white;
+    font-size: 1.2rem;
+  }
+
+  .prep-card--featured h3 {
+    font-size: 1.05rem;
+    color: var(--accent-dark);
+  }
+
+  .featured-tag {
+    display: inline-block;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: white;
+    background: var(--accent);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+
+  .featured-step {
+    display: flex;
+    gap: 10px;
+    background: white;
+    padding: 12px 14px;
+    border-radius: var(--r-sm);
+    border: 1px solid rgba(255,91,31,0.08);
+    margin-top: 10px;
+  }
+
+  .featured-step .step-num {
+    min-width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  .featured-step h4 {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .featured-step p {
+    font-size: 0.78rem;
+    color: var(--ink-light);
+    line-height: 1.5;
+  }
+
+  .featured-video-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 5px 11px;
+    background: var(--accent);
+    color: white !important;
+    text-decoration: none !important;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .featured-video-link .play-mini {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: white;
+    color: var(--accent);
+    font-size: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .featured-qr {
+    background: white;
+    border: 1px solid rgba(255,91,31,0.12);
+    border-radius: var(--r-md);
+    padding: 14px;
+    text-align: center;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .qr-placeholder {
+    width: 130px;
+    height: 130px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    background: white;
+    border: 1px solid rgba(26,26,46,0.12);
+    box-shadow: 0 2px 6px rgba(26,26,46,0.05);
+  }
+
+  .qr-placeholder img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .featured-qr h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .featured-qr p {
+    font-size: 0.72rem;
+    color: var(--ink-light);
+  }
+
+  /* ===== MODULE CARDS ===== */
+  .module {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 24px 18px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .module-number {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 3rem;
+    font-weight: 900;
+    color: rgba(255,91,31,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .module-tag {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: white;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    padding: 3px 9px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .module h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+
+  .module .module-summary {
+    font-size: 0.82rem;
+    color: var(--ink-light);
+    margin-bottom: 16px;
+  }
+
+  .lessons {
+    display: grid;
+    gap: 10px;
+  }
+
+  .lesson {
+    background: var(--paper-warm);
+    border: 1px solid rgba(255,91,31,0.04);
+    border-radius: var(--r-sm);
+    padding: 16px;
+  }
+
+  .lesson-new {
+    border-left: 3px solid var(--accent);
+  }
+
+  .lesson-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .lesson-num {
+    min-width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  .lesson-header h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .lesson-new-badge {
+    font-size: 0.58rem;
+    font-weight: 700;
+    color: white;
+    background: var(--accent);
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-left: 6px;
+    flex-shrink: 0;
+  }
+
+  .lesson-topics {
+    list-style: none;
+    display: grid;
+    gap: 3px;
+  }
+
+  .lesson-topics li {
+    font-size: 0.78rem;
+    color: var(--ink-light);
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .lesson-topics li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-light);
+  }
+
+  .lesson-outcome {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(255,91,31,0.12);
+    font-size: 0.72rem;
+    color: var(--accent-dark);
+    font-weight: 600;
+  }
+
+  /* ===== OUTCOMES ===== */
+  .outcomes-section {
+    background: linear-gradient(135deg, #FFF9F5 0%, #FFF5EE 100%);
+    color: var(--ink);
+    padding: 44px 18px;
+  }
+
+  .outcomes-section .section-tag {
+    background: rgba(255,91,31,0.1);
+    color: var(--accent-dark);
+  }
+
+  .outcomes-section .section-title { color: var(--ink); }
+  .outcomes-section .section-desc { color: var(--ink-light); }
+
+  .outcomes-grid {
+    display: grid;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .outcome-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 18px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .outcome-card .emoji {
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .outcome-card h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 3px;
+    color: var(--ink);
+  }
+
+  .outcome-card p {
+    font-size: 0.76rem;
+    color: var(--ink-light);
+    line-height: 1.5;
+  }
+
+  /* ===== RESULT ===== */
+  .result-card {
+    background: linear-gradient(135deg, #FFF5EE 0%, #FFE8DC 100%);
+    border: 2px solid rgba(255,91,31,0.1);
+    border-radius: var(--r-xl);
+    padding: 28px 18px;
+    text-align: center;
+  }
+
+  .result-card h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .result-card .highlight { color: var(--accent); }
+
+  .result-card > p {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+
+  .result-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 18px;
+    text-align: left;
+  }
+
+  .result-item {
+    background: white;
+    padding: 12px;
+    border-radius: var(--r-sm);
+  }
+
+  .result-item .icon { font-size: 1rem; margin-bottom: 3px; display: block; }
+
+  .result-item h4 {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 1px;
+  }
+
+  .result-item p {
+    font-size: 0.62rem;
+    color: var(--ink-light);
+    margin: 0;
+  }
+
+  /* ===== CTA ===== */
+  .cta-section {
+    background: linear-gradient(135deg, #FFF9F5 0%, #FFF5EE 50%, #FFE8DC 100%);
+    padding: 44px 18px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+
+  .cta-section h2 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .cta-section p {
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    margin-bottom: 20px;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: white;
+    padding: 12px 28px;
+    border-radius: 100px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(255,91,31,0.28);
+  }
+
+  .cta-poster {
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    border-radius: var(--r-lg);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+    margin-top: 8px;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: var(--paper-warm);
+    border-top: 1px solid var(--border);
+    padding: 24px 18px;
+    text-align: center;
+  }
+
+  .footer-logo {
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 12px;
+    display: block;
+    opacity: 0.92;
+  }
+
+  .footer p {
+    font-size: 0.68rem;
+    color: var(--ink-muted);
+  }
+
+  .footer .brand { font-weight: 700; color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- ===== TOP NAV ===== -->
+<nav class="topnav">
+  <div class="topnav-bar">
+    <a class="topnav-brand" href="/mobile.html">
+      <img class="topnav-logo" src="../assets/snailai_logo.png" alt="蜗牛AI">
+      <span>蜗牛AI</span>
+    </a>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('zh')" data-lang="zh">中文</button>
+      <button class="lang-btn" onclick="setLang('en')" data-lang="en">EN</button>
+    </div>
+  </div>
+  <div class="topnav-links">
+    <a href="../online-course/mobile.html" class="active">线上课</a>
+    <a href="../offline-course/mobile.html">线下课</a>
+    <a href="../faq/mobile.html">FAQ</a>
+  </div>
+</nav>
+
+<!-- VERSION TAG -->
+<div class="version-tag">V2.15 · 2026-07-05</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-content">
+    <img src="../assets/snailai_logo.png" alt="蜗牛AI Logo" class="hero-logo">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      <span data-zh="2026 年 7 月 · 悉尼" data-en="July 2026 · Sydney">2026 年 7 月 · 悉尼</span>
+    </div>
+    <h1 data-zh="蜗牛AI <span class='accent'>AI澳洲应用线上课</span><br>完整大纲" data-en="SnailAI <span class='accent'>AI Australia App Online Course</span><br>Full Syllabus">蜗牛AI <span class="accent">AI澳洲应用线上课</span><br>完整大纲</h1>
+
+    <div class="hero-quote">
+      <div class="quote-main" data-zh="打败你的不是 AI，是<em>会使用 AI 的人</em>。<br>AI 不是你的对手，而是你的机甲。" data-en="AI won't replace you. A <em>person using AI</em> will.<br>AI is not your rival — it's your exosuit.">打败你的不是 AI，是<em>会使用 AI 的人</em>。<br>AI 不是你的对手，而是你的机甲。</div>
+      <div class="quote-sub" data-zh="就像变形金刚穿上机甲就变得超级强大 — 在这个时代，你不用 AI，有的是其他人用 AI。不主动学习的人，会被 AI 时代悄悄淘汰。" data-en="Just like a Transformer becomes super-powered in its exosuit — in this era, if you don't use AI, someone else will. Those who don't learn will be quietly left behind.">就像变形金刚穿上机甲就变得超级强大 — 在这个时代，你不用 AI，有的是其他人用 AI。不主动学习的人，会被 AI 时代悄悄淘汰。</div>
+      <div class="quote-cta" data-zh="→ 主动选择学习 AI，成为 AI 时代的先行者" data-en="→ Choose to learn AI. Become a pioneer of the AI era.">→ 主动选择学习 AI，成为 AI 时代的先行者</div>
+    </div>
+
+    <p class="subtitle" data-zh="学习 · 应用 · 享受 · 投资<br>24 个真实 AI 工作流落地分享" data-en="Learn · Apply · Enjoy · Invest<br>24 Real AI Workflow Implementations">学习 · 应用 · 享受 · 投资<br>24 个真实 AI 工作流落地分享</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="label" data-zh="开课时间" data-en="START">开课时间</div>
+        <div class="value accent-color" data-zh="7月7日 周二" data-en="Jul 7 Tue">7月7日 周二</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label" data-zh="上课时段" data-en="TIME">上课时段</div>
+        <div class="value" data-zh="晚 8:30–10:30" data-en="8:30–10:30 PM">晚 8:30–10:30</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label" data-zh="课程周期" data-en="DURATION">课程周期</div>
+        <div class="value" data-zh="7/7→9/26" data-en="Jul 7→Sep 26">7/7→9/26</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label" data-zh="总课时" data-en="TOTAL">总课时</div>
+        <div class="value" data-zh="12周·24课" data-en="12Wks·24Lessons">12周·24课</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 课前准备 ===== -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-tag" data-zh="课前准备" data-en="PRE-COURSE">课前准备</span>
+    <h2 class="section-title" data-zh="开课前，你需要准备好这些" data-en="Get Ready Before Day One">开课前，你需要准备好这些</h2>
+    <p class="section-desc" data-zh="确保一切就绪，第一节课直接上手实操" data-en="Be ready from minute one">确保一切就绪，第一节课直接上手实操</p>
+  </div>
+
+  <div class="prep-grid">
+    <div class="prep-card prep-card--video">
+      <span class="video-tag" data-zh="必看 · 4 小时" data-en="REQ. · 4 HRS">必看 · 4 小时</span>
+      <div class="icon">🎬</div>
+      <h3 data-zh="必看 4 小时预习视频" data-en="Required 4-Hour Prep Video">必看 4 小时预习视频</h3>
+      <p data-zh="开课前必须看完：4 小时预习视频会建立你的 AI 基础认知，让正式课程事半功倍。" data-en="Must watch before class: this 4-hour video builds your AI foundation, making the live course twice as effective.">开课前必须看完：4 小时预习视频会建立你的 AI 基础认知，让正式课程事半功倍。</p>
+      <a href="https://www.youtube.com/watch?v=--Qcfa5Kwbo" target="_blank" rel="noopener" class="video-cta">
+        <span class="play-icon" aria-hidden="true">▶</span>
+        <span class="video-cta-text">
+          <strong data-zh="点击观看完整视频" data-en="Watch the Full Video">点击观看完整视频</strong>
+          <small data-zh="YouTube · 4 小时预习课" data-en="YouTube · 4-hour prep">YouTube · 4 小时预习课</small>
+        </span>
+        <span class="video-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div class="prep-card prep-card--featured">
+      <span class="featured-tag" data-zh="V2 新增 · 必做" data-en="NEW · REQ.">V2 新增 · 必做</span>
+      <div class="icon">💎</div>
+      <h3 data-zh="深度挖掘你的 AI 刚需（3 个）" data-en="Discover Your Top 3 AI Needs">深度挖掘你的 AI 刚需（3 个）</h3>
+      <p data-zh="开课前最重要的一步：每位学员都要挖掘出属于自己的 3 个 AI 刚需。带着问题来上课，效率翻倍。" data-en="Most important pre-class task: identify your top 3 AI needs. Come with real problems — your efficiency will double.">开课前最重要的一步：每位学员都要挖掘出属于自己的 3 个 AI 刚需。带着问题来上课，效率翻倍。</p>
+
+      <div class="featured-step">
+        <div class="step-num">1</div>
+        <div>
+          <h4 data-zh="请看视频：什么是 AI 刚需？" data-en="Watch: What is an AI need?">请看视频：什么是 AI 刚需？</h4>
+          <p data-zh="视频详细解释了 AI 刚需的定义，并提供 6 个挖掘维度。" data-en="The video explains AI needs and provides 6 discovery dimensions.">视频详细解释了 AI 刚需的定义，并提供 6 个挖掘维度。</p>
+          <a href="https://youtu.be/NZag6CZ0PHA" target="_blank" rel="noopener" class="featured-video-link">
+            <span class="play-mini" aria-hidden="true">▶</span>
+            <span data-zh="点击观看" data-en="Watch Now">点击观看</span>
+            <span class="link-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="featured-step">
+        <div class="step-num">2</div>
+        <div>
+          <h4 data-zh="扫码填写：提交 3 个 AI 刚需" data-en="Scan: Submit 3 AI needs">扫码填写：提交 3 个 AI 刚需</h4>
+          <p data-zh="用微信扫下方二维码，填写你的 3 个 AI 刚需。" data-en="Scan the QR below with WeChat and submit your 3 AI needs.">用微信扫下方二维码，填写你的 3 个 AI 刚需。</p>
+        </div>
+      </div>
+
+      <div class="featured-qr">
+        <div class="qr-placeholder"><img src="../assets/qr_ai_needs.png" alt="AI 刚需填写二维码"></div>
+        <h4 data-zh="扫码填写 3 个 AI 刚需" data-en="Scan to submit 3 AI needs">扫码填写 3 个 AI 刚需</h4>
+        <p data-zh="微信扫码 · 1 分钟完成" data-en="Scan via WeChat · 1 min">微信扫码 · 1 分钟完成</p>
+      </div>
+    </div>
+
+    <div class="prep-card">
+      <div class="icon">🤖</div>
+      <h3 data-zh="安装 WorkBuddy" data-en="Install WorkBuddy">安装 WorkBuddy</h3>
+      <p data-zh="蜗牛AI课程指定AI助手工具" data-en="The designated AI assistant for this course">蜗牛AI课程指定AI助手工具</p>
+      <ul class="steps">
+        <li><span class="num">1</span><span data-zh="腾讯云下载 WorkBuddy 客户端" data-en="Download from Tencent Cloud">腾讯云下载 WorkBuddy 客户端</span></li>
+        <li><span class="num">2</span><span data-zh="微信登录并激活" data-en="Sign in with WeChat">微信登录并激活</span></li>
+        <li><span class="num">3</span><span data-zh="确认能正常对话，安装技能，并且调用技能和专家进行简单对话，例如怎么使用你？" data-en="Confirm the conversation works, install skills, and try calling a skill or expert with a simple question like &quot;How do I use you?&quot;">确认能正常对话，安装技能，并且调用技能和专家进行简单对话，例如怎么使用你？</span></li>
+        <li><span class="num">4</span><span data-zh="参加 WorkBuddy 成长计划，赢取越多越好积分（赢积分的同时熟悉功能）" data-en="Join the WorkBuddy Growth Plan to earn points (learn features while earning)">参加 WorkBuddy 成长计划，赢取越多越好积分（赢积分的同时熟悉功能）</span></li>
+      </ul>
+    </div>
+    <div class="prep-card">
+      <div class="icon">🦞</div>
+      <h3 data-zh="配置「龙虾」" data-en="Set Up Lobster">配置「龙虾」</h3>
+      <p data-zh="为AI助手建立专属记忆" data-en="Build personalized memory for AI">为AI助手建立专属记忆</p>
+      <ul class="steps">
+        <li><span class="num">1</span><span data-zh="给龙虾介绍做自我介绍：姓名、性别、年龄、职业、兴趣、做事风格" data-en="Introduce yourself: name, gender, age, profession, hobbies, style">给龙虾介绍做自我介绍：姓名、性别、年龄、职业、兴趣、做事风格</span></li>
+        <li><span class="num">2</span><span data-zh="龙虾助理设置：企业微信和微信都要设置好" data-en="Set up Lobster: configure WeCom and WeChat">龙虾助理设置：企业微信和微信都要设置好</span></li>
+        <li><span class="num">3</span><span data-zh="在电脑里创建文件夹《龙虾文件夹》" data-en="Create Lobster Folder on your computer">在电脑里创建文件夹《龙虾文件夹》</span></li>
+        <li><span class="num">4</span><span data-zh="安装微信输入法：手机和电脑同时安装，然后设置右边 Shift 按键为 AI 录音转文字" data-en="Install WeChat Keyboard on both phone and computer, then set right Shift key as AI voice-to-text">安装微信输入法：手机和电脑同时安装，然后设置右边 Shift 按键为 AI 录音转文字</span></li>
+        <li><span class="num">5</span><span data-zh="调试电脑 Zoom 语音和共享成功使用，方便直播课堂分享" data-en="Test Zoom audio and screen sharing on computer for live class broadcasting">调试电脑 Zoom 语音和共享成功使用，方便直播课堂分享</span></li>
+      </ul>
+    </div>
+    <div class="prep-card">
+      <div class="icon">💬</div>
+      <h3 data-zh="加入蜗牛AI学习社群" data-en="Join the SnailAI Community">加入蜗牛AI学习社群</h3>
+      <ul class="steps">
+        <li><span class="num">1</span><span data-zh="扫码加入蜗牛AI线上课微信群" data-en="Scan QR to join the SnailAI WeChat group">扫码加入蜗牛AI线上课微信群</span></li>
+        <li><span class="num">2</span><span data-zh="添加"蜗牛 AI"官方客服企业微信号（非常重要！课前课中课后都是小蜗牛服务你）" data-en='Add the official "Snail AI" WeCom customer service (Very important! Little Snail will serve you)'>添加"蜗牛 AI"官方客服企业微信号（非常重要！课前课中课后都是小蜗牛服务你）</span></li>
+      </ul>
+      <div class="community-qr">
+        <img src="../assets/qr_community.jpg" alt="蜗牛AI学习社群永久群二维码">
+        <p data-zh="微信扫码 · 加入社群" data-en="Scan via WeChat · Join">微信扫码 · 加入社群</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 详细课程大纲 ===== -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-tag" data-zh="课程大纲" data-en="SYLLABUS">课程大纲</span>
+    <h2 class="section-title" data-zh="6 大模块 · 24 课时" data-en="6 Modules · 24 Lessons">6 大模块 · 24 课时</h2>
+    <p class="section-desc" data-zh="每节课都有实战任务，学完就用" data-en="Every lesson includes hands-on tasks">每节课都有实战任务，学完就用</p>
+  </div>
+
+  <!-- 模块一 -->
+  <div class="module">
+    <div class="module-number">01</div>
+    <span class="module-tag" data-zh="模块一" data-en="MODULE 1">模块一</span>
+    <h2 data-zh="AI 认知觉醒" data-en="AI Awareness Awakening">AI 认知觉醒</h2>
+    <p class="module-summary" data-zh="从零开始理解大模型，建立输出式学习思维" data-en="Understand large models from scratch, build output-driven mindset">从零开始理解大模型，建立输出式学习思维</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">01</span>
+          <h3 data-zh="AI 是什么，不是什么" data-en="What AI Is and Isn't">AI 是什么，不是什么</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="大模型本质区别" data-en="Core differences between models">大模型本质区别</li>
+          <li data-zh="AI能力边界" data-en="AI capability boundaries">AI能力边界</li>
+          <li data-zh="实战：第一次正确地和AI对话" data-en="Practice: First correct AI conversation">实战：第一次正确地和AI对话</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：能独立判断并完成有效对话" data-en="Goal: Judge and complete effective conversations">目标：能独立判断并完成有效对话</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header">
+          <span class="lesson-num">02</span>
+          <h3 data-zh="输出式学习" data-en="Output-Driven Learning">输出式学习</h3>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="边用边学 > 先学后用" data-en="Learn by doing > Learn before doing">边用边学 > 先学后用</li>
+          <li data-zh="实战：用AI学一个你完全不懂的东西" data-en="Practice: Learn something new with AI">实战：用AI学一个你完全不懂的东西</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：克服"不懂不敢用"障碍" data-en="Goal: Overcome the barrier of fear">目标：克服"不懂不敢用"障碍</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块二 -->
+  <div class="module">
+    <div class="module-number">02</div>
+    <span class="module-tag" data-zh="模块二" data-en="MODULE 2">模块二</span>
+    <h2 data-zh="基础工具实战" data-en="Essential AI Tools">基础工具实战</h2>
+    <p class="module-summary" data-zh="五大刚需工具逐一掌握" data-en="Master the five essential tools">五大刚需工具逐一掌握</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">03</span><h3 data-zh="ChatGPT 正确使用" data-en="Using ChatGPT Correctly">ChatGPT 正确使用</h3></div>
+        <ul class="lesson-topics">
+          <li data-zh="提示词：角色+任务+约束" data-en="Prompt: Role+Task+Constraints">提示词：角色+任务+约束</li>
+          <li data-zh="实战：写文字、分析产品" data-en="Practice: Write & analyze">实战：写文字、分析产品</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：掌握提示词三要素" data-en="Goal: Master the 3 prompt elements">目标：掌握提示词三要素</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">04</span><h3 data-zh="AI 输入法与语音工具" data-en="AI Input & Voice Tools">AI 输入法与语音工具</h3></div>
+        <ul class="lesson-topics">
+          <li data-zh="豆包输入法/Plaud AI" data-en="Doubao Input / Plaud AI">豆包输入法/Plaud AI</li>
+          <li data-zh="实战：用语音生成今日总结" data-en="Practice: Voice-to-daily summary">实战：用语音生成今日总结</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：建立语音+AI习惯" data-en="Goal: Build voice+AI habit">目标：建立语音+AI习惯</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">05</span><h3 data-zh="Gemini 谷歌AI助理" data-en="Gemini Google AI Assistant">Gemini 谷歌AI助理</h3></div>
+        <ul class="lesson-topics">
+          <li data-zh="Drive/Calendar/Tasks联动" data-en="Drive/Calendar/Tasks integration">Drive/Calendar/Tasks联动</li>
+          <li data-zh="实战：让Gemini读Google Drive文件" data-en="Practice: Gemini reads Drive files">实战：让Gemini读Google Drive文件</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：搭建谷歌AI私人助理" data-en="Goal: Set up Google AI assistant">目标：搭建谷歌AI私人助理</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">06</span><h3 data-zh="AI 文档处理" data-en="AI Document Processing">AI 文档处理</h3></div>
+        <ul class="lesson-topics">
+          <li data-zh="NotebookLM/PDF扫描处理" data-en="NotebookLM / PDF scanning">NotebookLM/PDF扫描处理</li>
+          <li data-zh="实战：提取合同PDF关键条款" data-en="Practice: Extract contract clauses">实战：提取合同PDF关键条款</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：快速处理各类文档" data-en="Goal: Process documents efficiently">目标：快速处理各类文档</div>
+      </div>
+      <div class="lesson lesson-new">
+        <div class="lesson-header">
+          <span class="lesson-num">07</span>
+          <h3 data-zh="WorkBuddy 连接一切" data-en="WorkBuddy Connects Everything">WorkBuddy 连接一切</h3>
+          <span class="lesson-new-badge" data-zh="V2 重构" data-en="UPDATED">V2 重构</span>
+        </div>
+        <ul class="lesson-topics">
+          <li data-zh="链接邮件、日历、任务、硬盘、相片" data-en="Connect email, calendar, tasks, drive, photos">链接邮件、日历、任务、硬盘、相片</li>
+          <li data-zh="注册并链接 GitHub，建立首个仓库，同步代码给助教讲师" data-en="Register & link GitHub, create first repo, sync code with TAs">注册并链接 GitHub，建立首个仓库，同步代码给助教讲师</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：让 WorkBuddy 接入工作流" data-en="Goal: Plug WorkBuddy into your workflow">目标：让 WorkBuddy 接入工作流</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块三 -->
+  <div class="module">
+    <div class="module-number">03</div>
+    <span class="module-tag" data-zh="模块三" data-en="MODULE 3">模块三</span>
+    <h2 data-zh="生活场景应用" data-en="AI for Daily Life">生活场景应用</h2>
+    <p class="module-summary" data-zh="邮件、购物、创作、音乐、视频" data-en="Email, shopping, creation, music, video">邮件、购物、创作、音乐、视频</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">08</span><h3 data-zh="AI 与邮件处理" data-en="AI for Email">AI 与邮件处理</h3></div>
+        <ul class="lesson-topics"><li data-zh="实战：用AI处理英文邮件" data-en="Practice: Process English emails with AI">实战：用AI处理英文邮件</li></ul>
+        <div class="lesson-outcome" data-zh="目标：邮件效率提升3倍" data-en="Goal: 3x email efficiency">目标：邮件效率提升3倍</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">09</span><h3 data-zh="AI 与购物决策" data-en="AI for Shopping">AI 与购物决策</h3></div>
+        <ul class="lesson-topics"><li data-zh="实战：选一款空气净化器" data-en="Practice: Choose an air purifier">实战：选一款空气净化器</li></ul>
+        <div class="lesson-outcome" data-zh="目标：理性决策不纠结" data-en="Goal: Decide rationally">目标：理性决策不纠结</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">10</span><h3 data-zh="AI 与内容创作" data-en="AI for Content Creation">AI 与内容创作</h3></div>
+        <ul class="lesson-topics"><li data-zh="实战：生成30秒短视频脚本" data-en="Practice: 30s video script">实战：生成30秒短视频脚本</li></ul>
+        <div class="lesson-outcome" data-zh="目标：独立完成创作全流程" data-en="Goal: Full creation pipeline">目标：独立完成创作全流程</div>
+      </div>
+      <div class="lesson lesson-new">
+        <div class="lesson-header">
+          <span class="lesson-num">11</span>
+          <h3 data-zh="AI 音乐与娱乐" data-en="AI Music & Entertainment">AI 音乐与娱乐</h3>
+          <span class="lesson-new-badge" data-zh="V2" data-en="NEW">V2</span>
+        </div>
+        <ul class="lesson-topics"><li data-zh="Moises.ai卡拉OK/Suno音乐生成" data-en="Moises.ai karaoke / Suno music generation">Moises.ai卡拉OK/Suno音乐生成</li></ul>
+        <div class="lesson-outcome" data-zh="目标：轻松创作音乐内容" data-en="Goal: Create music easily with AI">目标：轻松创作音乐内容</div>
+      </div>
+      <div class="lesson lesson-new">
+        <div class="lesson-header">
+          <span class="lesson-num">12</span>
+          <h3 data-zh="AI 视频创作实战" data-en="AI Video Creation">AI 视频创作实战</h3>
+          <span class="lesson-new-badge" data-zh="V2" data-en="NEW">V2</span>
+        </div>
+        <ul class="lesson-topics"><li data-zh="可灵/剪映/Runway全流程" data-en="Kling / CapCut / Runway pipeline">可灵/剪映/Runway全流程</li></ul>
+        <div class="lesson-outcome" data-zh="目标：文字到成品视频一键制作" data-en="Goal: Text to finished video in one click">目标：文字到成品视频一键制作</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块四 -->
+  <div class="module">
+    <div class="module-number">04</div>
+    <span class="module-tag" data-zh="模块四" data-en="MODULE 4">模块四</span>
+    <h2 data-zh="AI 工作流设计" data-en="AI Workflow Design">AI 工作流设计</h2>
+    <p class="module-summary" data-zh="双AI协作、提示词工程、AI记忆系统" data-en="Dual-AI, prompt engineering, AI memory">双AI协作、提示词工程、AI记忆系统</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">13</span><h3 data-zh="双AI 执行模式" data-en="Dual-AI Execution">双AI 执行模式</h3></div>
+        <ul class="lesson-topics"><li data-zh="实战：设计双AI协作任务" data-en="Practice: Design dual-AI task">实战：设计双AI协作任务</li></ul>
+        <div class="lesson-outcome" data-zh="目标：掌握双AI协作模式" data-en="Goal: Master dual-AI collaboration">目标：掌握双AI协作模式</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">14</span><h3 data-zh="提示词工程进阶" data-en="Advanced Prompt Engineering">提示词工程进阶</h3></div>
+        <ul class="lesson-topics"><li data-zh="实战：写高质量提示词" data-en="Practice: Write high-quality prompts">实战：写高质量提示词</li></ul>
+        <div class="lesson-outcome" data-zh="目标：AI输出精准匹配需求" data-en="Goal: AI output matches your needs">目标：AI输出精准匹配需求</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">15</span><h3 data-zh="AI 记忆系统" data-en="AI Memory System">AI 记忆系统</h3></div>
+        <ul class="lesson-topics"><li data-zh="实战：建立AI记忆档案" data-en="Practice: Build AI memory profile">实战：建立AI记忆档案</li></ul>
+        <div class="lesson-outcome" data-zh="目标：AI越用越懂你" data-en="Goal: AI gets smarter over time">目标：AI越用越懂你</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块五 -->
+  <div class="module">
+    <div class="module-number">05</div>
+    <span class="module-tag" data-zh="模块五" data-en="MODULE 5">模块五</span>
+    <h2 data-zh="自动化与技能开发" data-en="Automation & Skills">自动化与技能开发</h2>
+    <p class="module-summary" data-zh="让AI每天自动帮你干活" data-en="AI works for you automatically">让AI每天自动帮你干活</p>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">16</span><h3 data-zh="自动化基础" data-en="Automation Basics">自动化基础</h3></div>
+        <ul class="lesson-topics"><li data-zh="实战：每日邮件检查自动化" data-en="Practice: Daily email check automation">实战：每日邮件检查自动化</li></ul>
+        <div class="lesson-outcome" data-zh="目标：定时自动化替你做事" data-en="Goal: Scheduled AI tasks">目标：定时自动化替你做事</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">17</span><h3 data-zh="自定义技能开发" data-en="Custom Skill Development">自定义技能开发</h3></div>
+        <ul class="lesson-topics"><li data-zh="实战：创建购买清单技能" data-en="Practice: Create shopping list skill">实战：创建购买清单技能</li></ul>
+        <div class="lesson-outcome" data-zh="目标：一键调用常用工作流" data-en="Goal: One-click workflow invocation">目标：一键调用常用工作流</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">18</span><h3 data-zh="企业微信机器人" data-en="WeCom Bot">企业微信机器人</h3></div>
+        <ul class="lesson-topics"><li data-zh="实战：每日提醒推送" data-en="Practice: Daily reminder push">实战：每日提醒推送</li></ul>
+        <div class="lesson-outcome" data-zh="目标：AI输出实时推送到手机" data-en="Goal: AI pushes to phone in real time">目标：AI输出实时推送到手机</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">19</span><h3 data-zh="邮件自动化高级" data-en="Advanced Email Automation">邮件自动化高级</h3></div>
+        <ul class="lesson-topics"><li data-zh="实战：自动处理特定邮件" data-en="Practice: Auto-process specific emails">实战：自动处理特定邮件</li></ul>
+        <div class="lesson-outcome" data-zh="目标：邮箱半自动化管理" data-en="Goal: Semi-automated inbox">目标：邮箱半自动化管理</div>
+      </div>
+      <div class="lesson lesson-new">
+        <div class="lesson-header">
+          <span class="lesson-num">20</span>
+          <h3 data-zh="智能表格与二维码传播" data-en="Smart Tables & QR Sharing">智能表格与二维码传播</h3>
+          <span class="lesson-new-badge" data-zh="V2" data-en="NEW">V2</span>
+        </div>
+        <ul class="lesson-topics"><li data-zh="实战：搭建客户追踪表" data-en="Practice: Build client tracker">实战：搭建客户追踪表</li></ul>
+        <div class="lesson-outcome" data-zh="目标：快速分发AI成果" data-en="Goal: Quickly distribute AI outputs">目标：快速分发AI成果</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模块六 -->
+  <div class="module">
+    <div class="module-number">06</div>
+    <span class="module-tag" data-zh="模块六" data-en="MODULE 6">模块六</span>
+    <h2 data-zh="澳洲专业应用与毕业" data-en="Australia-Specific & Graduation">澳洲专业应用与毕业</h2>
+    <p class="module-summary" data-zh="整合所学，毕业答辩" data-en="Integrate everything, graduation defense">整合所学，毕业答辩</p>
+    <div class="lessons">
+      <div class="lesson lesson-new">
+        <div class="lesson-header">
+          <span class="lesson-num">21</span>
+          <h3 data-zh="AI 与澳洲报税" data-en="AI for Australian Tax">AI 与澳洲报税</h3>
+          <span class="lesson-new-badge" data-zh="V2" data-en="NEW">V2</span>
+        </div>
+        <ul class="lesson-topics"><li data-zh="实战：整理年度报税准备清单" data-en="Practice: Tax prep checklist">实战：整理年度报税准备清单</li></ul>
+        <div class="lesson-outcome" data-zh="目标：独立用AI辅助报税准备" data-en="Goal: AI-assisted tax preparation">目标：独立用AI辅助报税准备</div>
+      </div>
+      <div class="lesson lesson-new">
+        <div class="lesson-header">
+          <span class="lesson-num">22</span>
+          <h3 data-zh="银行对账与费用分析" data-en="Bank Reconciliation & Expense Analysis">银行对账与费用分析</h3>
+          <span class="lesson-new-badge" data-zh="V2" data-en="NEW">V2</span>
+        </div>
+        <ul class="lesson-topics"><li data-zh="实战：上传银行PDF生成月度支出报告" data-en="Practice: Bank PDF → monthly report">实战：上传银行PDF生成月度支出报告</li></ul>
+        <div class="lesson-outcome" data-zh="目标：自动生成清晰的收支报告" data-en="Goal: Auto-generate clear financial reports">目标：自动生成清晰的收支报告</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">23</span><h3 data-zh="专业场景深度应用" data-en="Professional Deep Dive">专业场景深度应用</h3></div>
+        <ul class="lesson-topics"><li data-zh="实战：设计完整AI解决方案" data-en="Practice: Design complete AI solution">实战：设计完整AI解决方案</li></ul>
+        <div class="lesson-outcome" data-zh="目标：搭建专业领域AI工作流" data-en="Goal: Build domain-specific AI workflow">目标：搭建专业领域AI工作流</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-header"><span class="lesson-num">24</span><h3 data-zh="建立你自己的 AI 工作法 · 毕业答辩" data-en="Build Your Own AI Method · Graduation Defense">建立你自己的 AI 工作法 · 毕业答辩</h3></div>
+        <ul class="lesson-topics">
+          <li data-zh="实战：毕业项目展示与答辩" data-en="Practice: Project presentation & defense">实战：毕业项目展示与答辩</li>
+          <li data-zh="班级所有成员合作完成班级网站（团队协作 + Git 实战）" data-en="All class members build class website together (teamwork + Git)">班级所有成员合作完成班级网站（团队协作 + Git 实战）</li>
+          <li data-zh="毕业项目落地：将你在课程中设计的 AI 工作流在实际工作和生活中部署运行，讲师持续跟进指导" data-en="Graduation project: deploy your AI workflow in real work & life, with continuous instructor follow-up">毕业项目落地：将你在课程中设计的 AI 工作流在实际工作和生活中部署运行，讲师持续跟进指导</li>
+        </ul>
+        <div class="lesson-outcome" data-zh="目标：独立运行你的AI工作体系" data-en="Goal: Run your own AI workflow system">目标：独立运行你的AI工作体系</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 学习目标 ===== -->
+<section class="outcomes-section">
+  <div class="section-header">
+    <span class="section-tag" data-zh="学习目标" data-en="OUTCOMES">学习目标</span>
+    <h2 class="section-title" data-zh="12 周后，你将获得什么" data-en="What You'll Gain After 12 Weeks">12 周后，你将获得什么</h2>
+    <p class="section-desc" data-zh="用AI真正改变你的工作和生活" data-en="Truly transform how you work and live with AI">用AI真正改变你的工作和生活</p>
+  </div>
+
+  <div class="outcomes-grid">
+    <div class="outcome-card">
+      <span class="emoji">🧠</span>
+      <h3 data-zh="AI 思维觉醒" data-en="AI Mindset">AI 思维觉醒</h3>
+      <p data-zh="建立输出式学习思维" data-en="Build output-driven learning mindset">建立输出式学习思维</p>
+    </div>
+    <div class="outcome-card">
+      <span class="emoji">⚡</span>
+      <h3 data-zh="效率暴增 3-10 倍" data-en="3-10x Efficiency">效率暴增 3-10 倍</h3>
+      <p data-zh="全场景AI加持" data-en="AI empowers every scenario">全场景AI加持</p>
+    </div>
+    <div class="outcome-card">
+      <span class="emoji">🤖</span>
+      <h3 data-zh="专属 AI 助理" data-en="Personal AI Assistant">专属 AI 助理</h3>
+      <p data-zh="有记忆、有技能、能自动执行" data-en="Memory, skills, and automation">有记忆、有技能、能自动执行</p>
+    </div>
+    <div class="outcome-card">
+      <span class="emoji">🔧</span>
+      <h3 data-zh="自定义工作流" data-en="Custom Workflows">自定义工作流</h3>
+      <p data-zh="重复劳动变自动化流程" data-en="Automate repetitive tasks">重复劳动变自动化流程</p>
+    </div>
+    <div class="outcome-card">
+      <span class="emoji">📱</span>
+      <h3 data-zh="全平台联动" data-en="Cross-Platform">全平台联动</h3>
+      <p data-zh="手机、电脑、企微全部打通" data-en="Phone, PC, WeCom connected">手机、电脑、企微全部打通</p>
+    </div>
+    <div class="outcome-card">
+      <span class="emoji">🎓</span>
+      <h3 data-zh="毕业认证" data-en="Certification">毕业认证</h3>
+      <p data-zh="官方结业证书" data-en="Official certificate">官方结业证书</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 成果 ===== -->
+<section class="section">
+  <div class="result-card">
+    <h2 data-zh="你将<span class='highlight'>真正拥有</span>这些" data-en="You'll <span class='highlight'>Truly Own</span> These">你将<span class="highlight">真正拥有</span>这些</h2>
+    <p data-zh="每一项都经过课堂实操验证" data-en="Every item verified through hands-on practice">每一项都经过课堂实操验证</p>
+    <div class="result-items">
+      <div class="result-item"><span class="icon">✅</span><h4 data-zh="个人AI档案" data-en="AI Profile">个人AI档案</h4><p data-zh="AI认识你" data-en="AI knows you">AI认识你</p></div>
+      <div class="result-item"><span class="icon">✅</span><h4 data-zh="3+技能" data-en="3+ Skills">3+技能</h4><p data-zh="一键执行" data-en="One-click">一键执行</p></div>
+      <div class="result-item"><span class="icon">✅</span><h4 data-zh="2+自动化" data-en="2+ Automations">2+自动化</h4><p data-zh="定时执行" data-en="Scheduled">定时执行</p></div>
+      <div class="result-item"><span class="icon">✅</span><h4 data-zh="工作流蓝图" data-en="Workflow Blueprint">工作流蓝图</h4><p data-zh="完整设计方案" data-en="Complete design">完整设计方案</p></div>
+      <div class="result-item"><span class="icon">✅</span><h4 data-zh="双AI协作" data-en="Dual-AI">双AI协作</h4><p data-zh="黄金搭档" data-en="Golden duo">黄金搭档</p></div>
+      <div class="result-item"><span class="icon">✅</span><h4 data-zh="毕业证书" data-en="Certificate">毕业证书</h4><p data-zh="官方认证" data-en="Official">官方认证</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-section">
+  <h2 data-zh="🦞 立即加入蜗牛AI线上课" data-en="🦞 Join SnailAI Now">🦞 立即加入蜗牛AI线上课</h2>
+  <p data-zh="7月7日开课 · 每周二晚 8:30–10:30" data-en="Starts Jul 7 · Every Tue 8:30–10:30 PM">7月7日开课 · 每周二晚 8:30–10:30</p>
+  <img src="../assets/poster_online_enroll.jpg" alt="蜗牛AI线上课报名海报" class="cta-poster">
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <img src="../assets/snailai_logo.png" alt="蜗牛AI Logo" class="footer-logo">
+  <div style="margin:14px 0 10px;display:flex;gap:18px;justify-content:center;flex-wrap:wrap;">
+    <a href="/live-share-2026-07-04/" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:600;font-size:0.9rem;" data-zh="直播分享会PPT →" data-en="Live Share PPT →">直播分享会PPT →</a>
+    <a href="/snailai-pitch-2026/" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:600;font-size:0.9rem;" data-zh="技术澳洲应用大全PPT →" data-en="Tech Application PPT →">技术澳洲应用大全PPT →</a>
+    <a href="/faq/mobile" style="color:var(--accent);text-decoration:none;font-weight:600;font-size:0.9rem;" data-zh="FAQ 常见问题" data-en="FAQ">FAQ 常见问题</a>
+  </div>
+  <p data-zh="© 2026 <span class='brand'>蜗牛AI</span> · 学习 · 应用 · 享受 · 投资" data-en="© 2026 <span class='brand'>SnailAI</span> · Learn · Apply · Enjoy · Invest">© 2026 <span class="brand">蜗牛AI</span> · 学习 · 应用 · 享受 · 投资</p>
+</footer>
+
+<script>
+function setLang(lang) {
+  document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.querySelectorAll('[data-zh][data-en]').forEach(el => {
+    el.innerHTML = el.getAttribute('data-' + lang);
+  });
+  localStorage.setItem('snailai-lang', lang);
+}
+
+(function() {
+  const saved = localStorage.getItem('snailai-lang');
+  setLang(saved || 'zh');
+})();
+</script>
+
+</body>
+</html>

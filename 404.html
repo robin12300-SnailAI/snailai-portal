@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 · 页面未找到 | 蜗牛 AI</title>
+<meta name="description" content="蜗牛 AI 官方网站 - 页面未找到">
+<meta name="theme-color" content="#FF5B1F">
+<link rel="icon" type="image/png" href="/assets/snailai_logo.png">
+<style>
+  :root {
+    --paper: #FCFCFA;
+    --paper-warm: #FFF9F5;
+    --ink: #1A1A2E;
+    --ink-light: rgba(26, 26, 46, 0.6);
+    --accent: #FF5B1F;
+    --accent-dark: #E54A0E;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, var(--paper-warm) 0%, var(--paper) 100%);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  .wrap {
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+  }
+  .logo {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 24px;
+    display: block;
+    filter: drop-shadow(0 6px 16px rgba(255, 91, 31, 0.18));
+  }
+  .code {
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    font-size: 6rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  p.lead {
+    font-size: 1rem;
+    color: var(--ink-light);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  a.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  a.btn.primary {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 4px 14px rgba(255, 91, 31, 0.25);
+  }
+  a.btn.primary:hover {
+    background: var(--accent-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(255, 91, 31, 0.35);
+  }
+  a.btn.ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid rgba(26, 26, 46, 0.15);
+  }
+  a.btn.ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .footer {
+    margin-top: 36px;
+    font-size: 0.78rem;
+    color: var(--ink-light);
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo" class="logo">
+    <div class="code">404</div>
+    <h1 data-zh="这一页还在写代码…" data-en="This page is still being coded…">这一页还在写代码…</h1>
+    <p class="lead" data-zh="你输入的路径不存在，或者我们正在重新设计这一页。先看看这些？" data-en="The path you visited doesn't exist, or we're redesigning this page. Try one of these?">你输入的路径不存在，或者我们正在重新设计这一页。先看看这些？</p>
+    <div class="links">
+      <a href="/" class="btn primary" data-zh="🏠 回到首页" data-en="🏠 Back to Home">🏠 回到首页</a>
+      <a href="/online-course/" class="btn ghost" data-zh="📚 线上课大纲" data-en="📚 Online Course">📚 线上课大纲</a>
+      <a href="/offline-course/" class="btn ghost" data-zh="🏫 线下课大纲" data-en="🏫 Offline Course">🏫 线下课大纲</a>
+      <a href="/faq/" class="btn ghost" data-zh="FAQ 常见问题" data-en="FAQ">FAQ 常见问题</a>
+    </div>
+    <p class="footer">🐌 蜗牛 AI · robin12300-snailai.github.io</p>
+  </div>
+</body>
+</html>

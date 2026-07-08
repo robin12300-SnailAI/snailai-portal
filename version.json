@@ -1,0 +1,36 @@
+{
+  "name": "SnailAI Official Website",
+  "version": "1.0.3",
+  "release_date": "2026-07-08",
+  "last_updated": "2026-07-08",
+  "domain": "https://robin12300-snailai.github.io/",
+  "deploy_target": "GitHub Pages",
+  "owner": {
+    "name": "Robin Luo",
+    "github": "https://github.com/robin12300-SnailAI"
+  },
+  "team": [
+    { "name": "Robin", "role": "Founder & Lead Instructor" },
+    { "name": "Michael Guo", "role": "Co-Founder & KSI Investment" },
+    { "name": "James 蒋培", "role": "AI Tool Support" },
+    { "name": "Jason 谢锦", "role": "Community Support" },
+    { "name": "Sean 吴清", "role": "AI Compute Specialist" }
+  ],
+  "channels": {
+    "wechat_official_account": "蜗牛 AI 在澳洲",
+    "wechat_video_account": "蜗牛 AI-AU",
+    "youtube": "https://www.youtube.com/@snailai-au"
+  },
+  "structure": {
+    "home": "/",
+    "faq": "/faq/",
+    "online_course": "/online-course/",
+    "offline_course": "/offline-course/"
+  },
+  "changelog": [
+    "1.0.3 (2026-07-08): Add mobile-only bottom nav to index.html (homepage root) too — phone visitors opening / now get the 8 quick-jump buttons (服务/课程表/视频/FAQ/学员登录/蜗牛问答/联系我们/链接大全); desktop unchanged",
+    "1.0.2 (2026-07-08): Add fixed mobile bottom nav to homepage — 服务/课程表/视频/FAQ/学员登录/蜗牛问答/联系我们/链接大全 (mobile-only, mirrors FAQ behavior)",
+    "1.0.0 (2026-07-05): Initial release on GitHub Pages — home, FAQ, online course, offline course, assets",
+    "offline-v1.0.0 (2026-07-05): Sync offline course from chocolate, add version tag V1.0.0"
+  ]
+}
