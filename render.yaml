@@ -18,3 +18,5 @@ services:
         value: /data/snailai.db
       - key: PYTHON_VERSION
         value: "3.13"
+
+# deployed on Starter plan with persistent disk
