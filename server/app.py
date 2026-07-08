@@ -33,7 +33,7 @@ BASE = Path(__file__).resolve().parent.parent          # 官网学生登录/
 SERVER_DIR = Path(__file__).resolve().parent           # 官网学生登录/server/
 DB_PATH = SERVER_DIR / "snailai.db"
 PORT = int(os.environ.get("PORT", "5000"))
-HOST = os.environ.get("HOST", "127.0.0.1")
+HOST = os.environ.get("HOST", "0.0.0.0")
 # 允许跨域的来源（GitHub Pages 主站等）。生产可改为你的域名。
 CORS_ORIGIN = os.environ.get("CORS_ORIGIN", "*")
 SESSION_TTL_HOURS = 24 * 7  # 会话有效期 7 天
