@@ -31,9 +31,16 @@ from flask import Flask, request, jsonify, send_from_directory
 
 BASE = Path(__file__).resolve().parent.parent          # 官网学生登录/
 SERVER_DIR = Path(__file__).resolve().parent           # 官网学生登录/server/
-# 数据库路径：Render 上挂 Persistent Disk 时设 DB_PATH=/data/snailai.db，
-# 本地开发默认放在 server/ 目录下。确保父目录存在。
-DB_PATH = Path(os.environ.get("DB_PATH", str(SERVER_DIR / "snailai.db")))
+# 数据库路径优先级：
+#   1) 若设置了 DB_PATH 环境变量，遵循它（Render 蓝图/控制台可设）
+#   2) 否则若 Persistent Disk 已挂载（/data 存在），用 /data/snailai.db（持久化，重新部署不丢）
+#   3) 否则本地开发回退到 server/ 目录
+if os.environ.get("DB_PATH"):
+    DB_PATH = Path(os.environ["DB_PATH"])
+elif os.path.exists("/data"):
+    DB_PATH = Path("/data/snailai.db")
+else:
+    DB_PATH = Path(SERVER_DIR / "snailai.db")
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 PORT = int(os.environ.get("PORT", "5000"))
 HOST = os.environ.get("HOST", "0.0.0.0")
