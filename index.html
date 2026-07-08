@@ -4,7 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>蜗牛AI 学员学堂</title>
-  <script>location.href = "login.html";</script>
+  <script>
+    if (location.hostname.indexOf('github.io') !== -1) {
+      location.replace('https://snailai-portal-1.onrender.com/login.html');
+    } else {
+      location.href = 'login.html';
+    }
+  </script>
 </head>
 <body>正在跳转至登录页…</body>
 </html>
