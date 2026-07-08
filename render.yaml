@@ -1,10 +1,20 @@
 services:
   - type: web
-    name: snailai-portal
+    name: snailai-portal-1
     runtime: python
     region: singapore
+    plan: starter
     branch: main
     rootDir: server
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn -w 4 -b 0.0.0.0:$PORT app:app
     healthCheckPath: /
+    disk:
+      name: snailai-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DB_PATH
+        value: /data/snailai.db
+      - key: PYTHON_VERSION
+        value: "3.13"
