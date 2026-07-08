@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的学堂 · 蜗牛AI 学员学堂</title>
+  <style>
+    :root{--paper:#FCFCFA;--ink:#1A1A2E;--ink2:#4a4a5e;--ink3:#8a8a9a;
+      --line:#e6e6ec;--accent:#FF5B1F;--accent-soft:#fff1ea;
+      --green:#10b981;--green-bg:#e7f8f1;--green2:#059669;
+      --radius:14px;--shadow:0 2px 8px rgba(26,26,46,.06);--shadow-lg:0 8px 32px rgba(26,26,46,.10)}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+      background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+
+    /* ---- 顶部栏 ---- */
+    .topbar{max-width:960px;margin:0 auto;padding:20px 24px;display:flex;align-items:center;
+      justify-content:space-between}
+    .brand{font-weight:800;font-size:18px;color:var(--ink)}
+    .brand span{color:var(--accent)}
+
+    /* ---- 欢迎区 ---- */
+    .hero{text-align:center;padding:48px 24px 36px;max-width:960px;margin:0 auto}
+    .hero-avatar{font-size:56px;margin-bottom:12px;line-height:1}
+    .hero h1{font-size:32px;font-weight:900;margin-bottom:4px}
+    .hero h1 .name{color:var(--accent)}
+    .hero-role{display:inline-block;background:var(--green-bg);color:var(--green2);
+      font-size:14px;font-weight:700;padding:4px 14px;border-radius:20px;margin-top:8px}
+    .hero-sub{color:var(--ink3);font-size:15px;margin-top:12px}
+
+    /* ---- 卡片网格 ---- */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+      gap:20px;max-width:960px;margin:0 auto;padding:0 24px 60px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:28px 24px;transition:.25s;cursor:pointer;text-decoration:none;
+      display:block;position:relative;overflow:hidden}
+    .card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);border-color:var(--accent)}
+    .card-icon{font-size:40px;margin-bottom:14px}
+    .card h3{font-size:19px;font-weight:800;margin-bottom:6px}
+    .card p{font-size:14px;color:var(--ink3);line-height:1.55}
+    .card-go{display:inline-flex;align-items:center;gap:6px;margin-top:14px;
+      font-size:14px;font-weight:700;color:var(--accent)}
+    .card-go::after{content:"→";transition:transform .2s}
+    .card:hover .card-go::after{transform:translateX(4px)}
+
+    /* ---- 特色标记 ---- */
+    .badge{position:absolute;top:16px;right:16px;background:var(--accent);
+      color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+
+    /* ---- 底部 ---- */
+    .foot{text-align:center;color:var(--ink3);font-size:13px;padding:24px;
+      border-top:1px solid var(--line);margin-top:20px}
+  </style>
+</head>
+<body>
+
+  <!-- 顶栏 -->
+  <div class="topbar">
+    <div class="brand">🐌 蜗牛<span>AI</span> · 学员学堂</div>
+    <div id="userArea"></div>
+  </div>
+
+  <!-- 欢迎区 -->
+  <div class="hero">
+    <div class="hero-avatar">👋</div>
+    <h1>欢迎回来，<span class="name" id="welcomeName">同学</span></h1>
+    <div class="hero-role" id="roleBadge">学员</div>
+    <p class="hero-sub" id="heroSub">以下是你可用的学习工具与资料</p>
+  </div>
+
+  <!-- 功能卡片 -->
+  <div class="grid" id="cardGrid">
+    <!-- JS 动态渲染 -->
+  </div>
+
+  <div class="foot">蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI</div>
+
+  <script>
+    const S_KEY = "snailai_api_token";
+    const U_KEY = "snailai_me";
+
+    // 未登录 → 回登录页
+    let token = sessionStorage.getItem(S_KEY);
+    let me = null;
+    try { me = JSON.parse(sessionStorage.getItem(U_KEY) || "null"); } catch(e){}
+
+    if (!token || !me) {
+      location.href = "login.html";
+    }
+
+    const ROLE_NAME = {student:"学员", ta:"助教", instructor:"讲师"};
+    const ROLE_DESC = {
+      student: "查看并确认你的课前准备能力进度",
+      ta: "查看全部学员能力进度，进行助教审核",
+      instructor: "查看全部学员能力进度，进行讲师终审"
+    };
+
+    // 渲染顶部用户信息
+    document.getElementById("userArea").innerHTML =
+      `<span style="font-size:14px;color:var(--ink3)">${me.name}</span>` +
+      ` <button onclick="doLogout()" style="margin-left:10px;padding:5px 14px;border:1px solid var(--line);` +
+      `border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink2)">退出</button>`;
+
+    // 渲染欢迎区
+    document.getElementById("welcomeName").textContent = me.name.split(/\s/).pop() || me.name;
+    document.getElementById("roleBadge").textContent = ROLE_NAME[me.role] || me.role;
+    document.getElementById("heroSub").textContent = ROLE_DESC[me.role] || "欢迎来到蜗牛AI学员学堂";
+
+    // 根据角色显示不同卡片
+    const cards = [];
+
+    // 所有角色都能看到：AI 能力清单
+    cards.push({
+      icon: "✅",
+      title: "AI 能力清单",
+      desc: "9 项课前准备能力（下载 WorkBuddy、配置龙虾、微信设置等）。三色标签审核：学员自查 🟢 / 助教审核 🔵 / 讲师审核 🟠。",
+      href: "AI%20能力清单/",
+      badge: null,
+      accent: true
+    });
+
+    // 渲染卡片
+    const grid = document.getElementById("cardGrid");
+    cards.forEach(c => {
+      const a = document.createElement("a");
+      a.href = c.href;
+      if (c.accent) a.className = "card card-main";
+      else a.className = "card";
+      a.innerHTML =
+        (c.badge ? `<span class="badge">${c.badge}</span>` : "") +
+        `<div class="card-icon">${c.icon}</div>` +
+        `<h3>${c.title}</h3>` +
+        `<p>${c.desc}</p>` +
+        `<div class="card-go">打开 →</div>`;
+      grid.appendChild(a);
+    });
+
+    function doLogout() {
+      sessionStorage.removeItem(S_KEY);
+      sessionStorage.removeItem(U_KEY);
+      location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
