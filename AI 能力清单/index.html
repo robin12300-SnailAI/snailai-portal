@@ -4,283 +4,294 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI 能力清单 · 蜗牛AI 学员学堂</title>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+    :root{
+      --paper:#FCFCFA; --ink:#1A1A2E; --ink-2:#4a4a5e; --ink-3:#8a8a9a;
+      --line:#e6e6ec; --accent:#FF5B1F; --accent-soft:#fff1ea;
+      --green:#10b981; --green-bg:#e7f8f1; --blue:#3b82f6; --blue-bg:#eaf1ff;
+      --radius:14px; --shadow:0 2px 8px rgba(26,26,46,.06);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+      background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+    a{color:var(--accent);text-decoration:none}
+    .topbar{max-width:1180px;margin:0 auto;padding:18px 20px;display:flex;align-items:center;
+      justify-content:space-between;gap:12px}
+    .brand{font-weight:700;font-size:17px;letter-spacing:.3px}
+    .brand .dot{color:var(--accent)}
+    .who{font-size:13px;color:var(--ink-3)}
+    .who b{color:var(--ink)}
+    .btn{border:none;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:600;
+      cursor:pointer;transition:.15s;font-family:inherit}
+    .btn-accent{background:var(--accent);color:#fff}
+    .btn-accent:hover{filter:brightness(1.05);transform:translateY(-1px)}
+    .btn-ghost{background:#fff;color:var(--ink-2);border:1px solid var(--line)}
+    .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+    .wrap{max-width:1180px;margin:0 auto;padding:8px 20px 60px}
+    .page-title{font-size:26px;font-weight:800;margin:10px 0 4px}
+    .page-sub{color:var(--ink-3);font-size:14px;margin-bottom:18px}
+
+    /* 登录卡片 */
+    #loginView{max-width:380px;margin:8vh auto 0;background:#fff;border:1px solid var(--line);
+      border-radius:var(--radius);box-shadow:var(--shadow);padding:30px 26px}
+    #loginView h2{font-size:20px;margin-bottom:4px}
+    #loginView p{color:var(--ink-3);font-size:13px;margin-bottom:18px}
+    .field{margin-bottom:14px}
+    .field label{display:block;font-size:13px;color:var(--ink-2);margin-bottom:6px;font-weight:600}
+    .field input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;
+      font-size:15px;font-family:inherit;transition:.15s}
+    .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+    .login-err{color:#ef4444;font-size:13px;margin-top:6px;min-height:18px}
+
+    /* 图例区 */
+    .legend{background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+      padding:16px 18px;margin-bottom:16px;box-shadow:var(--shadow)}
+    .legend h3{font-size:14px;margin-bottom:10px;color:var(--ink-2)}
+    .legend ol{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:6px 18px}
+    .legend li{font-size:13px;color:var(--ink-2);display:flex;gap:8px;align-items:baseline}
+    .legend .no{flex:none;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);
+      color:var(--accent);font-weight:700;font-size:12px;display:inline-flex;align-items:center;
+      justify-content:center}
+
+    /* 统计条 */
+    .stats{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;margin-bottom:14px}
+    .stat{flex:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;
+      min-width:88px;text-align:center;box-shadow:var(--shadow)}
+    .stat .n{font-size:18px;font-weight:800;color:var(--ink)}
+    .stat .l{font-size:11px;color:var(--ink-3);white-space:nowrap}
+
+    /* 矩阵 */
+    .matrix-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);
+      background:#fff;box-shadow:var(--shadow);max-height:74vh}
+    table.matrix{border-collapse:separate;border-spacing:0;width:100%;font-size:13px;min-width:880px}
+    table.matrix th,table.matrix td{padding:10px 12px;border-bottom:1px solid var(--line);
+      border-right:1px solid var(--line);vertical-align:middle;text-align:center}
+    table.matrix thead th{position:sticky;top:0;background:#fafafe;z-index:3;font-weight:700;
+      color:var(--ink-2);white-space:nowrap}
+    table.matrix thead th .col-no{display:inline-flex;width:20px;height:20px;border-radius:50%;
+      background:var(--accent-soft);color:var(--accent);font-size:11px;align-items:center;
+      justify-content:center;margin-right:5px;font-weight:800}
+    table.matrix td.name{position:sticky;left:0;background:#fff;z-index:2;text-align:left;
+      font-weight:600;min-width:120px;box-shadow:1px 0 0 var(--line)}
+    table.matrix thead th.name{position:sticky;left:0;z-index:4;background:#fafafe}
+    table.matrix tbody tr:hover td{background:#fcfcff}
+    table.matrix tbody tr:hover td.name{background:#f7f7ff}
+    .cells{display:flex;flex-direction:column;gap:5px;align-items:center}
+
+    /* chip */
+    .chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;
+      font-size:12px;font-weight:600;border:1.5px solid var(--line);background:#fff;color:var(--ink-3);
+      cursor:pointer;user-select:none;transition:.12s;min-width:74px;justify-content:center}
+    .chip .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-3);flex:none}
+    .chip.self .dot{background:var(--green)} .chip.ta .dot{background:var(--blue)} .chip.final .dot{background:var(--accent)}
+    .chip.self.on{background:var(--green-bg);border-color:var(--green);color:#0a7a55}
+    .chip.ta.on{background:var(--blue-bg);border-color:var(--blue);color:#1d4ed8}
+    .chip.final.on{background:var(--accent-soft);border-color:var(--accent);color:#c2410c}
+    .chip.on .dot{background:#fff}
+    .chip[disabled]{opacity:.55;cursor:not-allowed}
+    .chip[disabled] .dot{background:var(--ink-3)}
+
+    .skeleton{height:14px;background:linear-gradient(90deg,#eee,#f5f5f5,#eee);border-radius:6px;
+      margin:6px 0;animation:sk 1.2s infinite}
+    @keyframes sk{0%{opacity:.6}50%{opacity:1}100%{opacity:.6}}
+    .empty{padding:40px;text-align:center;color:var(--ink-3)}
+
+    /* toast */
+    #toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(20px);
+      background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;
+      opacity:0;pointer-events:none;transition:.25s;z-index:99}
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    .foot{max-width:1180px;margin:30px auto 0;padding:20px;text-align:center;color:var(--ink-3);font-size:12px}
+    @media(max-width:600px){
+      .wrap{padding:8px 12px 50px}
+      .page-title{font-size:22px}
+      table.matrix{font-size:12px;min-width:760px}
+    }
+  </style>
 </head>
 <body>
-  <div id="nav-root"></div>
-  <div id="announce-root"></div>
-
-  <div class="wrap">
-    <h2 class="section-title">✅ AI 能力清单</h2>
-    <p class="section-sub">勾选流程：<b>助教初审 → 总讲师终审</b>（初级能力助教打勾即过）。学员可查看自己的进度与证书，但不能打勾。</p>
-
-    <!-- 腾讯文档智能表格入口 -->
-    <a href="https://docs.qq.com/smartsheet/DRUVnWkhSeXFwSEtR" target="_blank" rel="noopener" class="smart-sheet-card">
-      <div class="ss-icon">📊</div>
-      <div class="ss-body">
-        <div class="ss-title">腾讯文档 · AI 能力清单智能表格</div>
-        <div class="ss-desc">9 项能力 × 三角色审核（学员自查 / 助教审核 / 讲师审核），在线协作编辑 →</div>
-      </div>
-      <div class="ss-arrow">→</div>
-    </a>
-
-    <!-- 证书等级卡片 -->
-    <div id="certCard"></div>
-
-    <!-- 助教 / 讲师：学员选择 + 总览 -->
-    <div id="staffBar"></div>
-    <div id="overviewWrap"></div>
-
-    <!-- 能力清单（按等级分段）-->
-    <div id="list"></div>
-
-    <!-- 导出 / 导入 -->
-    <div class="toolbar" id="ioBar" style="margin-top:24px;"></div>
+  <div class="topbar">
+    <div class="brand">蜗牛AI<span class="dot">·</span>学员学堂</div>
+    <div class="who" id="whoBox"></div>
   </div>
 
-  <div id="foot-root"></div>
+  <!-- 登录视图 -->
+  <div id="loginView">
+    <h2>🔐 登录 AI 能力清单</h2>
+    <p>使用你的学员账号登录（数据存于蜗牛AI 后端，实时同步）</p>
+    <div class="field">
+      <label>账号</label>
+      <input id="username" type="text" autocomplete="username" placeholder="如 serena">
+    </div>
+    <div class="field">
+      <label>密码</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="密码">
+    </div>
+    <button class="btn btn-accent" id="loginBtn" style="width:100%">登录</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
 
-  <script src="../assets/data.js"></script>
-  <script src="../assets/auth.js"></script>
-  <script src="../assets/app.js"></script>
+  <!-- 应用视图 -->
+  <div class="wrap" id="appView" style="display:none">
+    <h1 class="page-title">✅ AI 能力清单</h1>
+    <p class="page-sub">9 项课前准备能力 · 三角色审核（学员自查 / 助教审核 / 讲师审核）。数据实时存于后端，多人协作自动同步。</p>
+
+    <div class="legend">
+      <h3>📋 能力项说明（列头 ①~⑨ 对应如下）</h3>
+      <ol id="legendList"></ol>
+    </div>
+
+    <div class="stats" id="statsBar"></div>
+
+    <div class="matrix-wrap">
+      <div id="matrixBox"><div class="empty">加载中…</div></div>
+    </div>
+  </div>
+
+  <div class="foot">蜗牛AI 学员学堂 · AI 能力清单（SQLite 驱动）· 数据私有、实时同步</div>
+  <div id="toast"></div>
+
   <script>
-    requireAuth();
-    const user = getCurrentUser();
-    const role = user.role;                                  // student | ta | instructor
-    const isStaff = (role === "ta" || role === "instructor");
-    const canTa = (role === "ta");
-    const canFinal = (role === "instructor");
-    const ROLE_NAME = { student: "学员", ta: "助教", instructor: "总讲师" };
-    const students = USERS.filter(u => u.role === "student");
-    const LS_KEY = "snailai_checklist_v1";
+    const API = window.SNAILAI_API_BASE || "";
+    const COLS = [
+      {key:"self",  label:"学员自查", cls:"self"},
+      {key:"ta",    label:"助教审核", cls:"ta"},
+      {key:"final", label:"讲师审核", cls:"final"}
+    ];
+    const ROLE_NAME = {student:"学员", ta:"助教", instructor:"讲师"};
+    let TOKEN = sessionStorage.getItem("snailai_api_token");
+    let ME = null; try { ME = JSON.parse(sessionStorage.getItem("snailai_me")||"null"); } catch(e){}
+    let CAPS = [], STUDENTS = [];
 
-    /* ---------- 数据存储（localStorage，存于本浏览器）---------- */
-    function loadChecks() {
-      try { return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch (e) { return {}; }
-    }
-    let checks = loadChecks();
-    function saveChecks() { localStorage.setItem(LS_KEY, JSON.stringify(checks)); }
-    function getCap(username, capId) {
-      return (checks[username] && checks[username][capId]) || { ta: false, final: false };
-    }
-    function setCap(username, capId, col, val) {
-      checks[username] = checks[username] || {};
-      checks[username][capId] = checks[username][capId] || { ta: false, final: false };
-      checks[username][capId][col] = val;
-      // 助教取消初审时，同步清空讲师终审，保持顺序一致
-      if (col === "ta" && !val) checks[username][capId].final = false;
-      saveChecks();
-    }
-
-    let viewUser = (role === "student") ? user.username : (students[0] ? students[0].username : null);
-
-    /* ---------- 通过判定 ---------- */
-    function isPassed(c, st) {
-      if (c.tier === "初级") return !!st.ta;
-      return !!st.ta && !!st.final;
-    }
-    function countPassed(username) {
-      let n = 0;
-      CAPABILITIES.forEach(c => { if (isPassed(c, getCap(username, c.id))) n++; });
-      return n;
-    }
-    function capStatus(c, st) {
-      if (c.tier === "初级") {
-        return st.ta ? { cls: "pass", txt: "✅ 已通过" } : { cls: "none", txt: "未开始" };
-      }
-      if (st.ta && st.final) return { cls: "pass", txt: "✅ 已通过" };
-      if (st.ta)           return { cls: "wait", txt: "🟡 初审通过" };
-      return { cls: "none", txt: "未开始" };
-    }
-
-    /* ---------- 证书等级 ---------- */
-    function certOf(passed) {
-      for (const c of CERT_LEVELS) if (passed >= c.min) return c;
-      return null;
-    }
-    function nextCert(passed) {
-      let best = null;
-      for (const c of CERT_LEVELS) if (c.min > passed && (!best || c.min < best.min)) best = c;
-      return best;
-    }
-    function renderCertCard(username) {
-      const passed = countPassed(username);
-      const total = CAPABILITIES.length;
-      const cur = certOf(passed);
-      const nxt = nextCert(passed);
-      const pct = Math.round(passed / total * 100);
-      const name = cur ? `${cur.icon} ${cur.name}` : "🔒 未定级";
-      const color = cur ? cur.color : "#b0bec5";
-      let hint;
-      if (nxt) hint = `再完成 <b>${nxt.min - passed}</b> 项即可升级到 ${nxt.icon} ${nxt.name}`;
-      else hint = "🎉 已达最高等级，全部能力通过！";
-      document.getElementById("certCard").innerHTML = `
-        <div class="cert-card" style="border-left:6px solid ${color};">
-          <div class="cert-icon" style="color:${color}">${cur ? cur.icon : "🔒"}</div>
-          <div class="cert-body">
-            <div class="cert-name" style="color:${color}">${name}</div>
-            <div class="cert-sub">已通过 ${passed} / ${total} 项能力</div>
-            <div class="progress" style="margin-top:8px;"><span style="width:${pct}%;background:${color}"></span></div>
-            <div class="cert-hint">${hint}</div>
-          </div>
-        </div>`;
-    }
-
-    /* ---------- 助教 / 讲师：学员选择器 ---------- */
-    function renderStaffBar() {
-      if (!isStaff) return;
-      const opts = students.map(s =>
-        `<option value="${s.username}" ${s.username === viewUser ? "selected" : ""}>${s.name}（${s.username}）</option>`).join("");
-      const editTxt = canTa ? "助教初审" : canFinal ? "讲师终审" : "—";
-      document.getElementById("staffBar").innerHTML = `
-        <div class="staff-bar">
-          <span class="staff-label">查看学员：</span>
-          <select id="studentSel">${opts}</select>
-          <span class="staff-hint">你当前可勾选：<b>${editTxt}</b></span>
-        </div>`;
-      document.getElementById("studentSel").addEventListener("change", e => {
-        viewUser = e.target.value;
-        renderAll();
+    function api(path, opts={}) {
+      opts.headers = Object.assign({"Content-Type":"application/json"}, opts.headers||{});
+      if (TOKEN) opts.headers["Authorization"] = "Bearer " + TOKEN;
+      return fetch(API + path, opts).then(r => {
+        if (r.status === 401) { logout(); throw new Error("登录已失效"); }
+        return r.json();
       });
     }
+    function toast(msg){
+      const t = document.getElementById("toast");
+      t.textContent = msg; t.classList.add("show");
+      clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove("show"), 1800);
+    }
+    function logout(){
+      TOKEN=null; ME=null;
+      sessionStorage.removeItem("snailai_api_token");
+      sessionStorage.removeItem("snailai_me");
+      location.reload();
+    }
+    function canEdit(col){
+      if (col==="self")  return ["student","ta","instructor"].includes(ME.role);
+      if (col==="ta")    return ["ta","instructor"].includes(ME.role);
+      if (col==="final") return ME.role==="instructor";
+      return false;
+    }
 
-    /* ---------- 助教 / 讲师：学员总览表 ---------- */
-    function renderOverview() {
-      if (!isStaff) return;
-      const total = CAPABILITIES.length;
-      const rows = students.map(s => {
-        let ta = 0, fin = 0;
-        CAPABILITIES.forEach(c => {
-          const st = getCap(s.username, c.id);
-          if (st.ta) ta++;
-          if (st.final) fin++;
-        });
-        const passed = countPassed(s.username);
-        const cert = certOf(passed);
-        return `<tr data-u="${s.username}" class="${s.username === viewUser ? "active" : ""}">
-          <td>${s.name}</td>
-          <td>${ta}/${total}</td>
-          <td>${fin}/${total}</td>
-          <td>${Math.round(passed / total * 100)}%</td>
-          <td>${cert ? cert.icon + " " + cert.name : "🔒 未定级"}</td>
-        </tr>`;
+    async function doLogin(){
+      const u = document.getElementById("username").value.trim();
+      const p = document.getElementById("password").value;
+      document.getElementById("loginErr").textContent = "";
+      try {
+        const d = await api("/api/login", {method:"POST", body:JSON.stringify({username:u, password:p})});
+        if (!d.ok) throw new Error(d.error || "登录失败");
+        TOKEN = d.token; ME = d.user;
+        sessionStorage.setItem("snailai_api_token", TOKEN);
+        sessionStorage.setItem("snailai_me", JSON.stringify(ME));
+        enterApp();
+      } catch(e){ document.getElementById("loginErr").textContent = e.message; }
+    }
+
+    async function enterApp(){
+      document.getElementById("loginView").style.display = "none";
+      document.getElementById("appView").style.display = "block";
+      document.getElementById("whoBox").innerHTML =
+        `欢迎 <b>${ME.name}</b> · ${ROLE_NAME[ME.role]||ME.role} · <a href="#" id="logoutLink">退出</a>`;
+      document.getElementById("logoutLink").onclick = (e)=>{e.preventDefault();logout();};
+      await load();
+    }
+
+    async function load(){
+      const c = await api("/api/capabilities");
+      CAPS = c.capabilities || [];
+      if (ME.role === "student") {
+        STUDENTS = [{username:ME.username, name:ME.name}];
+      } else {
+        const s = await api("/api/students");
+        STUDENTS = s.students || [];
+      }
+      for (const st of STUDENTS) {
+        const ck = await api("/api/checks/" + st.username);
+        st.checks = ck.checks || {};
+      }
+      renderLegend();
+      renderStats();
+      renderMatrix();
+    }
+
+    function renderLegend(){
+      document.getElementById("legendList").innerHTML = CAPS.map((c,i)=>
+        `<li><span class="no">${i+1}</span><span><b>${c.title}</b> — ${c.description||""}</span></li>`
+      ).join("");
+    }
+
+    function renderStats(){
+      if (ME.role === "student") { document.getElementById("statsBar").innerHTML = ""; return; }
+      const html = CAPS.map((c,i)=>{
+        let n=0;
+        STUDENTS.forEach(st=>{ const ck=st.checks[c.id]; if(ck && ck.self) n++; });
+        return `<div class="stat"><div class="n">${n}/${STUDENTS.length}</div><div class="l">${i+1}·自查</div></div>`;
       }).join("");
-      document.getElementById("overviewWrap").innerHTML = `
-        <div class="overview">
-          <h3 class="catalog-title" style="margin-top:4px;">📊 学员总览（${students.length} 人）</h3>
-          <table class="ov-table">
-            <thead><tr><th>学员</th><th>初审</th><th>终审</th><th>通过率</th><th>证书等级</th></tr></thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>`;
-      document.querySelectorAll("#overviewWrap tbody tr").forEach(tr => {
-        tr.addEventListener("click", () => { viewUser = tr.dataset.u; renderAll(); });
+      document.getElementById("statsBar").innerHTML = html;
+    }
+
+    function renderMatrix(){
+      if (!STUDENTS.length){ document.getElementById("matrixBox").innerHTML='<div class="empty">暂无学员数据</div>'; return; }
+      const head = `<thead><tr><th class="name">学员</th>${CAPS.map((c,i)=>
+        `<th title="${c.description||""}"><span class="col-no">${i+1}</span>${c.title}</th>`).join("")}</tr></thead>`;
+      const body = "<tbody>" + STUDENTS.map(st=>{
+        const cells = CAPS.map(c=>{
+          const ck = st.checks[c.id] || {};
+          const chips = COLS.map(col=>{
+            const on = !!ck[col.key];
+            const dis = canEdit(col.key) ? "" : "disabled";
+            return `<span class="chip ${col.cls} ${on?"on":""}" data-u="${st.username}" data-cap="${c.id}" data-col="${col.key}" ${dis}>
+              <span class="dot"></span>${col.label}</span>`;
+          }).join("");
+          return `<td><div class="cells">${chips}</div></td>`;
+        }).join("");
+        return `<tr><td class="name">${st.name}</td>${cells}</tr>`;
+      }).join("") + "</tbody>";
+      document.getElementById("matrixBox").innerHTML = `<table class="matrix">${head}${body}</table>`;
+      document.querySelectorAll(".chip:not([disabled])").forEach(el=>{
+        el.onclick = ()=>toggleChip(el);
       });
     }
 
-    /* ---------- 能力清单（按等级分段，2 勾选）---------- */
-    function renderList() {
-      if (!viewUser) {
-        document.getElementById("list").innerHTML = `<div class="pending">暂无学员数据</div>`;
-        return;
+    async function toggleChip(el){
+      const u = el.dataset.u, capId = el.dataset.cap, col = el.dataset.col;
+      const willOn = !el.classList.contains("on");
+      el.classList.toggle("on", willOn);            // 乐观更新
+      try {
+        await api("/api/checks/"+u+"/"+capId, {method:"PUT",
+          body:JSON.stringify({column:col, value:willOn?1:0})});
+        toast("已保存");
+        // 刷新该学员统计
+        const st = STUDENTS.find(s=>s.username===u);
+        const ck = await api("/api/checks/"+u); st.checks = ck.checks||{};
+        renderStats();
+      } catch(e){
+        el.classList.toggle("on", !willOn);          // 回滚
+        toast("保存失败：" + e.message);
       }
-      const TIERS = ["初级", "中级", "高级"];
-      let html = "";
-      TIERS.forEach(tier => {
-        const items = CAPABILITIES.filter(c => c.tier === tier);
-        if (!items.length) return;
-        const tierCls = tier === "初级" ? "tier-basic" : tier === "中级" ? "tier-mid" : "tier-adv";
-        html += `<div class="cap-tier"><h3 class="cap-tier-title ${tierCls}">${tier}（${items.length} 项）</h3>`;
-        items.forEach(c => {
-          const st = getCap(viewUser, c.id);
-          const state = capStatus(c, st);
-          const taChk = st.ta ? "checked" : "";
-          const finalChk = st.final ? "checked" : "";
-          // 初级：讲师终审不适用（显示 —）；中高级：讲师终审在助教未勾前锁定
-          const finalDisabled = (!canFinal) || (tier !== "初级" && !st.ta) ? "disabled" : "";
-          const taDisabled = canTa ? "" : "disabled";
-          const finalCell = tier === "初级"
-            ? `<span class="cap-na">—</span>`
-            : `<label class="teacher"><input type="checkbox" data-cap="${c.id}" data-col="final" ${finalChk} ${finalDisabled}> 讲师终审</label>`;
-          html += `
-            <div class="cap-item">
-              <div class="cap-head">
-                <div>
-                  <div class="cap-name"><span class="cap-no">${c.no}</span>${c.name} <span class="cap-tag">${c.category}</span></div>
-                  <div class="cap-desc">${c.desc}</div>
-                </div>
-                <span class="cap-status ${state.cls}">${state.txt}</span>
-              </div>
-              <div class="cap-checks">
-                <label><input type="checkbox" data-cap="${c.id}" data-col="ta" ${taChk} ${taDisabled}> 助教初审</label>
-                ${finalCell}
-              </div>
-            </div>`;
-        });
-        html += `</div>`;
-      });
-      document.getElementById("list").innerHTML = html;
-      document.querySelectorAll("#list input[type=checkbox]").forEach(cb => {
-        cb.addEventListener("change", e => {
-          const capId = e.target.dataset.cap;
-          const col = e.target.dataset.col;
-          setCap(viewUser, capId, col, e.target.checked);
-          renderAll();
-        });
-      });
     }
 
-    /* ---------- 导出 / 导入（跨设备桥梁）---------- */
-    function renderIO() {
-      document.getElementById("ioBar").innerHTML = `
-        <button class="btn btn-ghost btn-sm" id="expBtn">⬇️ 导出备份 (JSON)</button>
-        <button class="btn btn-ghost btn-sm" id="impBtn">⬆️ 导入备份</button>
-        <input type="file" id="impFile" accept="application/json" style="display:none">
-        <span class="io-note">数据保存在本浏览器，换设备 / 清缓存会丢失，建议定期导出；多人协作可用「导入」合并彼此的备份。</span>`;
-      document.getElementById("expBtn").onclick = exportJSON;
-      document.getElementById("impBtn").onclick = () => document.getElementById("impFile").click();
-      document.getElementById("impFile").onchange = importJSON;
-    }
-    function exportJSON() {
-      const blob = new Blob([JSON.stringify(checks, null, 2)], { type: "application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "snailai_checklist_" + new Date().toISOString().slice(0, 10) + ".json";
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
-    function importJSON(e) {
-      const f = e.target.files[0]; if (!f) return;
-      const r = new FileReader();
-      r.onload = () => {
-        try {
-          const data = JSON.parse(r.result);
-          Object.keys(data).forEach(u => {
-            checks[u] = checks[u] || {};
-            Object.keys(data[u]).forEach(capId => {
-              const src = data[u][capId] || {};
-              checks[u][capId] = { ta: !!src.ta, final: !!src.final };
-            });
-          });
-          saveChecks();
-          renderAll();
-          alert("导入成功，已与本地备份合并。");
-        } catch (err) { alert("导入失败：文件格式不正确。"); }
-      };
-      r.readAsText(f);
-    }
-
-    /* ---------- 初始化 ---------- */
-    function renderAll() {
-      renderCertCard(viewUser);
-      renderStaffBar();
-      renderOverview();
-      renderList();
-    }
-    document.getElementById("roleLabel") && (document.getElementById("roleLabel").textContent = ROLE_NAME[role]);
-    renderIO();
-    renderAll();
-    initPortal("checklist");
+    // 初始化
+    if (TOKEN && ME) { enterApp(); }
+    else { document.getElementById("loginBtn").onclick = doLogin;
+      document.getElementById("password").addEventListener("keydown", e=>{ if(e.key==="Enter") doLogin(); }); }
   </script>
 </body>
 </html>

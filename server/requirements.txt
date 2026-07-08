@@ -1,3 +1,2 @@
 flask>=3.0
-# 生产部署可加 gunicorn（见 README）
-# gunicorn>=21.0
+gunicorn>=21.0
