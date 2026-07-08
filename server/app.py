@@ -46,6 +46,8 @@ def db_conn():
     conn = sqlite3.connect(str(DB_PATH))
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
+    conn.execute("PRAGMA journal_mode = WAL")
+    conn.execute("PRAGMA busy_timeout = 5000")
     return conn
 
 
@@ -127,7 +129,7 @@ def _seed_users(c):
     for username, name, role, pw in users:
         salt = secrets.token_hex(16)
         c.execute(
-            "INSERT INTO users(username, name, role, password_hash, salt) "
+            "INSERT OR IGNORE INTO users(username, name, role, password_hash, salt) "
             "VALUES(?,?,?,?,?)",
             (username, name, role, _hash_pw(pw, salt), salt),
         )
@@ -147,7 +149,7 @@ def _seed_capabilities(c):
     ]
     for cid, cat, title, desc in caps:
         c.execute(
-            "INSERT INTO capabilities(id, title, description, category) VALUES(?,?,?,?)",
+            "INSERT OR IGNORE INTO capabilities(id, title, description, category) VALUES(?,?,?,?)",
             (cid, title, desc, cat),
         )
 
@@ -396,8 +398,11 @@ def serve(path):
     return send_from_directory(BASE, "login.html")
 
 
+# 模块加载时即初始化数据库：gunicorn 以模块方式导入时也会执行，
+# 确保 Render 等生产环境在首次请求前已建好表并灌入种子数据。
+init_db()
+print(f"[蜗牛AI Portal] 数据库: {DB_PATH}")
+
 if __name__ == "__main__":
-    init_db()
-    print(f"[蜗牛AI Portal] 数据库: {DB_PATH}")
     print(f"[蜗牛AI Portal] 监听: http://{HOST}:{PORT}")
     app.run(host=HOST, port=PORT, debug=False)
