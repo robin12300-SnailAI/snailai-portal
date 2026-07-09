@@ -37,7 +37,7 @@
   <header>
     <div>
       <h1 data-zh="蜗牛AI 访问分析看板" data-en="SnailAI Analytics Dashboard">蜗牛AI 访问分析看板</h1>
-      <div class="sub" data-zh="仅管理员可见 · 数据存于本站数据库" data-en="Admin only · data stored on this site's database">仅管理员可见 · 数据存于本站数据库</div>
+      <div class="sub" data-zh="助教与管理员可见 · 数据存于本站数据库" data-en="Visible to TAs & admins · data stored on this site's database">助教与管理员可见 · 数据存于本站数据库</div>
     </div>
     <div class="lang-switch">
       <button class="lang-btn active" data-lang="zh">中文</button>
@@ -79,7 +79,7 @@
 <script>
 requireAuth();
 var me = getCurrentUser();
-if (!me || me.role !== 'admin') { location.href = '/login.html'; }
+if (!me || !['ta','instructor','admin'].includes(me.role)) { location.href = '/login.html'; }
 
 var TOKEN = sessionStorage.getItem('snailai_api_token') || '';
 function api(path){

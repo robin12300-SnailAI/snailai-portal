@@ -2,18 +2,20 @@
 """
 蜗牛AI 学员门户 — 后端（SQLite + Flask）
 ========================================
-统一存储：用户(学员/助教/总讲师)、能力清单勾选、登录会话。
+统一存储：用户(学员/助教/总讲师)、能力清单勾选、登录会话、蜗牛问答。
 纯前端站点由本服务一并托管（同源，免 CORS）；同时开放 CORS 以便
 GitHub Pages 版门户也能调用本 API。
 
 表结构
 ------
 users(id, username UNIQUE, name, role, password_hash, salt)
-  role ∈ {student, ta, instructor}
+  role ∈ {student, ta, instructor, admin}
 capabilities(id PK, title, description, category)
 checks(student_username, cap_id, self, ta, final, updated_at, updated_by)
   PK(student_username, cap_id)
 sessions(token PK, username, created_at, expires_at)
+qa_threads(id PK, author_type, author_username, author_name, title, body, pinned, deleted)
+qa_replies(id PK, thread_id, parent_id, author_type, author_username, author_name, body, deleted)
 
 运行
 ----
@@ -180,6 +182,29 @@ def init_db():
       duration_sec INTEGER,
       is_login INTEGER DEFAULT 0,
       created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE TABLE IF NOT EXISTS qa_threads(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      author_type TEXT NOT NULL,        -- 'student' | 'anon'
+      author_username TEXT,             -- NULL for anon
+      author_name TEXT NOT NULL,        -- 显示名（学员=真实姓名；匿名=自取昵称）
+      title TEXT NOT NULL,
+      body TEXT NOT NULL,
+      pinned INTEGER DEFAULT 0,
+      deleted INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE TABLE IF NOT EXISTS qa_replies(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      thread_id INTEGER NOT NULL,
+      parent_id INTEGER,                -- NULL=顶层回答；否则=对某回复的追问
+      author_type TEXT NOT NULL,
+      author_username TEXT,
+      author_name TEXT NOT NULL,
+      body TEXT NOT NULL,
+      deleted INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY(thread_id) REFERENCES qa_threads(id)
     );
     """)
     conn.commit()
@@ -844,6 +869,185 @@ def api_delete_need(need_id):
     return jsonify(ok=True, id=need_id)
 
 
+# ---------------------------------------------------------------- 蜗牛问答 (Q&A Board)
+def _qa_author(user, anon_name):
+    """解析发帖身份：登录学员→实名；否则匿名（需昵称）。
+    返回 (author_type, author_username, author_name) 或 None（匿名未给昵称）。"""
+    if user:
+        return ("student", user["username"], user["name"])
+    name = (anon_name or "").strip()
+    if not name:
+        return None
+    return ("anon", None, name[:40])
+
+
+def _can_delete_qa(user, author_username):
+    """作者本人（学员）或助教/讲师/管理员可删。"""
+    if not user:
+        return False
+    if _is_staff(user):
+        return True
+    return user["role"] == "student" and user["username"] == author_username
+
+
+@app.route("/api/qa/threads", methods=["GET"])
+def api_qa_list_threads():
+    q = (request.args.get("q") or "").strip()
+    sort = request.args.get("sort", "new")  # new | old
+    conn = db_conn()
+    sql = (
+        "SELECT t.id, t.author_type, t.author_username, t.author_name, t.title, "
+        "t.body, t.pinned, t.created_at, "
+        "(SELECT COUNT(*) FROM qa_replies r WHERE r.thread_id=t.id AND r.deleted=0) AS replies "
+        "FROM qa_threads t WHERE t.deleted=0"
+    )
+    params = []
+    if q:
+        sql += " AND (t.title LIKE ? OR t.body LIKE ?)"
+        like = "%" + q + "%"
+        params += [like, like]
+    if sort == "old":
+        sql += " ORDER BY t.pinned DESC, t.id ASC"
+    else:
+        sql += " ORDER BY t.pinned DESC, t.id DESC"
+    rows = conn.execute(sql, params).fetchall()
+    out = []
+    for r in rows:
+        d = dict(r)
+        d["body"] = (d["body"] or "")[:160]  # 列表只显示摘要
+        out.append(d)
+    conn.close()
+    return jsonify(ok=True, threads=out)
+
+
+@app.route("/api/qa/threads", methods=["POST"])
+def api_qa_create_thread():
+    user = _current_user()
+    data = request.get_json(silent=True) or {}
+    auth = _qa_author(user, data.get("anon_name"))
+    if not auth:
+        return jsonify(ok=False, error="匿名发言需填写昵称"), 400
+    author_type, author_username, author_name = auth
+    title = (data.get("title") or "").strip()
+    body = (data.get("body") or "").strip()
+    if not title:
+        return jsonify(ok=False, error="标题不能为空"), 400
+    if not body:
+        return jsonify(ok=False, error="内容不能为空"), 400
+    conn = db_conn()
+    cur = conn.execute(
+        "INSERT INTO qa_threads(author_type, author_username, author_name, title, body) "
+        "VALUES(?,?,?,?,?)",
+        (author_type, author_username, author_name, title[:200], body[:5000]))
+    tid = cur.lastrowid
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True, id=tid)
+
+
+@app.route("/api/qa/threads/<int:tid>", methods=["GET"])
+def api_qa_thread_detail(tid):
+    conn = db_conn()
+    t = conn.execute("SELECT * FROM qa_threads WHERE id=? AND deleted=0", (tid,)).fetchone()
+    if not t:
+        conn.close()
+        return jsonify(ok=False, error="问题不存在"), 404
+    rows = conn.execute(
+        "SELECT * FROM qa_replies WHERE thread_id=? AND deleted=0 ORDER BY id ASC",
+        (tid,)).fetchall()
+    conn.close()
+    nodes = {}
+    for r in rows:
+        d = dict(r)
+        d["children"] = []
+        nodes[d["id"]] = d
+    roots = []
+    for d in nodes.values():
+        if d["parent_id"] and d["parent_id"] in nodes:
+            nodes[d["parent_id"]]["children"].append(d)
+        else:
+            roots.append(d)
+    return jsonify(ok=True, thread=dict(t), replies=roots)
+
+
+@app.route("/api/qa/replies", methods=["POST"])
+def api_qa_create_reply():
+    user = _current_user()
+    data = request.get_json(silent=True) or {}
+    auth = _qa_author(user, data.get("anon_name"))
+    if not auth:
+        return jsonify(ok=False, error="匿名发言需填写昵称"), 400
+    author_type, author_username, author_name = auth
+    try:
+        thread_id = int(data.get("thread_id") or 0)
+    except (ValueError, TypeError):
+        return jsonify(ok=False, error="缺少问题 ID"), 400
+    parent_id = data.get("parent_id")
+    parent_id = int(parent_id) if parent_id else None
+    body = (data.get("body") or "").strip()
+    if not body:
+        return jsonify(ok=False, error="内容不能为空"), 400
+    conn = db_conn()
+    t = conn.execute("SELECT id FROM qa_threads WHERE id=? AND deleted=0",
+                     (thread_id,)).fetchone()
+    if not t:
+        conn.close()
+        return jsonify(ok=False, error="问题不存在"), 404
+    if parent_id:
+        p = conn.execute(
+            "SELECT id FROM qa_replies WHERE id=? AND thread_id=? AND deleted=0",
+            (parent_id, thread_id)).fetchone()
+        if not p:
+            conn.close()
+            return jsonify(ok=False, error="父回复不存在"), 404
+    cur = conn.execute(
+        "INSERT INTO qa_replies(thread_id, parent_id, author_type, author_username, "
+        "author_name, body) VALUES(?,?,?,?,?,?)",
+        (thread_id, parent_id, author_type, author_username, author_name, body[:3000]))
+    rid = cur.lastrowid
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True, id=rid)
+
+
+@app.route("/api/qa/threads/<int:tid>", methods=["DELETE"])
+def api_qa_delete_thread(tid):
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    conn = db_conn()
+    t = conn.execute("SELECT * FROM qa_threads WHERE id=?", (tid,)).fetchone()
+    if not t:
+        conn.close()
+        return jsonify(ok=False, error="问题不存在"), 404
+    if not _can_delete_qa(user, t["author_username"]):
+        conn.close()
+        return jsonify(ok=False, error="无权限"), 403
+    conn.execute("UPDATE qa_threads SET deleted=1 WHERE id=?", (tid,))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@app.route("/api/qa/replies/<int:rid>", methods=["DELETE"])
+def api_qa_delete_reply(rid):
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    conn = db_conn()
+    r = conn.execute("SELECT * FROM qa_replies WHERE id=?", (rid,)).fetchone()
+    if not r:
+        conn.close()
+        return jsonify(ok=False, error="回复不存在"), 404
+    if not _can_delete_qa(user, r["author_username"]):
+        conn.close()
+        return jsonify(ok=False, error="无权限"), 403
+    conn.execute("UPDATE qa_replies SET deleted=1 WHERE id=?", (rid,))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
 # ---------------------------------------------------------------- 密码管理
 @app.route("/api/change-password", methods=["POST"])
 def api_change_password():
@@ -1055,7 +1259,8 @@ def _grant_cap_points(conn, username, cap_id, granted_by):
 
 # ---------------------------------------------------------------- 总管理员：全表浏览 + 权限
 _ADMIN_TABLES = ["users", "capabilities", "checks", "ai_needs", "directory",
-                 "points_log", "points_config", "assistant_assignments"]
+                 "points_log", "points_config", "assistant_assignments",
+                 "qa_threads", "qa_replies"]
 # 助教/讲师只读浏览白名单（不含 users，避免暴露密码哈希与会话）
 _TA_BROWSE = ["capabilities", "checks", "ai_needs", "directory",
              "points_log", "points_config"]
@@ -1190,7 +1395,7 @@ def _agg_summary(from_date=None, to_date=None):
 @app.route("/api/admin/analytics/summary", methods=["GET"])
 def api_an_summary():
     user = _current_user()
-    if not _is_admin(user):
+    if not _is_staff(user):
         return jsonify(ok=False, error="无权限"), 403
     return jsonify(ok=True, **_agg_summary(request.args.get("from"), request.args.get("to")))
 
@@ -1198,7 +1403,7 @@ def api_an_summary():
 @app.route("/api/admin/analytics/logins", methods=["GET"])
 def api_an_logins():
     user = _current_user()
-    if not _is_admin(user):
+    if not _is_staff(user):
         return jsonify(ok=False, error="无权限"), 403
     w, p = _date_filter("login_at", request.args.get("from"), request.args.get("to"))
     conn = db_conn()
@@ -1219,7 +1424,7 @@ def api_an_logins():
 @app.route("/api/admin/analytics/geo", methods=["GET"])
 def api_an_geo():
     user = _current_user()
-    if not _is_admin(user):
+    if not _is_staff(user):
         return jsonify(ok=False, error="无权限"), 403
     w, p = _date_filter("login_at", request.args.get("from"), request.args.get("to"))
     conn = db_conn()
@@ -1233,7 +1438,7 @@ def api_an_geo():
 @app.route("/api/admin/analytics/pages", methods=["GET"])
 def api_an_pages():
     user = _current_user()
-    if not _is_admin(user):
+    if not _is_staff(user):
         return jsonify(ok=False, error="无权限"), 403
     w, p = _date_filter("created_at", request.args.get("from"), request.args.get("to"))
     conn = db_conn()
@@ -1248,7 +1453,7 @@ def api_an_pages():
 @app.route("/api/admin/analytics/extra", methods=["GET"])
 def api_an_extra():
     user = _current_user()
-    if not _is_admin(user):
+    if not _is_staff(user):
         return jsonify(ok=False, error="无权限"), 403
     f, t = request.args.get("from"), request.args.get("to")
     w1, p1 = _date_filter("login_at", f, t)
@@ -1337,7 +1542,7 @@ def _send_wechat(markdown_text):
 @app.route("/api/admin/analytics/report", methods=["GET"])
 def api_an_report():
     user = _current_user()
-    if not _is_admin(user):
+    if not _is_staff(user):
         return jsonify(ok=False, error="无权限"), 403
     rt = request.args.get("range", "daily")
     if rt not in ("daily", "weekly"):
