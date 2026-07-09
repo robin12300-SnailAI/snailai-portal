@@ -1397,6 +1397,9 @@ def serve(path):
 init_db()
 _start_scheduler()
 print(f"[蜗牛AI Portal] 数据库: {DB_PATH}")
+if not os.environ.get("WECHAT_WEBHOOK_URL"):
+    print("[蜗牛AI Portal] ⚠️  警告：WECHAT_WEBHOOK_URL 未配置，日报/周报不会推送。"
+          "请在 Render 控制台 → snailai-portal-1 → Environment 中添加该变量（值即企业微信 webhook 地址）。")
 
 if __name__ == "__main__":
     print(f"[蜗牛AI Portal] 监听: http://{HOST}:{PORT}")
