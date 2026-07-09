@@ -315,26 +315,32 @@ def _seed_users(c):
 def _ensure_ta_accounts(c):
     """确保指定助教账号角色为 ta，并为缺失账号创建初始密码 12345。
     幂等：每次服务启动都执行，因此对已在运行的生产库也生效（种子仅在空库时跑）。"""
-    TA_USERNAMES = ("xieyouchen", "luoyajuan")
-    # 已存在的 student 助教：先重置初始密码 12345（避免忘记/错密码），再提升为 ta
-    salt = secrets.token_hex(16)
-    c.execute(
-        "UPDATE users SET password_hash=?, salt=? WHERE username IN ({}) AND role='student'".format(
-            ",".join("?" * len(TA_USERNAMES))),
-        (_hash_pw("12345", salt), salt, *TA_USERNAMES),
-    )
-    # 提升角色为 ta（已存在但非 student 的也一并处理）
-    c.execute(
-        "UPDATE users SET role='ta' WHERE username IN ({})".format(",".join("?" * len(TA_USERNAMES))),
-        TA_USERNAMES,
-    )
-    # 生产库若无 luoyajuan，创建为 ta / 初始密码 12345
-    salt2 = secrets.token_hex(16)
-    c.execute(
-        "INSERT OR IGNORE INTO users(username, name, role, password_hash, salt) "
-        "VALUES('luoyajuan','Luo Yajuan','ta',?,?)",
-        (_hash_pw("12345", salt2), salt2),
-    )
+    TA_ACCOUNTS = {
+        "jiangpei123": "Jiang Pei",
+        "luoyajuan123": "Luo Yajuan",
+        "wuqing123": "Wu Qing",
+        "xiejing123": "Xie Jing",
+        "zhangruirui123": "Zhang Ruirui",
+    }
+    for username, name in TA_ACCOUNTS.items():
+        salt = secrets.token_hex(16)
+        pw_hash = _hash_pw("12345", salt)
+        # 若该账号已存在且是 student，重置密码并提升为 ta
+        c.execute(
+            "UPDATE users SET password_hash=?, salt=?, role='ta' WHERE username=? AND role='student'",
+            (pw_hash, salt, username),
+        )
+        # 若该账号已存在且 role 不是 ta，也提升为 ta（不重置密码，保留用户可能已改的密码）
+        c.execute(
+            "UPDATE users SET role='ta' WHERE username=? AND role != 'ta'",
+            (username,),
+        )
+        # 若不存在，创建为 ta / 初始密码 12345
+        c.execute(
+            "INSERT OR IGNORE INTO users(username, name, role, password_hash, salt) "
+            "VALUES(?,?,'ta',?,?)",
+            (username, name, pw_hash, salt),
+        )
 
 
 def _seed_capabilities(c):
