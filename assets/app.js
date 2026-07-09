@@ -12,6 +12,9 @@
 const LANG_KEY = "snailai-lang";
 let curLang = localStorage.getItem(LANG_KEY) || "zh";
 
+/* 门户版本号（与仓库根目录 version.json 保持一致，每次发布同步 bump）*/
+const PORTAL_VERSION = "1.0.0";
+
 /* 计算从当前页面回到门户根目录的相对前缀 */
 const _APP_SRC = (document.currentScript && document.currentScript.src) || "";
 function navPrefix() {
@@ -91,7 +94,7 @@ function renderAnnounce() {
 /* 页面底部通用 */
 function renderFoot() {
   const el = document.getElementById("foot-root");
-  if (el) el.innerHTML = `<div class="foot">${curLang === "en" ? "SnailAI · Australian Chinese AI Training &nbsp;|&nbsp; © 2026 SnailAI" : "蜗牛AI · 澳洲华人 AI 应用培训 &nbsp;|&nbsp; © 2026 SnailAI"}</div>`;
+  if (el) el.innerHTML = `<div class="foot">${curLang === "en" ? "SnailAI · Australian Chinese AI Training &nbsp;|&nbsp; © 2026 SnailAI &nbsp;|&nbsp; v" + PORTAL_VERSION : "蜗牛AI · 澳洲华人 AI 应用培训 &nbsp;|&nbsp; © 2026 SnailAI &nbsp;|&nbsp; v" + PORTAL_VERSION}</div>`;
 }
 
 /* 统一初始化（页面调用）*/

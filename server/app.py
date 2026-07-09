@@ -96,6 +96,19 @@ def init_db():
       created_at TEXT DEFAULT (datetime('now')),
       expires_at TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS ai_needs(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL,
+      seq INTEGER NOT NULL,
+      title TEXT NOT NULL,
+      content TEXT,
+      category TEXT,
+      priority TEXT,
+      tags TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT,
+      UNIQUE(username, seq)
+    );
     """)
     conn.commit()
 
@@ -387,6 +400,147 @@ def api_put_check(username, cap_id):
     conn.close()
     return jsonify(ok=True, column=column, value=value, updated_by=user["username"],
                    updated_at=now)
+
+
+# ---------------------------------------------------------------- 我的 AI 刚需
+def _can_manage_need(user, owner_username):
+    """学员只能管理自己的；助教/总讲师可管理任意学员的。"""
+    if not user:
+        return False
+    if user["role"] == "student":
+        return user["username"] == owner_username
+    return user["role"] in ("ta", "instructor")
+
+
+@app.route("/api/ai-needs", methods=["GET"])
+def api_list_needs():
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    # 学员只能看自己的；助教/总讲师可指定 username
+    req_user = request.args.get("username")
+    if user["role"] == "student":
+        target = user["username"]
+    else:
+        target = req_user or user["username"]
+    conn = db_conn()
+    rows = conn.execute(
+        "SELECT id, username, seq, title, content, category, priority, tags, "
+        "created_at, updated_at FROM ai_needs WHERE username=? ORDER BY seq",
+        (target,)).fetchall()
+    conn.close()
+    out = []
+    for r in rows:
+        d = dict(r)
+        try:
+            d["tags"] = json.loads(d["tags"]) if d["tags"] else []
+        except Exception:
+            d["tags"] = []
+        out.append(d)
+    return jsonify(ok=True, username=target, needs=out)
+
+
+@app.route("/api/ai-needs", methods=["POST"])
+def api_create_need():
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    data = request.get_json(silent=True) or {}
+    # 目标学员：学员只能给自己建；助教/总讲师可指定
+    if user["role"] == "student":
+        target = user["username"]
+    else:
+        target = (data.get("username") or "").strip() or user["username"]
+    if not target:
+        return jsonify(ok=False, error="缺少目标学员"), 400
+    title = (data.get("title") or "").strip()
+    if not title:
+        return jsonify(ok=False, error="标题不能为空"), 400
+    content = data.get("content") or ""
+    category = (data.get("category") or "").strip()
+    priority = (data.get("priority") or "中").strip()
+    if priority not in ("高", "中", "低"):
+        priority = "中"
+    tags = data.get("tags") or []
+    if isinstance(tags, str):
+        tags = [x.strip() for x in tags.replace("，", ",").split(",") if x.strip()]
+    tags_json = json.dumps(tags, ensure_ascii=False)
+
+    conn = db_conn()
+    u = conn.execute("SELECT username FROM users WHERE username=?", (target,)).fetchone()
+    if not u:
+        conn.close()
+        return jsonify(ok=False, error="目标学员不存在"), 404
+    row = conn.execute("SELECT MAX(seq) AS m FROM ai_needs WHERE username=?",
+                       (target,)).fetchone()
+    seq = (row["m"] or 0) + 1
+    now = datetime.datetime.utcnow().isoformat()
+    cur = conn.execute(
+        "INSERT INTO ai_needs(username, seq, title, content, category, priority, "
+        "tags, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?,?)",
+        (target, seq, title, content, category, priority, tags_json, now, now))
+    nid = cur.lastrowid
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True, id=nid, seq=seq)
+
+
+@app.route("/api/ai-needs/<int:need_id>", methods=["PUT"])
+def api_update_need(need_id):
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    conn = db_conn()
+    row = conn.execute("SELECT username FROM ai_needs WHERE id=?",
+                       (need_id,)).fetchone()
+    if not row:
+        conn.close()
+        return jsonify(ok=False, error="记录不存在"), 404
+    if not _can_manage_need(user, row["username"]):
+        conn.close()
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    title = (data.get("title") or "").strip()
+    if not title:
+        conn.close()
+        return jsonify(ok=False, error="标题不能为空"), 400
+    content = data.get("content") or ""
+    category = (data.get("category") or "").strip()
+    priority = (data.get("priority") or "中").strip()
+    if priority not in ("高", "中", "低"):
+        priority = "中"
+    tags = data.get("tags") or []
+    if isinstance(tags, str):
+        tags = [x.strip() for x in tags.replace("，", ",").split(",") if x.strip()]
+    tags_json = json.dumps(tags, ensure_ascii=False)
+    now = datetime.datetime.utcnow().isoformat()
+    conn.execute(
+        "UPDATE ai_needs SET title=?, content=?, category=?, priority=?, tags=?, "
+        "updated_at=? WHERE id=?",
+        (title, content, category, priority, tags_json, now, need_id))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True, id=need_id)
+
+
+@app.route("/api/ai-needs/<int:need_id>", methods=["DELETE"])
+def api_delete_need(need_id):
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    conn = db_conn()
+    row = conn.execute("SELECT username FROM ai_needs WHERE id=?",
+                       (need_id,)).fetchone()
+    if not row:
+        conn.close()
+        return jsonify(ok=False, error="记录不存在"), 404
+    if not _can_manage_need(user, row["username"]):
+        conn.close()
+        return jsonify(ok=False, error="无权限"), 403
+    conn.execute("DELETE FROM ai_needs WHERE id=?", (need_id,))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True, id=need_id)
 
 
 # ---------------------------------------------------------------- 静态站点托管

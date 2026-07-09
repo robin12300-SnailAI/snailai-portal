@@ -67,6 +67,46 @@
     /* ---- 底部 ---- */
     .foot{text-align:center;color:var(--ink3);font-size:13px;padding:32px 24px;
       border-top:1px solid var(--line);margin-top:32px}
+
+    /* ---- 我的 AI 刚需 ---- */
+    .needs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+      gap:16px;margin-bottom:8px}
+    .need-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:18px 18px 16px;position:relative}
+    .need-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+    .need-seq{font-weight:900;font-size:13px;color:var(--accent);background:var(--accent-soft);
+      padding:2px 9px;border-radius:8px}
+    .pri-badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;color:#fff}
+    .cat-badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;
+      background:var(--blue-bg);color:var(--blue2)}
+    .need-title{font-size:16px;font-weight:800;margin:2px 0 6px}
+    .need-content{font-size:13.5px;color:var(--ink2);line-height:1.6;white-space:pre-wrap;word-break:break-word}
+    .need-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+    .tag-chip{font-size:11px;background:#f1f1f6;color:var(--ink2);padding:2px 9px;border-radius:20px}
+    .need-actions{display:flex;gap:8px;margin-top:12px}
+    .need-actions button{font-family:inherit;font-size:12.5px;font-weight:700;border:1px solid var(--line);
+      background:#fff;color:var(--ink2);padding:5px 12px;border-radius:8px;cursor:pointer;transition:.15s}
+    .need-actions button:hover{border-color:var(--accent);color:var(--accent)}
+    .need-actions .del:hover{border-color:#ef4444;color:#ef4444}
+    .needs-empty{color:var(--ink3);font-size:14px;padding:18px 4px}
+    .btn-primary{font-family:inherit;font-size:13.5px;font-weight:700;border:none;background:var(--accent);
+      color:#fff;padding:8px 16px;border-radius:9px;cursor:pointer}
+    .btn-ghost{font-family:inherit;font-size:13.5px;font-weight:700;border:1px solid var(--line);
+      background:#fff;color:var(--ink2);padding:8px 16px;border-radius:9px;cursor:pointer}
+    .sel{font-family:inherit;font-size:13.5px;border:1px solid var(--line);border-radius:9px;
+      padding:7px 11px;background:#fff;color:var(--ink);max-width:240px}
+    /* 弹窗 */
+    .mask{position:fixed;inset:0;background:rgba(26,26,46,.45);display:flex;align-items:center;
+      justify-content:center;z-index:1000;padding:20px}
+    .modal{background:#fff;border-radius:16px;width:100%;max-width:480px;padding:24px;box-shadow:var(--shadow-lg)}
+    .modal h3{font-size:18px;font-weight:900;margin-bottom:16px}
+    .field{margin-bottom:14px}
+    .field label{display:block;font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:6px}
+    .field input,.field textarea,.field select{width:100%;font-family:inherit;font-size:14px;
+      border:1px solid var(--line);border-radius:9px;padding:9px 11px;color:var(--ink);background:#fff;
+      box-sizing:border-box}
+    .field textarea{resize:vertical;min-height:84px}
+    .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
   </style>
 </head>
 <body>
@@ -93,7 +133,7 @@
   <!-- 动态内容 -->
   <div id="content"></div>
 
-  <div class="foot" data-zh="蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI" data-en="SnailAI Student Portal · © 2026 SnailAI">蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI</div>
+  <div class="foot" data-zh="蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI · v1.0.0" data-en="SnailAI Student Portal · © 2026 SnailAI · v1.0.0">蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI · v1.0.0</div>
 
   <script>
     const LANG_KEY = "snailai-lang";
@@ -226,6 +266,7 @@
       renderUserArea();
       renderHero();
       renderContent();
+      renderNeeds();
     }
 
     document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang)));
@@ -235,6 +276,174 @@
     renderHero();
     renderContent();
     applyLang(curLang);
+
+    // ===================== 我的 AI 刚需 =====================
+    const NEEDS_TITLE = {zh:"我的 AI 刚需", en:"My AI Needs"};
+    const NEEDS_SUB = {zh:"记录你想用 AI 解决的真问题。可新建多个，按编号排列，分类 / 优先级 / 标签自由组织。",
+                       en:"Record the real problems you want AI to solve. Create as many as you like — numbered, with category / priority / tags."};
+    const NL = {
+      new:     {zh:"➕ 新建 AI 刚需", en:"➕ New AI Need"},
+      edit:    {zh:"编辑 AI 刚需", en:"Edit AI Need"},
+      save:    {zh:"保存", en:"Save"},
+      cancel:  {zh:"取消", en:"Cancel"},
+      del:     {zh:"删除", en:"Delete"},
+      title:   {zh:"标题", en:"Title"},
+      content: {zh:"内容（想让 AI 帮你做什么）", en:"Content (what you want AI to do for you)"},
+      category:{zh:"分类", en:"Category"},
+      priority:{zh:"优先级", en:"Priority"},
+      tags:    {zh:"标签（逗号分隔，数量不限）", en:"Tags (comma-separated, unlimited)"},
+      high:    {zh:"高", en:"High"},
+      mid:     {zh:"中", en:"Medium"},
+      low:     {zh:"低", en:"Low"},
+      empty:   {zh:"还没有记录，点「新建 AI 刚需」写下第一个吧。", en:"No entries yet. Click “New AI Need” to write your first one."},
+      delConfirm:{zh:"确定删除这条「我的 AI 刚需」吗？", en:"Delete this AI Need?"},
+      reqTitle:{zh:"标题不能为空", en:"Title is required"},
+      saveFail:{zh:"保存失败：", en:"Save failed: "},
+      delFail: {zh:"删除失败：", en:"Delete failed: "}
+    };
+    const PRI_COLOR = {高:"#ef4444", 中:"#f59e0b", 低:"#9ca3af"};
+    const PRI_LABEL = {高:NL.high, 中:NL.mid, 低:NL.low};
+
+    let needTarget = me.username;     // 学员=自己；助教/讲师=选中的学员
+    let needsCache = [];              // 当前列表缓存，供编辑时读取
+
+    async function api(path, method, body){
+      const opt = {method, headers:{"Authorization":"Bearer "+token, "Content-Type":"application/json"}};
+      if (body !== undefined) opt.body = JSON.stringify(body);
+      const r = await fetch(path, opt);
+      return r.json();
+    }
+    function escapeHtml(s){
+      return String(s==null?"":s).replace(/[&<>"']/g,
+        c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    }
+
+    async function renderNeeds(){
+      const content = document.getElementById("content");
+      if (!content) return;
+      const sec = document.createElement("div");
+      sec.className = "section";
+      sec.innerHTML = `
+        <h2 class="section-title">🧠 ${t(NEEDS_TITLE)}</h2>
+        <p class="section-sub">${t(NEEDS_SUB)}</p>
+        <div id="needsToolbar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px;"></div>
+        <div id="needsList" class="needs-grid"></div>`;
+      content.appendChild(sec);
+      const tb = sec.querySelector("#needsToolbar");
+      if (me.role !== "student"){
+        const sel = document.createElement("select");
+        sel.id = "needStudentSel"; sel.className = "sel";
+        tb.appendChild(sel);
+        sel.addEventListener("change", async () => { needTarget = sel.value; await loadNeeds(); });
+        await loadStudentPicker(sel);
+      }
+      const btn = document.createElement("button");
+      btn.className = "btn-primary"; btn.textContent = t(NL.new);
+      btn.onclick = () => openNeedForm(null);
+      tb.appendChild(btn);
+      await loadNeeds();
+    }
+
+    async function loadStudentPicker(sel){
+      try{
+        const d = await api("/api/students","GET");
+        if (d.ok && d.students.length){
+          sel.innerHTML = d.students.map(s=>`<option value="${s.username}">${escapeHtml(s.name)}</option>`).join("");
+          if (!needTarget || needTarget === me.username) needTarget = d.students[0].username;
+          sel.value = needTarget;
+        }
+      }catch(e){}
+    }
+
+    async function loadNeeds(){
+      const list = document.getElementById("needsList");
+      if (!list) return;
+      list.innerHTML = `<div class="needs-empty">…</div>`;
+      const d = await api("/api/ai-needs?username="+encodeURIComponent(needTarget),"GET");
+      if (!d.ok){ list.innerHTML = `<div class="needs-empty">${escapeHtml(d.error||"")}</div>`; return; }
+      needsCache = d.needs || [];
+      if (!needsCache.length){ list.innerHTML = `<div class="needs-empty">${t(NL.empty)}</div>`; return; }
+      list.innerHTML = needsCache.map(n => {
+        const tags = (n.tags||[]).map(x=>`<span class="tag-chip">${escapeHtml(x)}</span>`).join("");
+        const pri = n.priority || "中";
+        const color = PRI_COLOR[pri] || "#9ca3af";
+        const priLbl = (PRI_LABEL[pri] && PRI_LABEL[pri][curLang]) || pri;
+        return `
+        <div class="need-card">
+          <div class="need-head">
+            <span class="need-seq">#${n.seq}</span>
+            <span class="pri-badge" style="background:${color}">${priLbl}</span>
+            ${n.category ? `<span class="cat-badge">${escapeHtml(n.category)}</span>` : ""}
+          </div>
+          <div class="need-title">${escapeHtml(n.title)}</div>
+          ${n.content ? `<div class="need-content">${escapeHtml(n.content)}</div>` : ""}
+          ${tags ? `<div class="need-tags">${tags}</div>` : ""}
+          <div class="need-actions">
+            <button onclick="openNeedForm(${n.id})">${t(NL.edit)}</button>
+            <button class="del" onclick="deleteNeed(${n.id})">${t(NL.del)}</button>
+          </div>
+        </div>`;
+      }).join("");
+    }
+
+    function openNeedForm(id){
+      const isEdit = !!id;
+      const cur = isEdit ? (needsCache.find(x=>x.id===id) || null) : null;
+      const pri = cur ? (cur.priority || "中") : "中";
+      const tagsVal = cur ? (cur.tags||[]).join(", ") : "";
+      const mask = document.createElement("div");
+      mask.className = "mask";
+      mask.innerHTML = `
+        <div class="modal">
+          <h3>${isEdit ? t(NL.edit) : t(NL.new)}</h3>
+          <div class="field"><label>${t(NL.title)}</label><input id="nfTitle" value="${cur?escapeHtml(cur.title):""}"></div>
+          <div class="field"><label>${t(NL.content)}</label><textarea id="nfContent">${cur?escapeHtml(cur.content||""):""}</textarea></div>
+          <div class="field"><label>${t(NL.category)}</label><input id="nfCat" value="${cur?escapeHtml(cur.category||""):""}"></div>
+          <div class="field"><label>${t(NL.priority)}</label>
+            <select id="nfPri">
+              <option value="高" ${pri==="高"?"selected":""}>${t(NL.high)}</option>
+              <option value="中" ${pri==="中"?"selected":""}>${t(NL.mid)}</option>
+              <option value="低" ${pri==="低"?"selected":""}>${t(NL.low)}</option>
+            </select></div>
+          <div class="field"><label>${t(NL.tags)}</label><input id="nfTags" value="${escapeHtml(tagsVal)}"></div>
+          <div class="modal-actions">
+            <button class="btn-ghost" onclick="closeNeedForm()">${t(NL.cancel)}</button>
+            <button class="btn-primary" id="nfSave">${t(NL.save)}</button>
+          </div>
+        </div>`;
+      document.body.appendChild(mask);
+      mask.addEventListener("click", e => { if (e.target === mask) closeNeedForm(); });
+      document.getElementById("nfSave").onclick = () => saveNeed(id);
+    }
+    function closeNeedForm(){ const m = document.querySelector(".mask"); if (m) m.remove(); }
+
+    async function saveNeed(id){
+      const payload = {
+        title: document.getElementById("nfTitle").value.trim(),
+        content: document.getElementById("nfContent").value,
+        category: document.getElementById("nfCat").value.trim(),
+        priority: document.getElementById("nfPri").value,
+        tags: document.getElementById("nfTags").value
+      };
+      if (!payload.title){ alert(t(NL.reqTitle)); return; }
+      let d;
+      if (id){
+        d = await api("/api/ai-needs/"+id, "PUT", payload);
+      } else {
+        if (me.role !== "student") payload.username = needTarget;
+        d = await api("/api/ai-needs", "POST", payload);
+      }
+      if (!d.ok){ alert(t(NL.saveFail) + (d.error||"")); return; }
+      closeNeedForm();
+      await loadNeeds();
+    }
+
+    async function deleteNeed(id){
+      if (!confirm(t(NL.delConfirm))) return;
+      const d = await api("/api/ai-needs/"+id, "DELETE");
+      if (!d.ok){ alert(t(NL.delFail) + (d.error||"")); return; }
+      await loadNeeds();
+    }
 
     function doLogout() {
       sessionStorage.removeItem(S_KEY);
