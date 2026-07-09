@@ -169,6 +169,24 @@
     <div class="err" id="browseErr"></div>
   </section>
 
+  <!-- ===== Card: AI 能力点数设置 ===== -->
+  <section class="card">
+    <div class="card-head">
+      <h2>🏅 <span data-zh="AI 能力点数设置" data-en="AI Capability Points">AI 能力点数设置</span></h2>
+      <div class="toolbar">
+        <button class="btn" onclick="loadCapPoints()" data-zh="刷新" data-en="Refresh">刷新</button>
+      </div>
+    </div>
+    <p class="browse-meta" data-zh="每项 AI 能力对应的成长点数（助教确认即通过即发放）。修改后点击「保存」写入后端。" data-en="Growth points per AI capability (granted when TA confirms). Edit then Save.">每项 AI 能力对应的成长点数（助教确认即通过即发放）。修改后点击「保存」写入后端。</p>
+    <div class="table-scroll">
+      <table class="grid" id="capPointsTable">
+        <thead><tr><th data-zh="#" data-en="#">#</th><th data-zh="能力项" data-en="Capability">能力项</th><th data-zh="点数" data-en="Points">点数</th><th data-zh="操作" data-en="Action">操作</th></tr></thead>
+        <tbody id="capPointsBody"></tbody>
+      </table>
+    </div>
+    <div class="err" id="capPointsErr"></div>
+  </section>
+
   <!-- ===== Card 3: 访问分析看板 ===== -->
   <section class="card">
     <div class="card-head">
@@ -275,6 +293,7 @@
     localStorage.setItem(LANG_KEY, lang);
     // 重新渲染动态内容
     renderDirHead(); renderDirBody(); fillBrowseSelect(); renderBrowsePlaceholder();
+    if (capPointsRows && capPointsRows.length) renderCapPoints();
   }
   document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang)));
 
@@ -302,6 +321,7 @@
     fillBrowseSelect();
     loadDirectory();
     loadBrowse();
+    loadCapPoints();
   }
 
   // ===================== 通讯录：表头 =====================
@@ -461,6 +481,50 @@
       if (typeof v === "boolean") v = v ? "✅" : "—";
       return `<td>${escapeHtml(v==null?"":v)}</td>`;
     }).join("")}</tr>`).join("");
+  }
+
+  // ===================== AI 能力点数设置 =====================
+  let capPointsRows = [];
+  async function loadCapPoints(){
+    const d = await api("/api/capabilities","GET");
+    const err = document.getElementById("capPointsErr");
+    if (!d.ok){ err.textContent = (d.error||"加载失败"); return; }
+    err.textContent = "";
+    capPointsRows = d.capabilities || [];
+    renderCapPoints();
+  }
+  function renderCapPoints(){
+    const body = document.getElementById("capPointsBody");
+    if (!capPointsRows.length){ body.innerHTML = `<tr><td colspan="4" class="empty">${t({zh:"暂无能力项",en:"No capabilities"})}</td></tr>`; return; }
+    body.innerHTML = capPointsRows.map((c,i)=>`
+      <tr data-cap="${c.id}">
+        <td class="muted">${i+1}</td>
+        <td>${escapeHtml(c.title)}</td>
+        <td><input type="number" min="0" step="1" value="${c.points||0}" data-cap="${c.id}"></td>
+        <td class="actions"><div class="row-actions">
+          <button class="mini save" onclick="saveCapPoint('${c.id}')">${t({zh:"保存",en:"Save"})}</button>
+        </div></td>
+      </tr>`).join("");
+  }
+  async function saveCapPoint(capId){
+    const tr = document.querySelector(`#capPointsBody tr[data-cap="${capId}"]`);
+    const inp = tr.querySelector('input[type=number]');
+    const pts = parseInt(inp.value || "0", 10) || 0;
+    const d = await api("/api/capabilities/" + capId + "/points","PUT",{points:pts});
+    const err = document.getElementById("capPointsErr");
+    if (!d.ok){ err.textContent = (d.error||"保存失败"); return; }
+    err.textContent = "";
+    const c = capPointsRows.find(x=>x.id===capId);
+    if (c) c.points = pts;
+    capToast(t({zh:"已保存 "+pts+" 点",en:"Saved "+pts+" pts"}));
+  }
+  function capToast(msg){
+    let el = document.getElementById("capToast");
+    if (!el){ el = document.createElement("div"); el.id="capToast";
+      el.style.cssText="position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;transition:.25s;z-index:99;pointer-events:none";
+      document.body.appendChild(el); }
+    el.textContent = msg; el.style.opacity="1";
+    clearTimeout(el._t); el._t = setTimeout(()=>{ el.style.opacity="0"; }, 1800);
   }
 
   // 搜索框即时过滤

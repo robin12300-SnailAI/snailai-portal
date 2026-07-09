@@ -98,6 +98,21 @@
     .chip[disabled]{opacity:.55;cursor:not-allowed}
     .chip[disabled] .dot{background:var(--ink-3)}
 
+    /* 列头点数 */
+    .col-pts{font-size:11px;color:#D4A547;font-weight:700;margin-top:4px;
+      background:rgba(212,165,71,.10);display:inline-block;padding:1px 8px;border-radius:100px}
+    /* 累计点数列 */
+    .pts-col{font-size:15px;color:var(--ink);vertical-align:middle}
+    .pts-col b{color:var(--accent);font-size:16px}
+    /* 全员合计行 */
+    .total-row td{background:var(--paper-2);font-weight:700;border-top:2px solid var(--line)}
+    .total-row td.name{background:var(--paper-2)}
+    /* 恭喜通知按钮 */
+    .congrats-btn{border:none;border-radius:9px;padding:7px 12px;font-size:13px;font-weight:700;
+      cursor:pointer;background:var(--accent);color:#fff;transition:.15s;white-space:nowrap}
+    .congrats-btn:hover{background:var(--accent-2)}
+    .op-col{width:96px}
+
     .skeleton{height:14px;background:linear-gradient(90deg,#eee,#f5f5f5,#eee);border-radius:6px;
       margin:6px 0;animation:sk 1.2s infinite}
     @keyframes sk{0%{opacity:.6}50%{opacity:1}100%{opacity:.6}}
@@ -147,7 +162,7 @@
   <!-- 应用视图 -->
   <div class="wrap" id="appView" style="display:none">
     <h1 class="page-title">✅ AI 能力清单</h1>
-    <p class="page-sub" data-zh="9 项课前准备能力 · 三角色审核（学员自查 / 助教审核 / 讲师审核）。数据实时存于后端，多人协作自动同步。" data-en="9 pre-class capabilities · three-role review (self-check / TA review / instructor review). Data is stored on the backend in real time and synced automatically across collaborators.">9 项课前准备能力 · 三角色审核（学员自查 / 助教审核 / 讲师审核）。数据实时存于后端，多人协作自动同步。</p>
+    <p class="page-sub" data-zh="9 项课前准备能力 · 双角色审核（学员自查 / 助教审核）。数据实时存于后端，多人协作自动同步。" data-en="9 pre-class capabilities · two-role review (self-check / TA review). Data is stored on the backend in real time and synced automatically across collaborators.">9 项课前准备能力 · 双角色审核（学员自查 / 助教审核）。数据实时存于后端，多人协作自动同步。</p>
 
     <div class="legend">
       <h3 data-zh="📋 能力项说明（列头 ①~⑨ 对应如下）" data-en="📋 Capability legend (columns ①–⑨ correspond to the following)">📋 能力项说明（列头 ①~⑨ 对应如下）</h3>
@@ -172,9 +187,10 @@
     const API = window.SNAILAI_API_BASE || "";
     const COLS = [
       {key:"self",  cls:"self",  zh:"学员自查", en:"Self-check"},
-      {key:"ta",    cls:"ta",    zh:"助教审核", en:"TA Review"},
-      {key:"final", cls:"final", zh:"讲师审核", en:"Instructor"}
+      {key:"ta",    cls:"ta",    zh:"助教审核", en:"TA Review"}
     ];
+    const isStaff = () => ME && ["ta","instructor","admin"].includes(ME.role);
+    let POINTS_SUMMARY = {};
     const ROLE_NAME = {
       student:   {zh:"学员", en:"Student"},
       ta:        {zh:"助教", en:"TA"},
@@ -209,7 +225,6 @@
     function canEdit(col){
       if (col==="self")  return ["student","ta","instructor"].includes(ME.role);
       if (col==="ta")    return ["ta","instructor"].includes(ME.role);
-      if (col==="final") return ME.role==="instructor";
       return false;
     }
 
@@ -252,6 +267,14 @@
         const ck = await api("/api/checks/" + st.username);
         st.checks = ck.checks || {};
       }
+      // 累计成长点数
+      POINTS_SUMMARY = {};
+      try {
+        const ps = (ME.role === "student")
+          ? await api("/api/points/summary?username=" + encodeURIComponent(ME.username))
+          : await api("/api/points/summary");
+        (ps.summary || []).forEach(s => { POINTS_SUMMARY[s.username] = s.points; });
+      } catch(e){ /* 非致命 */ }
       renderLegend();
       renderStats();
       renderMatrix();
@@ -267,17 +290,23 @@
       if (ME.role === "student") { document.getElementById("statsBar").innerHTML = ""; return; }
       const html = CAPS.map((c,i)=>{
         let n=0;
-        STUDENTS.forEach(st=>{ const ck=st.checks[c.id]; if(ck && ck.self) n++; });
-        return `<div class="stat"><div class="n">${n}/${STUDENTS.length}</div><div class="l">${i+1}·${L_("自查","Self")}</div></div>`;
+        STUDENTS.forEach(st=>{ const ck=st.checks[c.id]; if(ck && ck.self && ck.ta) n++; });
+        return `<div class="stat"><div class="n">${n}/${STUDENTS.length}</div><div class="l">${i+1}·${L_("已通过","Passed")}</div></div>`;
       }).join("");
       document.getElementById("statsBar").innerHTML = html;
     }
 
     function renderMatrix(){
       if (!STUDENTS.length){ document.getElementById("matrixBox").innerHTML='<div class="empty">'+L_("暂无学员数据","No student data yet")+'</div>'; return; }
-      const head = `<thead><tr><th class="name">${L_("学员","Student")}</th>${CAPS.map((c,i)=>
-        `<th title="${c.description||""}"><span class="col-no">${i+1}</span>${c.title}</th>`).join("")}</tr></thead>`;
-      const body = "<tbody>" + STUDENTS.map(st=>{
+      const staff = isStaff();
+      const head = `<thead><tr><th class="name">${L_("学员","Student")}</th>` +
+        CAPS.map((c,i)=>
+          `<th title="${c.description||""}"><span class="col-no">${i+1}</span>${c.title}<div class="col-pts">+${c.points||0} ${L_("分","pts")}</div></th>`
+        ).join("") +
+        `<th class="pts-col">${L_("累计点数","Total")}</th>` +
+        (staff ? `<th class="op-col">${L_("操作","Action")}</th>` : "") +
+        `</tr></thead>`;
+      const rows = STUDENTS.map(st=>{
         const cells = CAPS.map(c=>{
           const ck = st.checks[c.id] || {};
           const chips = COLS.map(col=>{
@@ -288,12 +317,38 @@
           }).join("");
           return `<td><div class="cells">${chips}</div></td>`;
         }).join("");
-        return `<tr><td class="name">${st.name}</td>${cells}</tr>`;
-      }).join("") + "</tbody>";
+        const total = POINTS_SUMMARY[st.username] || 0;
+        const op = staff ? `<td class="op-col"><button class="congrats-btn" data-u="${st.username}" data-name="${st.name}">🎉 ${L_("恭喜通知","Congrats")}</button></td>` : "";
+        return `<tr><td class="name">${st.name}</td>${cells}<td class="pts-col"><b>${total}</b></td>${op}</tr>`;
+      }).join("");
+      const grand = STUDENTS.reduce((s,st)=> s + (POINTS_SUMMARY[st.username]||0), 0);
+      const totalRow = `<tr class="total-row"><td class="name">${L_("全员累计点数","Grand Total")}</td>` +
+        CAPS.map(()=> `<td></td>`).join("") +
+        `<td class="pts-col"><b>${grand}</b></td>` +
+        (staff ? `<td class="op-col"></td>` : "") + `</tr>`;
+      const body = "<tbody>" + rows + totalRow + "</tbody>";
       document.getElementById("matrixBox").innerHTML = `<table class="matrix">${head}${body}</table>`;
       document.querySelectorAll(".chip:not([disabled])").forEach(el=>{
         el.onclick = ()=>toggleChip(el);
       });
+      document.querySelectorAll(".congrats-btn").forEach(el=>{
+        el.onclick = ()=>sendCongrats(el);
+      });
+    }
+
+    async function sendCongrats(el){
+      const u = el.dataset.u, name = el.dataset.name;
+      if (!confirm(L_("确认向学员群发送「"+name+" 获得 AI 能力」恭喜通知？","Send congrats notice for "+name+" to the student group?"))) return;
+      el.disabled = true;
+      try {
+        const d = await api("/api/congrats/" + encodeURIComponent(u), {method:"POST"});
+        if (!d.ok) throw new Error(d.error || d.message || L_("发送失败","Send failed"));
+        toast(L_("已发送恭喜通知🎉","Congrats sent🎉"));
+      } catch(e){
+        toast(L_("发送失败：","Send failed: ") + e.message);
+      } finally {
+        el.disabled = false;
+      }
     }
 
     async function toggleChip(el){

@@ -668,10 +668,34 @@ def api_capabilities():
     if not user:
         return jsonify(ok=False, error="未登录"), 401
     conn = db_conn()
-    rows = conn.execute("SELECT id, title, description, category FROM capabilities "
+    rows = conn.execute("SELECT id, title, description, category, points FROM capabilities "
                         "ORDER BY id").fetchall()
     conn.close()
     return jsonify(ok=True, capabilities=[dict(r) for r in rows])
+
+
+@app.route("/api/capabilities/<cap_id>/points", methods=["PUT"])
+def api_set_cap_points(cap_id):
+    """助教/讲师/管理员可设置单项能力点数（用于成长点数配置）。"""
+    user = _current_user()
+    if not user or user["role"] not in ("ta", "instructor", "admin"):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    try:
+        pts = int(data.get("points", 0))
+    except (ValueError, TypeError):
+        return jsonify(ok=False, error="点数必须为整数"), 400
+    if pts < 0:
+        return jsonify(ok=False, error="点数不能为负"), 400
+    conn = db_conn()
+    cap = conn.execute("SELECT id FROM capabilities WHERE id=?", (cap_id,)).fetchone()
+    if not cap:
+        conn.close()
+        return jsonify(ok=False, error="能力项不存在"), 404
+    conn.execute("UPDATE capabilities SET points=? WHERE id=?", (pts, cap_id))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True, cap_id=cap_id, points=pts)
 
 
 @app.route("/api/students", methods=["GET"])
@@ -1570,6 +1594,50 @@ def _send_wechat(markdown_text):
         return r.ok, r.text
     except Exception as e:
         return False, str(e)
+
+
+def _send_capability_congrats(markdown_text):
+    """发送 AI 能力恭喜通知到学员群（专用 webhook）。
+    优先读 CAPABILITY_WEBHOOK_URL；未配置时回退到 WECHAT_WEBHOOK_URL。"""
+    url = os.environ.get("CAPABILITY_WEBHOOK_URL") or os.environ.get("WECHAT_WEBHOOK_URL")
+    if not url:
+        return False, "CAPABILITY_WEBHOOK_URL 未配置（请在 Render 控制台添加该变量）"
+    try:
+        r = requests.post(url, json={"msgtype": "markdown",
+                                     "markdown": {"content": markdown_text}}, timeout=10)
+        return r.ok, r.text
+    except Exception as e:
+        return False, str(e)
+
+
+@app.route("/api/congrats/<username>", methods=["POST"])
+def api_congrats(username):
+    """助教/讲师/管理员：向学员群发送「恭喜获得 AI 能力」通知。
+    自动汇总该学员 self=1 AND ta=1 的能力项，构造企业微信 markdown 消息。"""
+    user = _current_user()
+    if not user or user["role"] not in ("ta", "instructor", "admin"):
+        return jsonify(ok=False, error="无权限"), 403
+    conn = db_conn()
+    t = conn.execute("SELECT name, role FROM users WHERE username=?",
+                     (username,)).fetchone()
+    if not t or t["role"] != "student":
+        conn.close()
+        return jsonify(ok=False, error="目标用户不是学员"), 404
+    rows = conn.execute(
+        "SELECT c.id, c.title FROM checks ck "
+        "JOIN capabilities c ON c.id=ck.cap_id "
+        "WHERE ck.student_username=? AND ck.self=1 AND ck.ta=1 ORDER BY c.id",
+        (username,)).fetchall()
+    conn.close()
+    if not rows:
+        return jsonify(ok=False, error="该学员暂无可恭喜的能力项（需自查与助教审核均通过）"), 400
+    lines = ["恭喜🎉 **%s** 学员获得以下 AI 能力：" % (t["name"] or username)]
+    for i, r in enumerate(rows, 1):
+        lines.append("%d. %s" % (i, r["title"]))
+    lines.append("继续努力哦😄！")
+    content = "\n".join(lines)
+    ok, msg = _send_capability_congrats(content)
+    return jsonify(ok=ok, sent=ok, message=msg, content=content, count=len(rows))
 
 
 @app.route("/api/admin/analytics/report", methods=["GET"])
