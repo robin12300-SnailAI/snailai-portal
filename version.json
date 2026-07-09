@@ -1,9 +1,10 @@
 {
   "name": "snailai-portal",
-  "version": "1.0.1",
-  "release_date": "2026-07-09",
-  "last_updated": "2026-07-09",
+  "version": "1.0.3",
+  "release_date": "2026-07-10",
+  "last_updated": "2026-07-10",
   "changelog": [
+    "1.0.3 (2026-07-10): 全面审查报告：修复 snailai-pitch-2026/mobile 链接、更新链接大全 GitHub Pages 引用、同步 version.json",
     "1.0.1 (2026-07-09): 修复学员学堂 welcome 页「我的 AI 刚需」面板在初始加载时未渲染的问题（applyLang 调用 renderNeeds 时刚需常量尚未声明，导致 ReferenceError，面板未显示）",
     "1.0.0 (2026-07-09): 引入版本号机制；新增「我的 AI 刚需」功能——学员可在学员学堂内新建/编辑/删除多条 AI 刚需（编号/标题/内容/分类/优先级/不限量标签），数据存于同一 SQLite 库 ai_needs 表；助教与总讲师也可代学员管理"
   ]
