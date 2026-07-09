@@ -133,7 +133,7 @@
   <!-- 动态内容 -->
   <div id="content"></div>
 
-  <div class="foot" data-zh="蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI · v1.0.0" data-en="SnailAI Student Portal · © 2026 SnailAI · v1.0.0">蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI · v1.0.0</div>
+  <div class="foot" data-zh="蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI · v1.0.1" data-en="SnailAI Student Portal · © 2026 SnailAI · v1.0.1">蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI · v1.0.1</div>
 
   <script>
     const LANG_KEY = "snailai-lang";
@@ -269,13 +269,7 @@
       renderNeeds();
     }
 
-    document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang)));
-
-    // 初始渲染
-    renderUserArea();
-    renderHero();
-    renderContent();
-    applyLang(curLang);
+    // 初始化调用已移到脚本末尾（避免 applyLang 中 renderNeeds 在常量声明前执行）
 
     // ===================== 我的 AI 刚需 =====================
     const NEEDS_TITLE = {zh:"我的 AI 刚需", en:"My AI Needs"};
@@ -444,6 +438,14 @@
       if (!d.ok){ alert(t(NL.delFail) + (d.error||"")); return; }
       await loadNeeds();
     }
+
+    document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang)));
+
+    // 初始渲染
+    renderUserArea();
+    renderHero();
+    renderContent();
+    applyLang(curLang);
 
     function doLogout() {
       sessionStorage.removeItem(S_KEY);
