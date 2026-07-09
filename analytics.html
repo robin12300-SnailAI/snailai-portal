@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-zh="蜗牛AI 访问分析看板" data-en="SnailAI Analytics Dashboard">蜗牛AI 访问分析看板</title>
+<link rel="stylesheet" href="/assets/styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--paper);color:var(--ink);margin:0;padding:32px;}
+  .wrap{max-width:1200px;margin:0 auto;}
+  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
+  h1{font-size:28px;font-weight:800;margin:0;letter-spacing:-0.5px;}
+  .sub{color:var(--ink-3);font-size:13px;margin-top:4px;}
+  .lang-switch{display:inline-flex;gap:6px;}
+  .lang-btn{border:1px solid var(--line);background:var(--paper);color:var(--ink-2);padding:6px 14px;border-radius:100px;cursor:pointer;font-size:13px;}
+  .lang-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .logout{color:var(--accent);text-decoration:none;font-size:13px;font-weight:700;}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+  .kpi{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:20px;}
+  .kpi .v{font-size:30px;font-weight:800;color:var(--accent);line-height:1.1;}
+  .kpi .l{color:var(--ink-3);font-size:13px;margin-top:6px;}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+  .card{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:20px;}
+  .card h3{margin:0 0 14px;font-size:15px;font-weight:800;}
+  .card.full{grid-column:1 / -1;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);}
+  th{color:var(--ink-3);font-weight:700;}
+  .pill{display:inline-block;background:var(--accent-light);color:var(--accent-2);border-radius:100px;padding:2px 10px;font-size:12px;font-weight:700;}
+  .note{color:var(--ink-3);font-size:12px;margin-top:20px;}
+  @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr);}.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1 data-zh="蜗牛AI 访问分析看板" data-en="SnailAI Analytics Dashboard">蜗牛AI 访问分析看板</h1>
+      <div class="sub" data-zh="仅管理员可见 · 数据存于本站数据库" data-en="Admin only · data stored on this site's database">仅管理员可见 · 数据存于本站数据库</div>
+    </div>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <a class="logout" href="/login.html" data-zh="退出" data-en="Logout">退出</a>
+    </div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><div class="v" id="kpi-login">–</div><div class="l" data-zh="登录人数" data-en="Logins">登录人数</div></div>
+    <div class="kpi"><div class="v" id="kpi-pv">–</div><div class="l" data-zh="页面访问" data-en="Pageviews">页面访问</div></div>
+    <div class="kpi"><div class="v" id="kpi-uv">–</div><div class="l" data-zh="独立访客" data-en="Unique visitors">独立访客</div></div>
+    <div class="kpi"><div class="v" id="kpi-dur">–</div><div class="l" data-zh="平均停留" data-en="Avg. duration">平均停留</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h3 data-zh="每日登录趋势" data-en="Daily logins">每日登录趋势</h3><canvas id="c-trend" height="120"></canvas></div>
+    <div class="card"><h3 data-zh="国家 / 地区分布" data-en="Country / region">国家 / 地区分布</h3><canvas id="c-geo" height="120"></canvas></div>
+    <div class="card"><h3 data-zh="页面停留排行（总时长）" data-en="Top pages by dwell">页面停留排行（总时长）</h3><canvas id="c-pages" height="140"></canvas></div>
+    <div class="card"><h3 data-zh="24 小时高峰时段" data-en="Peak hours">24 小时高峰时段</h3><canvas id="c-hours" height="140"></canvas></div>
+    <div class="card"><h3 data-zh="设备分布" data-en="Devices">设备分布</h3><canvas id="c-dev" height="140"></canvas></div>
+    <div class="card"><h3 data-zh="引流来源" data-en="Referrers">引流来源</h3><canvas id="c-ref" height="140"></canvas></div>
+    <div class="card full"><h3 data-zh="最近登录明细" data-en="Recent logins">最近登录明细</h3>
+      <table>
+        <thead><tr><th data-zh="用户" data-en="User">用户</th><th>IP</th><th data-zh="国家/地区" data-en="Country">国家/地区</th><th data-zh="登录时间" data-en="Login at">登录时间</th><th data-zh="停留" data-en="Duration">停留</th></tr></thead>
+        <tbody id="tbody-recent"></tbody>
+      </table>
+    </div>
+    <div class="card full">
+      <h3 data-zh="新老访客（区间活跃）" data-en="New vs returning visitors">新老访客（区间活跃）</h3>
+      <p><span class="pill" id="pill-new">新访客 –</span> &nbsp; <span class="pill" id="pill-ret">老访客 –</span></p>
+    </div>
+  </div>
+
+  <p class="note" data-zh="报告每日 09:00（悉尼时间）与企业微信同步推送；可手动触发：GET /api/admin/analytics/report?range=daily|weekly" data-en="Reports push to WeChat Work daily 09:00 (Sydney). Manual: GET /api/admin/analytics/report?range=daily|weekly">报告每日 09:00（悉尼时间）与企业微信同步推送；可手动触发：GET /api/admin/analytics/report?range=daily|weekly</p>
+</div>
+
+<script src="/assets/auth.js"></script>
+<script>
+requireAuth();
+var me = getCurrentUser();
+if (!me || me.role !== 'admin') { location.href = '/login.html'; }
+
+var TOKEN = sessionStorage.getItem('snailai_api_token') || '';
+function api(path){
+  return fetch(path, { headers: { 'Authorization': 'Bearer ' + TOKEN } }).then(r=>r.json());
+}
+function fmtDur(s){ s=parseInt(s||0); if(s<60) return s+'秒'; var m=Math.floor(s/60), r=s%60; if(m<60) return m+'分'+r+'秒'; var h=Math.floor(m/60); return h+'时'+(m%60)+'分'; }
+var from = new Date(Date.now()-30*864e5).toISOString().slice(0,10);
+
+var charts = {};
+function render(res){
+  // KPI
+  document.getElementById('kpi-login').textContent = res.summary.logins;
+  document.getElementById('kpi-pv').textContent = res.summary.pageviews;
+  document.getElementById('kpi-uv').textContent = res.summary.unique_visitors;
+  document.getElementById('kpi-dur').textContent = fmtDur(res.summary.avg_duration_sec);
+
+  var accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#FF5B1F';
+  var ink3 = getComputedStyle(document.documentElement).getPropertyValue('--ink-3').trim() || '#6A6A85';
+
+  // trend
+  charts.trend = new Chart(document.getElementById('c-trend'), {
+    type:'line',
+    data:{ labels: res.logins.trend.map(x=>x.d), datasets:[{ data: res.logins.trend.map(x=>x.n), borderColor:accent, backgroundColor:'rgba(255,91,31,0.12)', fill:true, tension:0.35, pointRadius:0 }] },
+    options:{ plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:ink3,maxTicksLimit:8}}, y:{ticks:{color:ink3,beginAtZero:true}} } }
+  });
+  // geo
+  charts.geo = new Chart(document.getElementById('c-geo'), {
+    type:'bar',
+    data:{ labels: res.geo.map(x=>x.country||'未知'), datasets:[{ data: res.geo.map(x=>x.n), backgroundColor:accent }] },
+    options:{ plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:ink3}}, y:{ticks:{color:ink3,beginAtZero:true}} } }
+  });
+  // pages
+  charts.pages = new Chart(document.getElementById('c-pages'), {
+    type:'bar',
+    data:{ labels: res.pages.map(x=>x.path), datasets:[{ data: res.pages.map(x=>x.total), backgroundColor:accent }] },
+    options:{ indexAxis:'y', plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:ink3,beginAtZero:true}}, y:{ticks:{color:ink3}} } }
+  });
+  // hours
+  var hrs = Array.from({length:24}, (_,i)=> (res.extra.hours.find(h=>parseInt(h.h)===i)||{n:0}).n);
+  charts.hours = new Chart(document.getElementById('c-hours'), {
+    type:'line',
+    data:{ labels: hrs.map((_,i)=>i+':00'), datasets:[{ data:hrs, borderColor:accent, backgroundColor:'rgba(255,91,31,0.12)', fill:true, tension:0.35, pointRadius:0 }] },
+    options:{ plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:ink3,maxTicksLimit:8}}, y:{ticks:{color:ink3,beginAtZero:true}} } }
+  });
+  // devices
+  var dev = Object.entries(res.extra.devices);
+  charts.dev = new Chart(document.getElementById('c-dev'), {
+    type:'doughnut',
+    data:{ labels: dev.map(x=>x[0]), datasets:[{ data: dev.map(x=>x[1]), backgroundColor:['#FF5B1F','#2A2A40','#D4A547','#6A6A85','#E84A0F','#888'] }] },
+    options:{ plugins:{legend:{position:'right'}} }
+  });
+  // referrers
+  var ref = Object.entries(res.extra.referrers);
+  charts.ref = new Chart(document.getElementById('c-ref'), {
+    type:'bar',
+    data:{ labels: ref.map(x=>x[0]), datasets:[{ data: ref.map(x=>x[1]), backgroundColor:accent }] },
+    options:{ plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:ink3}}, y:{ticks:{color:ink3,beginAtZero:true}} } }
+  });
+
+  // recent
+  var tb = document.getElementById('tbody-recent');
+  tb.innerHTML = '';
+  res.logins.recent.forEach(function(r){
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>'+ (r.username||'') +'</td><td>'+ (r.ip||'') +'</td><td>'+ [r.country,r.region].filter(Boolean).join(' · ') +'</td><td>'+ (r.login_at||'') +'</td><td>'+ fmtDur(r.duration_sec) +'</td>';
+    tb.appendChild(tr);
+  });
+  document.getElementById('pill-new').textContent = '新访客 ' + res.extra.new_visitors;
+  document.getElementById('pill-ret').textContent = '老访客 ' + res.extra.returning_visitors;
+}
+
+var p1 = api('/api/admin/analytics/summary?from='+from);
+var p2 = api('/api/admin/analytics/logins?from='+from);
+var p3 = api('/api/admin/analytics/geo?from='+from);
+var p4 = api('/api/admin/analytics/pages?from='+from);
+var p5 = api('/api/admin/analytics/extra?from='+from);
+Promise.all([p1,p2,p3,p4,p5]).then(function(r){
+  render({ summary:r[0], logins:r[1], geo:r[2], pages:r[3], extra:r[4] });
+}).catch(function(e){
+  document.body.insertAdjacentHTML('beforeend','<p style="color:#E84A0F">加载失败：'+e+'</p>');
+});
+
+// 语言切换
+var savedLang = localStorage.getItem('snailai-lang') || 'zh';
+function setLang(lang){
+  document.querySelectorAll('[data-zh]').forEach(function(el){
+    el.textContent = el.getAttribute('data-'+lang);
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(b){
+    b.classList.toggle('active', b.dataset.lang===lang);
+  });
+  localStorage.setItem('snailai-lang', lang);
+}
+document.querySelectorAll('.lang-btn').forEach(function(b){
+  b.addEventListener('click', function(){ setLang(b.dataset.lang); });
+});
+setLang(savedLang);
+</script>
+</body>
+</html>

@@ -28,6 +28,10 @@ import secrets
 import datetime
 from pathlib import Path
 from flask import Flask, request, jsonify, send_from_directory
+import re
+import fcntl
+import requests
+from apscheduler.schedulers.background import BackgroundScheduler
 
 BASE = Path(__file__).resolve().parent.parent          # 官网学生登录/
 SERVER_DIR = Path(__file__).resolve().parent           # 官网学生登录/server/
@@ -153,6 +157,29 @@ def init_db():
       can_set_points INTEGER DEFAULT 1,
       can_view_db INTEGER DEFAULT 1,
       UNIQUE(student_username, assistant_username)
+    );
+    CREATE TABLE IF NOT EXISTS login_events(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL,
+      ip TEXT,
+      ua TEXT,
+      country TEXT,
+      region TEXT,
+      city TEXT,
+      login_at TEXT DEFAULT (datetime('now')),
+      logout_at TEXT,
+      last_activity_at TEXT
+    );
+    CREATE TABLE IF NOT EXISTS page_views(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      visitor_id TEXT,
+      username TEXT,
+      path TEXT NOT NULL,
+      referrer TEXT,
+      entered_at TEXT,
+      duration_sec INTEGER,
+      is_login INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
     );
     """)
     conn.commit()
@@ -327,6 +354,109 @@ def _public_user(row):
             "must_change_pw": bool(row.get("must_change_pw", 0))}
 
 
+# ---------------------------------------------------------------- 访问分析：工具函数
+def _client_ip():
+    """取真实客户端 IP（Render 反向代理下必须读 X-Forwarded-For）。"""
+    xff = request.headers.get("X-Forwarded-For")
+    if xff:
+        return xff.split(",")[0].strip()
+    return request.remote_addr or ""
+
+
+def _geo_lookup(ip):
+    """免费接口 ip-api.com 解析 国家/地区/城市（登录量小，性能无感）。"""
+    if not ip:
+        return ("", "", "")
+    try:
+        r = requests.get(
+            "http://ip-api.com/json/%s?fields=country,regionName,city&lang=zh-CN" % ip,
+            timeout=3)
+        if r.ok:
+            d = r.json()
+            return (d.get("country") or "", d.get("regionName") or "",
+                    d.get("city") or "")
+    except Exception:
+        pass
+    return ("", "", "")
+
+
+_UA_DEVICE_RE = [
+    (r"iPad", "iPad"), (r"iPhone", "iPhone"), (r"Android", "Android"),
+    (r"Macintosh", "Mac"), (r"Windows", "Windows"), (r"Linux", "Linux"),
+]
+_UA_BROWSER_RE = [
+    (r"Edg/", "Edge"), (r"OPR/|Opera", "Opera"),
+    (r"Chrome/|CriOS", "Chrome"), (r"Firefox/|FxiOS", "Firefox"),
+    (r"Safari/", "Safari"),
+]
+
+
+def _parse_ua(ua):
+    if not ua:
+        return ("未知", "未知")
+    device = browser = "其他"
+    for pat, name in _UA_DEVICE_RE:
+        if re.search(pat, ua, re.I):
+            device = name
+            break
+    for pat, name in _UA_BROWSER_RE:
+        if re.search(pat, ua, re.I):
+            browser = name
+            break
+    return (device, browser)
+
+
+def _classify_referrer(ref):
+    if not ref:
+        return "直接访问"
+    r = ref.lower()
+    if "weixin.qq.com" in r or "qq.com" in r:
+        return "微信"
+    if "google" in r:
+        return "谷歌"
+    if "youtube" in r or "youtu.be" in r:
+        return "YouTube"
+    if "facebook" in r or "fb." in r:
+        return "Facebook"
+    if "twitter" in r or "t.co" in r:
+        return "Twitter"
+    if "linkedin" in r:
+        return "LinkedIn"
+    return "其他外链"
+
+
+def _date_filter(date_col, from_date, to_date):
+    where, params = "1=1", []
+    if from_date:
+        where += " AND DATE(%s) >= ?" % date_col
+        params.append(from_date)
+    if to_date:
+        where += " AND DATE(%s) <= ?" % date_col
+        params.append(to_date)
+    return where, params
+
+
+def _login_duration_sec(row):
+    end = row["logout_at"] or row["last_activity_at"] or row["login_at"]
+    try:
+        d = (datetime.datetime.fromisoformat(end)
+             - datetime.datetime.fromisoformat(row["login_at"])).total_seconds()
+        return max(0, int(d))
+    except Exception:
+        return 0
+
+
+def _fmt_dur(sec):
+    sec = int(sec)
+    if sec < 60:
+        return "%d秒" % sec
+    m, s = divmod(sec, 60)
+    if m < 60:
+        return "%d分%d秒" % (m, s)
+    h, m = divmod(m, 60)
+    return "%d时%d分" % (h, m)
+
+
 def _role_of(user):
     return user["role"] if user else None
 
@@ -385,6 +515,16 @@ def api_login():
     if not user:
         return jsonify(ok=False, error="用户名或密码错误"), 401
     token = _create_session(username)
+    ip = _client_ip()
+    ua = request.headers.get("User-Agent", "")
+    country, region, city = _geo_lookup(ip)
+    conn = db_conn()
+    conn.execute(
+        "INSERT INTO login_events(username, ip, ua, country, region, city, login_at) "
+        "VALUES(?,?,?,?,?,?, datetime('now'))",
+        (username, ip, ua, country, region, city))
+    conn.commit()
+    conn.close()
     return jsonify(ok=True, token=token, user=_public_user(user))
 
 
@@ -396,6 +536,52 @@ def api_logout():
         conn.execute("DELETE FROM sessions WHERE token=?", (token,))
         conn.commit()
         conn.close()
+    return jsonify(ok=True)
+
+
+@app.route("/api/activity", methods=["POST"])
+def api_activity():
+    """已登录用户心跳：更新其最近一次登录的活跃时间（用于计算停留时长）。"""
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    now = datetime.datetime.utcnow().isoformat()
+    conn = db_conn()
+    conn.execute(
+        "UPDATE login_events SET last_activity_at=? "
+        "WHERE id=(SELECT MAX(id) FROM login_events WHERE username=?)",
+        (now, user["username"]))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@app.route("/api/track/pageview", methods=["POST"])
+def api_track_pageview():
+    """前端离开页面时上报停留（匿名也可，token 在 body 中）。"""
+    data = request.get_json(silent=True) or {}
+    path = (data.get("path") or "").strip()
+    if not path:
+        return jsonify(ok=False, error="missing path"), 400
+    try:
+        dur = int(data.get("duration_sec") or 0)
+    except (ValueError, TypeError):
+        dur = 0
+    ref = (data.get("referrer") or "")[:500]
+    vid = (data.get("visitor_id") or "")[:128]
+    token = data.get("token") or _token_from_req()
+    username = None
+    if token:
+        u = _get_session(token)
+        if u:
+            username = u["username"]
+    conn = db_conn()
+    conn.execute(
+        "INSERT INTO page_views(visitor_id, username, path, referrer, entered_at, "
+        "duration_sec, is_login) VALUES(?,?,?,?, datetime('now'), ?, ?)",
+        (vid, username, path, ref, dur, int(bool(username))))
+    conn.commit()
+    conn.close()
     return jsonify(ok=True)
 
 
@@ -982,6 +1168,204 @@ def api_aa_delete(aid):
     return jsonify(ok=True)
 
 
+# ---------------------------------------------------------------- 访问分析：聚合 + 看板 + 报告
+def _agg_summary(from_date=None, to_date=None):
+    conn = db_conn()
+    w1, p1 = _date_filter("login_at", from_date, to_date)
+    logins = conn.execute("SELECT COUNT(*) n FROM login_events WHERE " + w1, p1).fetchone()["n"]
+    rows = conn.execute(
+        "SELECT login_at, logout_at, last_activity_at FROM login_events WHERE " + w1, p1).fetchall()
+    durs = [_login_duration_sec(r) for r in rows]
+    avg_dur = int(sum(durs) / len(durs)) if durs else 0
+    w2, p2 = _date_filter("created_at", from_date, to_date)
+    pv = conn.execute(
+        "SELECT COUNT(*) n, COUNT(DISTINCT visitor_id) v, "
+        "COALESCE(SUM(duration_sec),0) s FROM page_views WHERE " + w2, p2).fetchone()
+    conn.close()
+    return {"logins": logins, "avg_duration_sec": avg_dur,
+            "pageviews": pv["n"], "unique_visitors": pv["v"],
+            "total_dwell_sec": int(pv["s"])}
+
+
+@app.route("/api/admin/analytics/summary", methods=["GET"])
+def api_an_summary():
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    return jsonify(ok=True, **_agg_summary(request.args.get("from"), request.args.get("to")))
+
+
+@app.route("/api/admin/analytics/logins", methods=["GET"])
+def api_an_logins():
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    w, p = _date_filter("login_at", request.args.get("from"), request.args.get("to"))
+    conn = db_conn()
+    trend = conn.execute(
+        "SELECT DATE(login_at) d, COUNT(*) n FROM login_events WHERE " + w
+        + " GROUP BY d ORDER BY d", p).fetchall()
+    detail = conn.execute(
+        "SELECT username, ip, country, region, city, login_at, logout_at, "
+        "last_activity_at FROM login_events WHERE " + w
+        + " ORDER BY login_at DESC LIMIT 50", p).fetchall()
+    conn.close()
+    recent = [{"username": r["username"], "ip": r["ip"], "country": r["country"],
+               "region": r["region"], "city": r["city"], "login_at": r["login_at"],
+               "duration_sec": _login_duration_sec(r)} for r in detail]
+    return jsonify(ok=True, trend=[dict(r) for r in trend], recent=recent)
+
+
+@app.route("/api/admin/analytics/geo", methods=["GET"])
+def api_an_geo():
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    w, p = _date_filter("login_at", request.args.get("from"), request.args.get("to"))
+    conn = db_conn()
+    rows = conn.execute(
+        "SELECT country, COUNT(*) n FROM login_events WHERE " + w
+        + " GROUP BY country ORDER BY n DESC LIMIT 15", p).fetchall()
+    conn.close()
+    return jsonify(ok=True, geo=[dict(r) for r in rows])
+
+
+@app.route("/api/admin/analytics/pages", methods=["GET"])
+def api_an_pages():
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    w, p = _date_filter("created_at", request.args.get("from"), request.args.get("to"))
+    conn = db_conn()
+    rows = conn.execute(
+        "SELECT path, COUNT(*) views, COALESCE(SUM(duration_sec),0) total, "
+        "COALESCE(AVG(duration_sec),0) avg FROM page_views WHERE " + w
+        + " GROUP BY path ORDER BY total DESC LIMIT 15", p).fetchall()
+    conn.close()
+    return jsonify(ok=True, pages=[dict(r) for r in rows])
+
+
+@app.route("/api/admin/analytics/extra", methods=["GET"])
+def api_an_extra():
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    f, t = request.args.get("from"), request.args.get("to")
+    w1, p1 = _date_filter("login_at", f, t)
+    w2, p2 = _date_filter("created_at", f, t)
+    conn = db_conn()
+    ua_rows = conn.execute("SELECT ua FROM login_events WHERE " + w1, p1).fetchall()
+    dev_counter, br_counter = {}, {}
+    for r in ua_rows:
+        d, b = _parse_ua(r["ua"])
+        dev_counter[d] = dev_counter.get(d, 0) + 1
+        br_counter[b] = br_counter.get(b, 0) + 1
+    ref_rows = conn.execute("SELECT referrer FROM page_views WHERE " + w2, p2).fetchall()
+    ref_counter = {}
+    for r in ref_rows:
+        k = _classify_referrer(r["referrer"])
+        ref_counter[k] = ref_counter.get(k, 0) + 1
+    hrs = conn.execute(
+        "SELECT strftime('%H', created_at) h, COUNT(*) n FROM page_views WHERE " + w2
+        + " GROUP BY h", p2).fetchall()
+    vis = conn.execute(
+        "SELECT visitor_id, MIN(created_at) first FROM page_views GROUP BY visitor_id").fetchall()
+    active = conn.execute(
+        "SELECT DISTINCT visitor_id FROM page_views WHERE " + w2, p2).fetchall()
+    active_set = {r["visitor_id"] for r in active}
+    new_v = ret_v = 0
+    for r in vis:
+        if r["visitor_id"] not in active_set:
+            continue
+        if f and r["first"] >= f:
+            new_v += 1
+        else:
+            ret_v += 1
+    conn.close()
+    return jsonify(ok=True, devices=dev_counter, browsers=br_counter,
+                   referrers=ref_counter, hours=[dict(r) for r in hrs],
+                   new_visitors=new_v, returning_visitors=ret_v)
+
+
+def _build_report(range_type):
+    today = datetime.date.today()
+    if range_type == "daily":
+        from_d = (today - datetime.timedelta(days=1)).isoformat()
+        to_d = from_d
+        title = "蜗牛AI 每日访问报告 · " + from_d
+    else:
+        from_d = (today - datetime.timedelta(days=7)).isoformat()
+        to_d = (today - datetime.timedelta(days=1)).isoformat()
+        title = "蜗牛AI 每周访问报告 · " + from_d + " ~ " + to_d
+    s = _agg_summary(from_d, to_d)
+    conn = db_conn()
+    w1, p1 = _date_filter("login_at", from_d, to_d)
+    geo = conn.execute(
+        "SELECT country, COUNT(*) n FROM login_events WHERE " + w1
+        + " GROUP BY country ORDER BY n DESC LIMIT 5", p1).fetchall()
+    w2, p2 = _date_filter("created_at", from_d, to_d)
+    pages = conn.execute(
+        "SELECT path, COALESCE(SUM(duration_sec),0) total, COUNT(*) views "
+        "FROM page_views WHERE " + w2 + " GROUP BY path ORDER BY total DESC LIMIT 5", p2).fetchall()
+    conn.close()
+    lines = ["> " + title, "",
+             "> 🔑 登录人数：**%d**" % s["logins"],
+             "> 👀 页面访问：**%d** 次（独立访客 %d）" % (s["pageviews"], s["unique_visitors"]),
+             "> ⏱ 平均停留：**%s**" % _fmt_dur(s["avg_duration_sec"]), "",
+             "**国家/地区 Top5**"]
+    for r in geo:
+        lines.append("- %s：%d" % (r["country"] or "未知", r["n"]))
+    lines.append("")
+    lines.append("**页面停留 Top5**")
+    for r in pages:
+        lines.append("- %s：%s（%d 次）" % (r["path"], _fmt_dur(int(r["total"])), r["views"]))
+    return "\n".join(lines)
+
+
+def _send_wechat(markdown_text):
+    url = os.environ.get("WECHAT_WEBHOOK_URL")
+    if not url:
+        return False, "WECHAT_WEBHOOK_URL 未配置"
+    try:
+        r = requests.post(url, json={"msgtype": "markdown",
+                                     "markdown": {"content": markdown_text}}, timeout=10)
+        return r.ok, r.text
+    except Exception as e:
+        return False, str(e)
+
+
+@app.route("/api/admin/analytics/report", methods=["GET"])
+def api_an_report():
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    rt = request.args.get("range", "daily")
+    if rt not in ("daily", "weekly"):
+        rt = "daily"
+    text = _build_report(rt)
+    ok, msg = _send_wechat(text)
+    return jsonify(ok=True, sent=ok, message=msg, content=text)
+
+
+_sched = BackgroundScheduler(timezone="Australia/Sydney")
+
+def _start_scheduler():
+    # gunicorn -w 4 多 worker：用文件锁保证仅一个进程启动定时任务，避免重复推送
+    if os.environ.get("ANALYTICS_SCHEDULER_DISABLE") == "1":
+        return
+    lock_path = "/data/.scheduler.lock" if os.path.exists("/data") else "/tmp/.scheduler.lock"
+    try:
+        fd = open(lock_path, "w")
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return
+    _sched.add_job(lambda: _send_wechat(_build_report("daily")),
+                   "cron", hour=9, minute=0, id="daily_report")
+    _sched.add_job(lambda: _send_wechat(_build_report("weekly")),
+                   "cron", day_of_week="mon", hour=9, minute=0, id="weekly_report")
+    _sched.start()
+
+
 # ---------------------------------------------------------------- 静态站点托管
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
@@ -1011,6 +1395,7 @@ def serve(path):
 # 模块加载时即初始化数据库：gunicorn 以模块方式导入时也会执行，
 # 确保 Render 等生产环境在首次请求前已建好表并灌入种子数据。
 init_db()
+_start_scheduler()
 print(f"[蜗牛AI Portal] 数据库: {DB_PATH}")
 
 if __name__ == "__main__":

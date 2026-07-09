@@ -18,5 +18,7 @@ services:
         value: /data/snailai.db
       - key: PYTHON_VERSION
         value: "3.13"
+      - key: WECHAT_WEBHOOK_URL
+        sync: false
 
 # deployed on Starter plan with persistent disk
