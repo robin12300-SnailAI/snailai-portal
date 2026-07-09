@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>蜗牛AI · 蜗牛问答</title>
-<meta name="description" content="蜗牛问答 — 蜗牛 AI 学员专属问答看板。学生提问，老师回答，同学互助评论。" />
+<meta name="description" content="蜗牛问答 — 蜗牛 AI 开放问答看板。任何人都能提问、回答、跟进讨论；学员登录显示真实姓名，匿名也能给自己起个名字。" />
 <style>
   :root {
     --ink: #1A1A2E;
@@ -16,12 +16,13 @@
     --accent-2: #E84A0F;
     --accent-light: rgba(255,91,31,0.08);
     --accent-warm: #FFF5EE;
+    --green: #10b981;
+    --green-bg: #e7f8f1;
     --line: rgba(26,26,46,0.08);
     --shadow-sm: 0 1px 3px rgba(26,26,46,0.04), 0 2px 8px rgba(26,26,46,0.04);
     --shadow-md: 0 4px 16px rgba(26,26,46,0.08);
     --r-md: 10px;
     --r-lg: 16px;
-    --r-xl: 24px;
     --maxw: 1080px;
     --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   }
@@ -61,7 +62,7 @@
   }
   .qa-hero h1 { font-size: 2.4rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
   .qa-hero h1 .accent { color: var(--accent); }
-  .qa-hero p { max-width: 620px; margin: 18px auto 0; color: var(--ink-3); font-size: 1.05rem; }
+  .qa-hero p { max-width: 640px; margin: 18px auto 0; color: var(--ink-3); font-size: 1.05rem; }
 
   /* ===== GUIDELINES CARD ===== */
   .guidelines {
@@ -77,12 +78,65 @@
   /* ===== BOARD ===== */
   .board { max-width: 860px; margin: 36px auto 0; padding: 0 24px 80px; }
   .board-label { font-size: 13px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
-  .giscus-wrap {
-    background: white; border: 1px solid var(--line); border-radius: var(--r-lg);
-    box-shadow: var(--shadow-sm); padding: 8px; overflow: hidden;
-  }
-  .giscus-note { font-size: 0.85rem; color: var(--ink-3); text-align: center; padding: 30px 16px; }
-  .giscus-note code { background: var(--paper-2); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; }
+
+  /* 身份条 */
+  .identity-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; padding: 12px 14px; background: var(--accent-warm); border: 1px solid var(--accent-light); border-radius: var(--r-md); }
+  .id-student { font-size: 0.92rem; color: var(--ink-2); }
+  .id-student b { color: var(--accent); }
+  .id-anon-input { flex: 1; min-width: 180px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.92rem; font-family: inherit; background: #fff; }
+  .id-anon-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+  .id-login { font-size: 0.88rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+  .id-login:hover { color: var(--accent-2); }
+  .id-logout { border: none; background: transparent; color: var(--ink-3); font-size: 0.85rem; cursor: pointer; text-decoration: underline; font-family: inherit; }
+
+  /* 发帖框 */
+  .composer { background: white; border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: 18px; margin-bottom: 18px; }
+  .q-title { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 1rem; font-family: inherit; margin-bottom: 12px; background: var(--paper); }
+  .q-title:focus, .q-body:focus, .reply-input:focus, .q-search:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+  .q-body { width: 100%; min-height: 90px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.95rem; font-family: inherit; resize: vertical; background: var(--paper); }
+  .composer-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+  .btn-primary { border: none; background: var(--accent); color: #fff; font-weight: 700; font-size: 0.95rem; padding: 11px 22px; border-radius: 100px; cursor: pointer; font-family: inherit; transition: all .15s ease; }
+  .btn-primary:hover { background: var(--accent-2); transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+  .q-err { color: #ef4444; font-size: 0.82rem; }
+
+  /* 搜索 */
+  .search-row { margin-bottom: 16px; }
+  .q-search { width: 100%; padding: 11px 16px; border: 1px solid var(--line); border-radius: 100px; font-size: 0.92rem; font-family: inherit; background: white; }
+
+  /* 列表 */
+  .thread { background: white; border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: 18px 20px; margin-bottom: 14px; }
+  .thread-head { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: var(--ink-3); margin-bottom: 8px; }
+  .thread-author { color: var(--ink-2); }
+  .badge { font-size: 0.72rem; font-weight: 700; padding: 2px 9px; border-radius: 100px; }
+  .badge.student { background: var(--green-bg); color: #047857; }
+  .badge.anon { background: var(--paper-2); color: var(--ink-3); }
+  .time { margin-left: auto; }
+  .thread-title { font-size: 1.12rem; font-weight: 700; line-height: 1.35; }
+  .thread-snippet { color: var(--ink-2); font-size: 0.92rem; margin-top: 6px; white-space: pre-wrap; }
+  .thread-foot { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
+  .link-toggle { border: none; background: transparent; color: var(--accent); font-weight: 600; font-size: 0.86rem; cursor: pointer; font-family: inherit; padding: 0; }
+  .link-del { border: none; background: transparent; color: var(--ink-3); font-size: 0.82rem; cursor: pointer; font-family: inherit; text-decoration: underline; }
+
+  /* 详情 */
+  .thread-detail { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 14px; }
+  .thread-body { white-space: pre-wrap; color: var(--ink-2); font-size: 0.95rem; }
+  .detail-loading, .empty { color: var(--ink-3); font-size: 0.9rem; padding: 12px 0; }
+  .empty.small { padding: 6px 0; font-size: 0.85rem; }
+
+  /* 回复 */
+  .reply-compose { margin: 14px 0; }
+  .reply-compose.nested { margin: 10px 0; }
+  .reply-input { width: 100%; min-height: 64px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 0.9rem; font-family: inherit; resize: vertical; background: var(--paper); }
+  .reply-compose-foot { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 8px; }
+  .btn-small { border: none; background: var(--accent); color: #fff; font-weight: 700; font-size: 0.85rem; padding: 8px 18px; border-radius: 100px; cursor: pointer; font-family: inherit; }
+  .btn-small:hover { background: var(--accent-2); }
+  .replies { margin-top: 10px; }
+  .reply { border-left: 2px solid var(--paper-3); padding: 10px 0 4px 14px; margin-top: 10px; }
+  .reply-head { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--ink-3); }
+  .reply-head b { color: var(--ink-2); }
+  .reply-body { white-space: pre-wrap; color: var(--ink-2); font-size: 0.92rem; margin: 4px 0 6px; }
+  .link-reply { border: none; background: transparent; color: var(--accent); font-size: 0.8rem; font-weight: 600; cursor: pointer; font-family: inherit; padding: 0; }
 
   /* ===== FOOTER ===== */
   .footer { text-align: center; padding: 40px 24px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 0.85rem; }
@@ -94,6 +148,7 @@
     .qa-hero h1 { font-size: 1.7rem; }
     .nav-links { gap: 14px; }
     .nav-links a { font-size: 12px; }
+    .board { padding: 0 16px 60px; }
   }
 </style>
 </head>
@@ -120,14 +175,16 @@
 </nav>
 
 <header class="qa-hero">
-  <span class="qa-tag">💬 学员专属问答看板</span>
+  <span class="qa-tag" data-zh="💬 开放问答看板" data-en="💬 Open Q&A Board">💬 开放问答看板</span>
   <h1>蜗牛<span class="accent">问答</span></h1>
-  <p data-zh="学生提问，老师回答，同学互助评论。把学习路上的每一个卡点，变成大家一起进步的机会。" data-en="Students ask, teachers answer, peers comment. Turn every learning hurdle into shared progress.">学生提问，老师回答，同学互助评论。把学习路上的每一个卡点，变成大家一起进步的机会。</p>
+  <p data-zh="任何人都能提问、回答、跟进讨论。学员登录后显示真实姓名，匿名也可以给自己起个名字。"
+     data-en="Anyone can ask, answer and follow up. Students show their real name after login; anonymous visitors can pick a nickname.">任何人都能提问、回答、跟进讨论。学员登录后显示真实姓名，匿名也可以给自己起个名字。</p>
 </header>
 
 <section class="guidelines">
   <h3>📌 使用公约</h3>
   <ul>
+    <li><span class="dot">·</span><span data-zh="学员登录→显示真实姓名；匿名→给自己起个名字即可发言" data-en="Login as student to show your real name; anonymous visitors just pick a nickname">学员登录→显示真实姓名；匿名→给自己起个名字即可发言</span></li>
     <li><span class="dot">·</span><span data-zh="提问前先搜索，避免重复问题" data-en="Search before posting to avoid duplicates">提问前先搜索，避免重复问题</span></li>
     <li><span class="dot">·</span><span data-zh="描述清楚：你做了什么、卡在哪、想要什么结果" data-en="Be specific: what you did, where you're stuck, what you want">描述清楚：你做了什么、卡在哪、想要什么结果</span></li>
     <li><span class="dot">·</span><span data-zh="友善讨论，互相帮助，禁止广告与攻击" data-en="Be kind, help each other, no ads or attacks">友善讨论，互相帮助，禁止广告与攻击</span></li>
@@ -136,28 +193,28 @@
 
 <section class="board">
   <div class="board-label" data-zh="问答区" data-en="Q&A Board">问答区</div>
-  <div class="giscus-wrap">
-    <!-- Giscus 评论区：启用步骤见部署说明。repo-id / category-id 为占位符，需在 giscus.app 安装后替换 -->
-    <div class="giscus-note" id="giscus-loading">
-      评论区加载中… 若长时间不显示，请确认仓库已开启 <code>Discussions</code> 并已安装 Giscus App。
+
+  <div class="composer">
+    <div class="identity-bar" id="identity-bar"></div>
+    <input id="q-title" class="q-title" maxlength="200"
+           data-ph-zh="一句话说清你的问题" data-ph-en="Summarize your question"
+           placeholder="一句话说清你的问题">
+    <textarea id="q-body" class="q-body" maxlength="5000"
+              data-ph-zh="详细描述：你做了什么、卡在哪、想要什么结果"
+              data-ph-en="Describe: what you did, where stuck, what you want"
+              placeholder="详细描述：你做了什么、卡在哪、想要什么结果"></textarea>
+    <div class="composer-foot">
+      <span class="q-err" id="q-err"></span>
+      <button class="btn-primary" id="q-submit" data-zh="发布问题" data-en="Post Question">发布问题</button>
     </div>
-    <script src="https://giscus.app/client.js"
-            data-repo="robin12300-SnailAI/robin12300-SnailAI.github.io"
-            data-repo-id="R_kgDOTOPGsQ"
-            data-category="Q&A"
-            data-category-id="DIC_kwDOTOPGsc4DAqHJ"
-            data-mapping="pathname"
-            data-strict="0"
-            data-reactions-enabled="1"
-            data-emit-metadata="0"
-            data-input-position="top"
-            data-theme="light"
-            data-lang="zh-CN"
-            data-loading="lazy"
-            crossorigin="anonymous"
-            async>
-    </script>
   </div>
+
+  <div class="search-row">
+    <input id="q-search" class="q-search" maxlength="80"
+           data-ph-zh="搜索问题…" data-ph-en="Search…" placeholder="搜索问题…">
+  </div>
+
+  <div class="thread-list" id="thread-list"></div>
 </section>
 
 <footer class="footer">
@@ -172,12 +229,15 @@
 </footer>
 
 <script>
-  // 语言切换（与官网一致）
+  // ===================== 语言切换（与官网一致，含 placeholder 同步） =====================
   (function () {
     var saved = localStorage.getItem('snailai-lang') || 'zh';
     function apply(lang) {
       document.querySelectorAll('[data-zh]').forEach(function (el) {
         el.textContent = el.getAttribute(lang === 'zh' ? 'data-zh' : 'data-en');
+      });
+      document.querySelectorAll('[data-ph-zh]').forEach(function (el) {
+        el.setAttribute('placeholder', el.getAttribute(lang === 'zh' ? 'data-ph-zh' : 'data-ph-en'));
       });
       document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
       document.querySelectorAll('.lang-btn').forEach(function (b) {
@@ -194,13 +254,311 @@
         apply(lang);
       });
     });
-    // Giscus 加载后移除占位提示
-    document.addEventListener('DOMContentLoaded', function () {
-      setTimeout(function () {
-        var g = document.querySelector('.giscus, .giscus-frame');
-        if (g) { var n = document.getElementById('giscus-loading'); if (n) n.style.display = 'none'; }
-      }, 2500);
-    });
+  })();
+
+  // ===================== 问答看板逻辑 =====================
+  (function () {
+    var S_KEY = "snailai_api_token";
+    var ANON_KEY = "qa_anon_name";
+    var currentUser = null;     // {username, name, role} 或 null
+    var currentQ = "";
+
+    function esc(s) {
+      return (s == null ? "" : String(s)).replace(/[&<>"']/g, function (c) {
+        return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c];
+      });
+    }
+    function $(id) { return document.getElementById(id); }
+    function lang() { return localStorage.getItem('snailai-lang') || 'zh'; }
+    function isStaff(role) { return role === 'ta' || role === 'instructor' || role === 'admin'; }
+    function canDelete(authorUsername) {
+      if (!currentUser) return false;
+      if (isStaff(currentUser.role)) return true;
+      return currentUser.role === 'student' && currentUser.username === authorUsername;
+    }
+    function timeAgo(s) {
+      if (!s) return "";
+      var parts = String(s).split(" ");
+      var dt = new Date(parts[0] + "T" + (parts[1] || "00:00:00"));
+      if (isNaN(dt.getTime())) return s;
+      var diff = (Date.now() - dt.getTime()) / 1000;
+      if (diff < 60) return lang() === 'zh' ? '刚刚' : 'just now';
+      if (diff < 3600) return Math.floor(diff / 60) + (lang() === 'zh' ? ' 分钟前' : 'm ago');
+      if (diff < 86400) return Math.floor(diff / 3600) + (lang() === 'zh' ? ' 小时前' : 'h ago');
+      if (diff < 86400 * 30) return Math.floor(diff / 86400) + (lang() === 'zh' ? ' 天前' : 'd ago');
+      return parts[0];
+    }
+
+    // ---- 身份 ----
+    async function initIdentity() {
+      var token = sessionStorage.getItem(S_KEY);
+      if (token) {
+        try {
+          var r = await fetch("/api/me", { headers: { "Authorization": "Bearer " + token } });
+          var d = await r.json();
+          if (d.ok) currentUser = d.user;
+        } catch (e) {}
+      }
+      renderIdentityBar();
+    }
+    function renderIdentityBar() {
+      var bar = $("identity-bar");
+      if (currentUser) {
+        bar.innerHTML = '<span class="id-student">👋 <b>' + esc(currentUser.name) + '</b> · '
+          + (lang() === 'zh' ? '学员' : 'Student') + '</span>'
+          + '<button class="id-logout" id="id-logout">' + (lang() === 'zh' ? '退出' : 'Logout') + '</button>';
+        $("id-logout").onclick = logout;
+      } else {
+        var saved = localStorage.getItem(ANON_KEY) || "";
+        bar.innerHTML = '<input id="anon-name" class="id-anon-input" maxlength="40" '
+          + 'placeholder="' + (lang() === 'zh' ? '给自己起个名字（匿名）' : 'Pick a nickname (anonymous)') + '" value="' + esc(saved) + '">'
+          + '<a class="id-login" href="/login.html?redirect=' + encodeURIComponent(location.pathname) + '">'
+          + (lang() === 'zh' ? '学员登录' : 'Student Login') + '</a>';
+        $("anon-name").addEventListener("input", function (e) {
+          localStorage.setItem(ANON_KEY, e.target.value.trim());
+        });
+      }
+    }
+    function logout() {
+      sessionStorage.removeItem(S_KEY);
+      sessionStorage.removeItem("snailai_me");
+      currentUser = null;
+      renderIdentityBar();
+      loadThreads();
+    }
+
+    // ---- 身份辅助：取当前发帖身份 payload ----
+    function authHeaders() {
+      var h = { "Content-Type": "application/json" };
+      if (currentUser) h["Authorization"] = "Bearer " + sessionStorage.getItem(S_KEY);
+      return h;
+    }
+    function anonName() {
+      var inp = $("anon-name");
+      return (inp ? inp.value : "") || localStorage.getItem(ANON_KEY) || "";
+    }
+    function requireName(errEl) {
+      if (!currentUser && !anonName().trim()) {
+        if (errEl) errEl.textContent = lang() === 'zh' ? '匿名发言请先填写昵称' : 'Pick a nickname first';
+        return false;
+      }
+      return true;
+    }
+
+    // ---- 列表 ----
+    async function loadThreads() {
+      var url = "/api/qa/threads";
+      if (currentQ) url += "?q=" + encodeURIComponent(currentQ);
+      try {
+        var r = await fetch(url);
+        var d = await r.json();
+        var list = $("thread-list");
+        if (!d.ok || !d.threads.length) {
+          list.innerHTML = '<div class="empty">' + (currentQ
+            ? (lang() === 'zh' ? '没有匹配的问题' : 'No matching questions')
+            : (lang() === 'zh' ? '还没有人提问，来发第一个吧！' : 'No questions yet — be the first!')) + '</div>';
+          return;
+        }
+        list.innerHTML = d.threads.map(threadCard).join("");
+      } catch (e) {
+        $("thread-list").innerHTML = '<div class="empty">' + (lang() === 'zh' ? '加载失败' : 'Failed to load') + '</div>';
+      }
+    }
+    function threadCard(t) {
+      var L = lang();
+      var delBtn = canDelete(t.author_username)
+        ? '<button class="link-del" data-del-thread="' + t.id + '">' + (L === 'zh' ? '删除' : 'Delete') + '</button>' : '';
+      return '<article class="thread" data-id="' + t.id + '">'
+        + '<div class="thread-head">'
+        + '<span class="badge ' + t.author_type + '">' + (t.author_type === 'student' ? (L === 'zh' ? '学员' : 'Student') : (L === 'zh' ? '匿名' : 'Anon')) + '</span>'
+        + '<b class="thread-author">' + esc(t.author_name) + '</b>'
+        + '<span class="time">' + timeAgo(t.created_at) + '</span>'
+        + '</div>'
+        + '<h3 class="thread-title">' + esc(t.title) + '</h3>'
+        + '<p class="thread-snippet">' + esc(t.body) + '</p>'
+        + '<div class="thread-foot">'
+        + '<button class="link-toggle" data-toggle="' + t.id + '">💬 <span>' + (L === 'zh' ? '展开' : 'Expand') + '</span> (' + t.replies + ')</button>'
+        + delBtn
+        + '</div>'
+        + '<div class="thread-detail" id="detail-' + t.id + '" style="display:none"></div>'
+        + '</article>';
+    }
+
+    async function toggleThread(id) {
+      var det = $("detail-" + id);
+      var span = document.querySelector('[data-toggle="' + id + '"] span');
+      if (det.style.display === "none") {
+        if (!det.dataset.loaded) { await fillDetail(id); det.dataset.loaded = "1"; }
+        det.style.display = "block";
+        if (span) span.textContent = lang() === 'zh' ? '收起' : 'Collapse';
+      } else {
+        det.style.display = "none";
+        if (span) span.textContent = lang() === 'zh' ? '展开' : 'Expand';
+      }
+    }
+
+    async function fillDetail(id) {
+      var det = $("detail-" + id);
+      det.innerHTML = '<div class="detail-loading">' + (lang() === 'zh' ? '加载中…' : 'Loading…') + '</div>';
+      try {
+        var r = await fetch("/api/qa/threads/" + id);
+        var d = await r.json();
+        if (!d.ok) { det.innerHTML = '<div class="empty">' + esc(d.error || (lang() === 'zh' ? '加载失败' : 'Failed')) + '</div>'; return; }
+        var th = d.thread;
+        var html = '<div class="thread-full"><p class="thread-body">' + esc(th.body) + '</p>';
+        html += answerFormHtml(id);
+        html += '<div class="replies">' + (d.replies.length
+          ? renderReplies(d.replies, 0)
+          : '<div class="empty small">' + (lang() === 'zh' ? '还没有回答，来抢沙发～' : 'No answers yet') + '</div>') + '</div>';
+        html += '</div>';
+        det.innerHTML = html;
+      } catch (e) {
+        det.innerHTML = '<div class="empty">' + (lang() === 'zh' ? '加载失败' : 'Failed') + '</div>';
+      }
+    }
+
+    function answerFormHtml(id) {
+      var L = lang();
+      return '<div class="reply-compose">'
+        + '<textarea class="reply-input" id="ans-' + id + '" maxlength="3000" placeholder="'
+        + (L === 'zh' ? '写下你的回答…' : 'Write your answer…') + '"></textarea>'
+        + '<div class="reply-compose-foot">'
+        + '<span class="q-err" id="ans-err-' + id + '"></span>'
+        + '<button class="btn-small" data-answer="' + id + '">' + (L === 'zh' ? '回答' : 'Answer') + '</button>'
+        + '</div></div>';
+    }
+
+    function renderReplies(nodes, depth) {
+      var L = lang();
+      return nodes.map(function (n) {
+        var del = canDelete(n.author_username)
+          ? '<button class="link-del" data-del-reply="' + n.id + '" data-tid="' + threadIdOf(n) + '">' + (L === 'zh' ? '删除' : 'Delete') + '</button>'
+          : '';
+        return '<div class="reply" style="margin-left:' + (Math.min(depth, 4) * 18) + 'px">'
+          + '<div class="reply-head">'
+          + '<span class="badge ' + n.author_type + '">' + (n.author_type === 'student' ? (L === 'zh' ? '学员' : 'Student') : (L === 'zh' ? '匿名' : 'Anon')) + '</span>'
+          + '<b>' + esc(n.author_name) + '</b>'
+          + '<span class="time">' + timeAgo(n.created_at) + '</span>'
+          + del
+          + '</div>'
+          + '<div class="reply-body">' + esc(n.body) + '</div>'
+          + '<button class="link-reply" data-reply-to="' + n.id + '">↳ ' + (L === 'zh' ? '追问' : 'Reply') + '</button>'
+          + '<div class="reply-form-slot" id="rf-' + n.id + '"></div>'
+          + (n.children && n.children.length ? renderReplies(n.children, depth + 1) : '')
+          + '</div>';
+      }).join("");
+    }
+    function threadIdOf(node) {
+      var el = document.getElementById("rf-" + node.id);
+      return el ? (el.closest(".thread") || {}).dataset ? el.closest(".thread").dataset.id : "" : "";
+    }
+
+    function openReplyForm(replyId) {
+      var slot = $("rf-" + replyId);
+      if (!slot) return;
+      if (slot.dataset.open === "1") { slot.innerHTML = ""; slot.dataset.open = ""; return; }
+      slot.dataset.open = "1";
+      slot.innerHTML = '<div class="reply-compose nested">'
+        + '<textarea class="reply-input" id="rep-' + replyId + '" maxlength="3000" placeholder="'
+        + (lang() === 'zh' ? '追问…' : 'Reply…') + '"></textarea>'
+        + '<div class="reply-compose-foot">'
+        + '<span class="q-err" id="rep-err-' + replyId + '"></span>'
+        + '<button class="btn-small" data-reply-submit="' + replyId + '">' + (lang() === 'zh' ? '发送' : 'Send') + '</button>'
+        + '</div></div>';
+      $("rep-" + replyId).focus();
+    }
+
+    // ---- 发帖 / 回复 ----
+    async function postThread(e) {
+      e.preventDefault();
+      var err = $("q-err"); err.textContent = "";
+      var title = $("q-title").value.trim();
+      var body = $("q-body").value.trim();
+      if (!title || !body) { err.textContent = lang() === 'zh' ? '标题和内容都要填' : 'Title and content required'; return; }
+      if (!requireName(err)) return;
+      var payload = { title: title, body: body };
+      if (!currentUser) payload.anon_name = anonName().trim();
+      var btn = $("q-submit"); btn.disabled = true;
+      try {
+        var r = await fetch("/api/qa/threads", { method: "POST", headers: authHeaders(), body: JSON.stringify(payload) });
+        var d = await r.json();
+        if (!d.ok) { err.textContent = d.error || (lang() === 'zh' ? '发布失败' : 'Failed'); btn.disabled = false; return; }
+        $("q-title").value = ""; $("q-body").value = "";
+        loadThreads();
+      } catch (ex) {
+        err.textContent = lang() === 'zh' ? '网络错误' : 'Network error';
+        btn.disabled = false;
+      }
+    }
+
+    async function postReply(threadId, parentId, ta, errEl) {
+      var body = (ta.value || "").trim();
+      if (!body) { errEl.textContent = lang() === 'zh' ? '内容不能为空' : 'Content required'; return; }
+      if (!requireName(errEl)) return;
+      var payload = { thread_id: threadId, parent_id: parentId, body: body };
+      if (!currentUser) payload.anon_name = anonName().trim();
+      try {
+        var r = await fetch("/api/qa/replies", { method: "POST", headers: authHeaders(), body: JSON.stringify(payload) });
+        var d = await r.json();
+        if (!d.ok) { errEl.textContent = d.error || (lang() === 'zh' ? '发布失败' : 'Failed'); return; }
+        var det = $("detail-" + threadId);
+        det.dataset.loaded = "";      // 强制重新加载
+        await fillDetail(threadId);
+        det.style.display = "block";
+      } catch (ex) {
+        errEl.textContent = lang() === 'zh' ? '网络错误' : 'Network error';
+      }
+    }
+
+    async function deleteThread(id) {
+      if (!confirm(lang() === 'zh' ? '确定删除这个问题？' : 'Delete this question?')) return;
+      await apiDelete("/api/qa/threads/" + id);
+      loadThreads();
+    }
+    async function deleteReply(id, tid) {
+      if (!confirm(lang() === 'zh' ? '确定删除这条回复？' : 'Delete this reply?')) return;
+      await apiDelete("/api/qa/replies/" + id);
+      var det = $("detail-" + tid);
+      det.dataset.loaded = "";
+      await fillDetail(tid);
+      det.style.display = "block";
+    }
+    async function apiDelete(url) {
+      await fetch(url, { method: "DELETE", headers: { "Authorization": "Bearer " + sessionStorage.getItem(S_KEY) } });
+    }
+
+    // ---- 事件委托 ----
+    function bindEvents() {
+      $("q-submit").addEventListener("click", postThread);
+      var search = $("q-search");
+      var t;
+      search.addEventListener("input", function () {
+        clearTimeout(t);
+        t = setTimeout(function () { currentQ = search.value.trim(); loadThreads(); }, 300);
+      });
+      $("thread-list").addEventListener("click", async function (e) {
+        var el;
+        if ((el = e.target.closest("[data-toggle]"))) { await toggleThread(+el.getAttribute("data-toggle")); return; }
+        if ((el = e.target.closest("[data-del-thread]"))) { await deleteThread(+el.getAttribute("data-del-thread")); return; }
+        if ((el = e.target.closest("[data-del-reply]"))) { await deleteReply(+el.getAttribute("data-del-reply"), +el.getAttribute("data-tid")); return; }
+        if ((el = e.target.closest("[data-reply-to]"))) { openReplyForm(el.getAttribute("data-reply-to")); return; }
+        if ((el = e.target.closest("[data-answer]"))) {
+          var id = +el.getAttribute("data-answer");
+          await postReply(id, null, $("ans-" + id), $("ans-err-" + id));
+          return;
+        }
+        if ((el = e.target.closest("[data-reply-submit]"))) {
+          var rid = +el.getAttribute("data-reply-submit");
+          var card = el.closest(".thread");
+          var tid = card ? +card.dataset.id : 0;
+          await postReply(tid, rid, $("rep-" + rid), $("rep-err-" + rid));
+          return;
+        }
+      });
+    }
+
+    // ---- 启动 ----
+    initIdentity().then(bindEvents).then(loadThreads);
   })();
 </script>
 

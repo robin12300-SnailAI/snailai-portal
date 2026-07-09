@@ -94,8 +94,9 @@
   <script>
     const S_KEY = "snailai_api_token";
     const U_KEY = "snailai_me";
-    // 已有 token → 直接进欢迎页（一次登录）
-    if (sessionStorage.getItem(S_KEY)) { location.href = "welcome.html"; }
+    const REDIRECT = new URLSearchParams(location.search).get("redirect") || "";
+    // 已有 token → 直接跳到目标页（一次登录）；否则进欢迎页
+    if (sessionStorage.getItem(S_KEY)) { location.href = REDIRECT || "welcome.html"; }
 
     async function doLogin(e) {
       e.preventDefault();
@@ -120,8 +121,12 @@
         // 存共享 session key（矩阵页也读这个）
         sessionStorage.setItem(S_KEY, d.token);
         sessionStorage.setItem(U_KEY, JSON.stringify(d.user));
-        // 首次登录（must_change_pw）强制跳改密页，否则进学堂
-        location.href = d.user.must_change_pw ? "change-password.html" : "welcome.html";
+        // 首次登录（must_change_pw）强制跳改密页（透传 redirect），否则跳目标页/学堂
+        if (d.user.must_change_pw) {
+          location.href = "change-password.html" + (REDIRECT ? "?redirect=" + encodeURIComponent(REDIRECT) : "");
+        } else {
+          location.href = REDIRECT || "welcome.html";
+        }
       } catch(ex) {
         err.textContent = ex.message;
         btn.disabled = false;
