@@ -68,6 +68,19 @@
     .foot{text-align:center;color:var(--ink3);font-size:13px;padding:32px 24px;
       border-top:1px solid var(--line);margin-top:32px}
 
+    /* ---- 改密横幅 & 成长点数 ---- */
+    .pw-banner{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;
+      max-width:960px;margin:18px auto 0;padding:12px 18px;background:var(--accent-soft);
+      border:1px solid var(--accent);border-radius:12px;color:var(--accent);font-size:14px;font-weight:600}
+    .pw-banner button{font-family:inherit;font-size:13px;font-weight:700;border:none;
+      background:var(--accent);color:#fff;padding:7px 16px;border-radius:9px;cursor:pointer}
+    .pw-banner button:hover{filter:brightness(1.05)}
+    .points-box{display:flex;flex-direction:column;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,var(--accent-soft),#fff);border:1px solid var(--line);
+      border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+    .points-num{font-size:48px;font-weight:900;color:var(--accent);line-height:1}
+    .points-label{font-size:14px;color:var(--ink3);margin-top:8px}
+
     /* ---- 我的 AI 刚需 ---- */
     .needs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
       gap:16px;margin-bottom:8px}
@@ -130,8 +143,17 @@
     <p class="hero-sub" id="heroSub">以下是你的课程、资料与学习工具</p>
   </div>
 
+  <!-- 改密提示横幅（初始密码时显示） -->
+  <div class="pw-banner" id="pwBanner" style="display:none">
+    <span data-zh="⚠️ 你正在使用初始密码，建议尽快修改" data-en="⚠️ Using default password — please change it">⚠️ 你正在使用初始密码，建议尽快修改</span>
+    <button onclick="location.href='change-password.html'" data-zh="修改密码" data-en="Change Password">修改密码</button>
+  </div>
+
   <!-- 动态内容 -->
   <div id="content"></div>
+
+  <!-- 成长点数总览 -->
+  <div id="pointsSection"></div>
 
   <div class="foot" data-zh="蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI · v1.0.1" data-en="SnailAI Student Portal · © 2026 SnailAI · v1.0.1">蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI · v1.0.1</div>
 
@@ -215,10 +237,21 @@
     // 渲染顶部用户信息
     function renderUserArea(){
       const btnLabel = t(LABEL.logout);
-      document.getElementById("userArea").innerHTML =
-        `<span style="font-size:14px;color:var(--ink3)">${me.name}</span>` +
-        ` <button onclick="doLogout()" style="margin-left:10px;padding:5px 14px;border:1px solid var(--line);` +
-        `border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink2)">${btnLabel}</button>`;
+      let html = `<span style="font-size:14px;color:var(--ink3)">${me.name}</span>`;
+      const isStaff = me.role === "ta" || me.role === "instructor" || me.role === "admin";
+      if (isStaff) {
+        html += ` <a href="ta/dashboard.html" style="margin-left:8px;padding:5px 12px;border:1px solid var(--accent);` +
+                `border-radius:8px;background:var(--accent-soft);color:var(--accent);font-size:13px;font-weight:700;text-decoration:none">` +
+                `🛠 ${t({zh:"助教看板",en:"TA Board"})}</a>`;
+      }
+      if (me.role === "admin") {
+        html += ` <a href="admin/" style="margin-left:8px;padding:5px 12px;border:1px solid var(--line);` +
+                `border-radius:8px;background:#fff;color:var(--ink2);font-size:13px;font-weight:700;text-decoration:none">` +
+                `⚙ ${t({zh:"管理后台",en:"Admin"})}</a>`;
+      }
+      html += ` <button onclick="doLogout()" style="margin-left:10px;padding:5px 14px;border:1px solid var(--line);` +
+              `border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink2)">${btnLabel}</button>`;
+      document.getElementById("userArea").innerHTML = html;
     }
 
     // 渲染欢迎区
@@ -226,6 +259,8 @@
       document.getElementById("welcomeName").textContent = me.name.split(/\s/).pop() || me.name;
       document.getElementById("roleBadge").textContent = t(ROLE_NAME[me.role] || {zh:me.role, en:me.role});
       document.getElementById("heroSub").textContent = t(ROLE_DESC[me.role] || {zh:"欢迎来到蜗牛AI学员学堂", en:"Welcome to SnailAI Student Portal"});
+      const banner = document.getElementById("pwBanner");
+      if (banner) banner.style.display = me.must_change_pw ? "flex" : "none";
     }
 
     // 渲染动态板块
@@ -270,6 +305,23 @@
     }
 
     // 初始化调用已移到脚本末尾（避免 applyLang 中 renderNeeds 在常量声明前执行）
+
+    // ===================== 蜗牛 AI 成长点数 =====================
+    const POINTS_TITLE = {zh:"蜗牛 AI 成长点数", en:"SnailAI Growth Points"};
+    const POINTS_SUB = {zh:"确认能力项、推荐新学员等获得的累计成长点数", en:"Cumulative growth points from confirmed capabilities and referrals"};
+    async function renderPoints(){
+      const sec = document.getElementById("pointsSection");
+      if (!sec) return;
+      sec.innerHTML = `<h2 class="section-title">🌟 ${t(POINTS_TITLE)}</h2>`
+        + `<p class="section-sub">${t(POINTS_SUB)}</p>`
+        + `<div id="pointsBox" class="points-box"><div class="points-num">…</div></div>`;
+      const d = await api("/api/points/summary","GET");
+      const box = sec.querySelector("#pointsBox");
+      if (!d.ok){ box.innerHTML = `<div class="needs-empty">${escapeHtml(d.error||"")}</div>`; return; }
+      const me_row = (d.summary||[]).find(x => x.username === me.username);
+      const pts = me_row ? me_row.points : 0;
+      box.innerHTML = `<div class="points-num">${pts}</div><div class="points-label">${t(POINTS_TITLE)}</div>`;
+    }
 
     // ===================== 我的 AI 刚需 =====================
     const NEEDS_TITLE = {zh:"我的 AI 刚需", en:"My AI Needs"};
@@ -446,6 +498,7 @@
     renderHero();
     renderContent();
     applyLang(curLang);
+    renderPoints();
 
     function doLogout() {
       sessionStorage.removeItem(S_KEY);

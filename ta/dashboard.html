@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-title-zh="蜗牛 AI · 助教看板" data-title-en="SnailAI · TA Dashboard">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蜗牛 AI · 助教看板</title>
+<link rel="icon" type="image/png" href="../assets/snailai_logo.png">
+<style>
+  :root {
+    --ink: #1A1A2E; --ink-2: #2A2A40; --ink-3: #6A6A85;
+    --paper: #FCFCFA; --paper-2: #F5F4EE; --paper-3: #E8E7E0;
+    --accent: #FF5B1F; --accent-2: #E84A0F; --accent-light: rgba(255,91,31,.10);
+    --accent-soft: #FFF5EE; --green: #10b981; --green-bg: #e7f8f1;
+    --blue: #3b82f6; --blue-bg: #eaf1ff; --red: #ef4444; --red-bg: #fdeaea;
+    --line: rgba(26,26,46,.10);
+    --shadow-sm: 0 1px 3px rgba(26,26,46,.04), 0 2px 8px rgba(26,26,46,.04);
+    --shadow-md: 0 4px 16px rgba(26,26,46,.08);
+    --r-md: 10px; --r-lg: 16px; --r-xl: 24px;
+    --sans: 'Inter','Helvetica Neue','Helvetica','Arial','PingFang SC','Microsoft YaHei UI','Noto Sans SC',sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--sans); background: var(--paper); color: var(--ink); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  /* ===== Top bar ===== */
+  .topbar {
+    position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 24px; background: rgba(252,252,250,.94); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line); flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .brand img { height: 30px; }
+  .brand span { font-weight: 800; font-size: 16px; letter-spacing: -.01em; }
+  .top-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .who { font-size: 13px; color: var(--ink-3); }
+  .role-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px; background: var(--accent-light); color: var(--accent); }
+  .role-badge.admin { background: #ede9fe; color: #6d28d9; }
+  .btn { font-family: inherit; font-size: 13px; font-weight: 700; border-radius: 9px; padding: 7px 14px; cursor: pointer; border: 1px solid var(--line); background: #fff; color: var(--ink-2); transition: .15s; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { background: var(--accent-2); color: #fff; }
+  .btn.danger:hover { border-color: var(--red); color: var(--red); }
+  .lang-switch { display: inline-flex; gap: 4px; border: 1px solid var(--line); border-radius: 100px; padding: 3px; }
+  .lang-btn { border: none; background: transparent; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--ink-3); padding: 4px 10px; border-radius: 100px; transition: all .2s; }
+  .lang-btn.active { background: var(--ink); color: #fff; }
+
+  /* ===== Layout ===== */
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 80px; }
+  .page-head { margin-bottom: 24px; }
+  .page-head h1 { font-size: 28px; letter-spacing: -.02em; }
+  .page-head p { color: var(--ink-3); margin-top: 6px; font-size: 14px; }
+
+  .card {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg);
+    padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px;
+  }
+  .card-head { display: flex; align-items: center; gap: 10px; justify-content: space-between; flex-wrap: wrap; margin-bottom: 16px; }
+  .card-head h2 { font-size: 19px; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+  .card-head .sub { font-size: 13px; color: var(--ink-3); }
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .toolbar input[type=text] { font-family: inherit; font-size: 13.5px; border: 1px solid var(--line); border-radius: 9px; padding: 8px 12px; background: #fff; color: var(--ink); min-width: 180px; }
+  .toolbar select { font-family: inherit; font-size: 13.5px; border: 1px solid var(--line); border-radius: 9px; padding: 8px 12px; background: #fff; color: var(--ink); }
+
+  /* ===== Tables ===== */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table.grid { border-collapse: collapse; width: 100%; font-size: 13px; }
+  table.grid th, table.grid td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; white-space: nowrap; vertical-align: middle; }
+  table.grid th { background: var(--paper-2); font-weight: 700; color: var(--ink-2); position: sticky; top: 0; }
+  table.grid td .cell-edit input[type=text], table.grid td .cell-edit input[type=number] {
+    font-family: inherit; font-size: 13px; border: 1px solid var(--accent); border-radius: 6px; padding: 5px 7px; width: 130px; background: #fff; color: var(--ink);
+  }
+  table.grid td.actions { white-space: nowrap; }
+  .row-actions { display: flex; gap: 6px; }
+  .mini { font-family: inherit; font-size: 12px; font-weight: 700; border: 1px solid var(--line); background: #fff; color: var(--ink-2); border-radius: 7px; padding: 4px 9px; cursor: pointer; }
+  .mini:hover { border-color: var(--accent); color: var(--accent); }
+  .mini.save { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .mini.del { color: var(--red); border-color: var(--red); }
+  .tag-yes { color: var(--green); font-weight: 700; }
+  .tag-no { color: var(--ink-3); }
+  .muted { color: var(--ink-3); }
+  .empty { padding: 30px; text-align: center; color: var(--ink-3); font-size: 14px; }
+  .err { color: var(--red); font-size: 13px; margin-top: 10px; min-height: 18px; }
+  .browse-meta { font-size: 12px; color: var(--ink-3); margin-bottom: 10px; }
+
+  /* ===== Modal ===== */
+  .mask { position: fixed; inset: 0; background: rgba(26,26,46,.45); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+  .mask.show { display: flex; }
+  .modal { background: #fff; border-radius: 16px; width: 100%; max-width: 560px; padding: 24px; box-shadow: var(--shadow-md); max-height: 88vh; overflow-y: auto; }
+  .modal h3 { font-size: 18px; font-weight: 900; margin-bottom: 16px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+  .field label { display: block; font-size: 12.5px; font-weight: 700; color: var(--ink-2); margin-bottom: 5px; }
+  .field input[type=text], .field input[type=number] { width: 100%; font-family: inherit; font-size: 14px; border: 1px solid var(--line); border-radius: 9px; padding: 9px 11px; color: var(--ink); background: #fff; box-sizing: border-box; }
+  .field input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--accent); }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+
+  .forbidden { max-width: 460px; margin: 14vh auto; text-align: center; padding: 40px; border: 1px solid var(--line); border-radius: var(--r-lg); }
+  .forbidden .ico { font-size: 48px; }
+  .forbidden h2 { margin: 14px 0 6px; }
+  .forbidden p { color: var(--ink-3); margin-bottom: 20px; }
+  .forbidden a { display: inline-block; margin: 0 6px; padding: 9px 18px; border-radius: 9px; font-weight: 700; text-decoration: none; }
+  .forbidden a.go { background: var(--accent); color: #fff; }
+  .forbidden a.back { border: 1px solid var(--line); color: var(--ink-2); }
+
+  @media (max-width: 720px) {
+    .wrap { padding: 20px 14px 60px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .page-head h1 { font-size: 23px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar" id="topbar" style="display:none">
+  <a href="../" class="brand">
+    <img src="../assets/snailai_logo.png" alt="蜗牛 AI">
+    <span data-zh="蜗牛 AI · 助教看板" data-en="SnailAI · TA Dashboard">蜗牛 AI · 助教看板</span>
+  </a>
+  <div class="top-right">
+    <span class="who" id="whoName"></span>
+    <span class="role-badge" id="roleBadge"></span>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+    <button class="btn" onclick="doLogout()" data-zh="退出" data-en="Log out">退出</button>
+  </div>
+</header>
+
+<main class="wrap" id="wrap" style="display:none">
+  <div class="page-head">
+    <h1 data-zh="助教看板" data-en="TA Dashboard">助教看板</h1>
+    <p data-zh="维护学员通讯录，并浏览教学过程数据库" data-en="Maintain the student directory and browse the teaching database">维护学员通讯录，并浏览教学过程数据库</p>
+  </div>
+
+  <!-- ===== Card 1: 通讯录管理 ===== -->
+  <section class="card">
+    <div class="card-head">
+      <h2>📇 <span data-zh="通讯录管理" data-en="Directory Management">通讯录管理</span></h2>
+      <div class="toolbar">
+        <input type="text" id="dirSearch" data-zh-ph="搜索姓名/账号" data-en-ph="Search name/login" placeholder="搜索姓名/账号">
+        <button class="btn primary" id="addBtn" data-zh="➕ 新增学员" data-en="➕ Add Student">➕ 新增学员</button>
+        <button class="btn" onclick="loadDirectory()" data-zh="刷新" data-en="Refresh">刷新</button>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table class="grid" id="dirTable">
+        <thead id="dirHead"></thead>
+        <tbody id="dirBody"></tbody>
+      </table>
+    </div>
+    <div class="err" id="dirErr"></div>
+  </section>
+
+  <!-- ===== Card 2: 数据库浏览 ===== -->
+  <section class="card">
+    <div class="card-head">
+      <h2>🗄️ <span data-zh="数据库浏览（只读）" data-en="Database Browse (read-only)">数据库浏览（只读）</span></h2>
+      <div class="toolbar">
+        <select id="browseTable"></select>
+        <button class="btn" onclick="loadBrowse()" data-zh="查看" data-en="View">查看</button>
+      </div>
+    </div>
+    <div class="browse-meta" id="browseMeta"></div>
+    <div class="table-scroll">
+      <table class="grid" id="browseTableEl">
+        <thead id="browseHead"></thead>
+        <tbody id="browseBody"></tbody>
+      </table>
+    </div>
+    <div class="err" id="browseErr"></div>
+  </section>
+</main>
+
+<!-- ===== Forbidden ===== -->
+<div class="forbidden" id="forbidden" style="display:none">
+  <div class="ico">🔒</div>
+  <h2 data-zh="无访问权限" data-en="Access Denied">无访问权限</h2>
+  <p data-zh="该页面仅限助教 / 讲师 / 管理员访问。" data-en="This page is for Teaching Assistants, Instructors and Admins only.">该页面仅限助教 / 讲师 / 管理员访问。</p>
+  <a class="go" href="../login.html" data-zh="去登录" data-en="Log in">去登录</a>
+  <a class="back" href="../" data-zh="返回首页" data-en="Home">返回首页</a>
+</div>
+
+<!-- ===== Add Student Modal ===== -->
+<div class="mask" id="addMask">
+  <div class="modal">
+    <h3 data-zh="新增学员" data-en="Add Student">新增学员</h3>
+    <div class="form-grid" id="addForm"></div>
+    <div class="err" id="addErr"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeAdd()" data-zh="取消" data-en="Cancel">取消</button>
+      <button class="btn primary" onclick="submitAdd()" data-zh="保存" data-en="Save">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===================== 配置 =====================
+  const S_KEY = "snailai_api_token", U_KEY = "snailai_me";
+  const LANG_KEY = "snailai-lang";
+  const BROWSE_TABLES = ["directory","checks","ai_needs","capabilities","points_log","points_config"];
+  const BROWSE_LABELS = {
+    directory:{zh:"通讯录",en:"Directory"}, checks:{zh:"能力审核",en:"Checks"},
+    ai_needs:{zh:"我的 AI 刚需",en:"AI Needs"}, capabilities:{zh:"能力项",en:"Capabilities"},
+    points_log:{zh:"成长点数流水",en:"Points Log"}, points_config:{zh:"点数配置",en:"Points Config"}
+  };
+  // 通讯录字段定义（后端 _DIR_FIELDS 顺序）
+  const DIR_FIELDS = [
+    {k:"student_no",     label:{zh:"学号",en:"No"},     type:"int", ro:true},
+    {k:"name",           label:{zh:"姓名",en:"Name"},   type:"text"},
+    {k:"zoom_id",        label:{zh:"Zoom ID",en:"Zoom ID"}, type:"text"},
+    {k:"cpu",            label:{zh:"CPU",en:"CPU"},     type:"text"},
+    {k:"ram",            label:{zh:"内存",en:"RAM"},     type:"text"},
+    {k:"storage",        label:{zh:"存储",en:"Storage"}, type:"text"},
+    {k:"github",         label:{zh:"GitHub",en:"GitHub"}, type:"text"},
+    {k:"login_username", label:{zh:"登录账号",en:"Login"}, type:"text"},
+    {k:"email",          label:{zh:"邮箱",en:"Email"},  type:"text"},
+    {k:"wechat",         label:{zh:"微信",en:"WeChat"}, type:"text"},
+    {k:"phone",          label:{zh:"手机",en:"Phone"},  type:"text"},
+    {k:"online_course",  label:{zh:"线上课",en:"Online"}, type:"bool"},
+    {k:"offline_course", label:{zh:"线下课",en:"Offline"}, type:"bool"},
+    {k:"tuition_fee",    label:{zh:"学费",en:"Fee"},     type:"int"},
+    {k:"tuition_paid",   label:{zh:"已缴费",en:"Paid"},  type:"bool"},
+    {k:"course_term",    label:{zh:"期数",en:"Term"},    type:"text"},
+    {k:"identity",       label:{zh:"身份",en:"Identity"},type:"text"}
+  ];
+
+  let curLang = localStorage.getItem(LANG_KEY) || 'zh';
+  let token = sessionStorage.getItem(S_KEY) || "";
+  let me = null;
+  let editNo = null;          // 正在编辑的学号
+  let dirRows = [];           // 通讯录缓存
+
+  // ===================== 工具 =====================
+  function t(o){ return (o && o[curLang]) || (o && o.zh) || ""; }
+  function escapeHtml(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+  async function api(path, method, body){
+    const opt = { method, headers:{} };
+    if (token) opt.headers["Authorization"] = "Bearer " + token;
+    opt.headers["Content-Type"] = "application/json";
+    if (body !== undefined) opt.body = JSON.stringify(body);
+    const r = await fetch(path, opt);
+    let d = {}; try { d = await r.json(); } catch(e){}
+    return d;
+  }
+  function doLogout(){
+    fetch("/api/logout",{method:"POST",headers:{"Authorization":"Bearer "+token}}).catch(()=>{});
+    sessionStorage.removeItem(S_KEY); sessionStorage.removeItem(U_KEY);
+    location.href = "../login.html";
+  }
+
+  // ===================== 语言 =====================
+  function applyLang(lang){
+    curLang = lang;
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      const tx = el.getAttribute('data-' + lang);
+      if (tx !== null) el.textContent = tx;
+    });
+    document.querySelectorAll('[data-zh-ph]').forEach(el => {
+      el.placeholder = el.getAttribute('data-' + lang + '-ph') || el.getAttribute('data-zh-ph');
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    const _tt = document.documentElement.getAttribute('data-title-' + lang);
+    if (_tt) document.title = _tt;
+    localStorage.setItem(LANG_KEY, lang);
+    // 重新渲染动态内容
+    renderDirHead(); renderDirBody(); fillBrowseSelect(); renderBrowsePlaceholder();
+  }
+  document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang)));
+
+  // ===================== 守卫 =====================
+  (async function guard(){
+    if (!token){ location.href = "../login.html"; return; }
+    const d = await api("/api/me","GET");
+    if (!d.ok || !["ta","instructor","admin"].includes((d.user && d.user.role))){
+      document.getElementById("forbidden").style.display = "block";
+      return;
+    }
+    me = d.user;
+    boot();
+  })();
+
+  function boot(){
+    document.getElementById("topbar").style.display = "flex";
+    document.getElementById("wrap").style.display = "block";
+    document.getElementById("whoName").textContent = me.name;
+    const rb = document.getElementById("roleBadge");
+    const rn = {admin:{zh:"管理员",en:"Admin"}, instructor:{zh:"讲师",en:"Instructor"}, ta:{zh:"助教",en:"TA"}}[me.role] || {zh:me.role,en:me.role};
+    rb.textContent = t(rn);
+    if (me.role === "admin") rb.classList.add("admin");
+    applyLang(curLang);
+    fillBrowseSelect();
+    loadDirectory();
+    loadBrowse();
+  }
+
+  // ===================== 通讯录：表头 =====================
+  function renderDirHead(){
+    const head = document.getElementById("dirHead");
+    const cols = DIR_FIELDS.map(f => `<th>${escapeHtml(t(f.label))}</th>`).join("");
+    const actCol = (me && me.role === "admin") ? `<th>${t({zh:"操作",en:"Actions"})}</th>` : "";
+    head.innerHTML = `<tr><th>#</th>${cols}${actCol}</tr>`;
+  }
+
+  // ===================== 通讯录：加载 =====================
+  async function loadDirectory(){
+    const d = await api("/api/directory","GET");
+    const err = document.getElementById("dirErr");
+    if (!d.ok){ err.textContent = (d.error||"加载失败"); return; }
+    err.textContent = "";
+    dirRows = d.rows || [];
+    renderDirBody();
+  }
+
+  function renderDirBody(){
+    const body = document.getElementById("dirBody");
+    const q = (document.getElementById("dirSearch").value || "").trim().toLowerCase();
+    let rows = dirRows;
+    if (q) rows = rows.filter(r => ((""+ (r.name||"")).toLowerCase().includes(q) || (""+(r.login_username||"")).toLowerCase().includes(q)));
+    if (!rows.length){ body.innerHTML = `<tr><td colspan="99" class="empty">${t({zh:"暂无记录",en:"No records"})}</td></tr>`; return; }
+    body.innerHTML = rows.map(r => dirRowHtml(r)).join("");
+  }
+
+  function dirRowHtml(r){
+    const no = r.student_no;
+    const editing = (editNo === no);
+    const cells = DIR_FIELDS.map(f => {
+      const v = r[f.k];
+      if (editing){
+        if (f.type === "bool"){
+          return `<td><input type="checkbox" data-k="${f.k}" ${v?"checked":""}></td>`;
+        }
+        if (f.ro){
+          return `<td><input type="text" data-k="${f.k}" value="${escapeHtml(v)}" readonly style="background:var(--paper-2)"></td>`;
+        }
+        const ttype = f.type === "int" ? "number" : "text";
+        return `<td><input type="${ttype}" data-k="${f.k}" value="${escapeHtml(v==null?"":v)}"></td>`;
+      }
+      // 展示态
+      if (f.type === "bool") return `<td>${v ? '<span class="tag-yes">✅</span>' : '<span class="tag-no">—</span>'}</td>`;
+      return `<td>${escapeHtml(v==null?"":v)}</td>`;
+    }).join("");
+    let act = "";
+    if (me && me.role === "admin"){
+      if (editing){
+        act = `<td class="actions"><div class="row-actions">
+          <button class="mini save" onclick="saveRow(${no})">${t({zh:"保存",en:"Save"})}</button>
+          <button class="mini" onclick="cancelEdit()">${t({zh:"取消",en:"Cancel"})}</button>
+        </div></td>`;
+      } else {
+        act = `<td class="actions"><div class="row-actions">
+          <button class="mini" onclick="editRow(${no})">${t({zh:"编辑",en:"Edit"})}</button>
+          <button class="mini del" onclick="delRow(${no})">${t({zh:"删除",en:"Del"})}</button>
+        </div></td>`;
+      }
+    }
+    const idx = dirRows.findIndex(x => x.student_no === no) + 1;
+    return `<tr data-no="${no}"><td class="muted">${idx}</td>${cells}${act}</tr>`;
+  }
+
+  function editRow(no){ editNo = no; renderDirBody(); }
+  function cancelEdit(){ editNo = null; renderDirBody(); }
+
+  async function saveRow(no){
+    const tr = document.querySelector(`tr[data-no="${no}"]`);
+    const body = {};
+    tr.querySelectorAll("[data-k]").forEach(inp => {
+      const k = inp.getAttribute("data-k");
+      const f = DIR_FIELDS.find(x => x.k === k);
+      if (!f || f.ro) return;
+      if (f.type === "bool") body[k] = inp.checked ? 1 : 0;
+      else if (f.type === "int") body[k] = parseInt(inp.value || "0", 10) || 0;
+      else body[k] = inp.value;
+    });
+    const d = await api("/api/directory/" + no, "PUT", body);
+    const err = document.getElementById("dirErr");
+    if (!d.ok){ err.textContent = (d.error||"保存失败"); return; }
+    err.textContent = "";
+    editNo = null;
+    await loadDirectory();
+  }
+
+  async function delRow(no){
+    if (!confirm(t({zh:"确定删除学号 "+no+" 的通讯录记录吗？此操作不可撤销。",en:"Delete directory record No."+no+"? This cannot be undone."}))) return;
+    const d = await api("/api/directory/" + no, "DELETE");
+    const err = document.getElementById("dirErr");
+    if (!d.ok){ err.textContent = (d.error||"删除失败"); return; }
+    err.textContent = "";
+    await loadDirectory();
+  }
+
+  // ===================== 通讯录：新增 =====================
+  function openAdd(){
+    const form = document.getElementById("addForm");
+    form.innerHTML = DIR_FIELDS.filter(f => !f.ro).map(f => {
+      const lab = escapeHtml(t(f.label));
+      if (f.type === "bool"){
+        return `<div class="field"><label>${lab}</label><input type="checkbox" data-k="${f.k}"></div>`;
+      }
+      const ttype = f.type === "int" ? "number" : "text";
+      return `<div class="field"><label>${lab}</label><input type="${ttype}" data-k="${f.k}" value=""></div>`;
+    }).join("");
+    document.getElementById("addErr").textContent = "";
+    document.getElementById("addMask").classList.add("show");
+  }
+  function closeAdd(){ document.getElementById("addMask").classList.remove("show"); }
+
+  async function submitAdd(){
+    const form = document.getElementById("addForm");
+    const body = {};
+    form.querySelectorAll("[data-k]").forEach(inp => {
+      const k = inp.getAttribute("data-k");
+      const f = DIR_FIELDS.find(x => x.k === k);
+      if (f.type === "bool") body[k] = inp.checked ? 1 : 0;
+      else if (f.type === "int") body[k] = parseInt(inp.value || "0", 10) || 0;
+      else body[k] = inp.value;
+    });
+    if (!body.name || !body.name.trim()){ document.getElementById("addErr").textContent = t({zh:"姓名不能为空",en:"Name is required"}); return; }
+    const d = await api("/api/directory","POST", body);
+    const err = document.getElementById("addErr");
+    if (!d.ok){ err.textContent = (d.error||"新增失败"); return; }
+    closeAdd();
+    await loadDirectory();
+  }
+
+  // ===================== 数据库浏览 =====================
+  function fillBrowseSelect(){
+    const sel = document.getElementById("browseTable");
+    sel.innerHTML = BROWSE_TABLES.map(n => `<option value="${n}">${escapeHtml(t(BROWSE_LABELS[n]||{zh:n,en:n}))}（${n}）</option>`).join("");
+  }
+  function renderBrowsePlaceholder(){
+    const meta = document.getElementById("browseMeta");
+    if (meta) meta.textContent = "";
+  }
+  async function loadBrowse(){
+    const name = document.getElementById("browseTable").value;
+    const d = await api("/api/admin/table/" + name + "?limit=200","GET");
+    const err = document.getElementById("browseErr");
+    const meta = document.getElementById("browseMeta");
+    const head = document.getElementById("browseHead");
+    const body = document.getElementById("browseBody");
+    if (!d.ok){ err.textContent = (d.error||"加载失败"); head.innerHTML=""; body.innerHTML=""; meta.textContent=""; return; }
+    err.textContent = "";
+    meta.textContent = t({zh:"共 "+d.total+" 行（显示前 "+d.rows.length+" 行）",en:d.total+" rows total (showing first "+d.rows.length+")"});
+    const rows = d.rows || [];
+    if (!rows.length){ head.innerHTML=""; body.innerHTML = `<tr><td class="empty">${t({zh:"空表",en:"Empty table"})}</td></tr>`; return; }
+    const cols = Object.keys(rows[0]);
+    head.innerHTML = `<tr>${cols.map(c => `<th>${escapeHtml(c)}</th>`).join("")}</tr>`;
+    body.innerHTML = rows.map(r => `<tr>${cols.map(c => {
+      let v = r[c];
+      if (typeof v === "boolean") v = v ? "✅" : "—";
+      return `<td>${escapeHtml(v==null?"":v)}</td>`;
+    }).join("")}</tr>`).join("");
+  }
+
+  // 搜索框即时过滤
+  document.getElementById("dirSearch").addEventListener("input", renderDirBody);
+  document.getElementById("addBtn").addEventListener("click", openAdd);
+  document.getElementById("browseTable").addEventListener("change", loadBrowse);
+</script>
+</body>
+</html>

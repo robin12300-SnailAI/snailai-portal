@@ -161,10 +161,9 @@
 <section class="login-gate" id="loginGate">
   <div class="login-card">
     <div class="login-icon">🦞</div>
-    <h1 data-zh="助教登录" data-en="Teacher Login">助教登录</h1>
-    <p data-zh="请输入助教口令，进入助教天地" data-en="Enter the teacher passcode to enter the Teacher Hub">请输入助教口令，进入助教天地</p>
-    <input type="password" id="passInput" data-zh-ph="请输入口令" data-en-ph="Enter passcode" placeholder="请输入口令">
-    <button id="loginBtn" data-zh="进入助教天地" data-en="Enter Hub">进入助教天地</button>
+    <h1 data-zh="助教天地" data-en="Teacher Hub">助教天地</h1>
+    <p data-zh="请先登录学员账号，再进入助教看板" data-en="Log in with your staff account first">请先登录学员账号，再进入助教看板</p>
+    <a href="../login.html" style="display:inline-block;width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-md);font-size:15px;font-weight:700;text-decoration:none" data-zh="去登录 →" data-en="Log in →">去登录 →</a>
     <p class="login-hint" id="loginHint"></p>
   </div>
 </section>
@@ -177,11 +176,11 @@
     <p data-zh="教学资料与学员通讯录，一站直达" data-en="Teaching materials & student contacts, all in one place">教学资料与学员通讯录，一站直达</p>
   </div>
   <div class="tw-grid">
-    <a class="tw-card" href="https://docs.qq.com/smartsheet/DRUFGbHRMVHJtamhs?_t=1783498468065&nlc=1&tab=t00i2h&viewId=v2JKhc" target="_blank" rel="noopener">
+    <a class="tw-card" href="dashboard.html">
       <div class="tw-icon">📇</div>
       <h3 data-zh="蜗牛AI通讯录" data-en="SnailAI Contacts">蜗牛AI通讯录</h3>
-      <p data-zh="腾讯文档智能表格 · 可查询、修改、填写" data-en="Tencent Docs smart sheet · query, edit, fill">腾讯文档智能表格 · 可查询、修改、填写</p>
-      <span class="tw-go" data-zh="打开智能表格 →" data-en="Open sheet →">打开智能表格 →</span>
+      <p data-zh="蜗牛AI 云端数据库 · 增删改查、浏览教学数据" data-en="SnailAI cloud DB · CRUD & browse teaching data">蜗牛AI 云端数据库 · 增删改查、浏览教学数据</p>
+      <span class="tw-go" data-zh="打开看板 →" data-en="Open board →">打开看板 →</span>
     </a>
     <a class="tw-card" href="/AI%20能力清单/" target="_blank" rel="noopener">
       <div class="tw-icon">📋</div>
@@ -253,33 +252,28 @@
   try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {}
   applyLang(savedLang);
 
-  // ===== Teacher login gate =====
-  const PASSWORD = 'snailai2026';
+  // ===== 后端账号守卫（复用学员门户 token） =====
+  const S_KEY = 'snailai_api_token';
   const gate = document.getElementById('loginGate');
   const world = document.getElementById('teacherWorld');
-  const input = document.getElementById('passInput');
-  const btn = document.getElementById('loginBtn');
   const hint = document.getElementById('loginHint');
 
-  function tryLogin() {
-    if (input.value === PASSWORD) {
-      gate.style.display = 'none';
-      world.style.display = 'block';
-      try { sessionStorage.setItem('ta-auth', '1'); } catch(e) {}
-    } else {
-      hint.textContent = (document.documentElement.lang === 'zh') ? '口令错误，请重试' : 'Incorrect passcode';
-      input.value = '';
-      input.focus();
+  (async function taGuard() {
+    const token = sessionStorage.getItem(S_KEY);
+    if (!token) { gate.style.display = 'flex'; world.style.display = 'none'; return; }
+    try {
+      const r = await fetch('/api/me', { headers: { 'Authorization': 'Bearer ' + token } });
+      const d = await r.json();
+      if (d.ok && ['ta', 'instructor', 'admin'].includes(d.user.role)) {
+        gate.style.display = 'none'; world.style.display = 'block';
+      } else {
+        hint.textContent = (document.documentElement.lang === 'zh') ? '该账号无助教权限' : 'No TA permission';
+        gate.style.display = 'flex'; world.style.display = 'none';
+      }
+    } catch (e) {
+      gate.style.display = 'flex'; world.style.display = 'none';
     }
-  }
-  btn.addEventListener('click', tryLogin);
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
-  try {
-    if (sessionStorage.getItem('ta-auth') === '1') {
-      gate.style.display = 'none';
-      world.style.display = 'block';
-    }
-  } catch(e) {}
+  })();
 </script>
 
 </body>

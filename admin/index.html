@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-title-zh="蜗牛 AI · 管理后台" data-title-en="SnailAI · Admin Console">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蜗牛 AI · 管理后台</title>
+<link rel="icon" type="image/png" href="../assets/snailai_logo.png">
+<style>
+  :root {
+    --ink: #1A1A2E; --ink-2: #2A2A40; --ink-3: #6A6A85;
+    --paper: #FCFCFA; --paper-2: #F5F4EE; --paper-3: #E8E7E0;
+    --accent: #FF5B1F; --accent-2: #E84A0F; --accent-light: rgba(255,91,31,.10); --accent-soft: #FFF5EE;
+    --green: #10b981; --green-bg: #e7f8f1; --blue: #3b82f6; --blue-bg: #eaf1ff;
+    --purple: #6d28d9; --purple-bg: #ede9fe; --red: #ef4444; --red-bg: #fdeaea;
+    --line: rgba(26,26,46,.10);
+    --shadow-sm: 0 1px 3px rgba(26,26,46,.04), 0 2px 8px rgba(26,26,46,.04);
+    --shadow-md: 0 4px 16px rgba(26,26,46,.08);
+    --r-md: 10px; --r-lg: 16px; --r-xl: 24px;
+    --sans: 'Inter','Helvetica Neue','Helvetica','Arial','PingFang SC','Microsoft YaHei UI','Noto Sans SC',sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--sans); background: var(--paper); color: var(--ink); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  .topbar { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 24px; background: rgba(252,252,250,.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .brand img { height: 30px; }
+  .brand span { font-weight: 800; font-size: 16px; letter-spacing: -.01em; }
+  .top-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .who { font-size: 13px; color: var(--ink-3); }
+  .role-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px; background: var(--purple-bg); color: var(--purple); }
+  .btn { font-family: inherit; font-size: 13px; font-weight: 700; border-radius: 9px; padding: 7px 14px; cursor: pointer; border: 1px solid var(--line); background: #fff; color: var(--ink-2); transition: .15s; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { background: var(--accent-2); color: #fff; }
+  .btn.danger:hover { border-color: var(--red); color: var(--red); }
+  .lang-switch { display: inline-flex; gap: 4px; border: 1px solid var(--line); border-radius: 100px; padding: 3px; }
+  .lang-btn { border: none; background: transparent; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--ink-3); padding: 4px 10px; border-radius: 100px; transition: all .2s; }
+  .lang-btn.active { background: var(--ink); color: #fff; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 80px; }
+  .page-head { margin-bottom: 24px; }
+  .page-head h1 { font-size: 28px; letter-spacing: -.02em; }
+  .page-head p { color: var(--ink-3); margin-top: 6px; font-size: 14px; }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+  .card-head { display: flex; align-items: center; gap: 10px; justify-content: space-between; flex-wrap: wrap; margin-bottom: 16px; }
+  .card-head h2 { font-size: 19px; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .toolbar select, .toolbar input[type=text] { font-family: inherit; font-size: 13.5px; border: 1px solid var(--line); border-radius: 9px; padding: 8px 12px; background: #fff; color: var(--ink); }
+  .toolbar input[type=text] { min-width: 180px; }
+
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table.grid { border-collapse: collapse; width: 100%; font-size: 13px; }
+  table.grid th, table.grid td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; white-space: nowrap; vertical-align: middle; }
+  table.grid th { background: var(--paper-2); font-weight: 700; color: var(--ink-2); position: sticky; top: 0; }
+  .muted { color: var(--ink-3); }
+  .empty { padding: 30px; text-align: center; color: var(--ink-3); font-size: 14px; }
+  .err { color: var(--red); font-size: 13px; margin-top: 10px; min-height: 18px; }
+  .browse-meta { font-size: 12px; color: var(--ink-3); margin-bottom: 10px; }
+  .mini { font-family: inherit; font-size: 12px; font-weight: 700; border: 1px solid var(--line); background: #fff; color: var(--ink-2); border-radius: 7px; padding: 4px 9px; cursor: pointer; }
+  .mini:hover { border-color: var(--accent); color: var(--accent); }
+  .mini.del { color: var(--red); border-color: var(--red); }
+  .ok { color: var(--green); font-weight: 700; }
+  .tag-yes { color: var(--green); font-weight: 700; }
+  .tag-no { color: var(--ink-3); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple); font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px; }
+
+  .form-inline { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 16px; }
+  .field label { display: block; font-size: 12.5px; font-weight: 700; color: var(--ink-2); margin-bottom: 5px; }
+  .field input[type=text] { font-family: inherit; font-size: 14px; border: 1px solid var(--line); border-radius: 9px; padding: 9px 11px; color: var(--ink); background: #fff; }
+  .assist-row td input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); }
+
+  .forbidden { max-width: 460px; margin: 14vh auto; text-align: center; padding: 40px; border: 1px solid var(--line); border-radius: var(--r-lg); }
+  .forbidden .ico { font-size: 48px; }
+  .forbidden h2 { margin: 14px 0 6px; }
+  .forbidden p { color: var(--ink-3); margin-bottom: 20px; }
+  .forbidden a { display: inline-block; margin: 0 6px; padding: 9px 18px; border-radius: 9px; font-weight: 700; text-decoration: none; }
+  .forbidden a.go { background: var(--accent); color: #fff; }
+  .forbidden a.back { border: 1px solid var(--line); color: var(--ink-2); }
+
+  .mask { position: fixed; inset: 0; background: rgba(26,26,46,.45); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+  .mask.show { display: flex; }
+  .modal { background: #fff; border-radius: 16px; width: 100%; max-width: 520px; padding: 24px; box-shadow: var(--shadow-md); }
+  .modal h3 { font-size: 18px; font-weight: 900; margin-bottom: 16px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+  .chk-row { display: flex; align-items: center; gap: 8px; }
+  .chk-row input { width: 17px; height: 17px; accent-color: var(--accent); }
+  .chk-row label { font-size: 13.5px; font-weight: 600; color: var(--ink-2); margin: 0; }
+
+  @media (max-width: 720px) {
+    .wrap { padding: 20px 14px 60px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .page-head h1 { font-size: 23px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar" id="topbar" style="display:none">
+  <a href="../" class="brand">
+    <img src="../assets/snailai_logo.png" alt="蜗牛 AI">
+    <span data-zh="蜗牛 AI · 管理后台" data-en="SnailAI · Admin Console">蜗牛 AI · 管理后台</span>
+  </a>
+  <div class="top-right">
+    <span class="who" id="whoName"></span>
+    <span class="role-badge" id="roleBadge" data-zh="管理员" data-en="Admin">管理员</span>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+    <button class="btn" onclick="doLogout()" data-zh="退出" data-en="Log out">退出</button>
+  </div>
+</header>
+
+<main class="wrap" id="wrap" style="display:none">
+  <div class="page-head">
+    <h1 data-zh="管理后台" data-en="Admin Console">管理后台</h1>
+    <p data-zh="管理学员数据库、助教权限与账号状态（仅管理员可访问）" data-en="Manage the student database, assistant permissions and account state (admin only)">管理学员数据库、助教权限与账号状态（仅管理员可访问）</p>
+  </div>
+
+  <!-- ===== Card 1: 数据库总览 ===== -->
+  <section class="card">
+    <div class="card-head">
+      <h2>🗄️ <span data-zh="数据库总览（只读）" data-en="Database Overview (read-only)">数据库总览（只读）</span></h2>
+      <div class="toolbar">
+        <select id="browseTable"></select>
+        <button class="btn" onclick="loadBrowse()" data-zh="查看" data-en="View">查看</button>
+      </div>
+    </div>
+    <div class="browse-meta" id="browseMeta"></div>
+    <div class="table-scroll">
+      <table class="grid" id="browseTableEl">
+        <thead id="browseHead"></thead>
+        <tbody id="browseBody"></tbody>
+      </table>
+    </div>
+    <div class="err" id="browseErr"></div>
+  </section>
+
+  <!-- ===== Card 2: 助教权限管理 ===== -->
+  <section class="card">
+    <div class="card-head">
+      <h2>🛡️ <span data-zh="助教权限管理" data-en="Assistant Permissions">助教权限管理</span></h2>
+      <div class="toolbar">
+        <button class="btn primary" id="addAaBtn" data-zh="➕ 新增授权" data-en="➕ Add Grant">➕ 新增授权</button>
+        <button class="btn" onclick="loadAa()" data-zh="刷新" data-en="Refresh">刷新</button>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table class="grid" id="aaTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th data-zh="学员" data-en="Student">学员</th>
+            <th data-zh="助教" data-en="Assistant">助教</th>
+            <th data-zh="可改通讯录" data-en="Edit Dir">可改通讯录</th>
+            <th data-zh="可设点数" data-en="Set Points">可设点数</th>
+            <th data-zh="可浏览库" data-en="View DB">可浏览库</th>
+            <th data-zh="操作" data-en="Actions">操作</th>
+          </tr>
+        </thead>
+        <tbody id="aaBody"></tbody>
+      </table>
+    </div>
+    <div class="err" id="aaErr"></div>
+  </section>
+
+  <!-- ===== Card 3: 重置学员密码 ===== -->
+  <section class="card">
+    <div class="card-head">
+      <h2>🔑 <span data-zh="重置学员密码" data-en="Reset Student Password">重置学员密码</span></h2>
+    </div>
+    <p class="muted" data-zh="将该学员密码重置为初始密码 12345，并强制下次登录修改。" data-en="Reset the student's password to the default 12345 and force a change on next login.">将该学员密码重置为初始密码 12345，并强制下次登录修改。</p>
+    <div class="form-inline" style="margin-top:14px">
+      <div class="field">
+        <label data-zh="学员账号 (username)" data-en="Student username">学员账号 (username)</label>
+        <input type="text" id="resetUser" placeholder="username">
+      </div>
+      <button class="btn primary" onclick="resetPw()" data-zh="重置密码" data-en="Reset Password">重置密码</button>
+    </div>
+    <div class="err" id="resetErr"></div>
+  </section>
+
+  <!-- ===== Card 4: 通讯录管理（复用助教看板） ===== -->
+  <section class="card">
+    <div class="card-head">
+      <h2>📇 <span data-zh="通讯录管理" data-en="Directory Management">通讯录管理</span></h2>
+    </div>
+    <p class="muted" data-zh="管理员可在「助教看板」中对通讯录进行增删改查。" data-en="Admins can CRUD the directory in the TA Dashboard.">管理员可在「助教看板」中对通讯录进行增删改查。</p>
+    <div class="toolbar" style="margin-top:14px">
+      <a class="btn primary" href="../ta/dashboard.html" data-zh="打开助教看板 →" data-en="Open TA Dashboard →">打开助教看板 →</a>
+    </div>
+  </section>
+</main>
+
+<!-- ===== Forbidden ===== -->
+<div class="forbidden" id="forbidden" style="display:none">
+  <div class="ico">🔒</div>
+  <h2 data-zh="无访问权限" data-en="Access Denied">无访问权限</h2>
+  <p data-zh="该页面仅限总管理员访问。" data-en="This page is for the super-admin only.">该页面仅限总管理员访问。</p>
+  <a class="go" href="../login.html" data-zh="去登录" data-en="Log in">去登录</a>
+  <a class="back" href="../" data-zh="返回首页" data-en="Home">返回首页</a>
+</div>
+
+<!-- ===== Add Assignment Modal ===== -->
+<div class="mask" id="addAaMask">
+  <div class="modal">
+    <h3 data-zh="新增助教授权" data-en="Add Assistant Grant">新增助教授权</h3>
+    <div class="form-grid">
+      <div class="field">
+        <label data-zh="学员账号" data-en="Student username">学员账号</label>
+        <input type="text" id="aaStudent" placeholder="student_username">
+      </div>
+      <div class="field">
+        <label data-zh="助教账号" data-en="Assistant username">助教账号</label>
+        <input type="text" id="aaAssistant" placeholder="assistant_username">
+      </div>
+      <div class="field" style="grid-column:1 / -1">
+        <div class="chk-row"><input type="checkbox" id="aaEditDir" checked><label for="aaEditDir" data-zh="可改通讯录" data-en="Can edit directory">可改通讯录</label></div>
+        <div class="chk-row"><input type="checkbox" id="aaSetPts" checked><label for="aaSetPts" data-zh="可设点数" data-en="Can set points">可设点数</label></div>
+        <div class="chk-row"><input type="checkbox" id="aaViewDb" checked><label for="aaViewDb" data-zh="可浏览数据库" data-en="Can view database">可浏览数据库</label></div>
+      </div>
+    </div>
+    <div class="err" id="addAaErr"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeAddAa()" data-zh="取消" data-en="Cancel">取消</button>
+      <button class="btn primary" onclick="submitAddAa()" data-zh="保存" data-en="Save">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const S_KEY = "snailai_api_token", U_KEY = "snailai_me", LANG_KEY = "snailai-lang";
+  let curLang = localStorage.getItem(LANG_KEY) || 'zh';
+  let token = sessionStorage.getItem(S_KEY) || "";
+  let me = null;
+  let allTables = [];
+
+  function t(o){ return (o && o[curLang]) || (o && o.zh) || ""; }
+  function escapeHtml(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+  async function api(path, method, body){
+    const opt = { method, headers:{} };
+    if (token) opt.headers["Authorization"] = "Bearer " + token;
+    opt.headers["Content-Type"] = "application/json";
+    if (body !== undefined) opt.body = JSON.stringify(body);
+    const r = await fetch(path, opt);
+    let d = {}; try { d = await r.json(); } catch(e){}
+    return d;
+  }
+  function doLogout(){
+    fetch("/api/logout",{method:"POST",headers:{"Authorization":"Bearer "+token}}).catch(()=>{});
+    sessionStorage.removeItem(S_KEY); sessionStorage.removeItem(U_KEY);
+    location.href = "../login.html";
+  }
+
+  function applyLang(lang){
+    curLang = lang;
+    document.querySelectorAll('[data-zh]').forEach(el => { const tx = el.getAttribute('data-'+lang); if (tx!==null) el.textContent = tx; });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    const _tt = document.documentElement.getAttribute('data-title-'+lang); if (_tt) document.title = _tt;
+    localStorage.setItem(LANG_KEY, lang);
+    fillBrowseSelect();
+  }
+  document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang)));
+
+  // 严格管理员守卫
+  (async function guard(){
+    if (!token){ location.href = "../login.html"; return; }
+    const d = await api("/api/me","GET");
+    if (!d.ok || d.user.role !== "admin"){
+      document.getElementById("forbidden").style.display = "block";
+      return;
+    }
+    me = d.user;
+    boot();
+  })();
+
+  function boot(){
+    document.getElementById("topbar").style.display = "flex";
+    document.getElementById("wrap").style.display = "block";
+    document.getElementById("whoName").textContent = me.name;
+    applyLang(curLang);
+    loadTables();
+    loadAa();
+  }
+
+  // ===== Card 1: 数据库总览 =====
+  async function loadTables(){
+    const d = await api("/api/admin/tables","GET");
+    if (!d.ok){ document.getElementById("browseErr").textContent = d.error || "加载失败"; return; }
+    allTables = d.tables || [];
+    fillBrowseSelect();
+    loadBrowse();
+  }
+  function fillBrowseSelect(){
+    const sel = document.getElementById("browseTable");
+    if (!sel) return;
+    sel.innerHTML = allTables.map(n => `<option value="${n}">${escapeHtml(n)}</option>`).join("");
+  }
+  async function loadBrowse(){
+    const name = document.getElementById("browseTable").value;
+    if (!name) return;
+    const d = await api("/api/admin/table/" + name + "?limit=200","GET");
+    const err = document.getElementById("browseErr");
+    const meta = document.getElementById("browseMeta");
+    const head = document.getElementById("browseHead");
+    const body = document.getElementById("browseBody");
+    if (!d.ok){ err.textContent = d.error || "加载失败"; head.innerHTML=""; body.innerHTML=""; meta.textContent=""; return; }
+    err.textContent = "";
+    meta.textContent = t({zh:"共 "+d.total+" 行（显示前 "+d.rows.length+" 行）",en:d.total+" rows total (showing first "+d.rows.length+")"});
+    const rows = d.rows || [];
+    if (!rows.length){ head.innerHTML=""; body.innerHTML = `<tr><td class="empty">${t({zh:"空表",en:"Empty table"})}</td></tr>`; return; }
+    const cols = Object.keys(rows[0]);
+    head.innerHTML = `<tr>${cols.map(c => `<th>${escapeHtml(c)}</th>`).join("")}</tr>`;
+    body.innerHTML = rows.map(r => `<tr>${cols.map(c => {
+      let v = r[c];
+      if (typeof v === "boolean") v = v ? "✅" : "—";
+      return `<td>${escapeHtml(v==null?"":v)}</td>`;
+    }).join("")}</tr>`).join("");
+  }
+  document.getElementById("browseTable").addEventListener("change", loadBrowse);
+
+  // ===== Card 2: 助教权限管理 =====
+  async function loadAa(){
+    const d = await api("/api/admin/assistant-assignments","GET");
+    const err = document.getElementById("aaErr");
+    const body = document.getElementById("aaBody");
+    if (!d.ok){ err.textContent = d.error || "加载失败"; return; }
+    err.textContent = "";
+    const rows = d.assignments || [];
+    if (!rows.length){ body.innerHTML = `<tr><td colspan="7" class="empty">${t({zh:"暂无授权记录",en:"No grants yet"})}</td></tr>`; return; }
+    body.innerHTML = rows.map((r,i) => `
+      <tr class="assist-row" data-id="${r.id}">
+        <td class="muted">${i+1}</td>
+        <td>${escapeHtml(r.student_name || r.student_username)} <span class="muted">(${escapeHtml(r.student_username)})</span></td>
+        <td>${escapeHtml(r.assistant_name || r.assistant_username)} <span class="muted">(${escapeHtml(r.assistant_username)})</span></td>
+        <td><input type="checkbox" data-f="can_edit_directory" ${r.can_edit_directory?"checked":""}></td>
+        <td><input type="checkbox" data-f="can_set_points" ${r.can_set_points?"checked":""}></td>
+        <td><input type="checkbox" data-f="can_view_db" ${r.can_view_db?"checked":""}></td>
+        <td><button class="mini del" onclick="delAa(${r.id})">${t({zh:"删除",en:"Delete"})}</button></td>
+      </tr>`).join("");
+    body.querySelectorAll("tr.assist-row").forEach(tr => {
+      tr.querySelectorAll('input[type=checkbox]').forEach(cb => {
+        cb.addEventListener("change", () => {
+          const id = tr.getAttribute("data-id");
+          const f = cb.getAttribute("data-f");
+          saveAaFlag(id, f, cb.checked);
+        });
+      });
+    });
+  }
+  async function saveAaFlag(id, field, val){
+    const d = await api("/api/admin/assistant-assignments/" + id, "PUT", { [field]: val ? 1 : 0 });
+    if (!d.ok){ document.getElementById("aaErr").textContent = d.error || "保存失败"; loadAa(); }
+  }
+  async function delAa(id){
+    if (!confirm(t({zh:"确定删除该授权？",en:"Delete this grant?"}))) return;
+    const d = await api("/api/admin/assistant-assignments/" + id, "DELETE");
+    if (!d.ok){ document.getElementById("aaErr").textContent = d.error || "删除失败"; return; }
+    loadAa();
+  }
+  function openAddAa(){ document.getElementById("addAaErr").textContent=""; document.getElementById("addAaMask").classList.add("show"); }
+  function closeAddAa(){ document.getElementById("addAaMask").classList.remove("show"); }
+  async function submitAddAa(){
+    const stu = document.getElementById("aaStudent").value.trim();
+    const ast = document.getElementById("aaAssistant").value.trim();
+    if (!stu || !ast){ document.getElementById("addAaErr").textContent = t({zh:"学员与助教账号都不能为空",en:"Both usernames required"}); return; }
+    const body = {
+      student_username: stu, assistant_username: ast,
+      can_edit_directory: document.getElementById("aaEditDir").checked ? 1 : 0,
+      can_set_points: document.getElementById("aaSetPts").checked ? 1 : 0,
+      can_view_db: document.getElementById("aaViewDb").checked ? 1 : 0
+    };
+    const d = await api("/api/admin/assistant-assignments","POST", body);
+    if (!d.ok){ document.getElementById("addAaErr").textContent = d.error || "新增失败"; return; }
+    closeAddAa(); loadAa();
+  }
+  document.getElementById("addAaBtn").addEventListener("click", openAddAa);
+
+  // ===== Card 3: 重置密码 =====
+  async function resetPw(){
+    const u = document.getElementById("resetUser").value.trim();
+    const err = document.getElementById("resetErr");
+    if (!u){ err.textContent = t({zh:"请输入学员账号",en:"Enter a username"}); return; }
+    const d = await api("/api/admin/reset-password","POST", { username: u });
+    if (!d.ok){ err.textContent = d.error || "重置失败"; return; }
+    err.className = "err ok"; err.textContent = t({zh:"已重置为 12345，学员下次登录需改密",en:"Reset to 12345; student must change on next login"});
+    setTimeout(() => { err.className = "err"; err.textContent = ""; }, 4000);
+  }
+</script>
+</body>
+</html>

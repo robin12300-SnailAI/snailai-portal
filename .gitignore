@@ -19,6 +19,9 @@ __pycache__/
 # 本机常驻服务日志
 server/portal.log
 
+# 工作区 agent 记忆（本地，不入库）
+.workbuddy/
+
 # 路演 / 课程内容二进制
 # 大体积原文件不入库（m4a/mp4/mov/avi/pdf），改用压缩 mp3 + 图片画廊部署到 Pages
 路演直播 PPT/**/*.m4a

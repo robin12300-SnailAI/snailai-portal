@@ -72,13 +72,16 @@ def init_db():
       role TEXT NOT NULL,
       password_hash TEXT NOT NULL,
       salt TEXT NOT NULL,
+      must_change_pw INTEGER DEFAULT 1,
+      referrer TEXT,
       created_at TEXT DEFAULT (datetime('now'))
     );
     CREATE TABLE IF NOT EXISTS capabilities(
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
       description TEXT,
-      category TEXT
+      category TEXT,
+      points INTEGER DEFAULT 10
     );
     CREATE TABLE IF NOT EXISTS checks(
       student_username TEXT NOT NULL,
@@ -109,7 +112,63 @@ def init_db():
       updated_at TEXT,
       UNIQUE(username, seq)
     );
+    CREATE TABLE IF NOT EXISTS directory(
+      student_no INTEGER PRIMARY KEY,
+      name TEXT,
+      zoom_id TEXT,
+      cpu TEXT,
+      ram TEXT,
+      storage TEXT,
+      github TEXT,
+      login_username TEXT,
+      email TEXT,
+      wechat TEXT,
+      phone TEXT,
+      online_course INTEGER DEFAULT 0,
+      offline_course INTEGER DEFAULT 0,
+      tuition_fee INTEGER DEFAULT 0,
+      tuition_paid INTEGER DEFAULT 0,
+      course_term TEXT,
+      identity TEXT
+    );
+    CREATE TABLE IF NOT EXISTS points_log(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL,
+      source TEXT NOT NULL,
+      ref_id TEXT,
+      points INTEGER NOT NULL,
+      granted_by TEXT,
+      note TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE TABLE IF NOT EXISTS points_config(
+      key TEXT PRIMARY KEY,
+      value TEXT
+    );
+    CREATE TABLE IF NOT EXISTS assistant_assignments(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      student_username TEXT NOT NULL,
+      assistant_username TEXT NOT NULL,
+      can_edit_directory INTEGER DEFAULT 1,
+      can_set_points INTEGER DEFAULT 1,
+      can_view_db INTEGER DEFAULT 1,
+      UNIQUE(student_username, assistant_username)
+    );
     """)
+    conn.commit()
+
+    # 迁移：为已存在的旧库补列（全新库已由 CREATE 含列，ALTER 会抛错被忽略）
+    for sql in [
+        "ALTER TABLE users ADD COLUMN must_change_pw INTEGER DEFAULT 1",
+        "ALTER TABLE users ADD COLUMN referrer TEXT",
+        "ALTER TABLE capabilities ADD COLUMN points INTEGER DEFAULT 10",
+    ]:
+        try:
+            c.execute(sql)
+        except sqlite3.OperationalError:
+            pass
+    # 角色迁移：Robin 提为总管理员（admin 角色，继承 instructor 全部权限）
+    c.execute("UPDATE users SET role='admin' WHERE username='robin'")
     conn.commit()
 
     c.execute("SELECT COUNT(*) AS n FROM users")
@@ -118,8 +177,49 @@ def init_db():
     c.execute("SELECT COUNT(*) AS n FROM capabilities")
     if c.fetchone()["n"] == 0:
         _seed_capabilities(c)
+    c.execute("SELECT COUNT(*) AS n FROM directory")
+    if c.fetchone()["n"] == 0:
+        _seed_directory(c)
+    c.execute("SELECT COUNT(*) AS n FROM points_config")
+    if c.fetchone()["n"] == 0:
+        _seed_points_config(c)
     conn.commit()
     conn.close()
+
+
+def _seed_directory(c):
+    """灌入通讯录（源自腾讯智能表格最新 18 条快照，执行日：2026-07-09）。"""
+    rows = [
+        # student_no, name, zoom_id, cpu, ram, storage, github, login_username, tuition_paid
+        (1,  "Serena 谢昕言", "Serena", "I5-12450HX", "16G", "475G", None, "serena", 1),
+        (2,  "Mandy 曼蒂", "M Chen", "Intel64 Family 6 Model 170（Core Ultra 系列，GenuineIntel）", "32G", "1T", None, "mandy", 1),
+        (3,  "Jenny", "Jenny", "i5双核", "8G", "256G", None, "jenny", 0),
+        (4,  "Jackie", "Jackie", "i7-7500u", "16G", "1T", None, "jackie", 0),
+        (5,  "仙路", "仙路/金丹", "i5-7Y54", "8G", "128G", None, "xianlu", 0),
+        (6,  "雅雅CoCo", "CoCo ", "i7-1165G7", "16G", "512G", None, "coco", 1),
+        (7,  "谢侑辰", "jason", "Apple M1", "8G", "460G", "jason918262", "xieyouchen", 0),
+        (8,  "吴清", "Sean", "i5-14400", "16G", "512G", "ksiwuqing-cmyk", "wuqing", 0),
+        (9,  "蒋培", "James", "i5-14400", "16G", "512G", "jiangpei555", "jiangpei", 0),
+        (10, "laoliu", "X.LIU", "Intel Core i5-8250U", "8G", "237G", None, "laoliu", 1),
+        (11, "suping", "suping / grace", "i5-1145G7", "16G", "512G", None, "suping", 0),
+        (12, "Lucy", "LU shi", "Apple M2", "8G", "256G", None, "lucy", 0),
+        (13, "step", "STEPHANIE WANG", "Apple M5", "10G", "62.8G", None, "step", 0),
+        (14, "子霖", "zilin sun / Samsungsm-x20", "i7-1255U", "16G", "459G", None, "zilin", 1),
+        (15, "Yuchen Guo", None, None, None, None, "mynameisgy", None, 0),
+        (16, "Serene电脑", None, None, None, None, "rssz12300", None, 0),
+        (17, "Robin", None, None, None, None, "robin12300-snailai", None, 0),
+        (18, "张蕊蕊", "zrr", None, None, None, "ZRR168", None, 0),
+    ]
+    for (no, name, zoom, cpu, ram, storage, github, login, paid) in rows:
+        c.execute(
+            "INSERT OR IGNORE INTO directory(student_no, name, zoom_id, cpu, ram, storage, "
+            "github, login_username, tuition_paid, identity) VALUES(?,?,?,?,?,?,?,?,?,?)",
+            (no, name, zoom, cpu, ram, storage, github, login, paid, "学员"))
+
+
+def _seed_points_config(c):
+    c.execute("INSERT OR IGNORE INTO points_config(key, value) VALUES('referral_bonus', '50')")
+    c.execute("INSERT OR IGNORE INTO points_config(key, value) VALUES('default_cap_points', '10')")
 
 
 def _hash_pw(password: str, salt: str) -> str:
@@ -223,11 +323,20 @@ def _get_session(token):
 
 
 def _public_user(row):
-    return {"username": row["username"], "name": row["name"], "role": row["role"]}
+    return {"username": row["username"], "name": row["name"], "role": row["role"],
+            "must_change_pw": bool(row.get("must_change_pw", 0))}
 
 
 def _role_of(user):
     return user["role"] if user else None
+
+
+def _is_admin(user):
+    return bool(user and user["role"] == "admin")
+
+
+def _is_staff(user):
+    return bool(user and user["role"] in ("ta", "instructor", "admin"))
 
 
 # 列 -> 允许修改的角色
@@ -240,6 +349,9 @@ _COLUMN_ROLES = {
 
 def _can_edit(user, column, target_username):
     role = _role_of(user)
+    # 总管理员继承 instructor 全部权限
+    if role == "admin":
+        return True
     if role not in _COLUMN_ROLES.get(column, []):
         return False
     # 学员只能改自己的自查
@@ -321,7 +433,7 @@ def api_capabilities():
 @app.route("/api/students", methods=["GET"])
 def api_students():
     user = _current_user()
-    if not user or user["role"] not in ("ta", "instructor"):
+    if not user or user["role"] not in ("ta", "instructor", "admin"):
         return jsonify(ok=False, error="无权限"), 403
     conn = db_conn()
     rows = conn.execute("SELECT username, name FROM users WHERE role='student' "
@@ -396,6 +508,9 @@ def api_put_check(username, cap_id):
         (username, cap_id, cur["self"], cur["ta"], cur["final"],
          now, user["username"]),
     )
+    # 助教确认（ta=1）即发放能力项成长点数（判重防刷）
+    if column == "ta" and value:
+        _grant_cap_points(conn, username, cap_id, user["username"])
     conn.commit()
     conn.close()
     return jsonify(ok=True, column=column, value=value, updated_by=user["username"],
@@ -409,7 +524,7 @@ def _can_manage_need(user, owner_username):
         return False
     if user["role"] == "student":
         return user["username"] == owner_username
-    return user["role"] in ("ta", "instructor")
+    return user["role"] in ("ta", "instructor", "admin")
 
 
 @app.route("/api/ai-needs", methods=["GET"])
@@ -541,6 +656,330 @@ def api_delete_need(need_id):
     conn.commit()
     conn.close()
     return jsonify(ok=True, id=need_id)
+
+
+# ---------------------------------------------------------------- 密码管理
+@app.route("/api/change-password", methods=["POST"])
+def api_change_password():
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    data = request.get_json(silent=True) or {}
+    old_pw = data.get("old_password") or ""
+    new_pw = data.get("new_password") or ""
+    if len(new_pw) < 4:
+        return jsonify(ok=False, error="新密码至少 4 位"), 400
+    conn = db_conn()
+    row = conn.execute("SELECT * FROM users WHERE username=?",
+                       (user["username"],)).fetchone()
+    if _hash_pw(old_pw, row["salt"]) != row["password_hash"]:
+        conn.close()
+        return jsonify(ok=False, error="原密码错误"), 403
+    salt = secrets.token_hex(16)
+    conn.execute(
+        "UPDATE users SET password_hash=?, salt=?, must_change_pw=0 WHERE username=?",
+        (_hash_pw(new_pw, salt), salt, user["username"]))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@app.route("/api/admin/reset-password", methods=["POST"])
+def api_admin_reset_password():
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    target = (data.get("username") or "").strip()
+    if not target:
+        return jsonify(ok=False, error="缺少用户名"), 400
+    conn = db_conn()
+    row = conn.execute("SELECT username FROM users WHERE username=?",
+                       (target,)).fetchone()
+    if not row:
+        conn.close()
+        return jsonify(ok=False, error="用户不存在"), 404
+    salt = secrets.token_hex(16)
+    conn.execute(
+        "UPDATE users SET password_hash=?, salt=?, must_change_pw=1 WHERE username=?",
+        (_hash_pw("12345", salt), salt, target))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+# ---------------------------------------------------------------- 通讯录 (directory)
+_DIR_FIELDS = ["student_no", "name", "zoom_id", "cpu", "ram", "storage", "github",
+               "login_username", "email", "wechat", "phone", "online_course",
+               "offline_course", "tuition_fee", "tuition_paid", "course_term", "identity"]
+_DIR_INT = {"student_no", "online_course", "offline_course", "tuition_fee", "tuition_paid"}
+
+
+@app.route("/api/directory", methods=["GET"])
+def api_dir_list():
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    conn = db_conn()
+    if user["role"] == "student":
+        rows = conn.execute("SELECT * FROM directory WHERE login_username=?",
+                            (user["username"],)).fetchall()
+    else:
+        rows = conn.execute("SELECT * FROM directory ORDER BY student_no").fetchall()
+    conn.close()
+    return jsonify(ok=True, rows=[dict(r) for r in rows])
+
+
+@app.route("/api/directory", methods=["POST"])
+def api_dir_create():
+    user = _current_user()
+    if user["role"] not in ("ta", "instructor", "admin"):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    fields = [f for f in _DIR_FIELDS if f in data and f != "student_no"]
+    if not fields:
+        return jsonify(ok=False, error="无有效字段"), 400
+    vals = []
+    for f in fields:
+        v = data[f]
+        vals.append(int(v or 0) if f in _DIR_INT else v)
+    cols = ", ".join(fields)
+    ph = ", ".join("?" * len(fields))
+    conn = db_conn()
+    cur = conn.execute(f"INSERT INTO directory({cols}) VALUES({ph})", vals)
+    new_id = cur.lastrowid
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True, id=new_id)
+
+
+@app.route("/api/directory/<int:no>", methods=["PUT"])
+def api_dir_update(no):
+    user = _current_user()
+    if user["role"] not in ("ta", "instructor", "admin"):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    fields = [f for f in _DIR_FIELDS if f in data and f != "student_no"]
+    if not fields:
+        return jsonify(ok=False, error="无有效字段"), 400
+    sets, vals = [], []
+    for f in fields:
+        v = data[f]
+        sets.append(f"{f}=?")
+        vals.append(int(v or 0) if f in _DIR_INT else v)
+    vals.append(no)
+    conn = db_conn()
+    conn.execute(f"UPDATE directory SET {', '.join(sets)} WHERE student_no=?", vals)
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@app.route("/api/directory/<int:no>", methods=["DELETE"])
+def api_dir_delete(no):
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限（仅总管理员可删除）"), 403
+    conn = db_conn()
+    conn.execute("DELETE FROM directory WHERE student_no=?", (no,))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+# ---------------------------------------------------------------- 成长点数
+@app.route("/api/points/adjust", methods=["POST"])
+def api_points_adjust():
+    user = _current_user()
+    if user["role"] not in ("ta", "instructor", "admin"):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    target = (data.get("username") or "").strip()
+    try:
+        pts = int(data.get("points", 0))
+    except (ValueError, TypeError):
+        return jsonify(ok=False, error="点数必须为整数"), 400
+    if not target or pts == 0:
+        return jsonify(ok=False, error="缺少用户名或点数"), 400
+    conn = db_conn()
+    u = conn.execute("SELECT username FROM users WHERE username=?",
+                     (target,)).fetchone()
+    if not u:
+        conn.close()
+        return jsonify(ok=False, error="用户不存在"), 404
+    conn.execute(
+        "INSERT INTO points_log(username, source, ref_id, points, granted_by, note) "
+        "VALUES(?,?,?,?,?,?)",
+        (target, "manual", None, pts, user["username"],
+         (data.get("note") or "").strip() or "手动调整"))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@app.route("/api/points/summary", methods=["GET"])
+def api_points_summary():
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    conn = db_conn()
+    if user["role"] == "student":
+        rows = conn.execute(
+            "SELECT username, COALESCE(SUM(points),0) AS total "
+            "FROM points_log WHERE username=? GROUP BY username",
+            (user["username"],)).fetchall()
+    else:
+        target = request.args.get("username")
+        if target:
+            rows = conn.execute(
+                "SELECT username, COALESCE(SUM(points),0) AS total "
+                "FROM points_log WHERE username=? GROUP BY username",
+                (target,)).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT username, COALESCE(SUM(points),0) AS total "
+                "FROM points_log GROUP BY username").fetchall()
+    names = {}
+    for r in rows:
+        nm = conn.execute("SELECT name FROM users WHERE username=?",
+                          (r["username"],)).fetchone()
+        names[r["username"]] = (nm["name"] if nm else r["username"])
+    conn.close()
+    out = [{"username": r["username"],
+            "name": names.get(r["username"], r["username"]),
+            "points": r["total"]} for r in rows]
+    return jsonify(ok=True, summary=out)
+
+
+def _grant_cap_points(conn, username, cap_id, granted_by):
+    """助教确认(ta=1)时发放能力项成长点数；同 cap_id 判重防刷。"""
+    exist = conn.execute(
+        "SELECT 1 FROM points_log WHERE username=? AND source='capability' AND ref_id=?",
+        (username, cap_id)).fetchone()
+    if exist:
+        return
+    row = conn.execute("SELECT points FROM capabilities WHERE id=?",
+                       (cap_id,)).fetchone()
+    pts = row["points"] if row else 10
+    conn.execute(
+        "INSERT INTO points_log(username, source, ref_id, points, granted_by, note) "
+        "VALUES(?,?,?,?,?,?)",
+        (username, "capability", cap_id, pts, granted_by, f"能力项 {cap_id} 确认"))
+
+
+# ---------------------------------------------------------------- 总管理员：全表浏览 + 权限
+_ADMIN_TABLES = ["users", "capabilities", "checks", "ai_needs", "directory",
+                 "points_log", "points_config", "assistant_assignments"]
+# 助教/讲师只读浏览白名单（不含 users，避免暴露密码哈希与会话）
+_TA_BROWSE = ["capabilities", "checks", "ai_needs", "directory",
+             "points_log", "points_config"]
+
+
+@app.route("/api/admin/tables", methods=["GET"])
+def api_admin_tables():
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    return jsonify(ok=True, tables=_ADMIN_TABLES)
+
+
+@app.route("/api/admin/table/<name>", methods=["GET"])
+def api_admin_table(name):
+    user = _current_user()
+    if _is_admin(user):
+        allowed = _ADMIN_TABLES
+    elif user and user["role"] in ("ta", "instructor"):
+        allowed = _TA_BROWSE
+    else:
+        return jsonify(ok=False, error="无权限"), 403
+    if name not in allowed:
+        return jsonify(ok=False, error="不允许访问该表"), 400
+    try:
+        limit = min(int(request.args.get("limit", 100)), 500)
+        offset = max(int(request.args.get("offset", 0)), 0)
+    except ValueError:
+        limit, offset = 100, 0
+    conn = db_conn()
+    rows = conn.execute(f"SELECT * FROM '{name}' LIMIT ? OFFSET ?",
+                        (limit, offset)).fetchall()
+    total = conn.execute(f"SELECT COUNT(*) AS n FROM '{name}'").fetchone()["n"]
+    conn.close()
+    return jsonify(ok=True, name=name, total=total,
+                   rows=[dict(r) for r in rows])
+
+
+@app.route("/api/admin/assistant-assignments", methods=["GET"])
+def api_aa_list():
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    conn = db_conn()
+    rows = conn.execute(
+        "SELECT a.id, a.student_username, a.assistant_username, a.can_edit_directory, "
+        "a.can_set_points, a.can_view_db, s.name AS student_name, t.name AS assistant_name "
+        "FROM assistant_assignments a "
+        "LEFT JOIN users s ON s.username=a.student_username "
+        "LEFT JOIN users t ON t.username=a.assistant_username "
+        "ORDER BY a.student_username").fetchall()
+    conn.close()
+    return jsonify(ok=True, assignments=[dict(r) for r in rows])
+
+
+@app.route("/api/admin/assistant-assignments", methods=["POST"])
+def api_aa_create():
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    stu = (data.get("student_username") or "").strip()
+    ast = (data.get("assistant_username") or "").strip()
+    if not stu or not ast:
+        return jsonify(ok=False, error="缺少学员或助教"), 400
+    conn = db_conn()
+    conn.execute(
+        "INSERT OR IGNORE INTO assistant_assignments"
+        "(student_username, assistant_username, can_edit_directory, can_set_points, can_view_db) "
+        "VALUES(?,?,?,?,?)",
+        (stu, ast,
+         int(bool(data.get("can_edit_directory", True))),
+         int(bool(data.get("can_set_points", True))),
+         int(bool(data.get("can_view_db", True)))))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@app.route("/api/admin/assistant-assignments/<int:aid>", methods=["PUT"])
+def api_aa_update(aid):
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    fields, vals = [], []
+    for f in ("can_edit_directory", "can_set_points", "can_view_db"):
+        if f in data:
+            fields.append(f"{f}=?")
+            vals.append(int(bool(data[f])))
+    if fields:
+        vals.append(aid)
+        conn = db_conn()
+        conn.execute(
+            f"UPDATE assistant_assignments SET {', '.join(fields)} WHERE id=?", vals)
+        conn.commit()
+        conn.close()
+    return jsonify(ok=True)
+
+
+@app.route("/api/admin/assistant-assignments/<int:aid>", methods=["DELETE"])
+def api_aa_delete(aid):
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    conn = db_conn()
+    conn.execute("DELETE FROM assistant_assignments WHERE id=?", (aid,))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
 
 
 # ---------------------------------------------------------------- 静态站点托管
