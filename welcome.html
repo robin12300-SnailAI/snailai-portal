@@ -80,6 +80,11 @@
       border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
     .points-num{font-size:48px;font-weight:900;color:var(--accent);line-height:1}
     .points-label{font-size:14px;color:var(--ink3);margin-top:8px}
+    .points-actions{margin-top:16px}
+    .points-link{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:13.5px;
+      font-weight:700;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);
+      padding:8px 16px;border-radius:100px;cursor:pointer;transition:.15s}
+    .points-link:hover{background:var(--accent);color:#fff;text-decoration:none;filter:brightness(1.02)}
 
     /* ---- 我的 AI 刚需 ---- */
     .needs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
@@ -202,8 +207,8 @@
         sub:   {zh:"能力进度跟踪与历次分享回放", en:"Capability tracking and replays of past sessions"},
         items: [
           { icon:"✅", title:{zh:"AI 能力清单", en:"AI Capability Checklist"}, badge:null,
-            desc:{zh:"9 项课前准备能力进度。三色标签：学员自查 🟢 / 助教审核 🔵 / 讲师审核 🟠。",
-                  en:"Progress on 9 pre-class capabilities. Three-color tags: self-check 🟢 / TA review 🔵 / instructor review 🟠."},
+            desc:{zh:"9 项课前准备能力进度。双色标签：学员自查 🟢 / 助教审核 🔵。",
+                  en:"Progress on 9 pre-class capabilities. Two-color tags: self-check 🟢 / TA review 🔵."},
             href:"AI%20能力清单/", accent:true },
           { icon:"🎤", title:{zh:"路演直播 PPT", en:"Pitch & Livestream PPT"}, badge:{zh:"回放",en:"Replay"},
             desc:{zh:"历次分享会与直播的 PPT 合集，随时回看。",
@@ -309,6 +314,7 @@
     // ===================== 蜗牛 AI 成长点数 =====================
     const POINTS_TITLE = {zh:"蜗牛 AI 成长点数", en:"SnailAI Growth Points"};
     const POINTS_SUB = {zh:"确认能力项、推荐新学员等获得的累计成长点数", en:"Cumulative growth points from confirmed capabilities and referrals"};
+    const POINTS_INTRO_LINK = {zh:"蜗牛 AI 成长点数介绍", en:"About Growth Points"};
     async function renderPoints(){
       const sec = document.getElementById("pointsSection");
       if (!sec) return;
@@ -320,7 +326,8 @@
       if (!d.ok){ box.innerHTML = `<div class="needs-empty">${escapeHtml(d.error||"")}</div>`; return; }
       const me_row = (d.summary||[]).find(x => x.username === me.username);
       const pts = me_row ? me_row.points : 0;
-      box.innerHTML = `<div class="points-num">${pts}</div><div class="points-label">${t(POINTS_TITLE)}</div>`;
+      box.innerHTML = `<div class="points-num">${pts}</div><div class="points-label">${t(POINTS_TITLE)}</div>`
+        + `<div class="points-actions"><a class="points-link" href="成长点数介绍.html">📖 ${t(POINTS_INTRO_LINK)}</a></div>`;
     }
 
     // ===================== 我的 AI 刚需 =====================

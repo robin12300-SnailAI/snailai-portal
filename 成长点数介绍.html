@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>蜗牛 AI 成长点数系统 · 蜗牛AI 学员学堂</title>
+  <style>
+    :root{
+      --paper:#FCFCFA;--ink:#1A1A2E;--ink2:#4a4a5e;--ink3:#8a8a9a;
+      --line:#e6e6ec;--accent:#FF5B1F;--accent-soft:#fff1ea;
+      --green:#10b981;--green-bg:#e7f8f1;--green2:#059669;
+      --blue:#3b82f6;--blue-bg:#eaf1ff;--blue2:#1d4ed8;
+      --radius:16px;--shadow:0 2px 8px rgba(26,26,46,.06);--shadow-lg:0 10px 36px rgba(26,26,46,.12)
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+      background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    /* 顶栏 */
+    .topbar{max-width:1040px;margin:0 auto;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{font-weight:800;font-size:18px;color:var(--ink)}
+    .brand span{color:var(--accent)}
+    .back-btn{font-family:inherit;font-size:13.5px;font-weight:700;border:1px solid var(--line);
+      background:#fff;color:var(--ink2);padding:8px 16px;border-radius:10px;cursor:pointer;transition:.15s}
+    .back-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* Hero */
+    .hero{max-width:1040px;margin:0 auto;padding:28px 24px 8px;text-align:center}
+    .hero .snail{font-size:54px;line-height:1;margin-bottom:10px}
+    .hero h1{font-size:clamp(26px,5vw,38px);font-weight:900;letter-spacing:.5px}
+    .hero h1 .hl{color:var(--accent)}
+    .hero .lead{max-width:760px;margin:16px auto 0;color:var(--ink2);font-size:15.5px}
+    .hero .quote{display:inline-block;margin-top:18px;background:var(--accent-soft);
+      border:1px solid var(--accent);color:var(--accent);font-weight:700;font-size:14px;
+      padding:10px 18px;border-radius:100px}
+
+    /* 目录 */
+    .toc{max-width:1040px;margin:22px auto 6px;padding:0 24px}
+    .toc-inner{background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:18px 20px}
+    .toc h4{font-size:13px;font-weight:800;color:var(--ink3);letter-spacing:1px;margin-bottom:12px;text-transform:uppercase}
+    .toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+    .toc a{display:block;font-size:13.5px;font-weight:600;color:var(--ink2);
+      padding:7px 12px;border-radius:9px;background:var(--paper);border:1px solid var(--line);transition:.15s}
+    .toc a:hover{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);text-decoration:none}
+
+    /* 正文容器 */
+    .wrap{max-width:1040px;margin:0 auto;padding:8px 24px 40px}
+    .block{background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:26px 26px 22px;margin-top:22px;scroll-margin-top:18px}
+    .block h2{font-size:21px;font-weight:900;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+    .block h2 .no{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;
+      background:var(--accent);color:#fff;font-size:14px;font-weight:900;border-radius:9px;padding:0 8px}
+    .block h3{font-size:16px;font-weight:800;margin:18px 0 8px;color:var(--ink)}
+    .block p{color:var(--ink2);font-size:14.5px;margin:8px 0}
+    .block ul{margin:8px 0 8px 22px}
+    .block li{color:var(--ink2);font-size:14.5px;margin:5px 0}
+    .note{background:var(--green-bg);border:1px solid var(--green);color:var(--green2);
+      font-weight:600;font-size:13px;padding:9px 14px;border-radius:10px;margin:12px 0;display:inline-block}
+    .callout{background:var(--accent-soft);border-left:4px solid var(--accent);
+      color:var(--ink2);font-size:14px;padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+    .callout strong{color:var(--accent)}
+
+    /* 表格 */
+    .tbl-scroll{overflow-x:auto;margin:14px 0}
+    table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:360px}
+    table.tbl th{background:var(--paper);color:var(--ink);text-align:left;font-weight:800;
+      padding:11px 14px;border-bottom:2px solid var(--line)}
+    table.tbl td{padding:10px 14px;border-bottom:1px solid var(--line);color:var(--ink2)}
+    table.tbl tr:nth-child(even) td{background:#fafafa}
+    table.tbl td.pts{text-align:right;font-weight:800;color:var(--green2);white-space:nowrap}
+    table.tbl th.pts{text-align:right}
+
+    /* 等级卡片 */
+    .levels{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-top:14px}
+    .lvl{border:1px solid var(--line);border-radius:14px;padding:18px;position:relative;overflow:hidden;
+      background:linear-gradient(135deg,#fff,var(--paper))}
+    .lvl::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}
+    .lvl .lvl-no{font-size:12px;font-weight:800;color:var(--green2);background:var(--green-bg);
+      padding:3px 10px;border-radius:20px;display:inline-block}
+    .lvl h3{margin:10px 0 4px;font-size:17px;font-weight:900}
+    .lvl .thr{font-size:13px;color:var(--ink3);margin-bottom:8px}
+    .lvl .thr b{color:var(--accent);font-size:15px}
+    .lvl p{font-size:13.5px;color:var(--ink2);margin:0}
+
+    /* 兑换表加重 */
+    table.reward{margin-top:6px}
+    table.reward td:first-child{font-weight:800;color:var(--accent)}
+
+    /* 价格高亮 */
+    .price{font-size:15px;color:var(--ink);font-weight:700}
+    .price b{color:var(--accent)}
+
+    .foot{max-width:1040px;margin:30px auto 0;padding:24px;border-top:1px solid var(--line);
+      text-align:center;color:var(--ink3);font-size:13px}
+
+    @media (max-width:600px){
+      .block{padding:20px 16px}
+      .topbar{padding:16px}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">🐌 <span>蜗牛AI</span> · 成长点数</div>
+    <a class="back-btn" href="welcome.html">← 返回我的学堂</a>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="snail">🐌✨</div>
+    <h1>蜗牛 AI <span class="hl">成长点数</span>系统</h1>
+    <p class="lead">让你的 AI 学习，<strong>看得见、用得上、能持续成长</strong>。<br>
+      蜗牛 AI 不只是一个课程，而是一个持续成长的 AI 学习系统。</p>
+    <div class="quote">🎯 你学习、练习、输出、分享、帮助同学、推荐朋友，都可以获得成长点</div>
+  </div>
+
+  <!-- 目录 -->
+  <div class="toc">
+    <div class="toc-inner">
+      <h4>目录</h4>
+      <div class="toc-grid">
+        <a href="#s1">一、什么是蜗牛 AI 成长点</a>
+        <a href="#s2">二、为什么要有成长点数</a>
+        <a href="#s3">三、哪些行为可获得成长点</a>
+        <a href="#s4">四、成长点对应学习等级</a>
+        <a href="#s5">五、成长点可以兑换什么</a>
+        <a href="#s6">六、Robin 一对一深度辅导</a>
+        <a href="#s7">七、蜗牛 AI 学习券</a>
+        <a href="#s8">八、成长点不是现金返利</a>
+        <a href="#s9">九、如何查询记录成长点</a>
+        <a href="#s10">十、规则说明</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <!-- 一 -->
+    <section class="block" id="s1">
+      <h2><span class="no">一</span>什么是蜗牛 AI 成长点？</h2>
+      <p>蜗牛 AI 成长点，是记录你 AI 学习进步和课程参与度的<strong>成长积分</strong>。</p>
+      <p>它不是现金，也不是返佣。它代表的是：</p>
+      <ul>
+        <li>你的学习投入；</li>
+        <li>你的作业完成；</li>
+        <li>你的 AI 应用能力；</li>
+        <li>你的课堂参与；</li>
+        <li>你的社群贡献；</li>
+        <li>你对朋友和同学的帮助；</li>
+        <li>你对蜗牛 AI 学习圈子的贡献。</li>
+      </ul>
+      <div class="callout">简单说：<strong>你越认真学习，越积极应用，越愿意输出和分享，你的成长点就越多。</strong></div>
+    </section>
+
+    <!-- 二 -->
+    <section class="block" id="s2">
+      <h2><span class="no">二</span>为什么要有成长点数？</h2>
+      <p>很多人学习 AI 的时候，会遇到三个问题：</p>
+      <ul>
+        <li>不知道自己学到哪里了；</li>
+        <li>不知道自己有没有真正进步；</li>
+        <li>听完课以后，没有持续练习的动力。</li>
+      </ul>
+      <p>成长点数系统，就是为了解决这些问题。</p>
+      <p>我们希望每一位学员不只是"听过 AI 课"，而是能够在 3 个月里真正完成自己的 AI 应用任务，看到自己的能力变化。</p>
+      <div class="callout">蜗牛 AI 的目标不是让大家只听课，而是让大家<strong>真正把 AI 用起来</strong>。</div>
+    </section>
+
+    <!-- 三 -->
+    <section class="block" id="s3">
+      <h2><span class="no">三</span>哪些行为可以获得成长点？</h2>
+      <span class="note">以下点数仅为展示参考，具体点数以学员登录以后的点数看板为准。</span>
+
+      <h3>1. 上课参与</h3>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>学习行为</th><th class="pts">成长点</th></tr></thead>
+          <tbody>
+            <tr><td>参加一次线上直播课</td><td class="pts">10 点</td></tr>
+            <tr><td>观看回放并提交学习反馈</td><td class="pts">10 点</td></tr>
+            <tr><td>参加一次线下共创课</td><td class="pts">30 点</td></tr>
+            <tr><td>课堂中提出高质量问题</td><td class="pts">20 点</td></tr>
+            <tr><td>参与课堂案例共创</td><td class="pts">50 点</td></tr>
+            <tr><td>现场展示自己的 AI 应用案例</td><td class="pts">100 点</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>2. 作业与练习</h3>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>学习行为</th><th class="pts">成长点</th></tr></thead>
+          <tbody>
+            <tr><td>每周按时提交作业</td><td class="pts">20 点</td></tr>
+            <tr><td>作业内容完整、可复用</td><td class="pts">30 点</td></tr>
+            <tr><td>作业被评为优秀</td><td class="pts">50 点</td></tr>
+            <tr><td>作业被 Robin 课堂点评</td><td class="pts">80 点</td></tr>
+            <tr><td>作业进入蜗牛 AI 案例库</td><td class="pts">100 点</td></tr>
+            <tr><td>作业经本人同意用于公开分享</td><td class="pts">150 点</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>3. AI 能力清单</h3>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>AI 能力任务</th><th class="pts">成长点</th></tr></thead>
+          <tbody>
+            <tr><td>完成 AI 工具账号设置</td><td class="pts">10 点</td></tr>
+            <tr><td>完成 ChatGPT / Gemini / Claude 基础使用</td><td class="pts">10 点</td></tr>
+            <tr><td>学会用中文向 AI 清楚提问</td><td class="pts">10 点</td></tr>
+            <tr><td>完成一次 AI 写邮件任务</td><td class="pts">10 点</td></tr>
+            <tr><td>完成一次 AI 翻译 / 改写任务</td><td class="pts">10 点</td></tr>
+            <tr><td>完成一次 AI 总结资料任务</td><td class="pts">10 点</td></tr>
+            <tr><td>完成一次 AI 会议纪要任务</td><td class="pts">20 点</td></tr>
+            <tr><td>完成一次 AI 旅行计划任务</td><td class="pts">20 点</td></tr>
+            <tr><td>完成一次 AI 家庭任务清单</td><td class="pts">20 点</td></tr>
+            <tr><td>完成一次 NotebookLM 文档分析</td><td class="pts">30 点</td></tr>
+            <tr><td>完成一次 AI 浏览器辅助阅读网页</td><td class="pts">30 点</td></tr>
+            <tr><td>完成一次 AI 工具组合使用</td><td class="pts">50 点</td></tr>
+            <tr><td>完成一个个人 AI 工作流</td><td class="pts">80 点</td></tr>
+            <tr><td>完成一个家庭 AI 工作流</td><td class="pts">80 点</td></tr>
+            <tr><td>完成一个公司 AI 工作流</td><td class="pts">100 点</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>4. 财富投资 AI 应用</h3>
+      <p style="font-size:13.5px;color:var(--ink3)">适用于线下 AI 财富投资应用课学员。</p>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>AI 应用任务</th><th class="pts">成长点</th></tr></thead>
+          <tbody>
+            <tr><td>完成一次房产资料 AI 整理</td><td class="pts">50 点</td></tr>
+            <tr><td>完成一次房产初步分析报告</td><td class="pts">80 点</td></tr>
+            <tr><td>完成一次股票资料 AI 整理</td><td class="pts">80 点</td></tr>
+            <tr><td>完成一次投资风险清单</td><td class="pts">80 点</td></tr>
+            <tr><td>理解股票强度系统基本逻辑</td><td class="pts">100 点</td></tr>
+            <tr><td>完成一次 AI 投资研究框架</td><td class="pts">100 点</td></tr>
+            <tr><td>完成一个房产或股票 AI 辅助分析案例</td><td class="pts">150 点</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout">说明：以上内容属于 AI 学习、资料整理和辅助分析训练，<strong>不构成金融建议、投资建议、法律建议或税务建议，也不代表任何收益承诺。</strong></div>
+
+      <h3>5. 社群贡献</h3>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>贡献行为</th><th class="pts">成长点</th></tr></thead>
+          <tbody>
+            <tr><td>在群里提出高质量问题</td><td class="pts">10 点</td></tr>
+            <tr><td>在群里帮助同学解决基础问题</td><td class="pts">20 点</td></tr>
+            <tr><td>分享一个有价值的 AI 工具</td><td class="pts">20 点</td></tr>
+            <tr><td>分享一次自己的 AI 应用心得</td><td class="pts">30 点</td></tr>
+            <tr><td>分享一个自己的 AI 应用案例</td><td class="pts">50 点</td></tr>
+            <tr><td>协助蜗牛 AI 举办线下活动</td><td class="pts">200 点</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>6. 推荐朋友学习 AI</h3>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>推荐行为</th><th class="pts">成长点</th></tr></thead>
+          <tbody>
+            <tr><td>推荐朋友进入报名咨询群</td><td class="pts">5 点</td></tr>
+            <tr><td>推荐朋友参加课前说明会</td><td class="pts">20 点</td></tr>
+            <tr><td>推荐朋友完成线上课付款</td><td class="pts">100 点</td></tr>
+            <tr><td>推荐朋友完成线下课付款</td><td class="pts">300 点</td></tr>
+            <tr><td>推荐 5 位有效付费学员</td><td class="pts">额外奖励 500 点 + 蜗牛 AI 学习券</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout"><strong>有效推荐说明：</strong>被推荐人完成付款，并正式进入课程学习，才算有效付费推荐。</div>
+    </section>
+
+    <!-- 四 -->
+    <section class="block" id="s4">
+      <h2><span class="no">四</span>成长点对应的学习等级</h2>
+      <p>成长点不仅可以兑换奖励，也可以对应你的 AI 学习等级。</p>
+      <div class="levels">
+        <div class="lvl">
+          <span class="lvl-no">Level 1</span>
+          <h3>AI 入门使用者</h3>
+          <div class="thr">建议门槛：<b>100 点</b></div>
+          <p>你已经开始掌握 AI 的基础使用方法，能够向 AI 提问，让 AI 帮你完成简单写作、翻译、总结和基础邮件任务。</p>
+        </div>
+        <div class="lvl">
+          <span class="lvl-no">Level 2</span>
+          <h3>AI 日常助手使用者</h3>
+          <div class="thr">建议门槛：<b>300 点</b></div>
+          <p>你已经可以把 AI 用到日常生活中，例如会议纪要、旅行计划、家庭任务清单、健康资料整理和学习资料整理。</p>
+        </div>
+        <div class="lvl">
+          <span class="lvl-no">Level 3</span>
+          <h3>AI 工作流使用者</h3>
+          <div class="thr">建议门槛：<b>600 点</b></div>
+          <p>你已经可以把 AI 用到工作和公司事务中，例如客户跟进、营销文案、公司 SOP、合同重点整理和个人工作流设计。</p>
+        </div>
+        <div class="lvl">
+          <span class="lvl-no">Level 4</span>
+          <h3>AI 财富应用学习者</h3>
+          <div class="thr">建议门槛：<b>1000 点</b></div>
+          <p>你已经开始学习如何用 AI 整理房产资料、股票资料、投资问题清单和风险清单，并理解 AI 在财富投资辅助分析中的应用方式。</p>
+        </div>
+        <div class="lvl">
+          <span class="lvl-no">Level 5</span>
+          <h3>蜗牛 AI 共创者</h3>
+          <div class="thr">建议门槛：<b>1500 点</b></div>
+          <p>你已经具备较强的 AI 应用能力，能够独立完成 AI 应用案例，帮助其他同学，并有机会成为蜗牛 AI 助教候选人、共创者或未来 AI 应用传播伙伴。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 五 -->
+    <section class="block" id="s5">
+      <h2><span class="no">五</span>成长点可以兑换什么？</h2>
+      <div class="tbl-scroll">
+        <table class="tbl reward">
+          <thead><tr><th>所需成长点</th><th>可兑换奖励</th></tr></thead>
+          <tbody>
+            <tr><td>100 点</td><td>30 分钟助教辅导</td></tr>
+            <tr><td>200 点</td><td>1 次线上专题课学习券</td></tr>
+            <tr><td>300 点</td><td>60 分钟助教辅导</td></tr>
+            <tr><td>500 点</td><td>未来专题课 1 次</td></tr>
+            <tr><td>1000 点</td><td>Robin 30 分钟一对一咨询</td></tr>
+            <tr><td>1500 点</td><td>Robin 60 分钟一对一咨询</td></tr>
+            <tr><td>2500 点</td><td>Robin 半天 AI 应用深度辅导</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13px;color:var(--ink3);margin-top:10px">奖励兑换以蜗牛 AI 当期课程安排和团队确认为准。</p>
+    </section>
+
+    <!-- 六 -->
+    <section class="block" id="s6">
+      <h2><span class="no">六</span>Robin 一对一 AI 应用深度辅导</h2>
+      <p>Robin 一对一 AI 应用深度辅导，是蜗牛 AI 的高价值学习奖励。</p>
+      <p class="price">参考价值：<b>$299 澳币 / 小时</b></p>
+      <p class="price">半天深度辅导通常按 3 小时计算，参考价值约：<b>$897 澳币</b></p>
+      <h3>可辅导内容包括：</h3>
+      <ul>
+        <li>个人 AI 使用路径设计；</li>
+        <li>家庭 AI 应用规划；</li>
+        <li>公司 AI 工作流梳理；</li>
+        <li>AI 工具配置建议；</li>
+        <li>房产资料整理方法；</li>
+        <li>股票资料整理方法；</li>
+        <li>学员个人 AI 能力复盘；</li>
+        <li>后续学习路线建议。</li>
+      </ul>
+      <h3>不包括：</h3>
+      <ul>
+        <li>金融产品推荐；</li>
+        <li>法律建议；</li>
+        <li>税务建议；</li>
+        <li>医疗建议；</li>
+        <li>保证投资收益；</li>
+        <li>复杂系统开发；</li>
+        <li>无限售后；</li>
+        <li>现场代替学员完成全部工作。</li>
+      </ul>
+    </section>
+
+    <!-- 七 -->
+    <section class="block" id="s7">
+      <h2><span class="no">七</span>蜗牛 AI 学习券</h2>
+      <p>推荐 5 位有效付费学员，可获得：</p>
+      <div class="callout"><strong>1 张蜗牛 AI 学习券 + 额外 500 成长点</strong></div>
+      <h3>学习券可用于：</h3>
+      <ul>
+        <li>转赠亲属朋友参加对应线上或线下课程；</li>
+        <li>自己参加后续 AI 应用课程；</li>
+        <li>蜗牛 AI 团队指定的学习活动。</li>
+      </ul>
+      <h3>学习券规则：</h3>
+      <ul>
+        <li>不可兑换现金；</li>
+        <li>不可拆分；</li>
+        <li>有效期 12 个月。</li>
+      </ul>
+    </section>
+
+    <!-- 八 -->
+    <section class="block" id="s8">
+      <h2><span class="no">八</span>成长点不是现金返利</h2>
+      <div class="callout">请注意：蜗牛 AI 成长点<strong>不是现金，不可提现，不可兑换澳币，也不是佣金或投资回报。</strong></div>
+      <p>成长点是蜗牛 AI 内部的学习成长权益，目的是鼓励学员持续学习、持续应用、持续输出、持续分享。</p>
+    </section>
+
+    <!-- 九 -->
+    <section class="block" id="s9">
+      <h2><span class="no">九</span>如何查询和记录成长点？</h2>
+      <p>第一期课程中，蜗牛 AI 团队会先通过内部系统或表格记录学员成长点。</p>
+      <p>后续我们会逐步在官网会员中心增加：</p>
+      <ul>
+        <li>我的成长点；</li>
+        <li>我的学习等级；</li>
+        <li>我的 AI 能力清单；</li>
+        <li>我的奖励兑换；</li>
+        <li>我的推荐记录；</li>
+        <li>我的学习券。</li>
+      </ul>
+    </section>
+
+    <!-- 十 -->
+    <section class="block" id="s10">
+      <h2><span class="no">十</span>规则说明</h2>
+      <p>蜗牛 AI 团队会根据课程进展、学员反馈和实际运营情况，对成长点规则进行优化调整。</p>
+      <p>所有成长点发放、奖励兑换和学习券使用，以蜗牛 AI 团队最终确认为准。</p>
+    </section>
+
+    <!-- 总结 -->
+    <section class="block" style="border-color:var(--accent);background:linear-gradient(135deg,var(--accent-soft),#fff)">
+      <h2 style="font-size:20px">🐌 一句话总结</h2>
+      <p style="font-size:15.5px">蜗牛 AI 成长点数系统，是帮助你把 AI 学习变成可持续成长的机制。</p>
+      <p style="font-size:15.5px">你学习、练习、输出、分享、帮助同学、推荐朋友，都可以获得成长点。</p>
+      <div class="callout" style="margin-top:14px">我们的目标是：<strong>让每一位学员在 3 个月里看得见自己的 AI 能力成长，并真正把 AI 用进生活、工作、家庭和财富决策中。</strong></div>
+      <p style="margin-top:16px"><a class="back-btn" href="welcome.html">← 返回我的学堂，查看我的成长点</a></p>
+    </section>
+
+  </div>
+
+  <div class="foot">🐌 蜗牛AI 学员学堂 · SnailAI Student Portal · © 2026 SnailAI · 成长点数系统</div>
+
+</body>
+</html>
