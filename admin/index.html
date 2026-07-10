@@ -182,6 +182,51 @@
     <div class="err" id="resetErr"></div>
   </section>
 
+  <!-- ===== Card: 新建账号 ===== -->
+  <section class="card">
+    <div class="card-head">
+      <h2>➕ <span data-zh="新建账号" data-en="Create Account">新建账号</span></h2>
+    </div>
+    <p class="muted" data-zh="创建任意角色的账号（学员/助教/总讲师/管理员）。默认强制首次登录改密；取消勾选则保留初始密码。" data-en="Create an account of any role. Forced password change on first login by default; uncheck to keep the initial password.">创建任意角色的账号（学员/助教/总讲师/管理员）。默认强制首次登录改密；取消勾选则保留初始密码。</p>
+    <div class="form-inline" style="margin-top:14px; flex-wrap:wrap">
+      <div class="field">
+        <label data-zh="账号 (username)" data-en="Username">账号 (username)</label>
+        <input type="text" id="cuUser" placeholder="username">
+      </div>
+      <div class="field">
+        <label data-zh="姓名 (name)" data-en="Name">姓名 (name)</label>
+        <input type="text" id="cuName" placeholder="可选">
+      </div>
+      <div class="field">
+        <label data-zh="密码" data-en="Password">密码</label>
+        <input type="text" id="cuPw" placeholder="至少4位">
+      </div>
+      <div class="field">
+        <label data-zh="角色" data-en="Role">角色</label>
+        <select id="cuRole">
+          <option value="student">学员 student</option>
+          <option value="ta">助教 ta</option>
+          <option value="instructor">总讲师 instructor</option>
+          <option value="admin">管理员 admin</option>
+        </select>
+      </div>
+      <div class="field" style="align-self:flex-end">
+        <div class="chk-row"><input type="checkbox" id="cuMcp" checked><label for="cuMcp" data-zh="首次登录强制改密" data-en="Force change on first login">首次登录强制改密</label></div>
+      </div>
+    </div>
+    <div class="toolbar" style="margin-top:12px">
+      <button class="btn primary" onclick="createUser()" data-zh="创建账号" data-en="Create Account">创建账号</button>
+      <button class="btn" onclick="loadUsers()" data-zh="刷新账号列表" data-en="Refresh list">刷新账号列表</button>
+    </div>
+    <div class="err" id="cuErr"></div>
+    <div class="table-scroll" style="margin-top:14px">
+      <table class="grid" id="userTable" style="display:none">
+        <thead><tr><th data-zh="账号" data-en="Username">账号</th><th data-zh="姓名" data-en="Name">姓名</th><th data-zh="角色" data-en="Role">角色</th><th data-zh="强制改密" data-en="Must change">强制改密</th></tr></thead>
+        <tbody id="userTbody"></tbody>
+      </table>
+    </div>
+  </section>
+
   <!-- ===== Card 4: 通讯录管理（复用助教看板） ===== -->
   <section class="card">
     <div class="card-head">
@@ -388,6 +433,34 @@
     if (!d.ok){ err.textContent = d.error || "重置失败"; return; }
     err.className = "err ok"; err.textContent = t({zh:"已重置为 12345，学员下次登录需改密",en:"Reset to 12345; student must change on next login"});
     setTimeout(() => { err.className = "err"; err.textContent = ""; }, 4000);
+  }
+
+  async function createUser(){
+    const err = document.getElementById("cuErr");
+    const username = document.getElementById("cuUser").value.trim();
+    const name = document.getElementById("cuName").value.trim();
+    const password = document.getElementById("cuPw").value;
+    const role = document.getElementById("cuRole").value;
+    const mcp = document.getElementById("cuMcp").checked ? 1 : 0;
+    if (!username || !password){ err.className="err"; err.textContent = t({zh:"账号和密码不能为空",en:"Username and password required"}); return; }
+    const d = await api("/api/admin/users","POST", { username, name, password, role, must_change_pw: mcp });
+    if (!d.ok){ err.className="err"; err.textContent = d.error || "创建失败"; return; }
+    err.className="err ok"; err.textContent = t({zh:"已创建：" + username + "（" + role + "）",en:"Created: " + username + " (" + role + ")"});
+    document.getElementById("cuUser").value=""; document.getElementById("cuName").value=""; document.getElementById("cuPw").value="";
+    setTimeout(() => { err.className="err"; err.textContent=""; }, 4000);
+    loadUsers();
+  }
+
+  async function loadUsers(){
+    const d = await api("/api/admin/users","GET");
+    if (!d.ok) return;
+    const tbody = document.getElementById("userTbody");
+    const tbl = document.getElementById("userTable");
+    if (!d.rows || !d.rows.length){ tbl.style.display="none"; return; }
+    tbl.style.display="";
+    tbody.innerHTML = d.rows.map(r =>
+      `<tr><td>${escapeHtml(r.username)}</td><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.role)}</td><td>${r.must_change_pw ? "✅" : "—"}</td></tr>`
+    ).join("");
   }
 </script>
 <script src="/assets/analytics.js"></script>

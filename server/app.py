@@ -1155,6 +1155,56 @@ def api_admin_reset_password():
     return jsonify(ok=True)
 
 
+@app.route("/api/admin/users", methods=["GET"])
+def api_admin_list_users():
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    conn = db_conn()
+    rows = conn.execute(
+        "SELECT username, name, role, must_change_pw FROM users ORDER BY role, username"
+    ).fetchall()
+    conn.close()
+    return jsonify(ok=True, rows=[dict(r) for r in rows])
+
+
+@app.route("/api/admin/users", methods=["POST"])
+def api_admin_create_user():
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    username = (data.get("username") or "").strip()
+    password = data.get("password") or ""
+    name = (data.get("name") or "").strip()
+    role = (data.get("role") or "student").strip()
+    must_change = int(bool(data.get("must_change_pw", 1)))
+    if not re.match(r"^[A-Za-z0-9_]{2,32}$", username):
+        return jsonify(ok=False, error="账号名仅限字母/数字/下划线，2-32位"), 400
+    if len(password) < 4:
+        return jsonify(ok=False, error="密码至少 4 位"), 400
+    if role not in ("student", "ta", "instructor", "admin"):
+        return jsonify(ok=False, error="角色非法"), 400
+    if not name:
+        name = username
+    conn = db_conn()
+    exists = conn.execute("SELECT username FROM users WHERE username=?",
+                          (username,)).fetchone()
+    if exists:
+        conn.close()
+        return jsonify(ok=False, error="账号已存在"), 409
+    salt = secrets.token_hex(16)
+    conn.execute(
+        "INSERT INTO users(username, name, role, password_hash, salt, must_change_pw) "
+        "VALUES(?,?,?,?,?,?)",
+        (username, name, role, _hash_pw(password, salt), salt, must_change))
+    conn.commit()
+    row = conn.execute("SELECT * FROM users WHERE username=?",
+                       (username,)).fetchone()
+    conn.close()
+    return jsonify(ok=True, user=_public_user(row))
+
+
 # ---------------------------------------------------------------- 通讯录 (directory)
 _DIR_FIELDS = ["student_no", "name", "zoom_id", "cpu", "ram", "storage", "github",
                "login_username", "email", "wechat", "phone", "online_course",
