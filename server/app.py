@@ -219,15 +219,17 @@ def init_db():
             c.execute(sql)
         except sqlite3.OperationalError:
             pass
+    # 空库时先 seed 全部账号（学员/助教/总讲师/管理员）。必须在提升 robin 与 _ensure_ta_accounts 之前，
+    # 否则后者先插入助教会让 users 表非空导致 _seed_users 被跳过；且 seed 会把 robin 写成 instructor，
+    # 故提升 robin 为 admin 必须放在 seed 之后执行。
+    c.execute("SELECT COUNT(*) AS n FROM users")
+    if c.fetchone()["n"] == 0:
+        _seed_users(c)
     # 角色迁移：Robin 提为总管理员（admin 角色，继承 instructor 全部权限）
     c.execute("UPDATE users SET role='admin' WHERE username='robin'")
     # 助教账号保障：确保助教角色 + 创建缺失的助教账号（幂等，每次启动执行，作用于已有生产库）
     _ensure_ta_accounts(c)
     conn.commit()
-
-    c.execute("SELECT COUNT(*) AS n FROM users")
-    if c.fetchone()["n"] == 0:
-        _seed_users(c)
     c.execute("SELECT COUNT(*) AS n FROM capabilities")
     if c.fetchone()["n"] == 0:
         _seed_capabilities(c)
@@ -1199,8 +1201,8 @@ def api_admin_create_user():
         "VALUES(?,?,?,?,?,?)",
         (username, name, role, _hash_pw(password, salt), salt, must_change))
     conn.commit()
-    row = conn.execute("SELECT * FROM users WHERE username=?",
-                       (username,)).fetchone()
+    row = dict(conn.execute("SELECT * FROM users WHERE username=?",
+                             (username,)).fetchone())
     conn.close()
     return jsonify(ok=True, user=_public_user(row))
 
