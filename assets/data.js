@@ -84,7 +84,12 @@ const COURSES = {
       {
         title: "模块一 · AI 投资认知",
         lessons: [
-          { id: "l01", title: "用 AI 武装投资决策", desc: "AI 时代的投资信息优势、认知框架", duration: "120 min", slides: [], materials: [], chapters: [] },
+          { id: "l01", title: "第 1 堂课 — AI 时代的唯一入口", desc: "自定义技能入门（我的购买清单）、API 登录蜗牛 AI 官网学生账号、建立 AI 时代唯一入口的认知", duration: "120 min", slides: [], materials: [],
+            chapters: [
+              "自定义技能：我的购买清单",
+              "API 登录蜗牛 AI 官网学生登录账号",
+              "AI 时代的唯一入口"
+            ] },
           { id: "l02", title: "数据驱动的投资思维", desc: "从感觉投资到数据投资、指标体系建设", duration: "120 min", slides: [], materials: [], chapters: [] }
         ]
       },
