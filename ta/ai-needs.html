@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 刚需看板 — 助教天地</title>
+<style>
+  :root {
+    --accent: #ff5b1f; --accent-2: #e04a10; --accent-light: rgba(255,91,31,.10);
+    --ink: #1a1a2e; --ink-2: #3a3a50; --ink-3: #6b6b80;
+    --paper: #ffffff; --paper-2: #f8f8fa; --line: #e8e8ee;
+    --r-md: 8px; --r-lg: 14px; --r-xl: 20px;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,.06); --shadow-md: 0 4px 16px rgba(0,0,0,.10);
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--sans); background: var(--paper-2); color: var(--ink); min-height: 100vh; }
+
+  /* ===== Top Nav ===== */
+  .topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--paper); border-bottom: 1px solid var(--line); display: flex; align-items: center; padding: 0 24px; height: 64px; box-shadow: var(--shadow-sm); }
+  .topnav .logo { font-size: 18px; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
+  .topnav .nav-links { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .topnav .nav-links a { font-size: 13px; color: var(--ink-3); text-decoration: none; padding: 6px 14px; border-radius: 100px; transition: all .2s; }
+  .topnav .nav-links a:hover { background: var(--accent-light); color: var(--accent); }
+  .topnav .nav-links a.active { background: var(--accent); color: #fff; }
+  .lang-btn { margin-left: 8px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 100px; padding: 4px 12px; font-size: 12px; cursor: pointer; color: var(--ink-2); }
+  .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ===== Page ===== */
+  .page { max-width: 1100px; margin: 0 auto; padding: 96px 24px 80px; }
+  .page-head { margin-bottom: 32px; }
+  .page-head h1 { font-size: 32px; letter-spacing: -0.02em; }
+  .page-head p { color: var(--ink-3); margin-top: 6px; font-size: 15px; }
+
+  /* ===== Toolbar ===== */
+  .toolbar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 28px; }
+  .toolbar input[type=text] {
+    flex: 1; min-width: 200px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 100px;
+    font-size: 14px; background: var(--paper); color: var(--ink);
+  }
+  .toolbar input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+  .toolbar select {
+    padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--r-md); font-size: 14px; background: var(--paper); color: var(--ink);
+  }
+  .toolbar select:focus { outline: none; border-color: var(--accent); }
+  .btn-accent {
+    padding: 10px 20px; background: var(--accent); color: #fff; border: none; border-radius: 100px;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: background .2s; white-space: nowrap;
+  }
+  .btn-accent:hover { background: var(--accent-2); }
+
+  /* ===== Stats ===== */
+  .stats { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+  .stat-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px 28px; box-shadow: var(--shadow-sm); min-width: 140px; }
+  .stat-card .num { font-size: 32px; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
+  .stat-card .label { font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+
+  /* ===== Student Group ===== */
+  .student-group { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-xl); margin-bottom: 20px; box-shadow: var(--shadow-sm); overflow: hidden; }
+  .student-header {
+    display: flex; align-items: center; gap: 14px; padding: 20px 28px; cursor: pointer;
+    transition: background .2s; user-select: none;
+  }
+  .student-header:hover { background: var(--paper-2); }
+  .student-avatar {
+    width: 42px; height: 42px; border-radius: 50%; background: var(--accent-light); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0;
+  }
+  .student-info { flex: 1; }
+  .student-info .name { font-size: 16px; font-weight: 700; }
+  .student-info .username { font-size: 13px; color: var(--ink-3); }
+  .student-count { font-size: 13px; color: var(--ink-3); background: var(--paper-2); padding: 4px 12px; border-radius: 100px; }
+  .student-arrow { font-size: 18px; color: var(--ink-3); transition: transform .3s; }
+  .student-group.open .student-arrow { transform: rotate(180deg); }
+  .student-needs { display: none; padding: 0 28px 24px; }
+  .student-group.open .student-needs { display: block; }
+
+  /* ===== Need Card ===== */
+  .need-card {
+    background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px 22px;
+    margin-bottom: 12px; transition: border-color .2s;
+  }
+  .need-card:last-child { margin-bottom: 0; }
+  .need-card:hover { border-color: var(--accent); }
+  .need-card .nc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .need-card .nc-seq { font-size: 12px; color: var(--ink-3); background: var(--paper); border: 1px solid var(--line); border-radius: 100px; padding: 2px 10px; font-weight: 600; }
+  .need-card .nc-title { font-size: 15px; font-weight: 700; flex: 1; }
+  .priority-tag { font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 100px; }
+  .priority-tag.high { background: #fee2e2; color: #dc2626; }
+  .priority-tag.mid { background: #fef3c7; color: #d97706; }
+  .priority-tag.low { background: #d1fae5; color: #059669; }
+  .need-card .nc-category { font-size: 12px; color: var(--accent); background: var(--accent-light); padding: 2px 10px; border-radius: 100px; }
+  .need-card .nc-content { font-size: 14px; color: var(--ink-2); line-height: 1.6; margin-bottom: 10px; white-space: pre-wrap; }
+  .need-card .nc-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .need-card .nc-tag { font-size: 11px; color: var(--ink-3); background: var(--paper); border: 1px solid var(--line); border-radius: 100px; padding: 2px 10px; }
+  .need-card .nc-meta { font-size: 12px; color: var(--ink-3); display: flex; gap: 16px; }
+  .need-card .nc-actions { margin-top: 12px; display: flex; gap: 8px; }
+  .btn-sm { font-size: 12px; padding: 5px 14px; border-radius: 100px; border: 1px solid var(--line); background: var(--paper); cursor: pointer; color: var(--ink-2); transition: all .2s; }
+  .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-sm.danger:hover { border-color: #dc2626; color: #dc2626; }
+
+  /* ===== Modal ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200; background: rgba(26,26,46,.5); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box { background: var(--paper); border-radius: var(--r-xl); max-width: 540px; width: 100%; padding: 36px; box-shadow: var(--shadow-md); position: relative; }
+  .modal-close { position: absolute; top: 14px; right: 18px; border: none; background: none; font-size: 22px; cursor: pointer; color: var(--ink-3); }
+  .modal-close:hover { color: var(--ink); }
+  .modal-box h2 { font-size: 20px; margin-bottom: 4px; }
+  .modal-box > p { font-size: 14px; color: var(--ink-3); margin-bottom: 20px; }
+  .modal-form label { display: block; font-size: 13px; font-weight: 700; color: var(--ink-2); margin-bottom: 4px; margin-top: 14px; }
+  .modal-form label:first-child { margin-top: 0; }
+  .modal-form input, .modal-form textarea, .modal-form select {
+    width: 100%; padding: 11px 14px; border: 1px solid var(--line); border-radius: var(--r-md);
+    font-size: 14px; font-family: var(--sans); background: var(--paper); color: var(--ink);
+  }
+  .modal-form input:focus, .modal-form textarea:focus, .modal-form select:focus {
+    outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light);
+  }
+  .modal-form textarea { min-height: 80px; resize: vertical; }
+  .modal-form .hint { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+  .modal-submit {
+    margin-top: 20px; width: 100%; padding: 12px; background: var(--accent); color: #fff; border: none;
+    border-radius: 100px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .2s;
+  }
+  .modal-submit:hover { background: var(--accent-2); }
+  .modal-status { font-size: 13px; margin-top: 10px; min-height: 18px; }
+
+  /* ===== Empty ===== */
+  .empty { text-align: center; padding: 60px 20px; color: var(--ink-3); }
+  .empty .ico { font-size: 48px; margin-bottom: 16px; }
+  .empty p { font-size: 15px; }
+
+  /* ===== Loading ===== */
+  .loading { text-align: center; padding: 60px; color: var(--ink-3); font-size: 15px; }
+
+  @media (max-width: 640px) {
+    .page { padding: 84px 12px 60px; }
+    .page-head h1 { font-size: 24px; }
+    .toolbar { flex-direction: column; }
+    .toolbar input[type=text] { min-width: auto; }
+    .stats { gap: 10px; }
+    .stat-card { min-width: auto; flex: 1; padding: 14px 18px; }
+    .student-header { padding: 16px 18px; }
+    .student-needs { padding: 0 18px 18px; }
+    .modal-box { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top Nav -->
+<nav class="topnav">
+  <div class="logo">🐌 助教天地</div>
+  <div class="nav-links">
+    <a href="index.html" data-zh="主页" data-en="Home">主页</a>
+    <a href="ai-needs.html" class="active" data-zh="AI 刚需" data-en="AI Needs">AI 刚需</a>
+    <a href="index.html" data-zh="能力清单" data-en="Checklist">能力清单</a>
+    <a href="index.html" data-zh="通讯录" data-en="Contacts">通讯录</a>
+    <button class="lang-btn" id="langBtn">EN</button>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-head">
+    <h1 data-zh="AI 刚需看板" data-en="AI Needs Board">AI 刚需看板</h1>
+    <p data-zh="所有学员的 AI 刚需 · 助教/管理员可帮学员新建" data-en="All students' AI needs · TA/Admin can create needs for students">所有学员的 AI 刚需 · 助教/管理员可帮学员新建</p>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <input type="text" id="searchInput" placeholder="搜索学员姓名…" data-zh-ph="搜索学员姓名…" data-en-ph="Search student name…">
+    <select id="priorityFilter">
+      <option value="" data-zh="全部优先级" data-en="All priorities">全部优先级</option>
+      <option value="高" data-zh="高" data-en="High">高</option>
+      <option value="中" data-zh="中" data-en="Medium">中</option>
+      <option value="低" data-zh="低" data-en="Low">低</option>
+    </select>
+    <select id="categoryFilter">
+      <option value="" data-zh="全部分类" data-en="All categories">全部分类</option>
+    </select>
+    <button class="btn-accent" id="openCreateBtn" data-zh="➕ 帮学员新建" data-en="➕ Create for Student">➕ 帮学员新建</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats" id="statsRow">
+    <div class="stat-card"><div class="num" id="statStudents">-</div><div class="label" data-zh="学员数" data-en="Students">学员数</div></div>
+    <div class="stat-card"><div class="num" id="statTotal">-</div><div class="label" data-zh="刚需总数" data-en="Total Needs">刚需总数</div></div>
+    <div class="stat-card"><div class="num" id="statHigh">-</div><div class="label" data-zh="高优先级" data-en="High Priority">高优先级</div></div>
+  </div>
+
+  <!-- Student Groups -->
+  <div id="groupsContainer">
+    <div class="loading" data-zh="加载中…" data-en="Loading…">加载中…</div>
+  </div>
+</div>
+
+<!-- Create Need Modal -->
+<div class="modal-overlay" id="createModal">
+  <div class="modal-box">
+    <button class="modal-close" id="createClose">&times;</button>
+    <h2 data-zh="帮学员新建 AI 刚需" data-en="Create AI Need for Student">帮学员新建 AI 刚需</h2>
+    <p data-zh="选择学员并填写 AI 刚需信息，提交后学员即可在自己的页面看到。" data-en="Select a student and fill in the AI need. The student will see it immediately.">选择学员并填写 AI 刚需信息，提交后学员即可在自己的页面看到。</p>
+    <form class="modal-form" id="createForm">
+      <label data-zh="选择学员 *" data-en="Student *">选择学员 *</label>
+      <select id="createStudent" required>
+        <option value="" data-zh="-- 请选择学员 --" data-en="-- Select a student --">-- 请选择学员 --</option>
+      </select>
+      <label data-zh="标题 *" data-en="Title *">标题 *</label>
+      <input type="text" id="createTitle" required data-zh-ph="例如：用 AI 自动生成周报" data-en-ph="e.g. Auto-generate weekly reports with AI" placeholder="例如：用 AI 自动生成周报">
+      <label data-zh="具体内容 / 描述" data-en="Description">具体内容 / 描述</label>
+      <textarea id="createContent" data-zh-ph="描述这个 AI 刚需的具体场景或要求" data-en-ph="Describe the specific scenario or requirement"></textarea>
+      <label data-zh="分类" data-en="Category">分类</label>
+      <input type="text" id="createCategory" data-zh-ph="例如：办公效率、内容创作" data-en-ph="e.g. Productivity, Content Creation" placeholder="例如：办公效率、内容创作">
+      <label data-zh="优先级" data-en="Priority">优先级</label>
+      <select id="createPriority">
+        <option value="高" data-zh="高" data-en="High">高</option>
+        <option value="中" selected data-zh="中" data-en="Medium">中</option>
+        <option value="低" data-zh="低" data-en="Low">低</option>
+      </select>
+      <label data-zh="标签（逗号分隔）" data-en="Tags (comma-separated)">标签（逗号分隔）</label>
+      <input type="text" id="createTags" data-zh-ph="例如：自动化, 报告, Python" data-en-ph="e.g. automation, report, Python" placeholder="例如：自动化, 报告, Python">
+      <div class="hint" data-zh="学员将收到企业微信通知（如已配置）。" data-en="Student will be notified via WeChat Work (if configured).">学员将收到企业微信通知（如已配置）。</div>
+      <button type="submit" class="modal-submit" data-zh="提交新建" data-en="Create Need">提交新建</button>
+      <p class="modal-status" id="createStatus"></p>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Need Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <button class="modal-close" id="editClose">&times;</button>
+    <h2 data-zh="编辑 AI 刚需" data-en="Edit AI Need">编辑 AI 刚需</h2>
+    <form class="modal-form" id="editForm">
+      <input type="hidden" id="editId">
+      <label data-zh="标题 *" data-en="Title *">标题 *</label>
+      <input type="text" id="editTitle" required>
+      <label data-zh="具体内容 / 描述" data-en="Description">具体内容 / 描述</label>
+      <textarea id="editContent"></textarea>
+      <label data-zh="分类" data-en="Category">分类</label>
+      <input type="text" id="editCategory">
+      <label data-zh="优先级" data-en="Priority">优先级</label>
+      <select id="editPriority">
+        <option value="高" data-zh="高" data-en="High">高</option>
+        <option value="中" selected data-zh="中" data-en="Medium">中</option>
+        <option value="低" data-zh="低" data-en="Low">低</option>
+      </select>
+      <label data-zh="标签（逗号分隔）" data-en="Tags (comma-separated)">标签（逗号分隔）</label>
+      <input type="text" id="editTags" placeholder="例如：自动化, 报告, Python">
+      <button type="submit" class="modal-submit" data-zh="保存修改" data-en="Save Changes">保存修改</button>
+      <p class="modal-status" id="editStatus"></p>
+    </form>
+  </div>
+</div>
+
+<footer class="footer" style="text-align:center;padding:40px 20px;color:var(--ink-3);font-size:13px;border-top:1px solid var(--line);margin-top:60px;">
+  <p data-zh="© 2026 蜗牛 AI · 澳洲华人AI 应用教育学院" data-en="© 2026 Snail AI · Australian Chinese AI Education Institute">© 2026 蜗牛 AI · 澳洲华人AI 应用教育学院</p>
+</footer>
+
+<script>
+const API = location.origin + '/api';
+let allStudents = [];
+let allCategories = new Set();
+let currentUser = null;
+
+function getLang() { return localStorage.getItem('snailai-lang') || 'zh'; }
+function setLang(l) { localStorage.setItem('snailai-lang', l); applyLang(l); }
+function applyLang(lang) {
+  document.querySelectorAll('[data-zh]').forEach(el => { el.textContent = el.getAttribute(lang === 'zh' ? 'data-zh' : 'data-en'); });
+  document.querySelectorAll('[data-zh-ph]').forEach(el => { el.placeholder = el.getAttribute(lang === 'zh' ? 'data-zh-ph' : 'data-en-ph'); });
+  document.querySelectorAll('[data-zh-val]').forEach(el => { el.value = el.getAttribute(lang === 'zh' ? 'data-zh-val' : 'data-en-val'); });
+  document.getElementById('langBtn').textContent = lang === 'zh' ? 'EN' : '中文';
+}
+document.getElementById('langBtn').onclick = () => setLang(getLang() === 'zh' ? 'en' : 'zh');
+
+async function api(path, opts={}) {
+  const r = await fetch(API+path, opts);
+  return r.json();
+}
+
+async function loadUser() {
+  const d = await api('/me');
+  if (!d.ok) { location.href = '/ta/index.html'; return; }
+  currentUser = d.user;
+  // 只有 ta/instructor/admin 可以进这个页面
+  if (!['ta','instructor','admin'].includes(currentUser.role)) {
+    location.href = '/ta/index.html';
+  }
+}
+
+async function loadStudents() {
+  const d = await api('/ai-needs?all=1');
+  if (!d.ok) { document.getElementById('groupsContainer').innerHTML = '<div class="empty"><p>加载失败</p></div>'; return; }
+  allStudents = d.students || [];
+  // 收集所有分类
+  allCategories.clear();
+  let total = 0, high = 0;
+  allStudents.forEach(s => {
+    total += s.needs.length;
+    s.needs.forEach(n => {
+      if (n.category) allCategories.add(n.category);
+      if (n.priority === '高') high++;
+    });
+  });
+  // 更新统计
+  document.getElementById('statStudents').textContent = allStudents.length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statHigh').textContent = high;
+  // 更新分类下拉
+  const cf = document.getElementById('categoryFilter');
+  const curVal = cf.value;
+  while (cf.options.length > 1) cf.remove(1);
+  [...allCategories].sort().forEach(c => {
+    const o = document.createElement('option'); o.value = c; o.textContent = c; cf.appendChild(o);
+  });
+  cf.value = curVal;
+  // 更新学员下拉（新建用）
+  const sel = document.getElementById('createStudent');
+  while (sel.options.length > 1) sel.remove(1);
+  allStudents.forEach(s => {
+    const o = document.createElement('option'); o.value = s.username; o.textContent = s.name + ' (' + s.username + ')'; sel.appendChild(o);
+  });
+  renderGroups();
+}
+
+function renderGroups() {
+  const search = (document.getElementById('searchInput').value || '').toLowerCase();
+  const prio = document.getElementById('priorityFilter').value;
+  const cat = document.getElementById('categoryFilter').value;
+  const container = document.getElementById('groupsContainer');
+  let filtered = allStudents;
+  if (search) filtered = filtered.filter(s => (s.name||'').toLowerCase().includes(search) || s.username.toLowerCase().includes(search));
+  // 过滤每个学员的 needs
+  filtered = filtered.map(s => {
+    let needs = s.needs;
+    if (prio) needs = needs.filter(n => n.priority === prio);
+    if (cat) needs = needs.filter(n => n.category === cat);
+    return { ...s, needs };
+  }).filter(s => s.needs.length > 0);
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty"><div class="ico">🧠</div><p data-zh="没有符合条件的 AI 刚需" data-en="No AI needs match the filters">没有符合条件的 AI 刚需</p></div>';
+    applyLang(getLang());
+    return;
+  }
+  container.innerHTML = filtered.map(s => `
+    <div class="student-group open" data-username="${s.username}">
+      <div class="student-header" onclick="toggleGroup(this)">
+        <div class="student-avatar">${(s.name||s.username).charAt(0)}</div>
+        <div class="student-info">
+          <div class="name">${s.name || s.username}</div>
+          <div class="username">${s.username}</div>
+        </div>
+        <div class="student-count">${s.needs.length} 项</div>
+        <div class="student-arrow">▼</div>
+      </div>
+      <div class="student-needs">
+        ${s.needs.map(n => `
+          <div class="need-card" data-id="${n.id}">
+            <div class="nc-head">
+              <span class="nc-seq">#${n.seq}</span>
+              <span class="nc-title">${escHtml(n.title)}</span>
+              <span class="priority-tag ${n.priority==='高'?'high':n.priority==='低'?'low':'mid'}">${n.priority}</span>
+              ${n.category ? '<span class="nc-category">'+escHtml(n.category)+'</span>' : ''}
+            </div>
+            ${n.content ? '<div class="nc-content">'+escHtml(n.content)+'</div>' : ''}
+            ${n.tags && n.tags.length ? '<div class="nc-tags">'+n.tags.map(t=>'<span class="nc-tag">'+escHtml(t)+'</span>').join('')+'</div>' : ''}
+            <div class="nc-meta">
+              <span>创建：${fmtDate(n.created_at)}</span>
+              <span>更新：${fmtDate(n.updated_at)}</span>
+            </div>
+            <div class="nc-actions">
+              <button class="btn-sm" onclick="editNeed(${n.id}, this)" data-zh="编辑" data-en="Edit">编辑</button>
+              <button class="btn-sm danger" onclick="deleteNeed(${n.id}, this)" data-zh="删除" data-en="Delete">删除</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+  applyLang(getLang());
+}
+
+function toggleGroup(headerEl) {
+  headerEl.closest('.student-group').classList.toggle('open');
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDate(s) {
+  if (!s) return '';
+  const d = new Date(s);
+  return d.toLocaleDateString('zh-CN', {month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
+
+// 搜索/筛选
+document.getElementById('searchInput').addEventListener('input', renderGroups);
+document.getElementById('priorityFilter').addEventListener('change', renderGroups);
+document.getElementById('categoryFilter').addEventListener('change', renderGroups);
+
+// 新建 Modal
+document.getElementById('openCreateBtn').onclick = () => {
+  document.getElementById('createForm').reset();
+  document.getElementById('createStatus').textContent = '';
+  document.getElementById('createModal').classList.add('open');
+};
+document.getElementById('createClose').onclick = () => document.getElementById('createModal').classList.remove('open');
+document.getElementById('createModal').addEventListener('click', e => { if (e.target === e.currentTarget) document.getElementById('createModal').classList.remove('open'); });
+
+document.getElementById('createForm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const status = document.getElementById('createStatus');
+  const username = document.getElementById('createStudent').value;
+  if (!username) { status.textContent = '请选择学员'; status.style.color = '#dc2626'; return; }
+  const body = {
+    username,
+    title: document.getElementById('createTitle').value.trim(),
+    content: document.getElementById('createContent').value.trim(),
+    category: document.getElementById('createCategory').value.trim(),
+    priority: document.getElementById('createPriority').value,
+    tags: document.getElementById('createTags').value.split(/[,，]/).map(x=>x.trim()).filter(Boolean)
+  };
+  if (!body.title) { status.textContent = '标题不能为空'; status.style.color = '#dc2626'; return; }
+  status.textContent = '提交中…'; status.style.color = '';
+  const d = await api('/ai-needs', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  if (d.ok) {
+    status.textContent = '新建成功！'; status.style.color = '#059669';
+    setTimeout(() => { document.getElementById('createModal').classList.remove('open'); loadStudents(); }, 800);
+  } else {
+    status.textContent = d.error || '提交失败'; status.style.color = '#dc2626';
+  }
+});
+
+// 编辑
+let editNeedData = {};
+function editNeed(id, btn) {
+  const card = btn.closest('.need-card');
+  const title = card.querySelector('.nc-title').textContent;
+  // 从 allStudents 里找完整数据
+  for (const s of allStudents) {
+    const n = s.needs.find(x => x.id === id);
+    if (n) { editNeedData = n; break; }
+  }
+  document.getElementById('editId').value = id;
+  document.getElementById('editTitle').value = editNeedData.title || '';
+  document.getElementById('editContent').value = editNeedData.content || '';
+  document.getElementById('editCategory').value = editNeedData.category || '';
+  document.getElementById('editPriority').value = editNeedData.priority || '中';
+  document.getElementById('editTags').value = (editNeedData.tags||[]).join(', ');
+  document.getElementById('editStatus').textContent = '';
+  document.getElementById('editModal').classList.add('open');
+}
+document.getElementById('editClose').onclick = () => document.getElementById('editModal').classList.remove('open');
+document.getElementById('editModal').addEventListener('click', e => { if (e.target === e.currentTarget) document.getElementById('editModal').classList.remove('open'); });
+
+document.getElementById('editForm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const status = document.getElementById('editStatus');
+  const id = document.getElementById('editId').value;
+  const body = {
+    title: document.getElementById('editTitle').value.trim(),
+    content: document.getElementById('editContent').value.trim(),
+    category: document.getElementById('editCategory').value.trim(),
+    priority: document.getElementById('editPriority').value,
+    tags: document.getElementById('editTags').value.split(/[,，]/).map(x=>x.trim()).filter(Boolean)
+  };
+  if (!body.title) { status.textContent = '标题不能为空'; status.style.color = '#dc2626'; return; }
+  status.textContent = '保存中…'; status.style.color = '';
+  const d = await api('/ai-needs/' + id, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  if (d.ok) {
+    status.textContent = '保存成功！'; status.style.color = '#059669';
+    setTimeout(() => { document.getElementById('editModal').classList.remove('open'); loadStudents(); }, 800);
+  } else {
+    status.textContent = d.error || '保存失败'; status.style.color = '#dc2626';
+  }
+});
+
+// 删除
+async function deleteNeed(id, btn) {
+  if (!confirm('确认删除这条 AI 刚需？')) return;
+  const d = await api('/ai-needs/' + id, { method:'DELETE' });
+  if (d.ok) loadStudents();
+  else alert(d.error || '删除失败');
+}
+
+// Init
+(async () => {
+  await loadUser();
+  await loadStudents();
+  applyLang(getLang());
+})();
+</script>
+</body>
+</html>

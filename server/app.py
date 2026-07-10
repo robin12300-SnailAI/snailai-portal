@@ -1004,13 +1004,41 @@ def api_list_needs():
     user = _current_user()
     if not user:
         return jsonify(ok=False, error="未登录"), 401
+    conn = db_conn()
+    # 助教/总讲师/管理员：?all=1 返回所有学员的 AI 刚需，按学员分组
+    if user["role"] in ("ta", "instructor", "admin") and request.args.get("all") == "1":
+        # 获取所有有 AI 刚需的学员
+        students = conn.execute(
+            "SELECT DISTINCT n.username, u.name FROM ai_needs n "
+            "LEFT JOIN users u ON n.username=u.username ORDER BY u.name, n.username"
+        ).fetchall()
+        result = []
+        for s in students:
+            rows = conn.execute(
+                "SELECT id, username, seq, title, content, category, priority, tags, "
+                "created_at, updated_at FROM ai_needs WHERE username=? ORDER BY seq",
+                (s["username"],)).fetchall()
+            needs = []
+            for r in rows:
+                d = dict(r)
+                try:
+                    d["tags"] = json.loads(d["tags"]) if d["tags"] else []
+                except Exception:
+                    d["tags"] = []
+                needs.append(d)
+            result.append({
+                "username": s["username"],
+                "name": s["name"] or s["username"],
+                "needs": needs
+            })
+        conn.close()
+        return jsonify(ok=True, all=True, students=result)
     # 学员只能看自己的；助教/总讲师可指定 username
     req_user = request.args.get("username")
     if user["role"] == "student":
         target = user["username"]
     else:
         target = req_user or user["username"]
-    conn = db_conn()
     rows = conn.execute(
         "SELECT id, username, seq, title, content, category, priority, tags, "
         "created_at, updated_at FROM ai_needs WHERE username=? ORDER BY seq",
