@@ -197,6 +197,35 @@
     </div>
     <p class="muted" data-zh="每日登录数、登录 IP 与国家/地区、停留时长、页面停留排行，以及设备、引流来源与高峰时段等。日报/周报自动推送到企业微信。" data-en="Daily logins, login IP & country/region, dwell time, top pages, plus devices, referrers and peak hours. Daily/weekly reports auto-push to WeChat Work.">每日登录数、登录 IP 与国家/地区、停留时长、页面停留排行，以及设备、引流来源与高峰时段等。日报/周报自动推送到企业微信。</p>
   </section>
+
+  <!-- ===== Card: 新建学员账号 ===== -->
+  <section class="card">
+    <div class="card-head">
+      <h2>👤 <span data-zh="新建学员账号" data-en="Create Student Account">新建学员账号</span></h2>
+      <div class="toolbar">
+        <button class="btn primary" onclick="createStudentAccount()" data-zh="创建账号" data-en="Create Account">创建账号</button>
+      </div>
+    </div>
+    <p class="browse-meta" data-zh="为官网创建一名学员登录账号（角色固定为「学员」）。创建后对方可用账号+密码登录官网、API 查询。初始密码建议让学员首次登录后自行修改。" data-en="Create a student login for the portal (role is fixed to Student). They can then log in and query via API. Suggest they change the password after first login.">为官网创建一名学员登录账号（角色固定为「学员」）。创建后对方可用账号+密码登录官网、API 查询。初始密码建议让学员首次登录后自行修改。</p>
+    <div class="form-grid" style="grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px">
+      <div class="field"><label data-zh="登录账号" data-en="Username">登录账号</label><input id="csUser" placeholder="test01" autocomplete="off"></div>
+      <div class="field"><label data-zh="姓名" data-en="Name">姓名</label><input id="csName" placeholder="张三" autocomplete="off"></div>
+      <div class="field"><label data-zh="初始密码" data-en="Password">初始密码</label><input id="csPw" type="text" placeholder="12345" autocomplete="off"></div>
+    </div>
+    <div class="err" id="csErr"></div>
+  </section>
+
+  <!-- ===== Card: 学员列表 ===== -->
+  <section class="card">
+    <div class="card-head">
+      <h2>📋 <span data-zh="学员列表" data-en="Student Accounts">学员列表</span></h2>
+      <div class="toolbar">
+        <button class="btn" onclick="loadStudentAccounts()" data-zh="刷新" data-en="Refresh">刷新</button>
+      </div>
+    </div>
+    <p class="browse-meta" data-zh="当前所有学员账号（仅助教/讲师可见学员，不显示助教/管理员）。「初始密码待改」= 是 表示学员尚未改过初始密码。" data-en="All student accounts (TAs/instructors see students only). 'Pw change' = Yes means the student hasn't changed the initial password yet.">当前所有学员账号（仅助教/讲师可见学员，不显示助教/管理员）。「初始密码待改」= 是 表示学员尚未改过初始密码。</p>
+    <div class="table-scroll" id="stuList"></div>
+  </section>
 </main>
 
 <!-- ===== Forbidden ===== -->
@@ -322,6 +351,7 @@
     loadDirectory();
     loadBrowse();
     loadCapPoints();
+    loadStudentAccounts();
   }
 
   // ===================== 通讯录：表头 =====================
@@ -533,6 +563,49 @@
   document.getElementById("dirSearch").addEventListener("input", renderDirBody);
   document.getElementById("addBtn").addEventListener("click", openAdd);
   document.getElementById("browseTable").addEventListener("change", loadBrowse);
+
+  // ===================== 新建学员账号 + 学员列表 =====================
+  async function createStudentAccount(){
+    const username = (document.getElementById("csUser").value || "").trim();
+    const name = (document.getElementById("csName").value || "").trim();
+    const pw = document.getElementById("csPw").value || "";
+    const err = document.getElementById("csErr");
+    err.className = "err"; err.textContent = "";
+    if (!username || !pw){
+      err.textContent = t({zh:"账号和初始密码必填", en:"Username and password are required"});
+      return;
+    }
+    const d = await api("/api/admin/users", "POST", {
+      username, name: name || username, password: pw,
+      role: "student", must_change_pw: 1
+    });
+    if (!d.ok){
+      err.textContent = d.error || t({zh:"创建失败", en:"Create failed"});
+      return;
+    }
+    err.className = "err ok";
+    err.textContent = t({zh:"已创建：" + username + "（学员）", en:"Created: " + username + " (student)"});
+    document.getElementById("csUser").value = "";
+    document.getElementById("csName").value = "";
+    document.getElementById("csPw").value = "";
+    setTimeout(() => { err.className = "err"; err.textContent = ""; }, 4000);
+    loadStudentAccounts();
+  }
+
+  async function loadStudentAccounts(){
+    const box = document.getElementById("stuList");
+    const d = await api("/api/admin/users", "GET");
+    if (!d.ok){ box.innerHTML = "<div class='err'>" + (d.error || t({zh:"加载失败",en:"Load failed"})) + "</div>"; return; }
+    const rows = d.rows || [];
+    if (!rows.length){
+      box.innerHTML = "<p class='muted'>" + t({zh:"暂无学员账号", en:"No student accounts"}) + "</p>";
+      return;
+    }
+    const head = `<tr><th>${t({zh:"账号",en:"Username"})}</th><th>${t({zh:"姓名",en:"Name"})}</th><th>${t({zh:"初始密码待改",en:"Pw change req."})}</th></tr>`;
+    const body = rows.map(r => `<tr><td>${escapeHtml(r.username)}</td><td>${escapeHtml(r.name)}</td>` +
+      `<td>${r.must_change_pw ? t({zh:"是",en:"Yes"}) : t({zh:"否",en:"No"})}</td></tr>`).join("");
+    box.innerHTML = `<table class="grid"><thead>${head}</thead><tbody>${body}</tbody></table>`;
+  }
 </script>
 <script src="/assets/analytics.js"></script>
 </body>

@@ -1160,12 +1160,18 @@ def api_admin_reset_password():
 @app.route("/api/admin/users", methods=["GET"])
 def api_admin_list_users():
     user = _current_user()
-    if not _is_admin(user):
+    if not _is_staff(user):
         return jsonify(ok=False, error="无权限"), 403
     conn = db_conn()
-    rows = conn.execute(
-        "SELECT username, name, role, must_change_pw FROM users ORDER BY role, username"
-    ).fetchall()
+    if user["role"] == "admin":
+        rows = conn.execute(
+            "SELECT username, name, role, must_change_pw FROM users ORDER BY role, username"
+        ).fetchall()
+    else:
+        # 助教/讲师仅可见学员账号，不泄露 staff 名单
+        rows = conn.execute(
+            "SELECT username, name, role, must_change_pw FROM users WHERE role='student' ORDER BY username"
+        ).fetchall()
     conn.close()
     return jsonify(ok=True, rows=[dict(r) for r in rows])
 
@@ -1173,7 +1179,7 @@ def api_admin_list_users():
 @app.route("/api/admin/users", methods=["POST"])
 def api_admin_create_user():
     user = _current_user()
-    if not _is_admin(user):
+    if not _is_staff(user):
         return jsonify(ok=False, error="无权限"), 403
     data = request.get_json(silent=True) or {}
     username = (data.get("username") or "").strip()
@@ -1187,6 +1193,15 @@ def api_admin_create_user():
         return jsonify(ok=False, error="密码至少 4 位"), 400
     if role not in ("student", "ta", "instructor", "admin"):
         return jsonify(ok=False, error="角色非法"), 400
+    # 角色创建白名单：调用者只能创建授权范围内的账号
+    # admin 可建全部；讲师/助教仅可建学员（两者都只能建 student）
+    _CREATEABLE = {
+        "admin": ("student", "ta", "instructor", "admin"),
+        "instructor": ("student",),
+        "ta": ("student",),
+    }
+    if role not in _CREATEABLE.get(user["role"], ()):
+        return jsonify(ok=False, error="无权创建该角色账号"), 403
     if not name:
         name = username
     conn = db_conn()
