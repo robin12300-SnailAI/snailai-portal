@@ -123,6 +123,46 @@
   .tw-placeholder h3 { color: var(--ink-3); }
   .tw-placeholder p { color: var(--ink-3); }
 
+  /* ===== Modal ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(26,26,46,.5); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--paper); border-radius: var(--r-xl); max-width: 520px; width: 100%;
+    padding: 40px; box-shadow: var(--shadow-lg); position: relative;
+  }
+  .modal-box h2 { font-size: 22px; margin-bottom: 6px; letter-spacing: -0.01em; }
+  .modal-box > p { color: var(--ink-3); font-size: 14px; margin-bottom: 24px; }
+  .modal-close {
+    position: absolute; top: 16px; right: 20px; border: none; background: none;
+    font-size: 24px; cursor: pointer; color: var(--ink-3); line-height: 1;
+  }
+  .modal-close:hover { color: var(--ink); }
+  .modal-form label { display: block; font-size: 13px; font-weight: 700; color: var(--ink-2); margin-bottom: 4px; margin-top: 16px; }
+  .modal-form label:first-child { margin-top: 0; }
+  .modal-form input, .modal-form textarea {
+    width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r-md);
+    font-size: 15px; font-family: var(--sans); background: var(--paper); color: var(--ink);
+    transition: border-color .2s;
+  }
+  .modal-form input:focus, .modal-form textarea:focus {
+    outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light);
+  }
+  .modal-form textarea { min-height: 80px; resize: vertical; }
+  .modal-form .modal-submit {
+    width: 100%; margin-top: 24px; padding: 14px; background: var(--accent); color: #fff;
+    border: none; border-radius: var(--r-md); font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: background .2s;
+  }
+  .modal-form .modal-submit:hover { background: var(--accent-2); }
+  .modal-form .modal-submit:disabled { opacity: .5; cursor: not-allowed; }
+  .modal-status { font-size: 13px; margin-top: 12px; min-height: 20px; }
+  .modal-status.success { color: #2e7d32; }
+  .modal-status.error { color: #c62828; }
+
   /* ===== Footer ===== */
   .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
   .footer img { height: 28px; margin-bottom: 12px; }
@@ -188,10 +228,11 @@
       <p data-zh="蜗牛AI 云端数据库 · 学员自查 / 助教审核" data-en="SnailAI cloud DB · self-check / TA review">蜗牛AI 云端数据库 · 学员自查 / 助教审核</p>
       <span class="tw-go" data-zh="打开能力清单 →" data-en="Open checklist →">打开能力清单 →</span>
     </a>
-    <div class="tw-card tw-placeholder">
-      <div class="tw-icon">📚</div>
-      <h3 data-zh="教学资料库" data-en="Teaching Library">教学资料库</h3>
-      <p data-zh="待补充链接（联系 Robin 添加）" data-en="Link pending (ask Robin to add)">待补充链接（联系 Robin 添加）</p>
+    <div class="tw-card" id="addCapCard" style="cursor:pointer">
+      <div class="tw-icon">📋</div>
+      <h3 data-zh="添加 AI 能力" data-en="Add AI Skill">添加 AI 能力</h3>
+      <p data-zh="向能力清单新增一项（标题、描述、分类、点数）" data-en="Add a new item to the skill checklist">向能力清单新增一项（标题、描述、分类、点数）</p>
+      <span class="tw-go" data-zh="打开表单 →" data-en="Open form →">打开表单 →</span>
     </div>
   </div>
 
@@ -215,6 +256,31 @@
     <p class="lg-note" data-zh="每列可分别勾选 学员自查 / 助教审核（绿、蓝两色标签）。" data-en="Each column can be checked for self-check / TA review (green, blue tags).">每列可分别勾选 学员自查 / 助教审核（绿、蓝两色标签）。</p>
   </div>
 </section>
+
+<!-- ===== Add Capability Modal ===== -->
+<div class="modal-overlay" id="addCapModal">
+  <div class="modal-box">
+    <button class="modal-close" id="addCapClose">&times;</button>
+    <h2 data-zh="添加 AI 能力" data-en="Add AI Skill">添加 AI 能力</h2>
+    <p data-zh="新增一项到 AI 能力清单，提交后学员即可在清单中看到。" data-en="Add a new item to the AI Skill Checklist. Students will see it immediately.">新增一项到 AI 能力清单，提交后学员即可在清单中看到。</p>
+    <form class="modal-form" id="addCapForm">
+      <label data-zh="能力标题 *" data-en="Skill title *">能力标题 *</label>
+      <input type="text" id="capTitle" required data-zh-ph="例如：使用 WorkBuddy 生成报告" data-en-ph="e.g. Generate reports with WorkBuddy" placeholder="例如：使用 WorkBuddy 生成报告">
+
+      <label data-zh="具体内容 / 描述" data-en="Description">具体内容 / 描述</label>
+      <textarea id="capDesc" data-zh-ph="描述该能力的具体要求或操作步骤" data-en-ph="Describe the skill requirements or steps"></textarea>
+
+      <label data-zh="分类 *" data-en="Category *">分类 *</label>
+      <input type="text" id="capCat" required data-zh-ph="例如：课前准备、进阶技能" data-en-ph="e.g. Pre-class, Advanced">
+
+      <label data-zh="点数" data-en="Points">点数</label>
+      <input type="number" id="capPts" value="10" min="0" max="999">
+
+      <button type="submit" class="modal-submit" data-zh="提交新增" data-en="Add Skill">提交新增</button>
+      <p class="modal-status" id="addCapStatus"></p>
+    </form>
+  </div>
+</div>
 
 <footer class="footer">
   <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo">
@@ -274,6 +340,84 @@
       gate.style.display = 'flex'; world.style.display = 'none';
     }
   })();
+
+  // ===== Add Capability Modal =====
+  const addCapCard = document.getElementById('addCapCard');
+  const addCapModal = document.getElementById('addCapModal');
+  const addCapClose = document.getElementById('addCapClose');
+  const addCapForm = document.getElementById('addCapForm');
+  const addCapStatus = document.getElementById('addCapStatus');
+
+  function openAddCapModal() {
+    addCapStatus.textContent = '';
+    addCapStatus.className = 'modal-status';
+    addCapForm.reset();
+    document.getElementById('capPts').value = 10;
+    addCapModal.classList.add('open');
+  }
+  function closeAddCapModal() {
+    addCapModal.classList.remove('open');
+  }
+  addCapCard.addEventListener('click', openAddCapModal);
+  addCapClose.addEventListener('click', closeAddCapModal);
+  addCapModal.addEventListener('click', (e) => {
+    if (e.target === addCapModal) closeAddCapModal();
+  });
+
+  addCapForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const lang = localStorage.getItem('snailai-lang') || 'zh';
+    const token = sessionStorage.getItem(S_KEY);
+    if (!token) {
+      addCapStatus.textContent = lang === 'en' ? 'Please log in first' : '请先登录';
+      addCapStatus.className = 'modal-status error';
+      return;
+    }
+    const title = document.getElementById('capTitle').value.trim();
+    const description = document.getElementById('capDesc').value.trim();
+    const category = document.getElementById('capCat').value.trim();
+    const points = parseInt(document.getElementById('capPts').value) || 10;
+
+    if (!title || !category) {
+      addCapStatus.textContent = lang === 'en' ? 'Title and category are required' : '标题和分类为必填项';
+      addCapStatus.className = 'modal-status error';
+      return;
+    }
+
+    const btn = addCapForm.querySelector('.modal-submit');
+    btn.disabled = true;
+    btn.textContent = lang === 'en' ? 'Submitting...' : '提交中...';
+
+    try {
+      const r = await fetch('/api/capabilities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token,
+        },
+        body: JSON.stringify({ title, description, category, points }),
+      });
+      const d = await r.json();
+      if (d.ok) {
+        addCapStatus.textContent = lang === 'en'
+          ? 'Skill added successfully! ID: ' + d.id
+          : '新增成功！能力 ID：' + d.id;
+        addCapStatus.className = 'modal-status success';
+        setTimeout(closeAddCapModal, 1500);
+      } else {
+        addCapStatus.textContent = lang === 'en' ? (d.error || 'Failed') : (d.error || '提交失败');
+        addCapStatus.className = 'modal-status error';
+      }
+    } catch (err) {
+      addCapStatus.textContent = lang === 'en' ? 'Network error, please try again' : '网络错误，请重试';
+      addCapStatus.className = 'modal-status error';
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = lang === 'en'
+        ? '<span data-zh="提交新增" data-en="Add Skill">Add Skill</span>'
+        : '<span data-zh="提交新增" data-en="Add Skill">提交新增</span>';
+    }
+  });
 </script>
 
 <script src="/assets/analytics.js"></script>

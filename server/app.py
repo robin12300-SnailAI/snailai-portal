@@ -827,6 +827,56 @@ def api_capabilities():
     return jsonify(ok=True, capabilities=[dict(r) for r in rows])
 
 
+@app.route("/api/capabilities", methods=["POST"])
+@_rate_limit_deco(20, 60)
+def api_create_capability():
+    """助教/讲师/管理员可新增 AI 能力项。"""
+    user = _current_user()
+    if not user or user["role"] not in ("ta", "instructor", "admin"):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    title = (data.get("title") or "").strip()
+    description = (data.get("description") or "").strip()
+    category = (data.get("category") or "").strip()
+    points = data.get("points", 10)
+    if not title:
+        return jsonify(ok=False, error="标题不能为空"), 400
+    if not category:
+        return jsonify(ok=False, error="分类不能为空"), 400
+    try:
+        points = int(points)
+        if points < 0:
+            raise ValueError
+    except (ValueError, TypeError):
+        return jsonify(ok=False, error="点数必须为非负整数"), 400
+
+    conn = db_conn()
+    # 生成新 id：取当前最大数字后缀 +1
+    row = conn.execute(
+        "SELECT id FROM capabilities WHERE id GLOB 'c[0-9]*' ORDER BY CAST(SUBSTR(id,2) AS INT) DESC LIMIT 1"
+    ).fetchone()
+    if row:
+        next_num = int(row["id"][1:]) + 1
+    else:
+        next_num = 1
+    new_id = f"c{next_num:02d}"
+
+    # 防重复标题
+    dup = conn.execute("SELECT id FROM capabilities WHERE title=?", (title,)).fetchone()
+    if dup:
+        conn.close()
+        return jsonify(ok=False, error="已存在同名能力项"), 409
+
+    conn.execute(
+        "INSERT INTO capabilities(id, title, description, category, points) VALUES(?,?,?,?,?)",
+        (new_id, title, description, category, points),
+    )
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True, id=new_id, title=title, description=description,
+                   category=category, points=points)
+
+
 @app.route("/api/capabilities/<cap_id>/points", methods=["PUT"])
 def api_set_cap_points(cap_id):
     """助教/讲师/管理员可设置单项能力点数（用于成长点数配置）。"""
