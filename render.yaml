@@ -7,7 +7,9 @@ services:
     branch: main
     rootDir: server
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn -w 4 -b 0.0.0.0:$PORT app:app
+    # 单 worker：API 限流为进程内内存实现（滑动窗口 dict），多 worker 不共享状态会失效；
+    # 当前学员规模单 worker 足够。若未来需多 worker 并发，请改用 Redis 共享限流。
+    startCommand: gunicorn -w 1 -b 0.0.0.0:$PORT app:app
     healthCheckPath: /
     disk:
       name: snailai-data
