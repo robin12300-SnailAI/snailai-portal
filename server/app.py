@@ -1298,6 +1298,64 @@ def api_points_summary():
     return jsonify(ok=True, summary=out)
 
 
+@app.route("/api/me/growth", methods=["GET"])
+def api_me_growth():
+    """学员成长总览：能力清单 + 本人勾选 + 各能力已得点数 + 总分。
+
+    - 学员只能看自己；助教/总讲师/管理员可带 ?username= 看他人。
+    - 用于支持学员通过 API 程序化查询自己的能力清单与蜗牛成长点数。
+    """
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    conn = db_conn()
+    target = user["username"]
+    if user["role"] in ("ta", "instructor", "admin"):
+        req_user = (request.args.get("username") or "").strip()
+        if req_user:
+            target = req_user
+    t = conn.execute("SELECT username, name FROM users WHERE username=?",
+                     (target,)).fetchone()
+    if not t:
+        conn.close()
+        return jsonify(ok=False, error="用户不存在"), 404
+
+    caps = conn.execute(
+        "SELECT id, title, description, category, points "
+        "FROM capabilities ORDER BY id").fetchall()
+    checks = conn.execute(
+        "SELECT cap_id, self, ta, final FROM checks "
+        "WHERE student_username=?", (target,)).fetchall()
+    chk_map = {r["cap_id"]: r for r in checks}
+    earned = conn.execute(
+        "SELECT ref_id, COALESCE(SUM(points),0) AS pts FROM points_log "
+        "WHERE username=? AND source='capability' GROUP BY ref_id",
+        (target,)).fetchall()
+    earn_map = {r["ref_id"]: r["pts"] for r in earned}
+    total_row = conn.execute(
+        "SELECT COALESCE(SUM(points),0) AS total FROM points_log WHERE username=?",
+        (target,)).fetchone()
+    total = total_row["total"] if total_row else 0
+    conn.close()
+
+    out_caps = []
+    for c in caps:
+        ck = chk_map.get(c["id"])
+        out_caps.append({
+            "id": c["id"],
+            "title": c["title"],
+            "description": c["description"],
+            "category": c["category"],
+            "max_points": c["points"],
+            "self": bool(ck["self"]) if ck else False,
+            "ta": bool(ck["ta"]) if ck else False,
+            "final": bool(ck["final"]) if ck else False,
+            "earned_points": earn_map.get(c["id"], 0),
+        })
+    return jsonify(ok=True, username=target, name=t["name"],
+                   total_points=total, capabilities=out_caps)
+
+
 def _grant_cap_points(conn, username, cap_id, granted_by):
     """助教确认(ta=1)时发放能力项成长点数；同 cap_id 判重防刷。"""
     exist = conn.execute(

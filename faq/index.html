@@ -329,6 +329,7 @@
   .faq-item:nth-child(9) { animation-delay: .45s; }
   .faq-item:nth-child(11) { animation-delay: .55s; }
   .faq-item:nth-child(12) { animation-delay: .60s; }
+  .faq-item:nth-child(13) { animation-delay: .65s; }
 
   /* ── Floating Bottom Nav ── */
   .bottom-nav {
@@ -374,11 +375,24 @@
     backdrop-filter: blur(8px);
     color: var(--ink-3);
   }
+
+  .api-code {
+    background: #16161f;
+    color: #E8E7E0;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    padding: 16px 18px;
+    border-radius: var(--r-md);
+    overflow-x: auto;
+    margin: 14px 0;
+    white-space: pre;
+  }
 </style>
 </head>
 <body>
 <!-- VERSION TAG -->
-<div class="version-tag">FAQ-V1.0.0 · 2026-07-06</div>
+<div class="version-tag">FAQ-V1.1.0 · 2026-07-10</div>
 
 <!-- ═══ Navigation ═══ -->
 <nav class="nav">
@@ -404,7 +418,7 @@
     <span class="h1-line" data-zh="澳洲华人 AI 应用" data-en="AI for Australian Chinese">澳洲华人 AI 应用</span>
     <span class="h1-line"><span class="accent" data-zh="首期培训班" data-en="First Cohort">首期培训班</span> <span data-zh="常见问题" data-en="FAQ">常见问题</span></span>
   </h1>
-  <p class="hero-sub" data-zh="关于课程内容、学习方式、工具准备、适合人群等 12 大核心问题，一一为你解答。" data-en="Answers to 12 core questions about the curriculum, learning format, tool setup, and who it's for.">关于课程内容、学习方式、工具准备、适合人群等 12 大核心问题，一一为你解答。</p>
+  <p class="hero-sub" data-zh="关于课程内容、学习方式、工具准备、适合人群等 13 大核心问题，一一为你解答。" data-en="Answers to 13 core questions about the curriculum, learning format, tool setup, and who it's for.">关于课程内容、学习方式、工具准备、适合人群等 13 大核心问题，一一为你解答。</p>
 
   <div class="toc" id="toc">
     <a href="#q1" data-zh="学什么 &amp; 能学会吗" data-en="What you'll learn &amp; can you">学什么 &amp; 能学会吗</a>
@@ -419,6 +433,7 @@
     <a href="#q10" data-zh="和免费视频的区别" data-en="Vs free videos">和免费视频的区别</a>
     <a href="#q11" data-zh="相信 AI" data-en="Believing in AI">相信 AI</a>
     <a href="#q12" data-zh="电脑配置" data-en="Computer specs">电脑配置</a>
+    <a href="#q13" data-zh="学员 API 查询" data-en="Student API">学员 API 查询</a>
   </div>
 </section>
 
@@ -708,6 +723,81 @@
         </div>
       </div>
       <p style="margin-top:14px;font-size:.95em;color:var(--ink-2;" data-zh="💡 总结：<strong>电脑先用着，配置让助教帮你测；算力买一点点，其他能省则省。</strong>这才是蜗牛 AI 学员该有的&quot;轻装上阵&quot;姿势。" data-en="💡 Summary: <strong>keep using your current computer, let the tutor test the specs for you; buy a little compute, save on everything else.</strong> That's the &quot;travel light&quot; posture every Snail AI student should have.">💡 总结：<strong>电脑先用着，配置让助教帮你测；算力买一点点，其他能省则省。</strong>这才是蜗牛 AI 学员该有的"轻装上阵"姿势。</p>
+    </div>
+  </article>
+
+  <!-- Q13 -->
+  <article class="faq-item" id="q13">
+    <div class="faq-q">
+      <div class="faq-num">13</div>
+      <div class="faq-q-text" data-zh="能不能用程序（API）直接查询我的能力清单和蜗牛成长点数？" data-en="Can I query my capability checklist and Snail growth points via API / script?">能不能用程序（API）直接查询我的能力清单和蜗牛成长点数？</div>
+    </div>
+    <div class="faq-a">
+      <p data-zh="可以。<strong>不需要 SSH，也不提供服务器 SSH 访问</strong>；蜗牛官网本身就是一个带登录的网站，开放了标准 HTTPS API，你用自己的学员账号就能用程序查询。" data-en="Yes. <strong>No SSH is needed, and server SSH access is not provided.</strong> The Snail AI portal is a login-based website that exposes a standard HTTPS API — you can query it with your own student account from any script.">可以。<strong>不需要 SSH，也不提供服务器 SSH 访问</strong>；蜗牛官网本身就是一个带登录的网站，开放了标准 HTTPS API，你用自己的学员账号就能用程序查询。</p>
+      <p data-zh="整体做法分两步：先用账号密码<strong>登录拿 token</strong>，再带着 token 调用查询接口。" data-en="The flow has two steps: first <strong>log in with your account to get a token</strong>, then call the query endpoints with that token.">整体做法分两步：先用账号密码<strong>登录拿 token</strong>，再带着 token 调用查询接口。</p>
+      <div class="highlight-box" data-zh="<strong>可用的查询接口：</strong><br>· <code>GET /api/capabilities</code> — 能力清单全表（含每项分值）<br>· <code>GET /api/checks/&lt;你的账号&gt;</code> — 你各项的勾选状态（self / ta / final）<br>· <code>GET /api/me/growth</code> — <strong>一次拿全</strong>：能力清单 + 我的勾选 + 各能力已得点数 + 成长总分（最推荐）<br>· <code>GET /api/points/summary</code> — 成长点数汇总" data-en="<strong>Available query endpoints:</strong><br>· <code>GET /api/capabilities</code> — full capability list (with per-item points)<br>· <code>GET /api/checks/&lt;your-username&gt;</code> — your check states (self / ta / final)<br>· <code>GET /api/me/growth</code> — <strong>all in one call</strong>: capabilities + your checks + earned points per capability + total growth points (recommended)<br>· <code>GET /api/points/summary</code> — growth points summary">
+        <strong>可用的查询接口：</strong><br>
+        · <code>GET /api/capabilities</code> — 能力清单全表（含每项分值）<br>
+        · <code>GET /api/checks/&lt;你的账号&gt;</code> — 你各项的勾选状态（self / ta / final）<br>
+        · <code>GET /api/me/growth</code> — <strong>一次拿全</strong>：能力清单 + 我的勾选 + 各能力已得点数 + 成长总分（最推荐）<br>
+        · <code>GET /api/points/summary</code> — 成长点数汇总
+      </div>
+      <p data-zh="下面三个示例都做了同样的事：登录 → 查询成长总览。把 <code>你的账号</code> / <code>你的密码</code> / <code>你的token</code> 换成你自己的即可。" data-en="The three examples below all do the same thing: log in → query the growth overview. Replace <code>你的账号</code> / <code>你的密码</code> / <code>你的token</code> with your own.">下面三个示例都做了同样的事：登录 → 查询成长总览。把 <code>你的账号</code> / <code>你的密码</code> / <code>你的token</code> 换成你自己的即可。</p>
+
+      <p style="font-weight:700;margin-top:6px;" data-zh="① curl 示例" data-en="① curl example">① curl 示例</p>
+      <pre class="api-code"># 1) 登录拿 token
+curl -s -X POST https://snailai.ai/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"你的账号","password":"你的密码"}'
+# 返回 {"ok":true,"token":"...","user":{...}}
+
+# 2) 用 token 查询成长总览（推荐，一次拿全）
+curl -s https://snailai.ai/api/me/growth \
+  -H "Authorization: Bearer 你的token"</pre>
+
+      <p style="font-weight:700;margin-top:6px;" data-zh="② Python 示例" data-en="② Python example">② Python 示例</p>
+      <pre class="api-code">import requests
+BASE = "https://snailai.ai"
+
+# 1) 登录拿 token
+r = requests.post(f"{BASE}/api/login",
+                  json={"username": "你的账号", "password": "你的密码"})
+token = r.json()["token"]
+
+# 2) 用 token 查询成长总览
+h = {"Authorization": f"Bearer {token}"}
+data = requests.get(f"{BASE}/api/me/growth", headers=h).json()
+
+print("总分:", data["total_points"])
+for c in data["capabilities"]:
+    flag = "已确认" if c["final"] else "未确认"
+    print(f'{c["title"]}  已得 {c["earned_points"]}/{c["max_points"]}  {flag}')</pre>
+
+      <p style="font-weight:700;margin-top:6px;" data-zh="③ JavaScript 示例（浏览器 / Node）" data-en="③ JavaScript example (browser / Node)">③ JavaScript 示例（浏览器 / Node）</p>
+      <pre class="api-code">const BASE = "https://snailai.ai";
+
+// 1) 登录拿 token
+const res = await fetch(`${BASE}/api/login`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ username: "你的账号", password: "你的密码" })
+});
+const { token } = await res.json();
+
+// 2) 用 token 查询成长总览
+const g = await fetch(`${BASE}/api/me/growth`, {
+  headers: { Authorization: `Bearer ${token}` }
+});
+const data = await g.json();
+
+console.log("总分:", data.total_points);</pre>
+
+      <div class="highlight-box" data-zh="<strong>安全提醒：</strong><br>· token 只保存在你自己的脚本/电脑里，<strong>不要分享账号，也不要把 token 贴到公开仓库或群里</strong><br>· token 有效期 7 天，过期后重新登录一次即可<br>· 你只能查到<strong>自己的</strong>数据，看不到其他学员" data-en="<strong>Security notes:</strong><br>· Keep your token in your own script/computer — <strong>don't share your account or post the token in public repos or groups</strong><br>· The token is valid for 7 days; just log in again after it expires<br>· You can only see <strong>your own</strong> data, not other students'">
+        <strong>安全提醒：</strong><br>
+        · token 只保存在你自己的脚本/电脑里，<strong>不要分享账号，也不要把 token 贴到公开仓库或群里</strong><br>
+        · token 有效期 7 天，过期后重新登录一次即可<br>
+        · 你只能查到<strong>自己的</strong>数据，看不到其他学员
+      </div>
     </div>
   </article>
 
