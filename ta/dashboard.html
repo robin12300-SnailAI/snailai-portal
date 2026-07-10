@@ -567,6 +567,7 @@
         <td><input type="number" min="0" step="1" value="${c.points||0}" data-cap="${c.id}"></td>
         <td class="actions"><div class="row-actions">
           <button class="mini save" onclick="saveCapPoint('${c.id}')">${t({zh:"保存",en:"Save"})}</button>
+          <button class="mini del" onclick="deleteCapPoint('${c.id}')">${t({zh:"删除",en:"Del"})}</button>
         </div></td>
       </tr>`).join("");
   }
@@ -581,6 +582,19 @@
     const c = capPointsRows.find(x=>x.id===capId);
     if (c) c.points = pts;
     capToast(t({zh:"已保存 "+pts+" 点",en:"Saved "+pts+" pts"}));
+  }
+  async function deleteCapPoint(capId){
+    const lang = curLang || 'zh';
+    const c = capPointsRows.find(x=>x.id===capId);
+    const name = c ? c.title : capId;
+    if (!confirm(t({zh:"确定删除「"+name+"」吗？此操作不可撤销。", en:"Delete '"+name+"'? This cannot be undone."}))) return;
+    const d = await api("/api/capabilities/" + capId, "DELETE");
+    if (!d.ok){
+      document.getElementById("capPointsErr").textContent = (d.error || t({zh:"删除失败",en:"Delete failed"}));
+      return;
+    }
+    capToast(t({zh:"已删除："+name, en:"Deleted: "+name}));
+    await loadCapPoints();
   }
   function capToast(msg){
     let el = document.getElementById("capToast");

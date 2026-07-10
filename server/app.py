@@ -877,6 +877,28 @@ def api_create_capability():
                    category=category, points=points)
 
 
+@app.route("/api/capabilities/<cap_id>", methods=["DELETE"])
+def api_delete_capability(cap_id):
+    """管理员可删除 AI 能力项（助教/讲师无权限）。"""
+    user = _current_user()
+    if not user or user["role"] != "admin":
+        return jsonify(ok=False, error="仅管理员可删除能力项"), 403
+    conn = db_conn()
+    cap = conn.execute("SELECT id FROM capabilities WHERE id=?", (cap_id,)).fetchone()
+    if not cap:
+        conn.close()
+        return jsonify(ok=False, error="能力项不存在"), 404
+    # 检查是否有学员已勾选该能力（checks 表有引用）
+    ref = conn.execute("SELECT 1 FROM checks WHERE cap_id=? LIMIT 1", (cap_id,)).fetchone()
+    if ref:
+        conn.close()
+        return jsonify(ok=False, error="已有学员勾选该能力，无法删除。请先清除相关勾选记录。"), 400
+    conn.execute("DELETE FROM capabilities WHERE id=?", (cap_id,))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True, id=cap_id)
+
+
 @app.route("/api/capabilities/<cap_id>/points", methods=["PUT"])
 def api_set_cap_points(cap_id):
     """助教/讲师/管理员可设置单项能力点数（用于成长点数配置）。"""
