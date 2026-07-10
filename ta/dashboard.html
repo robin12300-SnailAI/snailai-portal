@@ -174,6 +174,7 @@
     <div class="card-head">
       <h2>🏅 <span data-zh="AI 能力点数设置" data-en="AI Capability Points">AI 能力点数设置</span></h2>
       <div class="toolbar">
+        <button class="btn primary" onclick="openAddCapModal()" data-zh="➕ 新增能力项" data-en="➕ Add Skill">➕ 新增能力项</button>
         <button class="btn" onclick="loadCapPoints()" data-zh="刷新" data-en="Refresh">刷新</button>
       </div>
     </div>
@@ -227,6 +228,37 @@
     <div class="table-scroll" id="stuList"></div>
   </section>
 </main>
+
+<!-- ===== Add Capability Modal ===== -->
+<div class="mask" id="addCapMask">
+  <div class="modal">
+    <h3 data-zh="新增 AI 能力项" data-en="Add AI Capability">新增 AI 能力项</h3>
+    <p class="browse-meta" data-zh="新增一项到 AI 能力清单，提交后学员即可在清单中看到。" data-en="Add a new item to the AI Skill Checklist. Students will see it immediately.">新增一项到 AI 能力清单，提交后学员即可在清单中看到。</p>
+    <div class="form-grid">
+      <div class="field">
+        <label data-zh="能力标题 *" data-en="Skill title *">能力标题 *</label>
+        <input type="text" id="newCapTitle" data-zh-ph="例如：使用 WorkBuddy 生成报告" data-en-ph="e.g. Generate reports with WorkBuddy" placeholder="例如：使用 WorkBuddy 生成报告">
+      </div>
+      <div class="field">
+        <label data-zh="分类 *" data-en="Category *">分类 *</label>
+        <input type="text" id="newCapCat" data-zh-ph="例如：课前准备、进阶技能" data-en-ph="e.g. Pre-class, Advanced" placeholder="例如：课前准备、进阶技能">
+      </div>
+      <div class="field" style="grid-column: 1 / -1">
+        <label data-zh="具体内容 / 描述" data-en="Description">具体内容 / 描述</label>
+        <input type="text" id="newCapDesc" data-zh-ph="描述该能力的具体要求或操作步骤" data-en-ph="Describe the skill requirements or steps" placeholder="描述该能力的具体要求或操作步骤">
+      </div>
+      <div class="field">
+        <label data-zh="点数" data-en="Points">点数</label>
+        <input type="number" id="newCapPts" value="10" min="0" max="999">
+      </div>
+    </div>
+    <div class="err" id="addCapErr"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeAddCapModal()" data-zh="取消" data-en="Cancel">取消</button>
+      <button class="btn primary" onclick="submitAddCap()" data-zh="提交新增" data-en="Add Skill">提交新增</button>
+    </div>
+  </div>
+</div>
 
 <!-- ===== Forbidden ===== -->
 <div class="forbidden" id="forbidden" style="display:none">
@@ -558,6 +590,42 @@
     el.textContent = msg; el.style.opacity="1";
     clearTimeout(el._t); el._t = setTimeout(()=>{ el.style.opacity="0"; }, 1800);
   }
+
+  // ===== 新增 AI 能力项 =====
+  function openAddCapModal(){
+    document.getElementById("newCapTitle").value = "";
+    document.getElementById("newCapCat").value = "";
+    document.getElementById("newCapDesc").value = "";
+    document.getElementById("newCapPts").value = 10;
+    document.getElementById("addCapErr").textContent = "";
+    document.getElementById("addCapMask").classList.add("show");
+  }
+  function closeAddCapModal(){
+    document.getElementById("addCapMask").classList.remove("show");
+  }
+  async function submitAddCap(){
+    const lang = curLang || 'zh';
+    const title = (document.getElementById("newCapTitle").value || "").trim();
+    const description = (document.getElementById("newCapDesc").value || "").trim();
+    const category = (document.getElementById("newCapCat").value || "").trim();
+    const points = parseInt(document.getElementById("newCapPts").value) || 10;
+    const err = document.getElementById("addCapErr");
+    err.textContent = "";
+    if (!title){ err.textContent = t({zh:"标题不能为空",en:"Title is required"}); return; }
+    if (!category){ err.textContent = t({zh:"分类不能为空",en:"Category is required"}); return; }
+    const d = await api("/api/capabilities", "POST", { title, description, category, points });
+    if (!d.ok){
+      err.textContent = (d.error || t({zh:"新增失败",en:"Add failed"}));
+      return;
+    }
+    closeAddCapModal();
+    capToast(t({zh:"已新增："+title+"（"+d.id+"）", en:"Added: "+title+" ("+d.id+")"}));
+    await loadCapPoints();
+  }
+  // 点击遮罩关闭
+  document.getElementById("addCapMask").addEventListener("click", function(e){
+    if (e.target === this) closeAddCapModal();
+  });
 
   // 搜索框即时过滤
   document.getElementById("dirSearch").addEventListener("input", renderDirBody);
