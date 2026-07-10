@@ -57,35 +57,42 @@ SESSION_TTL_HOURS = 24 * 7  # 会话有效期 7 天
 app = Flask(__name__, static_folder=None)
 
 
-# ---------------------------------------------------------------- 限流 / 防爆破
+# ---------------------------------------------------------------- 限流 / 防爆破 (SQLite 持久化，跨 worker 可靠)
 import time as _time
-import threading as _threading
 from functools import wraps as _wraps
 
-_RL = {}
-_RL_LOCK = _threading.Lock()
-_LOGIN_FAIL = {}
-_LOGIN_LOCK = _threading.Lock()
-_RL_QUERY_LIMIT = 60             # 查询类 GET：每分钟 60 次（按账号，未登录按 IP）
+_RL_QUERY_LIMIT = 60             # 查询类 GET：每分钟 60 次
 _RL_QUERY_WINDOW = 60
-_RL_LOGIN_LIMIT = 10             # 登录 POST：每分钟 10 次（按 IP）
+_RL_LOGIN_LIMIT = 10             # 登录 POST：每分钟 10 次
 _RL_LOGIN_WINDOW = 60
 _LOGIN_MAX_FAILS = 5             # 连续失败 5 次
 _LOGIN_LOCK_SEC = 15 * 60        # 锁定 15 分钟
 
 
+def _rl_db():
+    c = db_conn()
+    c.execute("ATTACH DATABASE ? AS _rl", (DB_PATH,))
+    return c
+
+
 def _rate_check(key, limit, window):
-    now = _time.time()
-    with _RL_LOCK:
-        hits = _RL.get(key)
-        if hits is None:
-            hits = []
-            _RL[key] = hits
-        hits[:] = [t for t in hits if now - t < window]
-        if len(hits) >= limit:
+    """SQLite 滑动窗口限流：原子 INSERT/COUNT/DELETE，跨 worker 一致。"""
+    conn = sqlite3.connect(str(DB_PATH))
+    try:
+        conn.execute("PRAGMA busy_timeout = 5000")
+        now = _time.time()
+        cutoff = now - window
+        conn.execute("DELETE FROM rate_limits WHERE hit_at < ?", (cutoff,))
+        cur = conn.execute("SELECT COUNT(*) AS n FROM rate_limits WHERE rl_key=? AND hit_at >= ?",
+                           (key, cutoff))
+        cnt = cur.fetchone()[0]
+        if cnt >= limit:
             return False
-        hits.append(now)
+        conn.execute("INSERT INTO rate_limits(rl_key, hit_at) VALUES(?,?)", (key, now))
+        conn.commit()
         return True
+    finally:
+        conn.close()
 
 
 def _rate_limit_deco(limit, window=60, by_user=True):
@@ -108,31 +115,49 @@ def _rate_limit_deco(limit, window=60, by_user=True):
 
 
 def _login_lock_check(username):
-    """返回 (locked: bool, retry_after_sec: int)。"""
-    with _LOGIN_LOCK:
-        rec = _LOGIN_FAIL.get(username)
-        if not rec:
+    conn = sqlite3.connect(str(DB_PATH))
+    try:
+        conn.execute("PRAGMA busy_timeout = 5000")
+        row = conn.execute(
+            "SELECT fail_count, locked_until FROM login_fail_locks WHERE username=?",
+            (username,)).fetchone()
+        if not row:
             return (False, 0)
-        if rec["locked_until"] and _time.time() < rec["locked_until"]:
-            return (True, int(rec["locked_until"] - _time.time()))
-        if rec["locked_until"] and _time.time() >= rec["locked_until"]:
-            _LOGIN_FAIL[username] = {"fails": 0, "locked_until": 0}
+        fail_count, locked_until = row
+        if locked_until and _time.time() < locked_until:
+            return (True, int(locked_until - _time.time()))
+        if locked_until and _time.time() >= locked_until:
+            conn.execute("DELETE FROM login_fail_locks WHERE username=?", (username,))
+            conn.commit()
         return (False, 0)
+    finally:
+        conn.close()
 
 
 def _login_fail_incr(username):
-    with _LOGIN_LOCK:
-        rec = _LOGIN_FAIL.get(username) or {"fails": 0, "locked_until": 0}
-        rec["fails"] += 1
-        if rec["fails"] >= _LOGIN_MAX_FAILS:
-            rec["locked_until"] = _time.time() + _LOGIN_LOCK_SEC
-        _LOGIN_FAIL[username] = rec
+    conn = sqlite3.connect(str(DB_PATH))
+    try:
+        conn.execute("PRAGMA busy_timeout = 5000")
+        row = conn.execute("SELECT fail_count FROM login_fail_locks WHERE username=?",
+                           (username,)).fetchone()
+        cnt = (row[0] if row else 0) + 1
+        locked_until = _time.time() + _LOGIN_LOCK_SEC if cnt >= _LOGIN_MAX_FAILS else None
+        conn.execute(
+            "INSERT INTO login_fail_locks(username, fail_count, locked_until) VALUES(?,?,?) "
+            "ON CONFLICT(username) DO UPDATE SET fail_count=excluded.fail_count, locked_until=excluded.locked_until",
+            (username, cnt, locked_until))
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def _login_fail_clear(username):
-    with _LOGIN_LOCK:
-        if username in _LOGIN_FAIL:
-            del _LOGIN_FAIL[username]
+    conn = sqlite3.connect(str(DB_PATH))
+    try:
+        conn.execute("DELETE FROM login_fail_locks WHERE username=?", (username,))
+        conn.commit()
+    finally:
+        conn.close()
 
 
 # ---------------------------------------------------------------- 数据库
@@ -283,6 +308,18 @@ def init_db():
       deleted INTEGER DEFAULT 0,
       created_at TEXT DEFAULT (datetime('now')),
       FOREIGN KEY(thread_id) REFERENCES qa_threads(id)
+    );
+    CREATE TABLE IF NOT EXISTS rate_limits(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      rl_key TEXT NOT NULL,
+      hit_at REAL NOT NULL,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_rate_limits_key_time ON rate_limits(rl_key, hit_at);
+    CREATE TABLE IF NOT EXISTS login_fail_locks(
+      username TEXT PRIMARY KEY,
+      fail_count INTEGER DEFAULT 0,
+      locked_until REAL DEFAULT 0
     );
     """)
     conn.commit()
