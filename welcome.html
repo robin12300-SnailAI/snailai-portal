@@ -75,6 +75,19 @@
     .pw-banner button{font-family:inherit;font-size:13px;font-weight:700;border:none;
       background:var(--accent);color:#fff;padding:7px 16px;border-radius:9px;cursor:pointer}
     .pw-banner button:hover{filter:brightness(1.05)}
+
+    /* ---- API 查询入口横幅（指向 FAQ Q13） ---- */
+    .api-banner{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+      max-width:960px;margin:18px auto 0;padding:14px 20px;text-decoration:none;
+      background:linear-gradient(135deg,var(--accent-soft),#fff);border:1px solid var(--accent);
+      border-radius:12px;box-shadow:var(--shadow);transition:.15s}
+    .api-banner:hover{filter:brightness(1.02);box-shadow:var(--shadow-lg)}
+    .api-banner .api-text{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:600;color:var(--ink)}
+    .api-banner .api-ico{font-size:24px;line-height:1}
+    .api-banner .api-go{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:13.5px;
+      font-weight:700;border:1px solid var(--accent);background:var(--accent);color:#fff;
+      padding:9px 18px;border-radius:100px;cursor:pointer;white-space:nowrap}
+    .api-banner:hover .api-go{filter:brightness(1.06)}
     .points-box{display:flex;flex-direction:column;align-items:center;justify-content:center;
       background:linear-gradient(135deg,var(--accent-soft),#fff);border:1px solid var(--line);
       border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
@@ -153,6 +166,16 @@
     <span data-zh="⚠️ 你正在使用初始密码，建议尽快修改" data-en="⚠️ Using default password — please change it">⚠️ 你正在使用初始密码，建议尽快修改</span>
     <button onclick="location.href='change-password.html'" data-zh="修改密码" data-en="Change Password">修改密码</button>
   </div>
+
+  <!-- API 查询入口横幅（始终显示，指向 FAQ Q13） -->
+  <a class="api-banner" id="apiBanner" href="faq/#q13" target="_blank" rel="noopener">
+    <span class="api-text">
+      <span class="api-ico">🔌</span>
+      <span data-zh="想用 API 登录官网，一键查询你的能力清单与蜗牛成长点数？查看学员 API 查询教程 →"
+            data-en="Query your capability checklist &amp; Snail growth points via API? See the Student API guide →">想用 API 登录官网，一键查询你的能力清单与蜗牛成长点数？查看学员 API 查询教程 →</span>
+    </span>
+    <span class="api-go" data-zh="查看教程" data-en="Read Guide">查看教程</span>
+  </a>
 
   <!-- 动态内容 -->
   <div id="content"></div>
