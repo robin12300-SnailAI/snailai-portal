@@ -328,7 +328,7 @@
   function renderDirHead(){
     const head = document.getElementById("dirHead");
     const cols = DIR_FIELDS.map(f => `<th>${escapeHtml(t(f.label))}</th>`).join("");
-    const actCol = (me && me.role === "admin") ? `<th>${t({zh:"操作",en:"Actions"})}</th>` : "";
+    const actCol = (me && ["ta","instructor","admin"].includes(me.role)) ? `<th>${t({zh:"操作",en:"Actions"})}</th>` : "";
     head.innerHTML = `<tr><th>#</th>${cols}${actCol}</tr>`;
   }
 
@@ -371,7 +371,9 @@
       return `<td>${escapeHtml(v==null?"":v)}</td>`;
     }).join("");
     let act = "";
-    if (me && me.role === "admin"){
+    const canEdit = me && ["ta","instructor","admin"].includes(me.role);
+    const canDelete = me && me.role === "admin";
+    if (canEdit){
       if (editing){
         act = `<td class="actions"><div class="row-actions">
           <button class="mini save" onclick="saveRow(${no})">${t({zh:"保存",en:"Save"})}</button>
@@ -380,7 +382,7 @@
       } else {
         act = `<td class="actions"><div class="row-actions">
           <button class="mini" onclick="editRow(${no})">${t({zh:"编辑",en:"Edit"})}</button>
-          <button class="mini del" onclick="delRow(${no})">${t({zh:"删除",en:"Del"})}</button>
+          ${canDelete ? `<button class="mini del" onclick="delRow(${no})">${t({zh:"删除",en:"Del"})}</button>` : ""}
         </div></td>`;
       }
     }

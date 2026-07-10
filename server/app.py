@@ -316,11 +316,11 @@ def _ensure_ta_accounts(c):
     """确保指定助教账号角色为 ta，并为缺失账号创建初始密码 12345。
     幂等：每次服务启动都执行，因此对已在运行的生产库也生效（种子仅在空库时跑）。"""
     TA_ACCOUNTS = {
-        "jiangpei123": "Jiang Pei",
-        "luoyajuan123": "Luo Yajuan",
-        "wuqing123": "Wu Qing",
-        "xiejing123": "Xie Jing",
-        "zhangruirui123": "Zhang Ruirui",
+        "jiangpei": "Jiang Pei",
+        "luoyajuan": "Luo Yajuan",
+        "wuqing": "Wu Qing",
+        "xiejing": "Xie Jing",
+        "zhangruirui": "Zhang Ruirui",
     }
     for username, name in TA_ACCOUNTS.items():
         salt = secrets.token_hex(16)
