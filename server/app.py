@@ -1004,27 +1004,62 @@ def api_list_needs():
     user = _current_user()
     if not user:
         return jsonify(ok=False, error="未登录"), 401
-    # 学员只能看自己的；助教/总讲师可指定 username
+    # all=1：助教/总讲师/管理员查看所有学员的 AI 刚需
+    show_all = request.args.get("all") == "1"
+    if show_all and user["role"] not in ("ta", "instructor", "admin"):
+        return jsonify(ok=False, error="无权限查看全部"), 403
+    # 单个学员查询
     req_user = request.args.get("username")
-    if user["role"] == "student":
+    if show_all:
+        target = None
+    elif user["role"] == "student":
         target = user["username"]
     else:
         target = req_user or user["username"]
     conn = db_conn()
-    rows = conn.execute(
-        "SELECT id, username, seq, title, content, category, priority, tags, "
-        "created_at, updated_at FROM ai_needs WHERE username=? ORDER BY seq",
-        (target,)).fetchall()
-    conn.close()
-    out = []
-    for r in rows:
-        d = dict(r)
-        try:
-            d["tags"] = json.loads(d["tags"]) if d["tags"] else []
-        except Exception:
-            d["tags"] = []
-        out.append(d)
-    return jsonify(ok=True, username=target, needs=out)
+    if show_all:
+        # 所有学员的 AI 刚需，按学员分组，附带学员姓名
+        rows = conn.execute(
+            "SELECT n.id, n.username, n.seq, n.title, n.content, n.category, "
+            "n.priority, n.tags, n.created_at, n.updated_at, u.name AS user_name "
+            "FROM ai_needs n "
+            "JOIN users u ON u.username=n.username "
+            "ORDER BY u.name, n.seq").fetchall()
+        # 按学员分组
+        from collections import defaultdict
+        grouped = defaultdict(list)
+        for r in rows:
+            d = dict(r)
+            try:
+                d["tags"] = json.loads(d["tags"]) if d["tags"] else []
+            except Exception:
+                d["tags"] = []
+            grouped[d["username"]].append(d)
+        out = []
+        for username in sorted(grouped.keys()):
+            entries = grouped[username]
+            out.append({
+                "username": username,
+                "name": entries[0]["user_name"] if entries else username,
+                "needs": entries,
+            })
+        conn.close()
+        return jsonify(ok=True, all=True, students=out)
+    else:
+        rows = conn.execute(
+            "SELECT id, username, seq, title, content, category, priority, tags, "
+            "created_at, updated_at FROM ai_needs WHERE username=? ORDER BY seq",
+            (target,)).fetchall()
+        conn.close()
+        out = []
+        for r in rows:
+            d = dict(r)
+            try:
+                d["tags"] = json.loads(d["tags"]) if d["tags"] else []
+            except Exception:
+                d["tags"] = []
+            out.append(d)
+        return jsonify(ok=True, username=target, needs=out)
 
 
 @app.route("/api/ai-needs", methods=["POST"])

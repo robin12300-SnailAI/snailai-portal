@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-title-zh="AI 刚需看板 · 助教（手机版）" data-title-en="AI Needs Board · TA (Mobile)">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 刚需看板 · 助教（手机版）</title>
+<meta name="description" content="蜗牛AI 学员 AI 刚需看板 — 查看所有学员的 AI 刚需。">
+<link rel="icon" type="image/png" href="/assets/snailai_logo.png">
+<style>
+  :root {
+    --ink: #1A1A2E; --ink-2: #2A2A40; --ink-3: #6A6A85;
+    --paper: #FCFCFA; --paper-2: #F5F4EE; --paper-3: #E8E7E0;
+    --accent: #FF5B1F; --accent-2: #E84A0F; --accent-light: rgba(255,91,31,0.08);
+    --green: #10b981; --blue: #3b82f6; --blue-bg: #eaf1ff; --blue2: #1d4ed8;
+    --line: rgba(26,26,46,0.08);
+    --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-xl: 24px;
+    --sans: 'Inter','Helvetica Neue','Helvetica','Arial','PingFang SC','Microsoft YaHei UI','Noto Sans SC',sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--paper); color: var(--ink); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+  /* Nav */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; background: linear-gradient(180deg, rgba(252,252,250,.96) 0%, rgba(252,252,250,.85) 100%); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .nav-logo img { height: 30px; width: auto; }
+  .nav-logo span { font-weight: 800; font-size: 15px; }
+  .lang-switch { display: inline-flex; gap: 4px; border: 1px solid var(--line); border-radius: 100px; padding: 3px; }
+  .lang-btn { border: none; background: transparent; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--ink-3); padding: 4px 10px; border-radius: 100px; transition: all .2s; }
+  .lang-btn.active { background: var(--ink); color: #fff; }
+
+  /* Board */
+  .board { max-width: 560px; margin: 0 auto; padding: 90px 18px 60px; }
+
+  /* Header */
+  .bh { text-align: center; margin-bottom: 28px; }
+  .bh .badge { display: inline-block; background: var(--accent-light); color: var(--accent); font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 100px; margin-bottom: 12px; }
+  .bh h1 { font-size: 28px; letter-spacing: -0.02em; }
+  .bh p { color: var(--ink-3); margin-top: 6px; font-size: 14px; }
+  .bh .stats { display: flex; gap: 16px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+  .bh .stat { font-size: 13px; color: var(--ink-2); }
+  .bh .stat b { color: var(--accent); }
+
+  /* Filters */
+  .filters { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; padding: 14px 16px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md); }
+  .filters label { font-size: 13px; font-weight: 700; color: var(--ink-2); }
+  .filters input, .filters select { font-family: var(--sans); font-size: 15px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--paper); color: var(--ink); width: 100%; box-sizing: border-box; }
+  .filters input:focus, .filters select:focus { outline: none; border-color: var(--accent); }
+  .filter-clear { font-family: var(--sans); font-size: 14px; font-weight: 600; border: none; background: var(--accent); color: #fff; padding: 10px 16px; border-radius: var(--r-sm); cursor: pointer; width: 100%; }
+  .filter-clear:hover { background: var(--accent-2); }
+
+  /* Student Group */
+  .student-group { margin-bottom: 16px; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; box-shadow: 0 1px 3px rgba(26,26,46,0.04); background: var(--paper); }
+  .student-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; user-select: none; }
+  .student-head .arrow { font-size: 11px; color: var(--ink-3); transition: transform .2s; width: 14px; text-align: center; }
+  .student-head.open .arrow { transform: rotate(90deg); }
+  .student-head .s-name { font-weight: 800; font-size: 16px; }
+  .student-head .s-count { font-size: 12px; color: var(--ink-3); background: var(--paper-3); padding: 2px 9px; border-radius: 100px; }
+  .student-head .s-stats { margin-left: auto; font-size: 12px; color: var(--ink-3); }
+
+  /* Needs List */
+  .student-body { display: none; padding: 0 16px 14px; }
+  .student-body.open { display: block; }
+  .need-card { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .need-card:last-child { border-bottom: none; }
+  .need-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 5px; }
+  .need-seq { font-weight: 900; font-size: 11px; color: var(--accent); background: var(--accent-light); padding: 2px 7px; border-radius: 6px; }
+  .pri-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; color: #fff; }
+  .cat-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: var(--blue-bg); color: var(--blue2); }
+  .need-title { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+  .need-content { font-size: 13px; color: var(--ink-2); line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  .need-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+  .tag-chip { font-size: 10px; background: var(--paper-3); color: var(--ink-2); padding: 2px 8px; border-radius: 20px; }
+
+  .empty-state { text-align: center; padding: 50px 16px; color: var(--ink-3); }
+  .empty-state .icon { font-size: 42px; margin-bottom: 10px; }
+  .empty-state h2 { font-size: 20px; margin-bottom: 6px; }
+  .empty-state p { font-size: 13px; }
+
+  .loading { text-align: center; padding: 50px 16px; color: var(--ink-3); font-size: 14px; }
+
+  /* Footer */
+  .footer { text-align: center; padding: 36px 20px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
+  .footer img { height: 26px; margin-bottom: 10px; }
+  .footer .links { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin: 12px 0; }
+  .footer .links a { color: var(--ink-3); text-decoration: none; font-size: 13px; }
+  .footer .links a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo">
+    <span data-zh="蜗牛 AI" data-en="Snail AI">蜗牛 AI</span>
+  </a>
+  <div class="lang-switch">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+</nav>
+
+<section class="board" id="board">
+  <div class="bh">
+    <span class="badge" data-zh="助教专属" data-en="TA Only">助教专属</span>
+    <h1 data-zh="AI 刚需看板" data-en="AI Needs Board">AI 刚需看板</h1>
+    <p data-zh="查看所有学员记录的 AI 刚需" data-en="View all students' AI needs">查看所有学员记录的 AI 刚需</p>
+    <div class="stats" id="statsArea"></div>
+  </div>
+
+  <div class="filters" id="filterArea">
+    <label data-zh="搜索学员" data-en="Search">🔍</label>
+    <input type="text" id="filterStudent" data-zh-ph="输入学员姓名筛选…" data-en-ph="Type name to filter…" placeholder="输入学员姓名筛选…">
+    <label data-zh="优先级" data-en="Priority">优先级</label>
+    <select id="filterPriority">
+      <option value="" data-zh="全部" data-en="All">全部</option>
+      <option value="高" data-zh="高" data-en="High">高</option>
+      <option value="中" data-zh="中" data-en="Medium">中</option>
+      <option value="低" data-zh="低" data-en="Low">低</option>
+    </select>
+    <label data-zh="分类" data-en="Category">分类</label>
+    <select id="filterCategory">
+      <option value="" data-zh="全部" data-en="All">全部</option>
+    </select>
+    <button class="filter-clear" id="clearFilter" data-zh="清除筛选" data-en="Clear">清除筛选</button>
+  </div>
+
+  <div id="boardContent">
+    <div class="loading" data-zh="正在加载…" data-en="Loading…">正在加载…</div>
+  </div>
+</section>
+
+<footer class="footer">
+  <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo">
+  <p data-zh="© 2026 蜗牛 AI" data-en="© 2026 Snail AI">© 2026 蜗牛 AI</p>
+  <div class="links">
+    <a href="../ta/" data-zh="助教天地" data-en="TA Hub">助教天地</a>
+    <a href="/" data-zh="首页" data-en="Home">首页</a>
+  </div>
+</footer>
+
+<script>
+  const LANG_KEY = 'snailai-lang';
+
+  function applyLang(lang) {
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
+    });
+    document.querySelectorAll('[data-zh-ph]').forEach(el => {
+      el.placeholder = el.getAttribute('data-' + lang + '-ph') || el.getAttribute('data-zh-ph');
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+    const tt = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
+    if (tt) document.title = tt;
+    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', () => applyLang(btn.dataset.lang)));
+  let savedLang = 'zh';
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {}
+  applyLang(savedLang);
+
+  // ===== Backend Auth Guard =====
+  const S_KEY = 'snailai_api_token';
+
+  (async function guard() {
+    const token = sessionStorage.getItem(S_KEY);
+    if (!token) { showError('请先登录', '使用助教账号登录后即可查看。', '去登录 →', '../login.html'); return; }
+    try {
+      const r = await fetch('/api/me', { headers: { 'Authorization': 'Bearer ' + token } });
+      const d = await r.json();
+      if (!d.ok || !['ta', 'instructor', 'admin'].includes(d.user.role)) {
+        showError('无权访问', '该账号无助教权限。', '返回助教天地', '../ta/');
+        return;
+      }
+      await loadBoard();
+    } catch(e) {
+      showError('网络错误', '无法连接服务器，请稍后重试。', '重试', null);
+    }
+  })();
+
+  function showError(title, msg, btnText, btnHref) {
+    const board = document.getElementById('board');
+    board.innerHTML = '<div class="empty-state"><div class="icon">🚫</div><h2>' + title + '</h2><p>' + msg + '</p>' +
+      (btnText ? '<p style="margin-top:16px"><a href="' + (btnHref||'javascript:location.reload()') + '" style="display:inline-block;padding:10px 24px;background:var(--accent);color:#fff;border-radius:var(--r-md);text-decoration:none;font-weight:700">' + btnText + '</a></p>' : '') +
+      '</div>';
+  }
+
+  // ===== Board Logic =====
+  const PRI_COLOR = {高:'#ef4444', 中:'#f59e0b', 低:'#9ca3af'};
+  let allData = [];
+
+  function t(obj) { return (obj && obj[savedLang]) || (obj && obj.zh) || ''; }
+  function escapeHtml(s) {
+    return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  async function loadBoard() {
+    const content = document.getElementById('boardContent');
+    content.innerHTML = '<div class="loading">' + t({zh:'正在加载…', en:'Loading…'}) + '</div>';
+    try {
+      const r = await fetch('/api/ai-needs?all=1', {
+        headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem(S_KEY) }
+      });
+      const d = await r.json();
+      if (!d.ok) { content.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><h2>' + escapeHtml(d.error||'') + '</h2></div>'; return; }
+      allData = d.students || [];
+
+      // Categories
+      const catSet = new Set();
+      allData.forEach(s => (s.needs||[]).forEach(n => { if (n.category) catSet.add(n.category); }));
+      const catSel = document.getElementById('filterCategory');
+      catSel.innerHTML = '<option value="">' + t({zh:'全部', en:'All'}) + '</option>' +
+        Array.from(catSet).sort().map(c => '<option value="' + escapeHtml(c) + '">' + escapeHtml(c) + '</option>').join('');
+
+      // Stats
+      const totalStudents = allData.length;
+      const totalNeeds = allData.reduce((sum, s) => sum + (s.needs||[]).length, 0);
+      const highP = allData.reduce((sum, s) => sum + (s.needs||[]).filter(n => n.priority === '高').length, 0);
+      document.getElementById('statsArea').innerHTML =
+        '<span class="stat">' + t({zh:'学员', en:'Students'}) + ' <b>' + totalStudents + '</b></span>' +
+        '<span class="stat">' + t({zh:'刚需', en:'Needs'}) + ' <b>' + totalNeeds + '</b></span>' +
+        '<span class="stat">🔴 <b>' + highP + '</b></span>';
+
+      renderBoard();
+    } catch(e) {
+      content.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><h2>' + t({zh:'加载失败', en:'Load failed'}) + '</h2></div>';
+    }
+  }
+
+  function renderBoard() {
+    const content = document.getElementById('boardContent');
+    const studentFilter = (document.getElementById('filterStudent').value || '').trim().toLowerCase();
+    const priFilter = document.getElementById('filterPriority').value;
+    const catFilter = document.getElementById('filterCategory').value;
+
+    let filtered = allData;
+    if (studentFilter) filtered = filtered.filter(s => s.name.toLowerCase().includes(studentFilter));
+    if (priFilter || catFilter) {
+      filtered = filtered.map(s => ({
+        ...s,
+        needs: (s.needs||[]).filter(n => {
+          if (priFilter && n.priority !== priFilter) return false;
+          if (catFilter && n.category !== catFilter) return false;
+          return true;
+        })
+      })).filter(s => (s.needs||[]).length > 0);
+    }
+
+    if (!filtered.length) {
+      content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><h2>' + t({zh:'暂无匹配', en:'No matches'}) + '</h2></div>';
+      return;
+    }
+
+    content.innerHTML = filtered.map(s => {
+      const needsHtml = (s.needs||[]).map(n => {
+        const tags = (n.tags||[]).map(x => '<span class="tag-chip">' + escapeHtml(x) + '</span>').join('');
+        const pColor = PRI_COLOR[n.priority] || '#9ca3af';
+        return '<div class="need-card">' +
+          '<div class="need-head">' +
+            '<span class="need-seq">#' + n.seq + '</span>' +
+            '<span class="pri-badge" style="background:' + pColor + '">' + (n.priority||'中') + '</span>' +
+            (n.category ? '<span class="cat-badge">' + escapeHtml(n.category) + '</span>' : '') +
+          '</div>' +
+          '<div class="need-title">' + escapeHtml(n.title) + '</div>' +
+          (n.content ? '<div class="need-content">' + escapeHtml(n.content) + '</div>' : '') +
+          (tags ? '<div class="need-tags">' + tags + '</div>' : '') +
+        '</div>';
+      }).join('');
+
+      return '<div class="student-group" id="sg-' + escapeHtml(s.username) + '">' +
+        '<div class="student-head open" onclick="toggleGroup(\'' + escapeHtml(s.username) + '\')">' +
+          '<span class="arrow">▶</span>' +
+          '<span class="s-name">' + escapeHtml(s.name) + '</span>' +
+          '<span class="s-count">' + (s.needs||[]).length + '</span>' +
+        '</div>' +
+        '<div class="student-body open">' + needsHtml + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function toggleGroup(username) {
+    const group = document.getElementById('sg-' + username);
+    if (!group) return;
+    group.querySelector('.student-head').classList.toggle('open');
+    group.querySelector('.student-body').classList.toggle('open');
+  }
+
+  document.getElementById('filterStudent').addEventListener('input', renderBoard);
+  document.getElementById('filterPriority').addEventListener('change', renderBoard);
+  document.getElementById('filterCategory').addEventListener('change', renderBoard);
+  document.getElementById('clearFilter').addEventListener('click', function() {
+    document.getElementById('filterStudent').value = '';
+    document.getElementById('filterPriority').value = '';
+    document.getElementById('filterCategory').value = '';
+    renderBoard();
+  });
+</script>
+
+<script src="/assets/analytics.js"></script>
+</body>
+</html>

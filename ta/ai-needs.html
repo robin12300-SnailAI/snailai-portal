@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-title-zh="AI 刚需看板 · 助教" data-title-en="AI Needs Board · TA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 刚需看板 · 助教</title>
+<meta name="description" content="蜗牛AI 学员 AI 刚需看板 — 查看所有学员的 AI 刚需。">
+<link rel="icon" type="image/png" href="/assets/snailai_logo.png">
+<style>
+  :root {
+    --ink: #1A1A2E; --ink-2: #2A2A40; --ink-3: #6A6A85;
+    --paper: #FCFCFA; --paper-2: #F5F4EE; --paper-3: #E8E7E0;
+    --accent: #FF5B1F; --accent-2: #E84A0F; --accent-light: rgba(255,91,31,0.08); --accent-warm: #FFF5EE;
+    --green: #10b981; --green-bg: #e7f8f1; --green2: #059669;
+    --blue: #3b82f6; --blue-bg: #eaf1ff; --blue2: #1d4ed8;
+    --gold: #D4A547; --line: rgba(26,26,46,0.08);
+    --shadow-sm: 0 1px 3px rgba(26,26,46,0.04), 0 2px 8px rgba(26,26,46,0.04);
+    --shadow-md: 0 4px 16px rgba(26,26,46,0.08);
+    --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-xl: 24px;
+    --sans: 'Inter','Helvetica Neue','Helvetica','Arial','PingFang SC','Microsoft YaHei UI','Noto Sans SC',sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--paper); color: var(--ink); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+  /* Nav */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 16px 40px; background: linear-gradient(180deg, rgba(252,252,250,.96) 0%, rgba(252,252,250,.85) 100%); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .nav-logo img { height: 32px; width: auto; }
+  .nav-logo span { font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
+  .nav-links { display: flex; gap: 24px; align-items: center; }
+  .nav-links a { font-size: 13px; font-weight: 600; color: var(--ink-3); text-decoration: none; letter-spacing: 0.02em; transition: color .2s; }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links .back-link { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 100px; color: var(--ink-2); font-weight: 600; }
+  .nav-links .back-link:hover { border-color: var(--accent); color: var(--accent); }
+  .lang-switch { display: inline-flex; gap: 4px; border: 1px solid var(--line); border-radius: 100px; padding: 3px; }
+  .lang-btn { border: none; background: transparent; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--ink-3); padding: 4px 10px; border-radius: 100px; transition: all .2s; }
+  .lang-btn.active { background: var(--ink); color: #fff; }
+
+  /* ---------- Main ---------- */
+  .board { max-width: 1100px; margin: 0 auto; padding: 100px 24px 80px; }
+
+  /* Header */
+  .bh { text-align: center; margin-bottom: 36px; }
+  .bh .badge { display: inline-block; background: var(--accent-light); color: var(--accent); font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 100px; margin-bottom: 14px; }
+  .bh h1 { font-size: 34px; letter-spacing: -0.02em; }
+  .bh p { color: var(--ink-3); margin-top: 8px; font-size: 15px; }
+  .bh .stats { display: flex; gap: 24px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+  .bh .stat { font-size: 14px; color: var(--ink-2); }
+  .bh .stat b { color: var(--accent); }
+
+  /* Filters */
+  .filters { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; padding: 16px 20px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md); }
+  .filters label { font-size: 13px; font-weight: 700; color: var(--ink-2); white-space: nowrap; }
+  .filters input, .filters select { font-family: var(--sans); font-size: 14px; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--paper); color: var(--ink); }
+  .filters input:focus, .filters select:focus { outline: none; border-color: var(--accent); }
+  .filters input { flex: 1; min-width: 160px; max-width: 280px; }
+  .filter-clear { font-family: var(--sans); font-size: 13px; font-weight: 600; border: none; background: var(--accent); color: #fff; padding: 8px 16px; border-radius: var(--r-sm); cursor: pointer; }
+  .filter-clear:hover { background: var(--accent-2); }
+
+  /* Student Group */
+  .student-group { margin-bottom: 20px; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-sm); background: var(--paper); }
+  .student-head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; cursor: pointer; user-select: none; transition: background .15s; }
+  .student-head:hover { background: var(--paper-2); }
+  .student-head .arrow { font-size: 12px; color: var(--ink-3); transition: transform .2s; width: 16px; text-align: center; }
+  .student-head.open .arrow { transform: rotate(90deg); }
+  .student-head .s-name { font-weight: 800; font-size: 17px; }
+  .student-head .s-count { font-size: 13px; color: var(--ink-3); background: var(--paper-3); padding: 2px 10px; border-radius: 100px; }
+  .student-head .s-stats { margin-left: auto; display: flex; gap: 12px; font-size: 13px; color: var(--ink-3); }
+  .student-head .s-stats span { display: inline-flex; align-items: center; gap: 4px; }
+
+  /* Needs List */
+  .student-body { display: none; padding: 0 20px 16px; }
+  .student-body.open { display: block; }
+  .need-card { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .need-card:last-child { border-bottom: none; }
+  .need-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+  .need-seq { font-weight: 900; font-size: 12px; color: var(--accent); background: var(--accent-light); padding: 2px 8px; border-radius: 6px; }
+  .pri-badge { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px; color: #fff; }
+  .cat-badge { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px; background: var(--blue-bg); color: var(--blue2); }
+  .need-title { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+  .need-content { font-size: 13.5px; color: var(--ink-2); line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  .need-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .tag-chip { font-size: 11px; background: var(--paper-3); color: var(--ink-2); padding: 2px 9px; border-radius: 20px; }
+
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--ink-3); }
+  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state h2 { font-size: 22px; margin-bottom: 6px; }
+  .empty-state p { font-size: 14px; }
+
+  /* Loading */
+  .loading { text-align: center; padding: 60px 20px; color: var(--ink-3); font-size: 15px; }
+
+  /* Footer */
+  .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
+  .footer img { height: 28px; margin-bottom: 12px; }
+  .footer .links { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 14px 0; }
+  .footer .links a { color: var(--ink-3); text-decoration: none; font-size: 13px; }
+  .footer .links a:hover { color: var(--accent); }
+
+  @media (max-width: 768px) {
+    .nav { padding: 14px 20px; }
+    .board { padding: 90px 16px 60px; }
+    .bh h1 { font-size: 28px; }
+    .filters { flex-direction: column; align-items: stretch; }
+    .filters input { max-width: none; }
+    .student-head { flex-wrap: wrap; }
+    .student-head .s-stats { margin-left: 0; width: 100%; justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo">
+    <span data-zh="蜗牛 AI" data-en="Snail AI">蜗牛 AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="../ta/" class="back-link" data-zh="← 助教天地" data-en="← TA Hub">← 助教天地</a>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== Main Board ===== -->
+<section class="board" id="board">
+  <div class="bh">
+    <span class="badge" data-zh="助教专属" data-en="TA Only">助教专属</span>
+    <h1 data-zh="AI 刚需看板" data-en="AI Needs Board">AI 刚需看板</h1>
+    <p data-zh="查看所有学员记录的 AI 刚需，了解他们最想用 AI 解决的问题。" data-en="View all students' AI needs — understand what problems they most want AI to solve.">查看所有学员记录的 AI 刚需，了解他们最想用 AI 解决的问题。</p>
+    <div class="stats" id="statsArea"></div>
+  </div>
+
+  <div class="filters" id="filterArea">
+    <label data-zh="搜索学员" data-en="Search student">🔍</label>
+    <input type="text" id="filterStudent" data-zh-ph="输入学员姓名筛选…" data-en-ph="Type student name to filter…" placeholder="输入学员姓名筛选…">
+    <label data-zh="优先级" data-en="Priority">优先级</label>
+    <select id="filterPriority">
+      <option value="" data-zh="全部" data-en="All">全部</option>
+      <option value="高" data-zh="高" data-en="High">高</option>
+      <option value="中" data-zh="中" data-en="Medium">中</option>
+      <option value="低" data-zh="低" data-en="Low">低</option>
+    </select>
+    <label data-zh="分类" data-en="Category">分类</label>
+    <select id="filterCategory">
+      <option value="" data-zh="全部" data-en="All">全部</option>
+    </select>
+    <button class="filter-clear" id="clearFilter" data-zh="清除筛选" data-en="Clear">清除筛选</button>
+  </div>
+
+  <div id="boardContent">
+    <div class="loading" data-zh="正在加载 AI 刚需…" data-en="Loading AI needs…">正在加载 AI 刚需…</div>
+  </div>
+</section>
+
+<footer class="footer">
+  <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo">
+  <p data-zh="© 2026 蜗牛 AI · 澳洲华人AI 应用教育学院" data-en="© 2026 Snail AI · Australian Chinese AI Education Institute">© 2026 蜗牛 AI · 澳洲华人AI 应用教育学院</p>
+  <div class="links">
+    <a href="/ta/" data-zh="助教天地" data-en="TA Hub">助教天地</a>
+    <a href="/online-course/" data-zh="线上课" data-en="Online">线上课</a>
+    <a href="/offline-course/" data-zh="线下课" data-en="Offline">线下课</a>
+  </div>
+</footer>
+
+<script>
+  const LANG_KEY = 'snailai-lang';
+
+  function applyLang(lang) {
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
+    });
+    document.querySelectorAll('[data-zh-ph]').forEach(el => {
+      el.placeholder = el.getAttribute('data-' + lang + '-ph') || el.getAttribute('data-zh-ph');
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+    const tt = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
+    if (tt) document.title = tt;
+    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', () => applyLang(btn.dataset.lang)));
+  let savedLang = 'zh';
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {}
+  applyLang(savedLang);
+
+  // ===== Backend Auth Guard =====
+  const S_KEY = 'snailai_api_token';
+  const board = document.getElementById('board');
+
+  (async function guard() {
+    const token = sessionStorage.getItem(S_KEY);
+    if (!token) { board.innerHTML = '<div class="empty-state"><div class="icon">🔒</div><h2 data-zh="请先登录" data-en="Please log in">请先登录</h2><p data-zh="使用助教 / 讲师 / 管理员账号登录后即可查看。" data-en="Log in with TA / Instructor / Admin account to view.">使用助教 / 讲师 / 管理员账号登录后即可查看。</p><p style="margin-top:16px"><a href="../login.html" style="display:inline-block;padding:12px 28px;background:var(--accent);color:#fff;border-radius:var(--r-md);text-decoration:none;font-weight:700" data-zh="去登录 →" data-en="Log in →">去登录 →</a></p></div>'; return; }
+    try {
+      const r = await fetch('/api/me', { headers: { 'Authorization': 'Bearer ' + token } });
+      const d = await r.json();
+      if (!d.ok || !['ta', 'instructor', 'admin'].includes(d.user.role)) {
+        board.innerHTML = '<div class="empty-state"><div class="icon">🚫</div><h2 data-zh="无权访问" data-en="Access Denied">无权访问</h2><p data-zh="该账号无助教权限。请使用助教 / 讲师 / 管理员账号登录。" data-en="No TA permission. Please log in with a TA / Instructor / Admin account.">该账号无助教权限。</p></div>';
+        return;
+      }
+      // Auth'd — load data
+      await loadBoard();
+    } catch(e) {
+      board.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><h2 data-zh="网络错误" data-en="Network Error">网络错误</h2><p data-zh="无法连接服务器，请稍后重试。" data-en="Cannot connect to server, please retry later.">无法连接服务器，请稍后重试。</p></div>';
+    }
+  })();
+
+  // ===== Board Logic =====
+  const PRI_COLOR = {高:'#ef4444', 中:'#f59e0b', 低:'#9ca3af'};
+  let allData = [];       // raw from API
+  let categorySet = new Set();
+
+  function t(obj) { return (obj && obj[savedLang]) || (obj && obj.zh) || ''; }
+
+  function escapeHtml(s) {
+    return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  async function loadBoard() {
+    const content = document.getElementById('boardContent');
+    content.innerHTML = '<div class="loading">' + t({zh:'正在加载 AI 刚需…', en:'Loading AI needs…'}) + '</div>';
+
+    try {
+      const r = await fetch('/api/ai-needs?all=1', {
+        headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem(S_KEY) }
+      });
+      const d = await r.json();
+      if (!d.ok) {
+        content.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><h2>' + escapeHtml(d.error||'') + '</h2></div>';
+        return;
+      }
+      allData = d.students || [];
+
+      // Collect unique categories
+      categorySet = new Set();
+      allData.forEach(s => (s.needs||[]).forEach(n => { if (n.category) categorySet.add(n.category); }));
+      const catSel = document.getElementById('filterCategory');
+      const curCat = catSel.value;
+      catSel.innerHTML = '<option value="">' + t({zh:'全部', en:'All'}) + '</option>' +
+        Array.from(categorySet).sort().map(c => '<option value="' + escapeHtml(c) + '">' + escapeHtml(c) + '</option>').join('');
+      if (curCat) catSel.value = curCat;
+
+      // Stats
+      const totalStudents = allData.length;
+      const totalNeeds = allData.reduce((sum, s) => sum + (s.needs||[]).length, 0);
+      const highP = allData.reduce((sum, s) => sum + (s.needs||[]).filter(n => n.priority === '高').length, 0);
+      document.getElementById('statsArea').innerHTML =
+        '<span class="stat">' + t({zh:'👥 学员', en:'Students'}) + ' <b>' + totalStudents + '</b></span>' +
+        '<span class="stat">' + t({zh:'📋 刚需总数', en:'Total Needs'}) + ' <b>' + totalNeeds + '</b></span>' +
+        '<span class="stat">' + t({zh:'🔴 高优先级', en:'High Priority'}) + ' <b>' + highP + '</b></span>';
+
+      renderBoard();
+    } catch(e) {
+      content.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><h2>' + t({zh:'加载失败', en:'Load failed'}) + '</h2></div>';
+    }
+  }
+
+  function renderBoard() {
+    const content = document.getElementById('boardContent');
+    const studentFilter = (document.getElementById('filterStudent').value || '').trim().toLowerCase();
+    const priFilter = document.getElementById('filterPriority').value;
+    const catFilter = document.getElementById('filterCategory').value;
+
+    let filtered = allData;
+    if (studentFilter) {
+      filtered = filtered.filter(s => s.name.toLowerCase().includes(studentFilter));
+    }
+    if (priFilter || catFilter) {
+      filtered = filtered.map(s => ({
+        ...s,
+        needs: (s.needs||[]).filter(n => {
+          if (priFilter && n.priority !== priFilter) return false;
+          if (catFilter && n.category !== catFilter) return false;
+          return true;
+        })
+      })).filter(s => (s.needs||[]).length > 0);
+    }
+
+    if (!filtered.length) {
+      content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><h2>' + t({zh:'暂无匹配的 AI 刚需', en:'No matching AI needs'}) + '</h2><p>' + t({zh:'试试调整筛选条件', en:'Try adjusting the filters'}) + '</p></div>';
+      return;
+    }
+
+    content.innerHTML = filtered.map(s => {
+      const needsHtml = (s.needs||[]).map(n => {
+        const tags = (n.tags||[]).map(x => '<span class="tag-chip">' + escapeHtml(x) + '</span>').join('');
+        const pColor = PRI_COLOR[n.priority] || '#9ca3af';
+        const pLabel = n.priority || '中';
+        return '<div class="need-card">' +
+          '<div class="need-head">' +
+            '<span class="need-seq">#' + n.seq + '</span>' +
+            '<span class="pri-badge" style="background:' + pColor + '">' + pLabel + '</span>' +
+            (n.category ? '<span class="cat-badge">' + escapeHtml(n.category) + '</span>' : '') +
+          '</div>' +
+          '<div class="need-title">' + escapeHtml(n.title) + '</div>' +
+          (n.content ? '<div class="need-content">' + escapeHtml(n.content) + '</div>' : '') +
+          (tags ? '<div class="need-tags">' + tags + '</div>' : '') +
+        '</div>';
+      }).join('');
+
+      const highC = (s.needs||[]).filter(n => n.priority === '高').length;
+      const totalC = (s.needs||[]).length;
+
+      return '<div class="student-group" id="sg-' + escapeHtml(s.username) + '">' +
+        '<div class="student-head open" onclick="toggleGroup(\'' + escapeHtml(s.username) + '\')">' +
+          '<span class="arrow">▶</span>' +
+          '<span class="s-name">' + escapeHtml(s.name) + '</span>' +
+          '<span class="s-count">' + totalC + '</span>' +
+          '<span class="s-stats">' +
+            (highC > 0 ? '<span>🔴 ' + highC + '</span>' : '') +
+          '</span>' +
+        '</div>' +
+        '<div class="student-body open">' + needsHtml + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function toggleGroup(username) {
+    const group = document.getElementById('sg-' + username);
+    if (!group) return;
+    const head = group.querySelector('.student-head');
+    const body = group.querySelector('.student-body');
+    head.classList.toggle('open');
+    body.classList.toggle('open');
+  }
+
+  // ===== Filter Events =====
+  document.getElementById('filterStudent').addEventListener('input', renderBoard);
+  document.getElementById('filterPriority').addEventListener('change', renderBoard);
+  document.getElementById('filterCategory').addEventListener('change', renderBoard);
+  document.getElementById('clearFilter').addEventListener('click', function() {
+    document.getElementById('filterStudent').value = '';
+    document.getElementById('filterPriority').value = '';
+    document.getElementById('filterCategory').value = '';
+    renderBoard();
+  });
+</script>
+
+<script src="/assets/analytics.js"></script>
+</body>
+</html>
