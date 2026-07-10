@@ -57,6 +57,84 @@ SESSION_TTL_HOURS = 24 * 7  # 会话有效期 7 天
 app = Flask(__name__, static_folder=None)
 
 
+# ---------------------------------------------------------------- 限流 / 防爆破
+import time as _time
+import threading as _threading
+from functools import wraps as _wraps
+
+_RL = {}
+_RL_LOCK = _threading.Lock()
+_LOGIN_FAIL = {}
+_LOGIN_LOCK = _threading.Lock()
+_RL_QUERY_LIMIT = 60             # 查询类 GET：每分钟 60 次（按账号，未登录按 IP）
+_RL_QUERY_WINDOW = 60
+_RL_LOGIN_LIMIT = 10             # 登录 POST：每分钟 10 次（按 IP）
+_RL_LOGIN_WINDOW = 60
+_LOGIN_MAX_FAILS = 5             # 连续失败 5 次
+_LOGIN_LOCK_SEC = 15 * 60        # 锁定 15 分钟
+
+
+def _rate_check(key, limit, window):
+    now = _time.time()
+    with _RL_LOCK:
+        hits = _RL.get(key)
+        if hits is None:
+            hits = []
+            _RL[key] = hits
+        hits[:] = [t for t in hits if now - t < window]
+        if len(hits) >= limit:
+            return False
+        hits.append(now)
+        return True
+
+
+def _rate_limit_deco(limit, window=60, by_user=True):
+    def deco(fn):
+        @_wraps(fn)
+        def wrapper(*a, **k):
+            path = request.path
+            key = None
+            if by_user:
+                u = _current_user()
+                if u:
+                    key = "u:" + u["username"] + ":" + path
+            if not key:
+                key = "ip:" + _client_ip() + ":" + path
+            if not _rate_check(key, limit, window):
+                return jsonify(ok=False, error="请求过于频繁，请稍后再试 (rate limit)"), 429
+            return fn(*a, **k)
+        return wrapper
+    return deco
+
+
+def _login_lock_check(username):
+    """返回 (locked: bool, retry_after_sec: int)。"""
+    with _LOGIN_LOCK:
+        rec = _LOGIN_FAIL.get(username)
+        if not rec:
+            return (False, 0)
+        if rec["locked_until"] and _time.time() < rec["locked_until"]:
+            return (True, int(rec["locked_until"] - _time.time()))
+        if rec["locked_until"] and _time.time() >= rec["locked_until"]:
+            _LOGIN_FAIL[username] = {"fails": 0, "locked_until": 0}
+        return (False, 0)
+
+
+def _login_fail_incr(username):
+    with _LOGIN_LOCK:
+        rec = _LOGIN_FAIL.get(username) or {"fails": 0, "locked_until": 0}
+        rec["fails"] += 1
+        if rec["fails"] >= _LOGIN_MAX_FAILS:
+            rec["locked_until"] = _time.time() + _LOGIN_LOCK_SEC
+        _LOGIN_FAIL[username] = rec
+
+
+def _login_fail_clear(username):
+    with _LOGIN_LOCK:
+        if username in _LOGIN_FAIL:
+            del _LOGIN_FAIL[username]
+
+
 # ---------------------------------------------------------------- 数据库
 def db_conn():
     conn = sqlite3.connect(str(DB_PATH))
@@ -567,13 +645,20 @@ def _options():
 
 # ---------------------------------------------------------------- API
 @app.route("/api/login", methods=["POST"])
+@_rate_limit_deco(_RL_LOGIN_LIMIT, _RL_LOGIN_WINDOW, by_user=False)
 def api_login():
     data = request.get_json(silent=True) or {}
     username = (data.get("username") or "").strip()
     password = data.get("password") or ""
+    # 失败锁定（防爆破弱密码账号，如 test/12345）
+    locked, retry = _login_lock_check(username)
+    if locked:
+        return jsonify(ok=False, error=f"尝试次数过多，请 {retry} 秒后再试"), 429
     user = _auth_user(username, password)
     if not user:
+        _login_fail_incr(username)
         return jsonify(ok=False, error="用户名或密码错误"), 401
+    _login_fail_clear(username)
     token = _create_session(username)
     ip = _client_ip()
     ua = request.headers.get("User-Agent", "")
@@ -657,6 +742,7 @@ def _current_user():
 
 
 @app.route("/api/me", methods=["GET"])
+@_rate_limit_deco(_RL_QUERY_LIMIT, _RL_QUERY_WINDOW)
 def api_me():
     user = _current_user()
     if not user:
@@ -665,6 +751,7 @@ def api_me():
 
 
 @app.route("/api/me/token", methods=["GET"])
+@_rate_limit_deco(_RL_QUERY_LIMIT, _RL_QUERY_WINDOW)
 def api_me_token():
     """返回当前用户一个 guaranteed-valid 的 API token。
     若已有未过期 token 则复用，否则新发一个（默认 7 天有效）。
@@ -691,6 +778,7 @@ def api_me_token():
 
 
 @app.route("/api/capabilities", methods=["GET"])
+@_rate_limit_deco(_RL_QUERY_LIMIT, _RL_QUERY_WINDOW)
 def api_capabilities():
     user = _current_user()
     if not user:
@@ -739,6 +827,7 @@ def api_students():
 
 
 @app.route("/api/checks/<username>", methods=["GET"])
+@_rate_limit_deco(_RL_QUERY_LIMIT, _RL_QUERY_WINDOW)
 def api_get_checks(username):
     user = _current_user()
     if not user:
@@ -1358,6 +1447,7 @@ def api_points_adjust():
 
 
 @app.route("/api/points/summary", methods=["GET"])
+@_rate_limit_deco(_RL_QUERY_LIMIT, _RL_QUERY_WINDOW)
 def api_points_summary():
     user = _current_user()
     if not user:
@@ -1392,6 +1482,7 @@ def api_points_summary():
 
 
 @app.route("/api/me/growth", methods=["GET"])
+@_rate_limit_deco(_RL_QUERY_LIMIT, _RL_QUERY_WINDOW)
 def api_me_growth():
     """学员成长总览：能力清单 + 本人勾选 + 各能力已得点数 + 总分。
 
