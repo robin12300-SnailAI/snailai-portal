@@ -254,7 +254,9 @@
                 `border-radius:8px;background:#fff;color:var(--ink2);font-size:13px;font-weight:700;text-decoration:none">` +
                 `⚙ ${t({zh:"管理后台",en:"Admin"})}</a>`;
       }
-      html += ` <button onclick="doLogout()" style="margin-left:10px;padding:5px 14px;border:1px solid var(--line);` +
+      html += ` <button onclick="location.href='change-password.html'" style="margin-left:8px;padding:5px 12px;border:1px solid var(--line);` +
+              `border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink2)">🔐 ${t({zh:"修改密码",en:"Password"})}</button>`;
+      html += ` <button onclick="doLogout()" style="margin-left:8px;padding:5px 14px;border:1px solid var(--line);` +
               `border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink2)">${btnLabel}</button>`;
       document.getElementById("userArea").innerHTML = html;
     }
