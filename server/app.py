@@ -664,6 +664,32 @@ def api_me():
     return jsonify(ok=True, user=_public_user(user))
 
 
+@app.route("/api/me/token", methods=["GET"])
+def api_me_token():
+    """返回当前用户一个 guaranteed-valid 的 API token。
+    若已有未过期 token 则复用，否则新发一个（默认 7 天有效）。
+    学员拿它交给 WorkBuddy 等助手，即可代查本人能力清单与成长点数。"""
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    username = user["username"]
+    conn = db_conn()
+    now = datetime.datetime.utcnow().isoformat()
+    row = conn.execute(
+        "SELECT token, expires_at FROM sessions "
+        "WHERE username=? AND expires_at > ? ORDER BY expires_at DESC LIMIT 1",
+        (username, now)).fetchone()
+    if row:
+        token, expires_at = row["token"], row["expires_at"]
+    else:
+        token = _create_session(username)
+        r2 = conn.execute("SELECT expires_at FROM sessions WHERE token=?",
+                          (token,)).fetchone()
+        expires_at = r2["expires_at"] if r2 else None
+    conn.close()
+    return jsonify(ok=True, token=token, expires_at=expires_at)
+
+
 @app.route("/api/capabilities", methods=["GET"])
 def api_capabilities():
     user = _current_user()

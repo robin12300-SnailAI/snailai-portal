@@ -770,74 +770,23 @@
       <div class="faq-num">13</div>
       <div class="faq-q-text" data-zh="能不能用程序（API）直接查询我的能力清单和蜗牛成长点数？" data-en="Can I query my capability checklist and Snail growth points via API / script?">能不能用程序（API）直接查询我的能力清单和蜗牛成长点数？</div>
     </div>
-    <div class="faq-a">
-      <p data-zh="可以。<strong>不需要 SSH，也不提供服务器 SSH 访问</strong>；蜗牛官网本身就是一个带登录的网站，开放了标准 HTTPS API，你用自己的学员账号就能用程序查询。" data-en="Yes. <strong>No SSH is needed, and server SSH access is not provided.</strong> The Snail AI portal is a login-based website that exposes a standard HTTPS API — you can query it with your own student account from any script.">可以。<strong>不需要 SSH，也不提供服务器 SSH 访问</strong>；蜗牛官网本身就是一个带登录的网站，开放了标准 HTTPS API，你用自己的学员账号就能用程序查询。</p>
-      <p data-zh="整体做法分两步：先用账号密码<strong>登录拿 token</strong>，再带着 token 调用查询接口。" data-en="The flow has two steps: first <strong>log in with your account to get a token</strong>, then call the query endpoints with that token.">整体做法分两步：先用账号密码<strong>登录拿 token</strong>，再带着 token 调用查询接口。</p>
-      <div class="highlight-box" data-zh="<strong>可用的查询接口：</strong><br>· <code>GET /api/capabilities</code> — 能力清单全表（含每项分值）<br>· <code>GET /api/checks/&lt;你的账号&gt;</code> — 你各项的勾选状态（self / ta / final）<br>· <code>GET /api/me/growth</code> — <strong>一次拿全</strong>：能力清单 + 我的勾选 + 各能力已得点数 + 成长总分（最推荐）<br>· <code>GET /api/points/summary</code> — 成长点数汇总" data-en="<strong>Available query endpoints:</strong><br>· <code>GET /api/capabilities</code> — full capability list (with per-item points)<br>· <code>GET /api/checks/&lt;your-username&gt;</code> — your check states (self / ta / final)<br>· <code>GET /api/me/growth</code> — <strong>all in one call</strong>: capabilities + your checks + earned points per capability + total growth points (recommended)<br>· <code>GET /api/points/summary</code> — growth points summary">
-        <strong>可用的查询接口：</strong><br>
-        · <code>GET /api/capabilities</code> — 能力清单全表（含每项分值）<br>
-        · <code>GET /api/checks/&lt;你的账号&gt;</code> — 你各项的勾选状态（self / ta / final）<br>
-        · <code>GET /api/me/growth</code> — <strong>一次拿全</strong>：能力清单 + 我的勾选 + 各能力已得点数 + 成长总分（最推荐）<br>
-        · <code>GET /api/points/summary</code> — 成长点数汇总
+        <div class="faq-a">
+      <p data-zh="可以，而且<strong>完全不用写代码</strong>。你不需要 SSH、不需要懂编程，只要会复制粘贴就行。" data-en="Yes — and <strong>you don't need to write any code</strong>. No SSH, no programming, just copy-and-paste.">可以，而且<strong>完全不用写代码</strong>。你不需要 SSH、不需要懂编程，只要会复制粘贴就行。</p>
+      <p data-zh="查你自己的能力清单和蜗牛成长点数，只要 3 步：" data-en="To check your own capability checklist and Snail growth points, just 3 steps:">查你自己的能力清单和蜗牛成长点数，只要 3 步：</p>
+      <p data-zh="<strong>第 1 步 · 复制 Token</strong><br>登录官网 → 进入「我的学堂」→ 找到绿色卡片「🔑 我的 API Token」→ 点「复制 Token」。你的专属密钥就到剪贴板了。" data-en="<strong>Step 1 · Copy your Token</strong><br>Log into the portal → open &quot;My Classroom&quot; → find the green card &quot;🔑 My API Token&quot; → tap &quot;Copy Token&quot;. Your personal key is now on your clipboard."><strong>第 1 步 · 复制 Token</strong><br>登录官网 → 进入「我的学堂」→ 找到绿色卡片「🔑 我的 API Token」→ 点「复制 Token」。你的专属密钥就到剪贴板了。</p>
+      <p data-zh="<strong>第 2 步 · 发给 WorkBuddy</strong><br>回到现在这个对话框（WorkBuddy），把复制的 Token 发给我，说一句：「查我的能力清单和蜗牛成长点数」。" data-en="<strong>Step 2 · Send it to WorkBuddy</strong><br>Come back to this chat (WorkBuddy), paste the Token, and say: &quot;check my capability checklist and Snail growth points&quot;."><strong>第 2 步 · 发给 WorkBuddy</strong><br>回到现在这个对话框（WorkBuddy），把复制的 Token 发给我，说一句：「查我的能力清单和蜗牛成长点数」。</p>
+      <p data-zh="<strong>第 3 步 · 坐等结果</strong><br>我会用官网 API 登录你的账号，把能力清单、各项确认进度、蜗牛成长总点数用大白话讲给你听。一行代码都不用你写。" data-en="<strong>Step 3 · Wait for results</strong><br>I'll log into your account via the official API and tell you — in plain language — your capability checklist, each item's status, and total growth points. No code for you."><strong>第 3 步 · 坐等结果</strong><br>我会用官网 API 登录你的账号，把能力清单、各项确认进度、蜗牛成长总点数用大白话讲给你听。一行代码都不用你写。</p>
+      <div class="highlight-box" data-zh="<strong>常见问题：</strong><br>· <strong>担心看不懂代码？</strong> 不用看，照 3 步做就行。<br>· <strong>Token 是什么？</strong> 代表你身份的钥匙，WorkBuddy 拿它去官网查你的数据。<br>· <strong>能查别人的吗？</strong> 不能，只能查你自己的。" data-en="<strong>FAQ:</strong><br>· <strong>Worried about code?</strong> No need to read any — just follow the 3 steps.<br>· <strong>What is a Token?</strong> A key representing your identity; WorkBuddy uses it to query your data.<br>· <strong>Can I see others'?</strong> No — only your own.">
+        <strong>常见问题：</strong><br>
+        · <strong>担心看不懂代码？</strong> 不用看，照 3 步做就行。<br>
+        · <strong>Token 是什么？</strong> 代表你身份的钥匙，WorkBuddy 拿它去官网查你的数据。<br>
+        · <strong>能查别人的吗？</strong> 不能，只能查你自己的。
       </div>
-      <p data-zh="下面三个示例都做了同样的事：登录 → 查询成长总览。把 <code>你的账号</code> / <code>你的密码</code> / <code>你的token</code> 换成你自己的即可。" data-en="The three examples below all do the same thing: log in → query the growth overview. Replace <code>你的账号</code> / <code>你的密码</code> / <code>你的token</code> with your own.">下面三个示例都做了同样的事：登录 → 查询成长总览。把 <code>你的账号</code> / <code>你的密码</code> / <code>你的token</code> 换成你自己的即可。</p>
-
-      <p style="font-weight:700;margin-top:6px;" data-zh="① curl 示例" data-en="① curl example">① curl 示例</p>
-      <pre class="api-code"># 1) 登录拿 token
-curl -s -X POST https://snailai.ai/api/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"你的账号","password":"你的密码"}'
-# 返回 {"ok":true,"token":"...","user":{...}}
-
-# 2) 用 token 查询成长总览（推荐，一次拿全）
-curl -s https://snailai.ai/api/me/growth \
-  -H "Authorization: Bearer 你的token"</pre>
-
-      <p style="font-weight:700;margin-top:6px;" data-zh="② Python 示例" data-en="② Python example">② Python 示例</p>
-      <pre class="api-code">import requests
-BASE = "https://snailai.ai"
-
-# 1) 登录拿 token
-r = requests.post(f"{BASE}/api/login",
-                  json={"username": "你的账号", "password": "你的密码"})
-token = r.json()["token"]
-
-# 2) 用 token 查询成长总览
-h = {"Authorization": f"Bearer {token}"}
-data = requests.get(f"{BASE}/api/me/growth", headers=h).json()
-
-print("总分:", data["total_points"])
-for c in data["capabilities"]:
-    flag = "已确认" if c["final"] else "未确认"
-    print(f'{c["title"]}  已得 {c["earned_points"]}/{c["max_points"]}  {flag}')</pre>
-
-      <p style="font-weight:700;margin-top:6px;" data-zh="③ JavaScript 示例（浏览器 / Node）" data-en="③ JavaScript example (browser / Node)">③ JavaScript 示例（浏览器 / Node）</p>
-      <pre class="api-code">const BASE = "https://snailai.ai";
-
-// 1) 登录拿 token
-const res = await fetch(`${BASE}/api/login`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ username: "你的账号", password: "你的密码" })
-});
-const { token } = await res.json();
-
-// 2) 用 token 查询成长总览
-const g = await fetch(`${BASE}/api/me/growth`, {
-  headers: { Authorization: `Bearer ${token}` }
-});
-const data = await g.json();
-
-console.log("总分:", data.total_points);</pre>
-
-      <div class="highlight-box" data-zh="<strong>安全提醒：</strong><br>· token 只保存在你自己的脚本/电脑里，<strong>不要分享账号，也不要把 token 贴到公开仓库或群里</strong><br>· token 有效期 7 天，过期后重新登录一次即可<br>· 你只能查到<strong>自己的</strong>数据，看不到其他学员" data-en="<strong>Security notes:</strong><br>· Keep your token in your own script/computer — <strong>don't share your account or post the token in public repos or groups</strong><br>· The token is valid for 7 days; just log in again after it expires<br>· You can only see <strong>your own</strong> data, not other students'">
-        <strong>安全提醒：</strong><br>
-        · token 只保存在你自己的脚本/电脑里，<strong>不要分享账号，也不要把 token 贴到公开仓库或群里</strong><br>
-        · token 有效期 7 天，过期后重新登录一次即可<br>
-        · 你只能查到<strong>自己的</strong>数据，看不到其他学员
+      <div class="highlight-box" data-zh="<strong>⚠️ 安全提醒：</strong>Token 只代表你本人、只能看自己的数据。<strong>别发给不信任的人</strong>；过期后回到「我的学堂」重新点「复制 Token」即可。" data-en="<strong>⚠️ Security:</strong> the Token represents you and only shows your own data. <strong>Don't share it with untrusted people.</strong> If it expires, go back to &quot;My Classroom&quot; and tap &quot;Copy Token&quot; again.">
+        <strong>⚠️ 安全提醒：</strong>Token 只代表你本人、只能看自己的数据。<strong>别发给不信任的人</strong>；过期后回到「我的学堂」重新点「复制 Token」即可。
       </div>
     </div>
-  </article>
+
 
 </main>
 

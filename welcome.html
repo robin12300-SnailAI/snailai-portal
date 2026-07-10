@@ -88,6 +88,24 @@
       font-weight:700;border:1px solid var(--accent);background:var(--accent);color:#fff;
       padding:9px 18px;border-radius:100px;cursor:pointer;white-space:nowrap}
     .api-banner:hover .api-go{filter:brightness(1.06)}
+
+    /* ---- 我的 API Token 卡片 ---- */
+    .token-card{max-width:960px;margin:14px auto 0;padding:18px 22px;background:#fff;
+      border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+    .token-head{display:flex;align-items:center;gap:10px}
+    .token-ico{font-size:22px;line-height:1}
+    .token-title{font-size:16px;font-weight:700;color:var(--ink)}
+    .token-desc{margin:10px 0 14px;font-size:13.5px;line-height:1.65;color:var(--ink2)}
+    .token-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .token-value{flex:1;min-width:220px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+      font-size:13px;color:var(--ink);background:var(--accent-soft);padding:10px 12px;
+      border-radius:9px;word-break:break-all;border:1px solid var(--accent)}
+    .token-copy{font-family:inherit;font-size:13.5px;font-weight:700;border:none;background:var(--accent);
+      color:#fff;padding:10px 20px;border-radius:9px;cursor:pointer;white-space:nowrap}
+    .token-copy:hover{filter:brightness(1.05)}
+    .token-exp{margin-top:10px;font-size:12.5px;color:var(--ink3)}
+    .token-warn{margin-top:10px;font-size:12.5px;line-height:1.55;color:#b06b00;
+      background:#fff7e6;border:1px solid #ffe0a3;padding:8px 12px;border-radius:9px}
     .points-box{display:flex;flex-direction:column;align-items:center;justify-content:center;
       background:linear-gradient(135deg,var(--accent-soft),#fff);border:1px solid var(--line);
       border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
@@ -176,6 +194,29 @@
     </span>
     <span class="api-go" data-zh="查看教程" data-en="Read Guide">查看教程</span>
   </a>
+
+  <!-- 我的 API Token 卡片：复制 token 交给 WorkBuddy 代查 -->
+  <div class="token-card" id="tokenCard">
+    <div class="token-head">
+      <span class="token-ico">🔑</span>
+      <span class="token-title" data-zh="我的 API Token" data-en="My API Token">我的 API Token</span>
+    </div>
+    <p class="token-desc"
+       data-zh="点「复制 Token」拿到你的专属密钥，把它发给 WorkBuddy（就是现在这个对话框里的 AI 助手），说「查我的能力清单和蜗牛成长点数」，助手会用 API 帮你查——一行代码都不用写。"
+       data-en="Tap “Copy Token” to get your personal key, then send it to WorkBuddy (the AI assistant in this chat) and say “check my capability checklist and Snail growth points”. The assistant queries via API for you — no coding needed.">
+       点「复制 Token」拿到你的专属密钥，把它发给 WorkBuddy（就是现在这个对话框里的 AI 助手），说「查我的能力清单和蜗牛成长点数」，助手会用 API 帮你查——一行代码都不用写。
+    </p>
+    <div class="token-row">
+      <code class="token-value" id="tokenValue">••••••••••••••••••••••••••••••••••••••</code>
+      <button class="token-copy" id="tokenCopyBtn" data-zh="复制 Token" data-en="Copy Token">复制 Token</button>
+    </div>
+    <div class="token-exp" id="tokenExp"></div>
+    <div class="token-warn"
+         data-zh="⚠️ 安全提醒：Token 只代表你本人、只能看自己的数据。请勿发给他人；过期后回到本页重新复制即可。"
+         data-en="⚠️ Security: the Token represents you and only shows your own data. Don't share it with others. If expired, just re-copy it here.">
+      ⚠️ 安全提醒：Token 只代表你本人、只能看自己的数据。请勿发给他人；过期后回到本页重新复制即可。
+    </div>
+  </div>
 
   <!-- 动态内容 -->
   <div id="content"></div>
@@ -395,6 +436,31 @@
       return String(s==null?"":s).replace(/[&<>"']/g,
         c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
     }
+
+    // ===================== 我的 API Token =====================
+    async function copyMyToken(){
+      const btn = document.getElementById("tokenCopyBtn");
+      const valEl = document.getElementById("tokenValue");
+      const expEl = document.getElementById("tokenExp");
+      try {
+        const d = await api("/api/me/token", "GET");
+        if (!d.ok){ alert(d.error || (curLang==="en"?"Failed":"获取失败")); return; }
+        const tok = d.token || "";
+        valEl.textContent = tok;
+        const exp = (d.expires_at || "").replace("T", " ").slice(0, 16);
+        expEl.textContent = (curLang==="en" ? "Valid until: " : "有效期至：") + exp;
+        await navigator.clipboard.writeText(tok);
+        const old = btn.getAttribute("data-" + curLang);
+        btn.textContent = (curLang==="en" ? "Copied!" : "已复制 ✓");
+        setTimeout(() => { btn.textContent = old; }, 1500);
+      } catch(e){
+        alert(curLang==="en" ? "Network error, please retry" : "网络错误，请重试");
+      }
+    }
+    (function(){
+      const b = document.getElementById("tokenCopyBtn");
+      if (b) b.addEventListener("click", copyMyToken);
+    })();
 
     async function renderNeeds(){
       const content = document.getElementById("content");
