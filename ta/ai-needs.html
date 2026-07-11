@@ -277,8 +277,11 @@ function applyLang(lang) {
 document.getElementById('langBtn').onclick = () => setLang(getLang() === 'zh' ? 'en' : 'zh');
 
 async function api(path, opts={}) {
-  const r = await fetch(API+path, opts);
-  return r.json();
+  const token = sessionStorage.getItem('snailai_api_token');
+  const headers = opts.headers || {};
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  if (opts.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
+  return fetch(API+path, { ...opts, headers }).then(r => r.json());
 }
 
 async function loadUser() {
