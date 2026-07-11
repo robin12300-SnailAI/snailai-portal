@@ -38,6 +38,24 @@
 
     function escHtml(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+    function matIcon(m) {
+      const f = m.file || "", nm = (m.name || "").toLowerCase();
+      if (/^https?:\/\//i.test(f)) {
+        if (nm.includes("视频")) return "🎬";
+        if (nm.includes("音频")) return "🎵";
+        if (nm.includes("pdf")) return "📕";
+        if (nm.includes("图片") || nm.includes("png") || nm.includes("jpg")) return "🖼️";
+        if (nm.includes("word") || nm.includes("docx") || nm.includes("讲座")) return "📘";
+        return "☁️";
+      }
+      const e = (f.split(".").pop() || "").toLowerCase();
+      if (e === "pdf") return "📕"; if (["doc","docx"].includes(e)) return "📘";
+      if (["zip","rar"].includes(e)) return "🗜️"; if (["png","jpg","jpeg"].includes(e)) return "🖼️";
+      if (["mp3","m4a","wav","aac"].includes(e)) return "🎵";
+      if (["mp4","mov","avi","webm"].includes(e)) return "🎬";
+      return "📄";
+    }
+
     function renderAll() {
       document.getElementById("cTitle").textContent = course.cover + " " + (curLang === "en" ? (course.nameEn || course.name) : course.name);
       document.getElementById("cDesc").textContent = curLang === "en" ? (course.descEn || course.desc) : course.desc;
@@ -52,6 +70,7 @@
           lessonIdx++;
           const chs = ls.chapters || [];
           const hasContent = chs.length > 0;
+          const mats = ls.materials || [];
           catalogHtml += `
             <details class="catalog-lesson" ${lessonIdx === 1 ? "open" : ""}>
               <summary class="catalog-summary">
@@ -66,6 +85,15 @@
                 return `<li>${escHtml(text)}${img ? `<div class="chapter-img"><img src="${escHtml(img)}" alt="${escHtml(text)}" loading="lazy"></div>` : ''}</li>`;
               }).join("")}</ol></div>` :
                 `<div class="catalog-empty">📝 ${L_("目录待更新，老师会在课前发布本节详细内容", "Syllabus pending — details will be published before class")}</div>`}
+              ${mats.length ? `<div class="catalog-mats">
+                <div class="catalog-mats-title">📎 ${ls.materialsTitle || L_("课件下载", "Download")}（${mats.length} ${L_("个文件 · 点击下载", "files · click to download")}）</div>
+                ${mats.map(m => `
+                  <div class="material">
+                    <div class="fi">${matIcon(m)}</div>
+                    <div class="mt"><b>${m.name}</b><span>${/^https?:\/\//i.test(m.file) ? "☁️ Google 云端硬盘" : m.file.split("/").pop()}</span></div>
+                    <a class="btn btn-primary btn-sm" href="${m.file}" target="_blank" rel="noopener">${L_("下载", "Download")}</a>
+                  </div>`).join("")}
+              </div>` : ``}
             </details>`;
         });
       });
@@ -76,7 +104,10 @@
       course.modules.forEach(mod => {
         html += `<div class="module"><h3>${mod.title}</h3>`;
         mod.lessons.forEach(ls => {
-          const ready = ls.slides && ls.slides.length > 0;
+          const hasSlides = ls.slides && ls.slides.length > 0;
+          const mats = ls.materials || [];
+          const hasMats = mats.length > 0;
+          const ready = hasSlides || hasMats;
           html += `
             <a class="lesson" href="${p}lesson.html?course=offline&lesson=${ls.id}">
               <div class="num">${ls.id.replace("l", "")}</div>
@@ -85,7 +116,7 @@
                 <p>${ls.desc}</p>
               </div>
               <div class="dur">${ls.duration}</div>
-              <div class="badge ${ready ? "ready" : ""}">${ready ? L_("有课件", "Slides ready") : L_("资料准备中", "Preparing")}</div>
+              <div class="badge ${ready ? "ready" : ""}">${ready ? (hasMats ? L_("📎 可下载", "📎 Available") : L_("有课件", "Slides ready")) : L_("资料准备中", "Preparing")}</div>
             </a>`;
         });
         html += `</div>`;
