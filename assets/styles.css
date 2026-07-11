@@ -245,6 +245,9 @@ img { max-width: 100%; }
   padding: 4px 0;
 }
 .catalog-chapters li:last-child { border-bottom: none; }
+.chapter-img { margin: 8px 0 2px; }
+.chapter-img img { display: block; max-width: 360px; width: 100%; border-radius: 8px; border: 1px solid var(--gray-200); box-shadow: var(--shadow); cursor: pointer; }
+
 .catalog-empty { padding: 14px 18px; font-size: 13px; color: var(--gray-400); text-align: center; background: var(--gray-100); margin: 0 10px 12px; border-radius: 10px; }
 
 /* 课程目录内的课件下载区块（第7项起） */

@@ -37,6 +37,8 @@
     const course = COURSES.online;
     const p = navPrefix();
 
+    function escHtml(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
     function matIcon(m) {
       const f = m.file || "", nm = (m.name || "").toLowerCase();
       if (/^https?:\/\//i.test(f)) {
@@ -85,7 +87,11 @@
                 <span class="catalog-dur">${ls.duration}</span>
                 <span class="catalog-arrow">▸</span>
               </summary>
-              ${hasContent ? `<div class="catalog-chapters"><ol>${chs.map(c => `<li>${c}</li>`).join("")}</ol></div>` :
+              ${hasContent ? `<div class="catalog-chapters"><ol>${chs.map(c => {
+                const text = typeof c === 'string' ? c : (c.text || c.title || '');
+                const img = typeof c === 'string' ? null : c.image;
+                return `<li>${escHtml(text)}${img ? `<div class="chapter-img"><img src="${escHtml(img)}" alt="${escHtml(text)}" loading="lazy"></div>` : ''}</li>`;
+              }).join("")}</ol></div>` :
                 `<div class="catalog-empty">📝 ${L_("目录待更新，老师会在课前发布本节详细内容", "Syllabus pending — details will be published before class")}</div>`}
               ${mats.length ? `<div class="catalog-mats">
                 <div class="catalog-mats-title">📎 ${ls.materialsTitle || L_("课件下载", "Download")}（${mats.length} ${L_("个文件 · 点击下载", "files · click to download")}）</div>
