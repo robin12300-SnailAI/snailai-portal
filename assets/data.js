@@ -84,8 +84,9 @@ const COURSES = {
       {
         title: "模块一 · AI 投资认知",
         lessons: [
-          { id: "l01", title: "第 1 堂课 — AI 时代的唯一入口", desc: "如何讲专业的 AI 提示词（阿拉丁神灯咒语）、自定义技能入门（我的购买清单）、API 登录蜗牛 AI 官网学生账号、建立 AI 时代唯一入口的认知", duration: "120 min", slides: [], materials: [],
+          { id: "l01", title: "第 1 堂课 — AI 时代的唯一入口", desc: "登录 Snailai.ai 填写你的第一个 AI 刚需、如何讲专业的 AI 提示词（阿拉丁神灯咒语）、自定义技能入门（我的购买清单）、API 登录蜗牛 AI 官网学生账号、建立 AI 时代唯一入口的认知", duration: "120 min", slides: [], materials: [],
             chapters: [
+              "登录 Snailai.ai，填写你的第一个AI 刚需",
               { text: "如何讲专业的 AI 阿拉丁神灯咒语", image: "assets/ai-aladdin-prompt.jpg" },
               "自定义技能：我的购买清单",
               "API 登录蜗牛 AI 官网学生登录账号",
