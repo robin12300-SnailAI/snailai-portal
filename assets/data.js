@@ -34,12 +34,11 @@ const COURSES = {
               "课后作业（连上 email / drive 等服务）"
             ]
           },
-          { id: "l02", title: "第 2 堂课", desc: "AI 刚需项目启动与建设", duration: "120 min", slides: [], materials: [],
+          { id: "l02", title: "第 2 堂课 — 腾讯熊猫：你的 AI 第二大脑", desc: "AI 第二大脑、购买清单 SQLite 技能与个人项目启动", duration: "120 min", slides: [], materials: [],
             chapters: [
-              "AI 刚需提示词完工后，WorkBuddy 设立共享项，GitHub 推送",
-              "学员上传项目资产",
-              "开始项目 AI 建设",
-              "作业：我的购买清单技能，SQLite 数据库"
+              "腾讯熊猫 — 你的 AI 第二大脑",
+              "我的购买清单，SQLite 数据库",
+              "个人项目的开始"
             ] }
         ]
       },
