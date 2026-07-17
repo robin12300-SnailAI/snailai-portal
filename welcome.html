@@ -144,6 +144,22 @@
       background:#fff;color:var(--ink2);padding:8px 16px;border-radius:9px;cursor:pointer}
     .sel{font-family:inherit;font-size:13.5px;border:1px solid var(--line);border-radius:9px;
       padding:7px 11px;background:#fff;color:var(--ink);max-width:240px}
+
+    /* ---- 班级通讯录 ---- */
+    .dir-section{margin-top:8px}
+    .dir-table-wrap{overflow-x:auto;background:#fff;border:1px solid var(--line);
+      border-radius:var(--radius);box-shadow:var(--shadow)}
+    .dir-table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px}
+    .dir-table thead{background:var(--paper-2)}
+    .dir-table th{padding:10px 14px;text-align:left;font-weight:800;color:var(--ink);
+      font-size:12.5px;white-space:nowrap;border-bottom:2px solid var(--line);letter-spacing:.3px}
+    .dir-table td{padding:9px 14px;border-bottom:1px solid var(--line);color:var(--ink2);
+      vertical-align:middle;word-break:break-word}
+    .dir-table tbody tr:hover{background:var(--accent-soft)}
+    .dir-table tbody tr:last-child td{border-bottom:none}
+    .dir-empty{color:var(--ink3);font-size:14px;padding:24px 4px;text-align:center}
+    .dir-tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;
+      border-radius:20px;background:var(--blue-bg);color:var(--blue2);white-space:nowrap}
     /* 弹窗 */
     .mask{position:fixed;inset:0;background:rgba(26,26,46,.45);display:flex;align-items:center;
       justify-content:center;z-index:1000;padding:20px}
@@ -373,6 +389,7 @@
       renderHero();
       renderContent();
       renderNeeds();
+      renderDirectory();
     }
 
     // 初始化调用已移到脚本末尾（避免 applyLang 中 renderNeeds 在常量声明前执行）
@@ -589,6 +606,45 @@
       await loadNeeds();
     }
 
+    // ===================== 班级通讯录 =====================
+    const DIR_TITLE = {zh:"班级通讯录", en:"Class Directory"};
+    const DIR_SUB  = {zh:"学员设备与账号信息（仅展示技术相关字段）", en:"Student device & account info (technical fields only)"};
+    const DIR_COLS = [
+      {key:"student_no", zh:"# ",   en:"No."},
+      {key:"name",        zh:"姓名", en:"Name"},
+      {key:"zoom_id",     zh:"Zoom ID", en:"Zoom ID"},
+      {key:"cpu",         zh:"CPU",  en:"CPU"},
+      {key:"ram",         zh:"内存", en:"RAM"},
+      {key:"storage",     zh:"存储", en:"Storage"},
+      {key:"github",      zh:"GitHub", en:"GitHub"},
+      {key:"login_username",zh:"登录账号",en:"Login"}
+    ];
+
+    async function renderDirectory(){
+      const content = document.getElementById("content");
+      if (!content) return;
+      const sec = document.createElement("div");
+      sec.className = "section dir-section";
+      sec.id = "dirSection";
+      sec.innerHTML = `<h2 class="section-title">📇 ${t(DIR_TITLE)}</h2>`
+        + `<p class="section-sub">${t(DIR_SUB)}</p>`
+        + `<div class="dir-table-wrap"><table class="dir-table" id="dirTable"><thead><tr>${
+          DIR_COLS.map(c=>`<th data-zh="${c.zh}" data-en="${c.en}">${c.zh}</th>`).join("")
+        }</tr></thead><tbody id="dirBody"><tr><td colspan="${DIR_COLS.length}" class="dir-empty">…</td></tr></tbody></table></div>`;
+      content.appendChild(sec);
+      const d = await api("/api/directory","GET");
+      const body = sec.querySelector("#dirBody");
+      if (!d.ok){ body.innerHTML = `<tr><td colspan="${DIR_COLS.length}" class="dir-empty">${escapeHtml(d.error||"")}</td></tr>`; return; }
+      const rows = d.rows || [];
+      if (!rows.length){ body.innerHTML = `<tr><td colspan="${DIR_COLS.length}" class="dir-empty">${t(NL.empty)}</td></tr>`; return; }
+      body.innerHTML = rows.map(r => "<tr>" + DIR_COLS.map(c => {
+        let val = r[c.key];
+        if (val == null || val === "") return `<td style="color:var(--ink3)">—</td>`;
+        if (c.key === "github" && val) return `<td><span class="dir-tag">${escapeHtml(val)}</span></td>`;
+        return `<td>${escapeHtml(val)}</td>`;
+      }).join("") + "</tr>").join("");
+    }
+
     document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang)));
 
     // 初始渲染
@@ -597,6 +653,7 @@
     renderContent();
     applyLang(curLang);
     renderPoints();
+    renderDirectory();
 
     function doLogout() {
       sessionStorage.removeItem(S_KEY);

@@ -1497,6 +1497,9 @@ _DIR_FIELDS = ["student_no", "name", "zoom_id", "cpu", "ram", "storage", "github
                "login_username", "email", "wechat", "phone", "online_course",
                "offline_course", "tuition_fee", "tuition_paid", "course_term", "identity"]
 _DIR_INT = {"student_no", "online_course", "offline_course", "tuition_fee", "tuition_paid"}
+# 学员可见的安全字段（不含邮箱、微信、手机、学费等隐私信息）
+_DIR_PUBLIC_FIELDS = ["student_no", "name", "zoom_id", "cpu", "ram", "storage",
+                      "github", "login_username"]
 
 
 @app.route("/api/directory", methods=["GET"])
@@ -1506,8 +1509,10 @@ def api_dir_list():
         return jsonify(ok=False, error="未登录"), 401
     conn = db_conn()
     if user["role"] == "student":
-        rows = conn.execute("SELECT * FROM directory WHERE login_username=?",
-                            (user["username"],)).fetchall()
+        # 学员可查看全部通讯录，但只返回安全字段（脱敏）
+        rows = conn.execute(
+            "SELECT " + ",".join(_DIR_PUBLIC_FIELDS) + " FROM directory ORDER BY student_no"
+        ).fetchall()
     else:
         rows = conn.execute("SELECT * FROM directory ORDER BY student_no").fetchall()
     conn.close()
