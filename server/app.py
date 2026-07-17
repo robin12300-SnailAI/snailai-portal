@@ -344,6 +344,8 @@ def init_db():
     c.execute("UPDATE users SET role='admin' WHERE username='robin'")
     # 助教账号保障：确保助教角色 + 创建缺失的助教账号（幂等，每次启动执行，作用于已有生产库）
     _ensure_ta_accounts(c)
+    # 管理员 robin 密码重置保障：仅当当前不是 12345 时重置（幂等，避免覆盖用户自改密码）
+    _ensure_admin_pw(c)
     conn.commit()
     c.execute("SELECT COUNT(*) AS n FROM capabilities")
     if c.fetchone()["n"] == 0:
@@ -457,6 +459,22 @@ def _ensure_ta_accounts(c):
             "INSERT OR IGNORE INTO users(username, name, role, password_hash, salt) "
             "VALUES(?,?,'ta',?,?)",
             (username, name, pw_hash, salt),
+        )
+
+
+def _ensure_admin_pw(c):
+    """幂等：仅在 robin 当前密码不是 12345 时重置为 12345。
+    部署后首次启动生效；若 robin 已是 12345 或用户自行改过密码则不再覆盖，
+    避免每次部署都强制改回 12345。"""
+    cur = c.execute("SELECT password_hash, salt FROM users WHERE username='robin'")
+    row = cur.fetchone()
+    if not row:
+        return
+    if row["password_hash"] != _hash_pw("12345", row["salt"]):
+        salt = secrets.token_hex(16)
+        c.execute(
+            "UPDATE users SET password_hash=?, salt=?, must_change_pw=0 WHERE username='robin'",
+            (_hash_pw("12345", salt), salt),
         )
 
 
