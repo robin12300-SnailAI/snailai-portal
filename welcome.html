@@ -623,9 +623,14 @@
     async function renderDirectory(){
       const content = document.getElementById("content");
       if (!content) return;
-      const sec = document.createElement("div");
-      sec.className = "section dir-section";
-      sec.id = "dirSection";
+      // 幂等：复用已有容器，避免重复 append
+      let sec = document.getElementById("dirSection");
+      if (!sec){
+        sec = document.createElement("div");
+        sec.className = "section dir-section";
+        sec.id = "dirSection";
+        content.appendChild(sec);
+      }
       sec.innerHTML = `<h2 class="section-title">📇 ${t(DIR_TITLE)}</h2>`
         + `<p class="section-sub">${t(DIR_SUB)}</p>`
         + `<div class="dir-table-wrap"><table class="dir-table" id="dirTable"><thead><tr>${
