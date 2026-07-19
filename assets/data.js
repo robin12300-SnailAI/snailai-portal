@@ -100,7 +100,7 @@ const COURSES = {
       {
         title: "模块二 · AI 分析实战",
         lessons: [
-          { id: "l03", title: "第 3 堂课", desc: "待生成", duration: "120 min", slides: [], materials: [], chapters: ["企业微信通知", "Cloudflare 注册域名", "Render 租用远程主机服务"] },
+          { id: "l03", title: "第 3 堂课", desc: "搭建自动化部署工作流：企业微信通知、Cloudflare 注册域名、Render 租用远程主机服务", duration: "120 min", slides: [], materials: [], chapters: ["企业微信通知", "Cloudflare 注册域名", "Render 租用远程主机服务"] },
           { id: "l04", title: "第 4 堂课", desc: "待生成", duration: "120 min", slides: [], materials: [], chapters: ["待生成"] },
           { id: "l05", title: "第 5 堂课", desc: "待生成", duration: "120 min", slides: [], materials: [], chapters: ["待生成"] }
         ]
