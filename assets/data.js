@@ -48,7 +48,8 @@ const COURSES = {
           { id: "l03", title: "第 3 堂课", desc: "技能开发与 GitHub 随改推送", duration: "120 min", slides: [], materials: [],
             chapters: [
               "生成一个技能：GitHub 随改推送（例：网站修改技能）",
-              "Jason 演示生成 workbuddy 技能 制作视频"
+              "Jason 演示生成 workbuddy 技能 制作视频",
+              "AI 刚需项目启动"
             ] },
           { id: "l04", title: "第 4 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] },
           { id: "l05", title: "第 5 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] },
