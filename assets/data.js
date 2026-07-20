@@ -45,11 +45,13 @@ const COURSES = {
       {
         title: "模块二 · 基础工具实战",
         lessons: [
-          { id: "l03", title: "第 3 堂课", desc: "技能开发与 GitHub 随改推送", duration: "120 min", slides: [], materials: [],
+          { id: "l03", title: "第 3 堂课", desc: "技能开发实战：生成 WorkBuddy 技能 + GitHub 随改推送与回滚，三大专家协同，AI 刚需项目启动，AI 能力清单应用", duration: "120 min", slides: [], materials: [],
             chapters: [
-              "生成一个技能：GitHub 随改推送（例：网站修改技能）",
-              "Jason 演示生成 workbuddy 技能 制作视频",
-              "AI 刚需项目启动"
+              "生成一个同步修改技能，含 GitHub 随改推送与回滚机制（例：网站修改技能）",
+              "3 个专家协同：数据库工程师、UI 设计师、开发工程师",
+              "AI 刚需项目启动推进：调用同步修改技能，开发工程师大头炮、数据工程师建后端、UI 建前端，生成 GitHub Page 浏览并持续迭代",
+              "AI 能力清单的使用（与助教一起）",
+              "Jason 演示：生成 WorkBuddy 技能并制作教学视频"
             ] },
           { id: "l04", title: "第 4 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] },
           { id: "l05", title: "第 5 堂课", desc: "待定", duration: "120 min", slides: [], materials: [], chapters: [] },
