@@ -2194,9 +2194,9 @@ def _start_scheduler():
                    "cron", hour=9, minute=0, id="daily_report")
     _sched.add_job(lambda: _send_wechat(_build_report("weekly")),
                    "cron", day_of_week="mon", hour=9, minute=0, id="weekly_report")
-    # 每日积分排行榜：悉尼时间 23:59 推送
+    # 每日积分排行榜：悉尼时间 11:59（中午）推送
     _sched.add_job(_send_daily_leaderboard,
-                   "cron", hour=23, minute=59, id="daily_leaderboard")
+                   "cron", hour=11, minute=59, id="daily_leaderboard")
     _sched.start()
 
 
