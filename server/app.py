@@ -275,6 +275,14 @@ def init_db():
       logout_at TEXT,
       last_activity_at TEXT
     );
+    CREATE TABLE IF NOT EXISTS congrats_log(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      student_username TEXT NOT NULL,
+      granted_by TEXT NOT NULL,
+      cap_count INTEGER NOT NULL DEFAULT 0,
+      content TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
     CREATE TABLE IF NOT EXISTS page_views(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       visitor_id TEXT,
@@ -1607,6 +1615,45 @@ def api_points_adjust():
     return jsonify(ok=True)
 
 
+@app.route("/api/congrats/log", methods=["GET"])
+@_rate_limit_deco(_RL_QUERY_LIMIT, _RL_QUERY_WINDOW)
+def api_congrats_log():
+    """查询恭喜通知历史（助教/讲师/管理员可见）。"""
+    user = _current_user()
+    if not user or user["role"] not in ("ta", "instructor", "admin"):
+        return jsonify(ok=False, error="无权限"), 403
+    conn = db_conn()
+    rows = conn.execute(
+        "SELECT cl.id, cl.student_username, u.name AS student_name, "
+        "cl.granted_by, cl.cap_count, cl.content, cl.created_at "
+        "FROM congrats_log cl "
+        "LEFT JOIN users u ON u.username=cl.student_username "
+        "ORDER BY cl.created_at DESC LIMIT 200"
+    ).fetchall()
+    conn.close()
+    return jsonify(ok=True, logs=[dict(r) for r in rows])
+
+
+@app.route("/api/congrats/student/<username>", methods=["GET"])
+@_rate_limit_deco(_RL_QUERY_LIMIT, _RL_QUERY_WINDOW)
+def api_congrats_student(username):
+    """查询某学员的恭喜通知历史（学员本人也可查）。"""
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    if user["role"] == "student" and user["username"] != username:
+        return jsonify(ok=False, error="无权限"), 403
+    conn = db_conn()
+    rows = conn.execute(
+        "SELECT cl.id, cl.granted_by, cl.cap_count, cl.content, cl.created_at "
+        "FROM congrats_log cl "
+        "WHERE cl.student_username=? ORDER BY cl.created_at DESC LIMIT 50",
+        (username,)
+    ).fetchall()
+    conn.close()
+    return jsonify(ok=True, logs=[dict(r) for r in rows])
+
+
 @app.route("/api/points/summary", methods=["GET"])
 @_rate_limit_deco(_RL_QUERY_LIMIT, _RL_QUERY_WINDOW)
 def api_points_summary():
@@ -2016,7 +2063,8 @@ def _send_capability_congrats(markdown_text):
 @app.route("/api/congrats/<username>", methods=["POST"])
 def api_congrats(username):
     """助教/讲师/管理员：向学员群发送「恭喜获得 AI 能力」通知。
-    自动汇总该学员 self=1 AND ta=1 的能力项，构造企业微信 markdown 消息。"""
+    自动汇总该学员 self=1 AND ta=1 的能力项，构造企业微信 markdown 消息。
+    同时写入 congrats_log，供助教看板查看历史。"""
     user = _current_user()
     if not user or user["role"] not in ("ta", "instructor", "admin"):
         return jsonify(ok=False, error="无权限"), 403
@@ -2031,8 +2079,8 @@ def api_congrats(username):
         "JOIN capabilities c ON c.id=ck.cap_id "
         "WHERE ck.student_username=? AND ck.self=1 AND ck.ta=1 ORDER BY c.id",
         (username,)).fetchall()
-    conn.close()
     if not rows:
+        conn.close()
         return jsonify(ok=False, error="该学员暂无可恭喜的能力项（需自查与助教审核均通过）"), 400
     lines = ["恭喜🎉 **%s** 学员获得以下 AI 能力：" % (t["name"] or username)]
     for i, r in enumerate(rows, 1):
@@ -2040,6 +2088,16 @@ def api_congrats(username):
     lines.append("继续努力哦😄！")
     content = "\n".join(lines)
     ok, msg = _send_capability_congrats(content)
+    # 写入 congrats_log（无论企微是否成功，都记录操作）
+    try:
+        conn.execute(
+            "INSERT INTO congrats_log(student_username, granted_by, cap_count, content) "
+            "VALUES(?,?,?,?)",
+            (username, user["username"], len(rows), content))
+        conn.commit()
+    except Exception as e:
+        print("[congrats_log] write error:", e)
+    conn.close()
     return jsonify(ok=ok, sent=ok, message=msg, content=content, count=len(rows))
 
 

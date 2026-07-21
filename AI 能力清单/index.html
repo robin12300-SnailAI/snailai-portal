@@ -95,6 +95,10 @@
     .chip.ta.on{background:var(--blue-bg);border-color:var(--blue);color:#1d4ed8}
     .chip.final.on{background:var(--accent-soft);border-color:var(--accent);color:#c2410c}
     .chip.on .dot{background:#fff}
+    .chip .check{display:none;font-size:13px;font-weight:800;margin-left:1px}
+    .chip.self.on .check{display:inline;color:var(--green)}
+    .chip.ta.on .check{display:inline;color:var(--blue)}
+    .chip.final.on .check{display:inline;color:var(--accent)}
     .chip[disabled]{opacity:.55;cursor:not-allowed}
     .chip[disabled] .dot{background:var(--ink-3)}
 
@@ -111,6 +115,15 @@
     .congrats-btn{border:none;border-radius:9px;padding:7px 12px;font-size:13px;font-weight:700;
       cursor:pointer;background:var(--accent);color:#fff;transition:.15s;white-space:nowrap}
     .congrats-btn:hover{background:var(--accent-2)}
+    /* 恭喜记录区 */
+    .congrats-log{background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+      padding:16px 18px;margin-top:16px;box-shadow:var(--shadow)}
+    .congrats-log h3{font-size:14px;margin-bottom:10px;color:var(--ink-2)}
+    .congrats-log .log-item{padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+    .congrats-log .log-item:last-child{border-bottom:none}
+    .congrats-log .log-meta{color:var(--ink-3);font-size:12px;margin-bottom:4px}
+    .congrats-log .log-content{color:var(--ink-2);white-space:pre-wrap}
+    .congrats-log .empty{color:var(--ink-3);padding:12px 0}
     .op-col{width:96px}
 
     .skeleton{height:14px;background:linear-gradient(90deg,#eee,#f5f5f5,#eee);border-radius:6px;
@@ -173,6 +186,12 @@
 
     <div class="matrix-wrap">
       <div id="matrixBox"><div class="empty">加载中…</div></div>
+    </div>
+
+    <!-- 恭喜通知记录（仅助教/讲师可见） -->
+    <div class="congrats-log" id="congratsLog" style="display:none">
+      <h3>🎉 恭喜通知记录</h3>
+      <div id="congratsLogBody"><div class="empty">加载中…</div></div>
     </div>
   </div>
 
@@ -278,6 +297,7 @@
       renderLegend();
       renderStats();
       renderMatrix();
+      if (isStaff()) loadCongratsLog();
     }
 
     function renderLegend(){
@@ -313,7 +333,7 @@
             const on = !!ck[col.key];
             const dis = canEdit(col.key) ? "" : "disabled";
             return `<span class="chip ${col.cls} ${on?"on":""}" data-u="${st.username}" data-cap="${c.id}" data-col="${col.key}" ${dis}>
-              <span class="dot"></span>${colLabel(col)}</span>`;
+              <span class="dot"></span>${colLabel(col)}<span class="check">✓</span></span>`;
           }).join("");
           return `<td><div class="cells">${chips}</div></td>`;
         }).join("");
@@ -344,10 +364,34 @@
         const d = await api("/api/congrats/" + encodeURIComponent(u), {method:"POST"});
         if (!d.ok) throw new Error(d.error || d.message || L_("发送失败","Send failed"));
         toast(L_("已发送恭喜通知🎉","Congrats sent🎉"));
+        loadCongratsLog();  // 刷新记录列表
       } catch(e){
         toast(L_("发送失败：","Send failed: ") + e.message);
       } finally {
         el.disabled = false;
+      }
+    }
+
+    async function loadCongratsLog(){
+      const box = document.getElementById("congratsLog");
+      const body = document.getElementById("congratsLogBody");
+      box.style.display = "block";
+      body.innerHTML = '<div class="empty">'+L_("加载中…","Loading…")+'</div>';
+      try {
+        const d = await api("/api/congrats/log");
+        if (!d.ok) throw new Error(d.error);
+        if (!d.logs || !d.logs.length) {
+          body.innerHTML = '<div class="empty">'+L_("暂无恭喜通知记录","No congrats records yet")+'</div>';
+          return;
+        }
+        body.innerHTML = d.logs.map(l => {
+          const meta = L_("致","To") + " <b>" + (l.student_name || l.student_username) + "</b> · "
+            + L_("共","") + l.cap_count + L_("项能力"," abilities") + " · "
+            + L_("发送者","by ") + l.granted_by + " · " + l.created_at;
+          return `<div class="log-item"><div class="log-meta">${meta}</div><div class="log-content">${l.content}</div></div>`;
+        }).join("");
+      } catch(e){
+        body.innerHTML = '<div class="empty">'+L_("加载失败","Load failed")+'</div>';
       }
     }
 
@@ -362,6 +406,14 @@
         const st = STUDENTS.find(s=>s.username===u);
         const ck = await api("/api/checks/"+u); st.checks = ck.checks||{};
         renderStats();
+        // 重新拉取 points summary（助教确认后才会真正加点数）
+        try {
+          const ps = (ME.role === "student")
+            ? await api("/api/points/summary?username=" + encodeURIComponent(ME.username))
+            : await api("/api/points/summary");
+          (ps.summary || []).forEach(s => { POINTS_SUMMARY[s.username] = s.points; });
+        } catch(_){}
+        renderMatrix();
       } catch(e){
         el.classList.toggle("on", !willOn);          // 回滚
         toast(L_("保存失败：","Save failed: ") + e.message);
