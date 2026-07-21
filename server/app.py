@@ -2101,6 +2101,16 @@ def api_congrats(username):
     return jsonify(ok=ok, sent=ok, message=msg, content=content, count=len(rows))
 
 
+@app.route("/api/admin/leaderboard/test", methods=["POST"])
+def api_leaderboard_test():
+    """手动触发每日积分排行榜推送（测试用，仅管理员）。"""
+    user = _current_user()
+    if not user or user["role"] not in ("instructor", "admin"):
+        return jsonify(ok=False, error="无权限"), 403
+    _send_daily_leaderboard()
+    return jsonify(ok=True, message="排行榜推送已触发（请检查企业微信群）")
+
+
 @app.route("/api/admin/analytics/report", methods=["GET"])
 def api_an_report():
     user = _current_user()
@@ -2112,6 +2122,60 @@ def api_an_report():
     text = _build_report(rt)
     ok, msg = _send_wechat(text)
     return jsonify(ok=True, sent=ok, message=msg, content=text)
+
+
+def _build_points_leaderboard_text():
+    """构造每日积分排行榜消息（markdown 格式，发企业微信群）。"""
+    conn = db_conn()
+    rows = conn.execute(
+        "SELECT u.username, u.name, COALESCE(SUM(pl.points),0) AS total "
+        "FROM users u "
+        "LEFT JOIN points_log pl ON pl.username=u.username "
+        "WHERE u.role='student' "
+        "GROUP BY u.username, u.name "
+        "ORDER BY total DESC, u.name ASC"
+    ).fetchall()
+    conn.close()
+    if not rows:
+        return None
+    lines = [
+        "🏆 **蜗牛AI 每日积分排行榜**",
+        "📅 " + datetime.datetime.now().strftime("%Y-%m-%d") + "（悉尼时间）",
+        "---"
+    ]
+    medals = ["🥇", "🥈", "🥉"]
+    for i, r in enumerate(rows, 1):
+        name = r["name"] or r["username"]
+        total = r["total"]
+        if i <= 3:
+            lines.append("%s **%s** — %d 分" % (medals[i-1], name, total))
+        else:
+            lines.append("%d. %s — %d 分" % (i, name, total))
+    lines.append("---")
+    # 鼓励语
+    top_name = (rows[0]["name"] or rows[0]["username"]) if rows else ""
+    lines.append("🌟 **%s** 暂时领先，太棒了！" % top_name)
+    lines.append("💪 其他同学继续加油，每天进步一点点，积少成多！")
+    lines.append("🚀 明天的排行榜，等你来挑战！")
+    return "\n".join(lines)
+
+
+def _send_daily_leaderboard():
+    """每日积分排行榜推送（由定时任务调用）。"""
+    text = _build_points_leaderboard_text()
+    if not text:
+        print("[daily_leaderboard] 无学员数据，跳过推送")
+        return
+    url = os.environ.get("CAPABILITY_WEBHOOK_URL") or os.environ.get("WECHAT_WEBHOOK_URL")
+    if not url:
+        print("[daily_leaderboard] webhook URL 未配置，跳过推送")
+        return
+    try:
+        r = requests.post(url, json={"msgtype": "markdown",
+                                    "markdown": {"content": text}}, timeout=10)
+        print("[daily_leaderboard] 推送结果:", r.status_code, r.text[:200])
+    except Exception as e:
+        print("[daily_leaderboard] 推送失败:", e)
 
 
 _sched = BackgroundScheduler(timezone="Australia/Sydney")
@@ -2130,6 +2194,9 @@ def _start_scheduler():
                    "cron", hour=9, minute=0, id="daily_report")
     _sched.add_job(lambda: _send_wechat(_build_report("weekly")),
                    "cron", day_of_week="mon", hour=9, minute=0, id="weekly_report")
+    # 每日积分排行榜：悉尼时间 23:59 推送
+    _sched.add_job(_send_daily_leaderboard,
+                   "cron", hour=23, minute=59, id="daily_leaderboard")
     _sched.start()
 
 

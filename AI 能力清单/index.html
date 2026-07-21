@@ -187,12 +187,6 @@
     <div class="matrix-wrap">
       <div id="matrixBox"><div class="empty">加载中…</div></div>
     </div>
-
-    <!-- 恭喜通知记录（仅助教/讲师可见） -->
-    <div class="congrats-log" id="congratsLog" style="display:none">
-      <h3>🎉 恭喜通知记录</h3>
-      <div id="congratsLogBody"><div class="empty">加载中…</div></div>
-    </div>
   </div>
 
   <div class="foot" data-zh="蜗牛AI 学员学堂 · AI 能力清单（SQLite 驱动）· 数据私有、实时同步" data-en="SnailAI Student Portal · AI Capability Checklist (SQLite-powered) · Private data, real-time sync">蜗牛AI 学员学堂 · AI 能力清单（SQLite 驱动）· 数据私有、实时同步</div>
@@ -297,7 +291,7 @@
       renderLegend();
       renderStats();
       renderMatrix();
-      if (isStaff()) loadCongratsLog();
+      if (isStaff()) {}
     }
 
     function renderLegend(){
@@ -324,7 +318,7 @@
           `<th title="${c.description||""}"><span class="col-no">${i+1}</span>${c.title}<div class="col-pts">+${c.points||0} ${L_("分","pts")}</div></th>`
         ).join("") +
         `<th class="pts-col">${L_("累计点数","Total")}</th>` +
-        (staff ? `<th class="op-col">${L_("操作","Action")}</th>` : "") +
+        `` +
         `</tr></thead>`;
       const rows = STUDENTS.map(st=>{
         const cells = CAPS.map(c=>{
@@ -338,8 +332,7 @@
           return `<td><div class="cells">${chips}</div></td>`;
         }).join("");
         const total = POINTS_SUMMARY[st.username] || 0;
-        const op = staff ? `<td class="op-col"><button class="congrats-btn" data-u="${st.username}" data-name="${st.name}">🎉 ${L_("恭喜通知","Congrats")}</button></td>` : "";
-        return `<tr><td class="name">${st.name}</td>${cells}<td class="pts-col"><b>${total}</b></td>${op}</tr>`;
+        return `<tr><td class="name">${st.name}</td>${cells}<td class="pts-col"><b>${total}</b></td></tr>`;
       }).join("");
       const grand = STUDENTS.reduce((s,st)=> s + (POINTS_SUMMARY[st.username]||0), 0);
       const totalRow = `<tr class="total-row"><td class="name">${L_("全员累计点数","Grand Total")}</td>` +
@@ -351,48 +344,6 @@
       document.querySelectorAll(".chip:not([disabled])").forEach(el=>{
         el.onclick = ()=>toggleChip(el);
       });
-      document.querySelectorAll(".congrats-btn").forEach(el=>{
-        el.onclick = ()=>sendCongrats(el);
-      });
-    }
-
-    async function sendCongrats(el){
-      const u = el.dataset.u, name = el.dataset.name;
-      if (!confirm(L_("确认向学员群发送「"+name+" 获得 AI 能力」恭喜通知？","Send congrats notice for "+name+" to the student group?"))) return;
-      el.disabled = true;
-      try {
-        const d = await api("/api/congrats/" + encodeURIComponent(u), {method:"POST"});
-        if (!d.ok) throw new Error(d.error || d.message || L_("发送失败","Send failed"));
-        toast(L_("已发送恭喜通知🎉","Congrats sent🎉"));
-        loadCongratsLog();  // 刷新记录列表
-      } catch(e){
-        toast(L_("发送失败：","Send failed: ") + e.message);
-      } finally {
-        el.disabled = false;
-      }
-    }
-
-    async function loadCongratsLog(){
-      const box = document.getElementById("congratsLog");
-      const body = document.getElementById("congratsLogBody");
-      box.style.display = "block";
-      body.innerHTML = '<div class="empty">'+L_("加载中…","Loading…")+'</div>';
-      try {
-        const d = await api("/api/congrats/log");
-        if (!d.ok) throw new Error(d.error);
-        if (!d.logs || !d.logs.length) {
-          body.innerHTML = '<div class="empty">'+L_("暂无恭喜通知记录","No congrats records yet")+'</div>';
-          return;
-        }
-        body.innerHTML = d.logs.map(l => {
-          const meta = L_("致","To") + " <b>" + (l.student_name || l.student_username) + "</b> · "
-            + L_("共","") + l.cap_count + L_("项能力"," abilities") + " · "
-            + L_("发送者","by ") + l.granted_by + " · " + l.created_at;
-          return `<div class="log-item"><div class="log-meta">${meta}</div><div class="log-content">${l.content}</div></div>`;
-        }).join("");
-      } catch(e){
-        body.innerHTML = '<div class="empty">'+L_("加载失败","Load failed")+'</div>';
-      }
     }
 
     async function toggleChip(el){
