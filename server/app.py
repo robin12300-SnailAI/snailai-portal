@@ -65,8 +65,6 @@ _RL_QUERY_LIMIT = 60             # 查询类 GET：每分钟 60 次
 _RL_QUERY_WINDOW = 60
 _RL_LOGIN_LIMIT = 10             # 登录 POST：每分钟 10 次
 _RL_LOGIN_WINDOW = 60
-_LOGIN_MAX_FAILS = 5             # 连续失败 5 次
-_LOGIN_LOCK_SEC = 15 * 60        # 锁定 15 分钟
 
 
 def _rl_db():
@@ -112,52 +110,6 @@ def _rate_limit_deco(limit, window=60, by_user=True):
             return fn(*a, **k)
         return wrapper
     return deco
-
-
-def _login_lock_check(username):
-    conn = sqlite3.connect(str(DB_PATH))
-    try:
-        conn.execute("PRAGMA busy_timeout = 5000")
-        row = conn.execute(
-            "SELECT fail_count, locked_until FROM login_fail_locks WHERE username=?",
-            (username,)).fetchone()
-        if not row:
-            return (False, 0)
-        fail_count, locked_until = row
-        if locked_until and _time.time() < locked_until:
-            return (True, int(locked_until - _time.time()))
-        if locked_until and _time.time() >= locked_until:
-            conn.execute("DELETE FROM login_fail_locks WHERE username=?", (username,))
-            conn.commit()
-        return (False, 0)
-    finally:
-        conn.close()
-
-
-def _login_fail_incr(username):
-    conn = sqlite3.connect(str(DB_PATH))
-    try:
-        conn.execute("PRAGMA busy_timeout = 5000")
-        row = conn.execute("SELECT fail_count FROM login_fail_locks WHERE username=?",
-                           (username,)).fetchone()
-        cnt = (row[0] if row else 0) + 1
-        locked_until = _time.time() + _LOGIN_LOCK_SEC if cnt >= _LOGIN_MAX_FAILS else None
-        conn.execute(
-            "INSERT INTO login_fail_locks(username, fail_count, locked_until) VALUES(?,?,?) "
-            "ON CONFLICT(username) DO UPDATE SET fail_count=excluded.fail_count, locked_until=excluded.locked_until",
-            (username, cnt, locked_until))
-        conn.commit()
-    finally:
-        conn.close()
-
-
-def _login_fail_clear(username):
-    conn = sqlite3.connect(str(DB_PATH))
-    try:
-        conn.execute("DELETE FROM login_fail_locks WHERE username=?", (username,))
-        conn.commit()
-    finally:
-        conn.close()
 
 
 # ---------------------------------------------------------------- 数据库
@@ -324,11 +276,6 @@ def init_db():
       created_at TEXT DEFAULT (datetime('now'))
     );
     CREATE INDEX IF NOT EXISTS idx_rate_limits_key_time ON rate_limits(rl_key, hit_at);
-    CREATE TABLE IF NOT EXISTS login_fail_locks(
-      username TEXT PRIMARY KEY,
-      fail_count INTEGER DEFAULT 0,
-      locked_until REAL DEFAULT 0
-    );
     """)
     conn.commit()
 
@@ -713,15 +660,9 @@ def api_login():
     data = request.get_json(silent=True) or {}
     username = (data.get("username") or "").strip()
     password = data.get("password") or ""
-    # 失败锁定（防爆破弱密码账号，如 test/12345）
-    locked, retry = _login_lock_check(username)
-    if locked:
-        return jsonify(ok=False, error=f"尝试次数过多，请 {retry} 秒后再试"), 429
     user = _auth_user(username, password)
     if not user:
-        _login_fail_incr(username)
         return jsonify(ok=False, error="用户名或密码错误"), 401
-    _login_fail_clear(username)
     token = _create_session(username)
     ip = _client_ip()
     ua = request.headers.get("User-Agent", "")
@@ -1432,27 +1373,6 @@ def api_admin_reset_password():
         "UPDATE users SET password_hash=?, salt=?, must_change_pw=1 WHERE username=?",
         (_hash_pw("12345", salt), salt, target))
     conn.commit()
-    conn.close()
-    return jsonify(ok=True)
-
-
-@app.route("/api/admin/clear-lock", methods=["POST"])
-def api_admin_clear_lock():
-    """管理员清除某账号的登录失败锁定（学员连续输错被锁定时用）。"""
-    user = _current_user()
-    if not _is_admin(user):
-        return jsonify(ok=False, error="无权限"), 403
-    data = request.get_json(silent=True) or {}
-    target = (data.get("username") or "").strip()
-    if not target:
-        return jsonify(ok=False, error="缺少用户名"), 400
-    conn = db_conn()
-    row = conn.execute("SELECT username FROM users WHERE username=?",
-                       (target,)).fetchone()
-    if not row:
-        conn.close()
-        return jsonify(ok=False, error="用户不存在"), 404
-    _login_fail_clear(target)
     conn.close()
     return jsonify(ok=True)
 
