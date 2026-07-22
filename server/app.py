@@ -1436,6 +1436,27 @@ def api_admin_reset_password():
     return jsonify(ok=True)
 
 
+@app.route("/api/admin/clear-lock", methods=["POST"])
+def api_admin_clear_lock():
+    """管理员清除某账号的登录失败锁定（学员连续输错被锁定时用）。"""
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    target = (data.get("username") or "").strip()
+    if not target:
+        return jsonify(ok=False, error="缺少用户名"), 400
+    conn = db_conn()
+    row = conn.execute("SELECT username FROM users WHERE username=?",
+                       (target,)).fetchone()
+    if not row:
+        conn.close()
+        return jsonify(ok=False, error="用户不存在"), 404
+    _login_fail_clear(target)
+    conn.close()
+    return jsonify(ok=True)
+
+
 @app.route("/api/admin/users", methods=["GET"])
 def api_admin_list_users():
     user = _current_user()
