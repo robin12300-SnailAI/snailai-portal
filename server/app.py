@@ -1442,6 +1442,32 @@ def api_admin_create_user():
     return jsonify(ok=True, user=_public_user(row))
 
 
+@app.route("/api/admin/users/<username>/role", methods=["PUT"])
+def api_admin_set_role(username):
+    """总管理员修改用户角色（不改变密码）。
+    仅 admin 可调用；支持 student/ta/instructor 之间的角色切换。"""
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    role = (data.get("role") or "").strip()
+    if role not in ("student", "ta", "instructor"):
+        return jsonify(ok=False, error="角色必须是 student/ta/instructor"), 400
+    conn = db_conn()
+    row = conn.execute("SELECT username FROM users WHERE username=?",
+                       (username,)).fetchone()
+    if not row:
+        conn.close()
+        return jsonify(ok=False, error="用户不存在"), 404
+    conn.execute("UPDATE users SET role=? WHERE username=?", (role, username))
+    conn.commit()
+    updated = dict(conn.execute(
+        "SELECT username, name, role FROM users WHERE username=?",
+        (username,)).fetchone())
+    conn.close()
+    return jsonify(ok=True, user=updated)
+
+
 # ---------------------------------------------------------------- 通讯录 (directory)
 _DIR_FIELDS = ["student_no", "name", "zoom_id", "cpu", "ram", "storage", "github",
                "login_username", "email", "wechat", "phone", "online_course",
