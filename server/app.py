@@ -891,6 +891,67 @@ def api_set_cap_points(cap_id):
     return jsonify(ok=True, cap_id=cap_id, points=pts)
 
 
+@app.route("/api/capabilities/<cap_id>", methods=["PUT"])
+def api_update_capability(cap_id):
+    """助教/讲师/管理员可更新能力项的标题、描述、分类和积分。
+
+    所有字段均可选，仅更新传入的字段。
+    """
+    user = _current_user()
+    if not user or user["role"] not in ("ta", "instructor", "admin"):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+
+    conn = db_conn()
+    cap = conn.execute("SELECT * FROM capabilities WHERE id=?", (cap_id,)).fetchone()
+    if not cap:
+        conn.close()
+        return jsonify(ok=False, error="能力项不存在"), 404
+
+    updates = {}
+    if "title" in data:
+        title = (data.get("title") or "").strip()
+        if not title:
+            conn.close()
+            return jsonify(ok=False, error="标题不能为空"), 400
+        # 防重复标题（排除自身）
+        dup = conn.execute("SELECT id FROM capabilities WHERE title=? AND id!=?", (title, cap_id)).fetchone()
+        if dup:
+            conn.close()
+            return jsonify(ok=False, error="已存在同名能力项"), 409
+        updates["title"] = title
+    if "description" in data:
+        updates["description"] = (data.get("description") or "").strip()
+    if "category" in data:
+        category = (data.get("category") or "").strip()
+        if not category:
+            conn.close()
+            return jsonify(ok=False, error="分类不能为空"), 400
+        updates["category"] = category
+    if "points" in data:
+        try:
+            pts = int(data.get("points", 0))
+            if pts < 0:
+                raise ValueError
+        except (ValueError, TypeError):
+            conn.close()
+            return jsonify(ok=False, error="点数必须为非负整数"), 400
+        updates["points"] = pts
+
+    if not updates:
+        conn.close()
+        return jsonify(ok=False, error="没有需要更新的字段"), 400
+
+    set_clause = ", ".join(f"{k}=?" for k in updates)
+    params = list(updates.values()) + [cap_id]
+    conn.execute(f"UPDATE capabilities SET {set_clause} WHERE id=?", params)
+    conn.commit()
+
+    updated = conn.execute("SELECT * FROM capabilities WHERE id=?", (cap_id,)).fetchone()
+    conn.close()
+    return jsonify(ok=True, cap_id=cap_id, **dict(updated))
+
+
 @app.route("/api/students", methods=["GET"])
 def api_students():
     user = _current_user()
