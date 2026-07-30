@@ -104,7 +104,12 @@ const COURSES = {
         title: "模块二 · AI 分析实战",
         lessons: [
           { id: "l03", title: "第 3 堂课", desc: "实战部署与 AI 工具流：项目生成 GitHub Pages、三方协同推送与回滚、企业微信通知 Webhook、Cloudflare 注册域名、Render 远程主机、Germini 日程、卡拉OK 技能", duration: "120 min", slides: [], materials: [], chapters: ["项目生成 github pages（网页）以及 3方共同修改 github 推送回滚设置成功。", "企业微信通知 webhook", "Cloudflare 注册域名", "Render 租用远程主机服务", "你的日程和任务（Germini）", "卡拉OK技能"] },
-          { id: "l04", title: "第 4 堂课", desc: "待生成", duration: "120 min", slides: [], materials: [], chapters: ["待生成"] },
+          { id: "l04", title: "第 4 堂课 — 蜗牛 AI 技能生态与学员项目推进", desc: "安装蜗牛 AI 技能库、同步修改工具箱的使用、蜗牛项目意图检验器、所有学员项目的同步修改推进", duration: "120 min", slides: [], materials: [], chapters: [
+            "安装蜗牛 AI 技能库 — 一键初始化、安装、更新、检查、修复全部技能",
+            "同步修改工具箱的使用 — 创建私有学生项目、发布本地文件夹、首次下载项目、安全同步、自动检查、直接发布与回滚版本",
+            "蜗牛项目意图检验器 — 对任何项目想法进行高维战略级苏格拉底式拷问，5 轮递进提问 + 底线划定 + 验收标准",
+            "所有学员项目的同步修改推进 — 逐一点评每位学员项目进度，用同步修改工具箱实操推进"
+          ] },
           { id: "l05", title: "第 5 堂课", desc: "待生成", duration: "120 min", slides: [], materials: [], chapters: ["待生成"] }
         ]
       },
