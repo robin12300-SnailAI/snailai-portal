@@ -10,7 +10,8 @@ GitHub Pages 版门户也能调用本 API。
 ------
 users(id, username UNIQUE, name, role, password_hash, salt)
   role ∈ {student, ta, instructor, admin}
-capabilities(id PK, title, description, category)
+capabilities(id PK, title, description, category, points, sort_order)
+  sort_order INTEGER NULL — 显示顺序；NULL/0 时按 id 兜底，新增项追加到末尾
 checks(student_username, cap_id, self, ta, final, updated_at, updated_by)
   PK(student_username, cap_id)
 sessions(token PK, username, created_at, expires_at)
@@ -284,6 +285,7 @@ def init_db():
         "ALTER TABLE users ADD COLUMN must_change_pw INTEGER DEFAULT 1",
         "ALTER TABLE users ADD COLUMN referrer TEXT",
         "ALTER TABLE capabilities ADD COLUMN points INTEGER DEFAULT 10",
+        "ALTER TABLE capabilities ADD COLUMN sort_order INTEGER",
     ]:
         try:
             c.execute(sql)
@@ -305,6 +307,13 @@ def init_db():
     c.execute("SELECT COUNT(*) AS n FROM capabilities")
     if c.fetchone()["n"] == 0:
         _seed_capabilities(c)
+    # 能力清单排序字段初始化：为尚无 sort_order 的记录按当前 id 顺序补 1..N，
+    # 使排序迁移对现有数据无感（旧库首次部署后全部为 NULL，此处一次性补齐）。
+    c.execute("SELECT COUNT(*) AS n FROM capabilities WHERE sort_order IS NULL")
+    if c.fetchone()["n"] > 0:
+        _rows = c.execute("SELECT id FROM capabilities ORDER BY id").fetchall()
+        for _i, _r in enumerate(_rows, 1):
+            c.execute("UPDATE capabilities SET sort_order=? WHERE id=?", (_i, _r["id"]))
     c.execute("SELECT COUNT(*) AS n FROM directory")
     if c.fetchone()["n"] == 0:
         _seed_directory(c)
@@ -788,8 +797,9 @@ def api_capabilities():
     if not user:
         return jsonify(ok=False, error="未登录"), 401
     conn = db_conn()
-    rows = conn.execute("SELECT id, title, description, category, points FROM capabilities "
-                        "ORDER BY id").fetchall()
+    rows = conn.execute(
+        "SELECT id, title, description, category, points, sort_order "
+        "FROM capabilities ORDER BY sort_order IS NULL, sort_order, id").fetchall()
     conn.close()
     return jsonify(ok=True, capabilities=[dict(r) for r in rows])
 
@@ -828,6 +838,10 @@ def api_create_capability():
         next_num = 1
     new_id = f"c{next_num:02d}"
 
+    # 新项追加到末尾：sort_order = 当前最大 +1（保证排在列表最后）
+    mx = conn.execute("SELECT MAX(sort_order) AS m FROM capabilities").fetchone()
+    new_sort = (mx["m"] or 0) + 1
+
     # 防重复标题
     dup = conn.execute("SELECT id FROM capabilities WHERE title=?", (title,)).fetchone()
     if dup:
@@ -835,8 +849,9 @@ def api_create_capability():
         return jsonify(ok=False, error="已存在同名能力项"), 409
 
     conn.execute(
-        "INSERT INTO capabilities(id, title, description, category, points) VALUES(?,?,?,?,?)",
-        (new_id, title, description, category, points),
+        "INSERT INTO capabilities(id, title, description, category, points, sort_order) "
+        "VALUES(?,?,?,?,?,?)",
+        (new_id, title, description, category, points, new_sort),
     )
     conn.commit()
     conn.close()
@@ -950,6 +965,45 @@ def api_update_capability(cap_id):
     updated = conn.execute("SELECT * FROM capabilities WHERE id=?", (cap_id,)).fetchone()
     conn.close()
     return jsonify(ok=True, cap_id=cap_id, **dict(updated))
+
+
+@app.route("/api/capabilities/reorder", methods=["POST"])
+@_rate_limit_deco(20, 60)
+def api_reorder_capabilities():
+    """助教/讲师/管理员可重排能力清单显示顺序。
+
+    请求体：{"order": ["c06", "c01", ...]} —— 完整的、按期望显示顺序排列的 id 列表。
+    后端校验 order 必须正好覆盖全部现有能力项 id（无重复、无外来项），
+    通过后按列表下标 1..N 重写每项的 sort_order。互换 / 前移后移 / 插队
+    都可由调用方在客户端算出完整顺序后一次性提交（幂等、原子）。
+    """
+    user = _current_user()
+    if not user or user["role"] not in ("ta", "instructor", "admin"):
+        return jsonify(ok=False, error="无权限"), 403
+    data = request.get_json(silent=True) or {}
+    order = data.get("order")
+    if not isinstance(order, list) or not order:
+        return jsonify(ok=False, error="order 必须为非空 id 数组"), 400
+    # 去重校验 + 类型归一
+    seen, norm = set(), []
+    for cid in order:
+        s = str(cid).strip()
+        if s in seen:
+            return jsonify(ok=False, error="order 含重复 id"), 400
+        seen.add(s)
+        norm.append(s)
+    conn = db_conn()
+    rows = conn.execute("SELECT id FROM capabilities").fetchall()
+    all_ids = {r["id"] for r in rows}
+    if seen != all_ids:
+        conn.close()
+        return jsonify(ok=False, error="order 必须恰好包含全部现有能力项 id（无重复、无外来项）",
+                       missing=sorted(all_ids - seen), extra=sorted(seen - all_ids)), 400
+    for i, cid in enumerate(norm, 1):
+        conn.execute("UPDATE capabilities SET sort_order=? WHERE id=?", (i, cid))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True, count=len(norm))
 
 
 @app.route("/api/students", methods=["GET"])
@@ -1742,7 +1796,7 @@ def api_me_growth():
 
     caps = conn.execute(
         "SELECT id, title, description, category, points "
-        "FROM capabilities ORDER BY id").fetchall()
+        "FROM capabilities ORDER BY sort_order IS NULL, sort_order, id").fetchall()
     checks = conn.execute(
         "SELECT cap_id, self, ta, final FROM checks "
         "WHERE student_username=?", (target,)).fetchall()
