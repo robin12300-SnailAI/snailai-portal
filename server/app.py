@@ -2313,12 +2313,12 @@ class _WxBizMsgCrypt:
         if self._signature(self.token, timestamp, nonce, echostr) != msg_signature:
             return None
         aes_msg = _b64.b64decode(echostr)
-        iv = aes_msg[:16]
+        # 企微规范：IV 取 AESKey 前 16 字节，对整段密文做 AES-256-CBC 解密
+        iv = self.key[:16]
         cipher = _AES.new(self.key, _AES.MODE_CBC, iv)
-        plain = cipher.decrypt(aes_msg[16:])
+        plain = cipher.decrypt(aes_msg)
         pad = plain[-1]
-        if isinstance(pad, int):
-            plain = plain[:-pad]
+        plain = plain[:-pad]
         content = plain[16:]
         msg_len = _struct.unpack(">I", content[:4])[0]
         return content[4:4 + msg_len].decode("utf-8")
