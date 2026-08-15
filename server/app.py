@@ -2335,10 +2335,7 @@ def wecom_callback():
     nonce = request.args.get("nonce", "")
     echostr = request.args.get("echostr", "")
     if not (token and aes_key and corpid and msg_signature and timestamp and nonce and echostr):
-        miss = "tok=%s key=%s corp=%s ms=%s ts=%s nc=%s es=%s" % (
-            bool(token), bool(aes_key), bool(corpid),
-            bool(msg_signature), bool(timestamp), bool(nonce), bool(echostr))
-        return "bad request: " + miss, 400
+        return "bad request", 400
     try:
         crypt = _WxBizMsgCrypt(token, aes_key, corpid)
         reply = crypt.verify_url(msg_signature, timestamp, nonce, echostr)
