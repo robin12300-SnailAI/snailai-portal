@@ -2290,6 +2290,62 @@ def wecom_domain_verify(suffix):
     return suffix, 200, {"Content-Type": "text/plain; charset=utf-8"}
 
 
+# ---------------------------------------------------------------- 企业微信回调（解锁可信 IP 用）
+# 仅实现 GET 验证（VerifyURL），不接收业务消息。用于通过「接收消息服务器 URL」
+# 校验，从而解锁自建应用的企业可信 IP 白名单。
+import base64 as _b64
+import hashlib as _hashlib
+import struct as _struct
+from Crypto.Cipher import AES as _AES
+
+
+class _WxBizMsgCrypt:
+    def __init__(self, token, encoding_aes_key, corp_id):
+        self.token = token
+        self.key = _b64.b64decode(encoding_aes_key + "=")
+        self.corp_id = corp_id
+
+    def _signature(self, *args):
+        s = "".join(sorted(args))
+        return _hashlib.sha1(s.encode("utf-8")).hexdigest()
+
+    def verify_url(self, msg_signature, timestamp, nonce, echostr):
+        if self._signature(self.token, timestamp, nonce, echostr) != msg_signature:
+            return None
+        aes_msg = _b64.b64decode(echostr)
+        iv = aes_msg[:16]
+        cipher = _AES.new(self.key, _AES.MODE_CBC, iv)
+        plain = cipher.decrypt(aes_msg[16:])
+        pad = plain[-1]
+        if isinstance(pad, int):
+            plain = plain[:-pad]
+        content = plain[16:]
+        msg_len = _struct.unpack(">I", content[:4])[0]
+        return content[4:4 + msg_len].decode("utf-8")
+
+
+@app.route("/wecom_callback", methods=["GET"])
+def wecom_callback():
+    token = os.environ.get("WECOM_CALLBACK_TOKEN", "snailai_wecom_cb_2026")
+    aes_key = os.environ.get("WECOM_CALLBACK_AESKEY",
+                             "fATZdQgpClb8HD0/esLdoktglFQFURrAoh0drKGd7VY")
+    corpid = os.environ.get("WECOM_CORPID", "")
+    msg_signature = request.args.get("msg_signature", "")
+    timestamp = request.args.get("timestamp", "")
+    nonce = request.args.get("nonce", "")
+    echostr = request.args.get("echostr", "")
+    if not (token and aes_key and corpid and msg_signature and timestamp and nonce and echostr):
+        return "bad request", 400
+    try:
+        crypt = _WxBizMsgCrypt(token, aes_key, corpid)
+        reply = crypt.verify_url(msg_signature, timestamp, nonce, echostr)
+    except Exception:
+        return "verify error", 403
+    if reply is None:
+        return "signature mismatch", 403
+    return reply
+
+
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve(path):
