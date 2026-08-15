@@ -2283,6 +2283,13 @@ def _start_scheduler():
 
 
 # ---------------------------------------------------------------- 静态站点托管
+# 企业微信自建应用「可信域名」验证：文件名 WW_verify_<内容>.txt，直接返回内容。
+# 该路由必须在 catch-all 之前注册，否则会被 serve() 的 404 覆盖。
+@app.route("/WW_verify_<suffix>.txt")
+def wecom_domain_verify(suffix):
+    return suffix, 200, {"Content-Type": "text/plain; charset=utf-8"}
+
+
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve(path):
