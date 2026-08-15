@@ -2329,7 +2329,7 @@ def wecom_callback():
     token = os.environ.get("WECOM_CALLBACK_TOKEN", "snailai_wecom_cb_2026")
     aes_key = os.environ.get("WECOM_CALLBACK_AESKEY",
                              "fATZdQgpClb8HD0/esLdoktglFQFURrAoh0drKGd7VY")
-    corpid = os.environ.get("WECOM_CORPID", "")
+    corpid = os.environ.get("WECOM_CORPID", "wx43b97f937ac5863a")
     msg_signature = request.args.get("msg_signature", "")
     timestamp = request.args.get("timestamp", "")
     nonce = request.args.get("nonce", "")
