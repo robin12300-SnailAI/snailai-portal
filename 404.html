@@ -1,177 +1,30 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-title-zh="404 · 页面未找到 | 蜗牛 AI" data-title-en="404 · Page Not Found | Snail AI">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>404 · 页面未找到 | 蜗牛 AI</title>
-<meta name="description" content="蜗牛 AI 官方网站 - 页面未找到">
-<meta name="theme-color" content="#FF5B1F">
-<link rel="icon" type="image/png" href="/assets/snailai_logo.png">
+<title>页面未找到 - 蜗牛 AI</title>
 <style>
-  :root {
-    --paper: #FCFCFA;
-    --paper-warm: #FFF9F5;
-    --ink: #1A1A2E;
-    --ink-light: rgba(26, 26, 46, 0.6);
-    --accent: #FF5B1F;
-    --accent-dark: #E54A0E;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
-    background: linear-gradient(135deg, var(--paper-warm) 0%, var(--paper) 100%);
-    color: var(--ink);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-  }
-  .wrap {
-    max-width: 520px;
-    width: 100%;
-    text-align: center;
-  }
-  .logo {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 24px;
-    display: block;
-    filter: drop-shadow(0 6px 16px rgba(255, 91, 31, 0.18));
-  }
-  .code {
-    font-family: 'JetBrains Mono', 'SF Mono', monospace;
-    font-size: 6rem;
-    font-weight: 900;
-    color: var(--accent);
-    line-height: 1;
-    letter-spacing: -0.04em;
-    margin-bottom: 8px;
-  }
-  h1 {
-    font-size: 1.6rem;
-    font-weight: 800;
-    margin-bottom: 12px;
-    letter-spacing: -0.01em;
-  }
-  p.lead {
-    font-size: 1rem;
-    color: var(--ink-light);
-    line-height: 1.7;
-    margin-bottom: 32px;
-  }
-  .links {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  a.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 14px 28px;
-    border-radius: 100px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-  a.btn.primary {
-    background: var(--accent);
-    color: white;
-    box-shadow: 0 4px 14px rgba(255, 91, 31, 0.25);
-  }
-  a.btn.primary:hover {
-    background: var(--accent-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 22px rgba(255, 91, 31, 0.35);
-  }
-  a.btn.ghost {
-    background: transparent;
-    color: var(--ink);
-    border: 1.5px solid rgba(26, 26, 46, 0.15);
-  }
-  a.btn.ghost:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .footer {
-    margin-top: 36px;
-    font-size: 0.78rem;
-    color: var(--ink-light);
-  }
-  /* Language switcher (coral theme, fixed top-right) */
-  .lang-switch {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    z-index: 50;
-    display: inline-flex;
-    background: white;
-    border: 1.5px solid rgba(26, 26, 46, 0.12);
-    border-radius: 100px;
-    padding: 3px;
-    box-shadow: 0 4px 14px rgba(26, 26, 46, 0.08);
-  }
-  .lang-btn {
-    border: none;
-    background: transparent;
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--ink-light);
-    padding: 6px 14px;
-    border-radius: 100px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .lang-btn.active {
-    background: var(--accent);
-    color: white;
-  }
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+       background:#0f1115;color:#e8e8ea;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  .box{text-align:center;padding:40px}
+  .logo{width:72px;margin-bottom:16px}
+  h1{color:#d4a23a;font-size:22px;margin:0 0 8px}
+  p{color:#9aa0a6;font-size:15px;margin:0 0 24px}
+  a{display:inline-block;margin:6px;text-decoration:none;background:#d4a23a;color:#0f1115;
+    padding:10px 18px;border-radius:8px;font-weight:600;font-size:14px}
+  a.alt{background:#1a1d24;color:#e8e8ea;border:1px solid #2a2e37}
 </style>
 </head>
 <body>
-  <div class="lang-switch">
-    <button class="lang-btn active" data-lang="zh">中文</button>
-    <button class="lang-btn" data-lang="en">EN</button>
+  <div class="box">
+    <img class="logo" src="assets/snailai_logo.png" alt="蜗牛AI logo">
+    <h1>404 · 页面走丢了</h1>
+    <p>你访问的页面不存在或已移动。回到主页继续探索 AI 学习之旅。</p>
+    <a href="/">返回首页</a>
+    <a class="alt" href="/online-course/">线上课程</a>
+    <a class="alt" href="/offline-course/">线下工作坊</a>
+    <a class="alt" href="/faq/">常见问题</a>
   </div>
-  <div class="wrap">
-    <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo" class="logo">
-    <div class="code">404</div>
-    <h1 data-zh="这一页还在写代码…" data-en="This page is still being coded…">这一页还在写代码…</h1>
-    <p class="lead" data-zh="你输入的路径不存在，或者我们正在重新设计这一页。先看看这些？" data-en="The path you visited doesn't exist, or we're redesigning this page. Try one of these?">你输入的路径不存在，或者我们正在重新设计这一页。先看看这些？</p>
-    <div class="links">
-      <a href="/" class="btn primary" data-zh="🏠 回到首页" data-en="🏠 Back to Home">🏠 回到首页</a>
-      <a href="/online-course/" class="btn ghost" data-zh="📚 线上课大纲" data-en="📚 Online Course">📚 线上课大纲</a>
-      <a href="/offline-course/" class="btn ghost" data-zh="🏫 线下课大纲" data-en="🏫 Offline Course">🏫 线下课大纲</a>
-      <a href="/faq/" class="btn ghost" data-zh="FAQ 常见问题" data-en="FAQ">FAQ 常见问题</a>
-    </div>
-    <p class="footer">🐌 蜗牛 AI · robin12300-snailai.github.io</p>
-  </div>
-<script>
-  const LANG_KEY = 'snailai-lang';
-  function applyLang(lang) {
-    document.querySelectorAll('[data-zh]').forEach(el => {
-      el.innerHTML = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
-    });
-    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.lang === lang);
-    });
-    document.title = (lang === 'en'
-      ? document.documentElement.getAttribute('data-title-en')
-      : document.documentElement.getAttribute('data-title-zh')) || document.title;
-    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
-  }
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
-  });
-  let savedLang = 'zh';
-  try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {}
-  applyLang(savedLang);
-</script>
-<script src="/assets/analytics.js"></script>
 </body>
 </html>
