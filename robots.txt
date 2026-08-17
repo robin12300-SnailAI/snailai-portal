@@ -1,0 +1,13 @@
+# snailai.ai robots.txt
+# https://snailai.ai/robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://snailai.ai/sitemap.xml
+
+# Content signals (EU DSMS compliance)
+# search: yes
+# ai-input: yes
+# ai-train: no
