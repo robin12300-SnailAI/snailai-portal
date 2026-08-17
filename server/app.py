@@ -2286,6 +2286,7 @@ def _start_scheduler():
 import stripe as _stripe
 
 _STRIPE_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
+_stripe.api_key = _STRIPE_KEY
 
 _COURSE_PRICES = {
     "online":  {"name_zh": "AI 应用线上课", "name_en": "AI Application Online Course",  "amount_cents": 59900},
@@ -2303,8 +2304,7 @@ def api_create_checkout_session():
         return jsonify({"error": f"无效课程: {course}"}), 400
     info = _COURSE_PRICES[course]
     try:
-        client = _stripe.Stripe(_STRIPE_KEY, api_version="2024-06-20")
-        sess = client.checkout.sessions.create(
+        sess = _stripe.checkout.Session.create(
             mode="payment",
             success_url=request.url_root + "payment/success.html?session_id={CHECKOUT_SESSION_ID}&course=" + course,
             cancel_url=request.url_root + "?cancelled=1",
@@ -2323,7 +2323,7 @@ def api_create_checkout_session():
         )
         return jsonify({"url": sess.url})
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"{type(e).__name__}: {str(e)}"}), 500
 
 
 @app.route("/api/verify-session", methods=["GET"])
@@ -2333,8 +2333,7 @@ def api_verify_session():
     if not sid or not _STRIPE_KEY:
         return jsonify({"paid": False})
     try:
-        client = _stripe.Stripe(_STRIPE_KEY, api_version="2024-06-20")
-        sess = client.checkout.sessions.retrieve(sid)
+        sess = _stripe.checkout.Session.retrieve(sid)
         return jsonify({
             "paid": sess.payment_status == "paid",
             "course": sess.metadata.get("course", ""),
