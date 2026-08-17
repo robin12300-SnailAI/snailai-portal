@@ -2282,6 +2282,68 @@ def _start_scheduler():
     _sched.start()
 
 
+# ---------------------------------------------------------------- Stripe 支付（蜗牛AI课程报名）
+import stripe as _stripe
+
+_STRIPE_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
+
+_COURSE_PRICES = {
+    "online":  {"name_zh": "AI 应用线上课", "name_en": "AI Application Online Course",  "amount_cents": 59900},
+    "wealth":   {"name_zh": "AI 财富管理线下课", "name_en": "AI Wealth Management Offline", "amount_cents": 199900},
+}
+
+@app.route("/api/create-checkout-session", methods=["POST"])
+def api_create_checkout_session():
+    """创建 Stripe Checkout Session，返回跳转 URL"""
+    if not _STRIPE_KEY:
+        return jsonify({"error": "Stripe 未配置"}), 503
+    data = request.get_json(silent=True) or {}
+    course = (data.get("course") or "").strip().lower()
+    if course not in _COURSE_PRICES:
+        return jsonify({"error": f"无效课程: {course}"}), 400
+    info = _COURSE_PRICES[course]
+    try:
+        client = _stripe.Stripe(_STRIPE_KEY, api_version="2024-06-20")
+        sess = client.checkout.sessions.create(
+            mode="payment",
+            success_url=request.url_root + "payment/success.html?session_id={CHECKOUT_SESSION_ID}&course=" + course,
+            cancel_url=request.url_root + "?cancelled=1",
+            line_items=[{
+                "price_data": {
+                    "currency": "aud",
+                    "unit_amount": info["amount_cents"],
+                    "product_data": {
+                        "name": info["name_en"],
+                        "description": info["name_zh"],
+                    },
+                },
+                "quantity": 1,
+            }],
+            metadata={"course": course, "source": "snailai-portal"},
+        )
+        return jsonify({"url": sess.url})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/verify-session", methods=["GET"])
+def api_verify_session():
+    """验证 Checkout Session 付款状态"""
+    sid = request.args.get("session_id", "")
+    if not sid or not _STRIPE_KEY:
+        return jsonify({"paid": False})
+    try:
+        client = _stripe.Stripe(_STRIPE_KEY, api_version="2024-06-20")
+        sess = client.checkout.sessions.retrieve(sid)
+        return jsonify({
+            "paid": sess.payment_status == "paid",
+            "course": sess.metadata.get("course", ""),
+            "customer_email": sess.customer_details.get("email", "") if sess.customer_details else "",
+        })
+    except Exception:
+        return jsonify({"paid": False})
+
+
 # ---------------------------------------------------------------- 静态站点托管
 # 企业微信自建应用「可信域名」验证：文件名 WW_verify_<内容>.txt，直接返回内容。
 # 该路由必须在 catch-all 之前注册，否则会被 serve() 的 404 覆盖。

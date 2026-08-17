@@ -323,6 +323,24 @@
   }
   .service-card .link:hover { color: var(--accent-2); }
 
+  /* ===== Course Actions (syllabus link + pay button) ===== */
+  .course-actions {
+    display: flex; align-items: center; gap: 12px; margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .btn-pay {
+    display: inline-block;
+    padding: 8px 20px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 100px;
+    font-size: 0.85rem; font-weight: 800;
+    cursor: pointer; transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+  }
+  .btn-pay:hover { background: var(--accent-2); transform: translateY(-1px); }
+  .btn-pay:active { transform: translateY(0); }
+  .btn-pay.loading { opacity: 0.6; pointer-events: none; }
+
   /* ===== Wealth Highlights (inside service card) ===== */
   .wealth-highlights { margin-top: 8px; flex: 1; }
   .wh-item {
@@ -899,7 +917,10 @@
           <div class="ol-item"><span class="ol-icon">💡</span><span data-zh="终极目标：3 个月结束前实现 AI 顿悟" data-en="Ultimate Goal: Achieve AI Enlightenment in 3 months">终极目标：3 个月结束前实现 AI 顿悟</span></div>
         </div>
         <span class="price" data-zh="AUD $599 / 3 个月" data-en="AUD $599 / 3 months">AUD $599 / 3 个月</span>
-        <a href="/online-course/" target="_blank" class="link" data-zh="查看课程大纲 →" data-en="View Syllabus →">查看课程大纲 →</a>
+        <div class="course-actions">
+          <a href="/online-course/" target="_blank" class="link" data-zh="查看课程大纲 →" data-en="View Syllabus →">查看课程大纲 →</a>
+          <button class="btn-pay" data-course="online" data-zh="立即报名缴费" data-en="Enroll & Pay">立即报名缴费</button>
+        </div>
       </div>
 
       <div class="service-card">
@@ -912,7 +933,10 @@
           <div class="wh-item"><span class="wh-icon">📈</span><span data-zh="AI 股票与资产配置风控：AI 读财报，深度研究股票与板块强度指数，实现长期使用复盘流程" data-en="AI Stocks & Asset Allocation: AI reads financial reports, deep research on stocks & sector strength indices, long-term review process">AI 股票与资产配置风控：AI 读财报，深度研究股票与板块强度指数，实现长期使用复盘流程</span></div>
         </div>
         <span class="price" data-zh="AUD $1,999 / 高级" data-en="AUD $1,999 / Advanced">AUD $1,999 / 高级</span>
-        <a href="/offline-course/" target="_blank" class="link" data-zh="查看财富课 →" data-en="View Wealth →">查看财富课 →</a>
+        <div class="course-actions">
+          <a href="/offline-course/" target="_blank" class="link" data-zh="查看财富课 →" data-en="View Wealth →">查看财富课 →</a>
+          <button class="btn-pay" data-course="wealth" data-zh="立即报名缴费" data-en="Enroll & Pay">立即报名缴费</button>
+        </div>
       </div>
 
       <div class="service-card">
@@ -1433,6 +1457,40 @@
       el.textContent = `V${d.version} · ${d.release_date} · SnailAI Website`;
     }
   }).catch(() => {});
+
+  // ===== Stripe Pay Button Handler =====
+  document.querySelectorAll('.btn-pay').forEach(btn => {
+    btn.addEventListener('click', async function () {
+      const course = this.dataset.course;
+      if (!course) return;
+      this.classList.add('loading');
+      this.textContent = this.dataset.lang === 'en' ? 'Processing...' : '处理中...';
+      try {
+        const res = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ course: course }),
+        });
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert((data.error || 'Payment error') + '\n' + (this.dataset.lang === 'en' ? 'Please try again or contact us.' : '请稍后重试或联系我们。'));
+          this.classList.remove('loading');
+          this.textContent = this.getAttribute('data-zh');
+        }
+      } catch (e) {
+        alert(this.dataset.lang === 'en' ? 'Network error. Please try again.' : '网络错误，请重试。');
+        this.classList.remove('loading');
+        this.textContent = this.getAttribute('data-zh');
+      }
+    });
+  });
+
+  // Check URL for cancelled payment
+  if (window.location.search.includes('cancelled=1')) {
+    history.replaceState(null, '', window.location.pathname);
+  }
 </script>
 
 <!-- Mobile Bottom Nav (homepage root) -->
