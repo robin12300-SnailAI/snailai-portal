@@ -367,13 +367,13 @@
     }
     .quote-item.selected .sub-modules { display: block; }
 
-    /* ===== LOCKED MANDATORY ITEMS (V1.6.1) ===== */
+    /* ===== LOCKED MANDATORY ITEMS (V1.6.2) ===== */
     .badge-required { background: rgba(232,74,15,0.10); color: var(--accent-2); border: 1px solid rgba(232,74,15,0.45); }
     .quote-item.locked { cursor: default; }
     .quote-item.locked .checkbox { background: var(--accent-2); border-color: var(--accent-2); }
     .quote-item.locked .item-name { color: var(--ink-2); }
 
-    /* ===== CATEGORY SECTIONS (V1.6.1) ===== */
+    /* ===== CATEGORY SECTIONS (V1.6.2) ===== */
     .cat-header {
       display: flex; justify-content: space-between; align-items: baseline;
       margin: 26px 0 10px; padding-bottom: 7px;
@@ -883,7 +883,7 @@
       <div class="brand-header">
         <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
         <span class="brand-name">SnailAI<span class="brand-ai">.AI</span></span>
-        <span class="app-version">V1.6.1</span>
+        <span class="app-version">V1.6.2</span>
       </div>
       <h2 data-zh="Skin Cancer Laser Centre 模块化报价" data-en="Skin Cancer Laser Centre Modular Quotation">Skin Cancer Laser Centre Modular Quotation</h2>
       <span class="quote-id">SCLC-QUOTE-2026-001 &middot; v1.0</span>
@@ -1232,45 +1232,6 @@ const ITEMS = [
       boundary: { zh: '同 Standard 边界。额外支持时间不结转。', en: 'Same boundaries as Standard. Unused support time does not roll over.' }
     }
   },
-  {
-    id: 'agent-care', type: 'monthly', price: 220,
-    ref: { zh: '', en: '' },
-    name: { zh: '桌面AI Agent 部署维护', en: 'Desktop AI Agent Deployment Care' },
-    sub: 'Skill/pipeline health · Dependency updates · One deployment/rollback assistance · 1hr support',
-    preselected: false,
-    detail: {
-      objective: { zh: '桌面AI Agent 生产力工具的部署维护：技能和流程健康检查、依赖更新、一次部署/回滚协助、每月 1 小时支持。', en: 'Deployment care for the desktop AI agent productivity tool: skill/pipeline health checks, dependency updates, one deployment/rollback assistance and 1 hour of support per month.' },
-      deliverables: { zh: ['技能/流程健康检查', '依赖更新', '一次部署/回滚协助', '每月 1 小时支持'], en: ['Skill/pipeline health checks', 'Dependency updates', 'One deployment/rollback assistance', '1 hour support per month'] },
-      acceptance: { zh: ['技能与流程检查按计划执行'], en: ['Skill and pipeline checks performed on schedule'] },
-      boundary: { zh: '不含新技能开发与重大流程重构。未使用支持时间不结转。', en: 'Excludes new skill development and major pipeline rebuilds. Unused support time does not roll over.' }
-    }
-  },
-  {
-    id: 'care-combined', type: 'monthly', price: 850,
-    ref: { zh: '', en: '' },
-    name: { zh: 'Combined Digital Operations Care', en: 'Combined Digital Operations Care' },
-    sub: 'Website Standard + Desktop AI Agent Care + customer-data skill care · Up to 4hr support/mo',
-    preselected: false,
-    detail: {
-      objective: { zh: '综合运维套餐：网站 Standard + AI 助手维护 + 桌面AI Agent 部署维护；每月最多 4 小时支持。', en: 'Combined operations care: Website Standard + AI Assistant Care + Desktop AI Agent Deployment Care; up to 4 total hours of minor edits/support per month.' },
-      deliverables: { zh: ['网站 Standard 全部', '客户资料处理技能维护与更新', '桌面AI Agent 技能/流程检查', '每月最多 4 小时支持'], en: ['All Website Standard services', 'Customer-data processing skill maintenance and updates', 'Desktop AI agent skill/pipeline health checks', 'Up to 4 total hours of support per month'] },
-      acceptance: { zh: ['所有子服务验收条件通过'], en: ['All sub-service acceptance criteria pass'] },
-      boundary: { zh: '未使用支持时间不结转。第三方订阅、SMS、Email、AI token 和交易费另计。', en: 'Unused support time does not roll over. Third-party subscriptions, SMS, email, AI tokens and transaction charges are excluded.' }
-    }
-  },
-  {
-    id: 'care-comms', type: 'monthly', price: 990,
-    ref: { zh: '', en: '' },
-    name: { zh: 'Combined Care with Communications', en: 'Combined Care with Communications' },
-    sub: 'Website Standard + customer-data skill care (incl. SMS/Email connector) + Desktop AI Agent Care · Up to 5hr support/mo',
-    preselected: false,
-    detail: {
-      objective: { zh: '含通讯的综合运维套餐：网站 Standard + 客户资料处理技能维护（含 SMS/Email connector）+ 桌面AI Agent 部署维护；每月最多 5 小时支持。', en: 'Combined care with communications: Website Standard + customer-data skill care (incl. SMS/email connector) + Desktop AI Agent Deployment Care; up to 5 total hours of support per month.' },
-      deliverables: { zh: ['网站 Standard 全部', '客户资料处理技能维护（含 SMS/Email connector）', '桌面AI Agent 技能/流程检查', '每月最多 5 小时支持'], en: ['All Website Standard services', 'Customer-data skill care incl. SMS/email connector health', 'Desktop AI agent skill/pipeline health checks', 'Up to 5 total hours of support per month'] },
-      acceptance: { zh: ['所有子服务验收条件通过', 'SMS/Email connector 健康检查正常'], en: ['All sub-service acceptance criteria pass', 'SMS/email connector health check passes'] },
-      boundary: { zh: 'SMS/Email 用量费另计。其余同 Combined Digital Operations Care。', en: 'SMS/email usage charges excluded. Otherwise same as Combined Digital Operations Care.' }
-    }
-  }
 ];
 
 // ===== CONSTANTS =====
