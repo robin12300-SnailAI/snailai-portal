@@ -190,7 +190,7 @@
     <p class="subtitle" data-zh="请输入账号和密码" data-en="Enter your credentials">Enter your credentials</p>
     <div class="field"><label data-zh="账号" data-en="Account">Account</label><input type="text" id="login-user" autocomplete="off" spellcheck="false"></div>
     <div class="field"><label data-zh="密码" data-en="Password">Password</label><input type="password" id="login-pass"></div>
-    <button class="login-btn" id="login-btn" data-zh="进入" data-en="Enter">Enter</button>
+    <button type="button" class="login-btn" id="login-btn" data-zh="进入" data-en="Enter">Enter</button>
     <div class="login-error" id="login-error" data-zh="账号或密码不正确" data-en="Incorrect account or password">Incorrect account or password</div>
   </div>
 </div>
@@ -263,12 +263,13 @@ let selectedItems={};
 let currentLang=localStorage.getItem('snailai-lang')||'en';
 
 document.getElementById('login-btn').addEventListener('click',doLogin);
+document.getElementById('login-user').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
 function doLogin(){
   const u=document.getElementById('login-user').value.trim();
-  const p=document.getElementById('login-pass').value;
-  if(u==='Andrew'&&p==='success888'){
+  const p=document.getElementById('login-pass').value.trim();
+  if(u.toLowerCase()==='andrew'&&p==='success888'){
     document.getElementById('login-view').style.display='none';
     document.getElementById('app-view').style.display='block';
     initQuote();

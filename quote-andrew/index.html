@@ -572,7 +572,7 @@
       <label data-zh="密码" data-en="Password">Password</label>
       <input type="password" id="login-pass">
     </div>
-    <button class="login-btn" id="login-btn" data-zh="进入" data-en="Enter">Enter</button>
+    <button type="button" class="login-btn" id="login-btn" data-zh="进入" data-en="Enter">Enter</button>
     <div class="login-error" id="login-error" data-zh="账号或密码不正确" data-en="Incorrect account or password">Incorrect account or password</div>
   </div>
 </div>
@@ -896,12 +896,13 @@ async function sha256(str) {
 const PASS_HASH = 'a4ae9b28e0ae9c42e6e7a8f8e7f6e5e4d3d2d1d0c9c8c7c6c5c4c3c2c1c0b9b8b7b6b5'; // placeholder
 
 document.getElementById('login-btn').addEventListener('click', doLogin);
+document.getElementById('login-user').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 
 async function doLogin() {
   const user = document.getElementById('login-user').value.trim();
-  const pass = document.getElementById('login-pass').value;
-  if (user === 'Andrew' && pass === 'success888') {
+  const pass = document.getElementById('login-pass').value.trim();
+  if (user.toLowerCase() === 'andrew' && pass === 'success888') {
     document.getElementById('login-view').style.display = 'none';
     document.getElementById('app-view').style.display = 'block';
     initQuote();
