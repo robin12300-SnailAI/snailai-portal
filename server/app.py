@@ -712,6 +712,168 @@ def _options():
 
 # ---------------------------------------------------------------- API
 
+# ===== Gmail SMTP 报价通知（V1.7.0） =====
+GMAIL_USER = os.environ.get("GMAIL_USER", "robin12300@gmail.com")
+GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "")
+QUOTE_NOTIFY_TO = os.environ.get("QUOTE_NOTIFY_TO", "robin@snailai.ai")
+QUOTE_NOTIFY_CC = os.environ.get("QUOTE_NOTIFY_CC", "robin12300@gmail.com")
+
+
+def _fmt_aud(n):
+    try:
+        return "${:,.2f}".format(float(n))
+    except (TypeError, ValueError):
+        return "$0"
+
+
+def _esc(s):
+    """HTML 转义。"""
+    return (str(s) if s is not None else "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def _build_quote_email_html(data, confirmed_by):
+    """构建报价确认通知邮件的 HTML 正文。"""
+    sel = data.get("selections", []) or []
+    ci_company = data.get("companyName", "")
+    ci_abn = data.get("abn", "")
+    ci_addr = data.get("address", "")
+    ci_contact = data.get("contactPerson", "")
+    ci_email = data.get("email", "")
+    ci_phone = data.get("phone", "")
+    oneoff_total = data.get("oneoffTotal", 0)
+    monthly_total = data.get("monthlyTotal", 0)
+    deposit_total = data.get("depositTotal", 0)
+
+    rows = ""
+    for it in sel:
+        nm = it.get("name", "")
+        if isinstance(nm, dict):
+            nm = nm.get("en") or nm.get("zh") or ""
+        price = it.get("price", 0)
+        typ = it.get("type", "oneoff")
+        price_str = _fmt_aud(price) + ("/mo" if typ == "monthly" else "")
+        rows += (
+            '<tr>'
+            '<td style="padding:6px 10px;border-bottom:1px solid #eee;">{}</td>'
+            '<td style="padding:6px 10px;border-bottom:1px solid #eee;text-align:right;">{}</td>'
+            '</tr>'
+        ).format(_esc(nm), _esc(price_str))
+
+    schedule_rows = ""
+    for sc in data.get("paymentSchedule", []) or []:
+        nm = sc.get("name", "")
+        price = sc.get("price", 0)
+        if sc.get("type") == "304030":
+            parts = "30% {} / 40% {} / 30% {}".format(
+                _fmt_aud(sc.get("p30", 0)), _fmt_aud(sc.get("p40", 0)), _fmt_aud(sc.get("p30b", 0)))
+        else:
+            parts = "50% {} / 50% {}".format(
+                _fmt_aud(sc.get("p50a", 0)), _fmt_aud(sc.get("p50b", 0)))
+        schedule_rows += (
+            '<tr>'
+            '<td style="padding:6px 10px;border-bottom:1px solid #eee;">{}</td>'
+            '<td style="padding:6px 10px;border-bottom:1px solid #eee;text-align:right;">{}</td>'
+            '<td style="padding:6px 10px;border-bottom:1px solid #eee;text-align:right;">{}</td>'
+            '</tr>'
+        ).format(_esc(nm), _esc(_fmt_aud(price)), _esc(parts))
+
+    gst_rate = data.get("gstRate", 0.10)
+    oneoff_gst = data.get("oneoffGst", 0)
+    oneoff_incl = data.get("oneoffInclGst", 0)
+    monthly_gst = data.get("monthlyGst", 0)
+    monthly_incl = data.get("monthlyInclGst", 0)
+
+    html = """<!DOCTYPE html><html><body style="font-family:Arial,Helvetica,sans-serif;color:#1A1A2E;max-width:640px;margin:0 auto;">
+<h2 style="color:#FF5B1F;border-bottom:2px solid #FF5B1F;padding-bottom:6px;">SnailAI.AI — Quotation Confirmation</h2>
+<p>Quotation <b>{quote_id}</b> has been confirmed by the client.</p>
+
+<h3 style="color:#2A2A40;margin-bottom:4px;">Client Information</h3>
+<table style="border-collapse:collapse;font-size:13px;margin-bottom:18px;">
+<tr><td style="padding:3px 10px 3px 0;color:#6A6A85;">Company</td><td style="padding:3px 0;"><b>{company}</b></td></tr>
+<tr><td style="padding:3px 10px 3px 0;color:#6A6A85;">ABN</td><td style="padding:3px 0;">{abn}</td></tr>
+<tr><td style="padding:3px 10px 3px 0;color:#6A6A85;">Address</td><td style="padding:3px 0;">{addr}</td></tr>
+<tr><td style="padding:3px 10px 3px 0;color:#6A6A85;">Contact</td><td style="padding:3px 0;">{contact}</td></tr>
+<tr><td style="padding:3px 10px 3px 0;color:#6A6A85;">Email</td><td style="padding:3px 0;">{email}</td></tr>
+<tr><td style="padding:3px 10px 3px 0;color:#6A6A85;">Phone</td><td style="padding:3px 0;">{phone}</td></tr>
+<tr><td style="padding:3px 10px 3px 0;color:#6A6A85;">Confirmed by</td><td style="padding:3px 0;">{confirmed_by}</td></tr>
+<tr><td style="padding:3px 10px 3px 0;color:#6A6A85;">Confirmed at</td><td style="padding:3px 0;">{ts}</td></tr>
+</table>
+
+<h3 style="color:#2A2A40;margin-bottom:4px;">Selected Modules</h3>
+<table style="border-collapse:collapse;width:100%;font-size:13px;margin-bottom:8px;">
+<tr style="background:#F5F4EE;"><th style="padding:8px 10px;text-align:left;">Module</th><th style="padding:8px 10px;text-align:right;">Price (ex GST)</th></tr>
+{rows}
+</table>
+<table style="border-collapse:collapse;font-size:13px;margin-bottom:18px;">
+<tr><td style="padding:4px 10px 4px 0;">One-off total (ex GST)</td><td style="padding:4px 0;text-align:right;"><b>{oneoff}</b></td></tr>
+<tr><td style="padding:4px 10px 4px 0;">One-off GST ({gst_pct}%)</td><td style="padding:4px 0;text-align:right;">{oneoff_gst}</td></tr>
+<tr><td style="padding:4px 10px 4px 0;">One-off total (incl GST)</td><td style="padding:4px 0;text-align:right;"><b>{oneoff_incl}</b></td></tr>
+<tr><td style="padding:4px 10px 4px 0;">Monthly total (ex GST)</td><td style="padding:4px 0;text-align:right;"><b>{monthly}</b></td></tr>
+<tr><td style="padding:4px 10px 4px 0;">Monthly GST</td><td style="padding:4px 0;text-align:right;">{monthly_gst}</td></tr>
+<tr><td style="padding:4px 10px 4px 0;">Monthly total (incl GST)</td><td style="padding:4px 0;text-align:right;"><b>{monthly_incl}</b></td></tr>
+</table>
+
+<h3 style="color:#2A2A40;margin-bottom:4px;">Payment Schedule</h3>
+<table style="border-collapse:collapse;width:100%;font-size:13px;margin-bottom:8px;">
+<tr style="background:#F5F4EE;"><th style="padding:8px 10px;text-align:left;">Module</th><th style="padding:8px 10px;text-align:right;">Price</th><th style="padding:8px 10px;text-align:right;">Milestones (ex GST)</th></tr>
+{schedule_rows}
+</table>
+<p style="font-size:13px;">Commencement deposit due (ex GST): <b>{deposit}</b></p>
+
+<p style="font-size:12px;color:#6A6A85;margin-top:24px;border-top:1px solid #eee;padding-top:10px;">
+This is an automated notification from the SnailAI.AI quotation system (quote-andrew).<br>
+Sent {sent_at} · Record saved to quote_confirmations database.
+</p>
+</body></html>""".format(
+        quote_id=_esc(data.get("quoteId", "")),
+        company=_esc(ci_company), abn=_esc(ci_abn), addr=_esc(ci_addr),
+        contact=_esc(ci_contact), email=_esc(ci_email), phone=_esc(ci_phone),
+        confirmed_by=_esc(confirmed_by or "client"),
+        ts=_esc(str(data.get("timestamp", ""))),
+        rows=rows, schedule_rows=schedule_rows,
+        oneoff=_fmt_aud(oneoff_total), monthly=_fmt_aud(monthly_total),
+        deposit=_fmt_aud(deposit_total),
+        gst_pct=int(round(float(gst_rate) * 100)),
+        oneoff_gst=_fmt_aud(oneoff_gst), oneoff_incl=_fmt_aud(oneoff_incl),
+        monthly_gst=_fmt_aud(monthly_gst), monthly_incl=_fmt_aud(monthly_incl),
+        sent_at=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )
+    return html
+
+
+def _send_quote_email(data, confirmed_by):
+    """通过 Gmail SMTP 发送报价确认通知。失败只记日志，不影响确认接口。"""
+    if not GMAIL_APP_PASSWORD:
+        app.logger.info("[quote-email] GMAIL_APP_PASSWORD not set; skip notification")
+        return False
+    import smtplib
+    from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
+
+    subject = "[Quotation] {} confirmed — {} (one-off {})".format(
+        data.get("quoteId", "quote"), data.get("companyName", "client"),
+        _fmt_aud(data.get("oneoffTotal", 0)))
+
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = subject
+    msg["From"] = "SnailAI.AI Quote <{}>".format(GMAIL_USER)
+    msg["To"] = QUOTE_NOTIFY_TO
+    if QUOTE_NOTIFY_CC:
+        msg["Cc"] = QUOTE_NOTIFY_CC
+    msg.attach(MIMEText(_build_quote_email_html(data, confirmed_by), "html", "utf-8"))
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20) as srv:
+            srv.login(GMAIL_USER, GMAIL_APP_PASSWORD)
+            recipients = [QUOTE_NOTIFY_TO] + ([QUOTE_NOTIFY_CC] if QUOTE_NOTIFY_CC else [])
+            srv.sendmail(GMAIL_USER, recipients, msg.as_string())
+        app.logger.info("[quote-email] sent to %s cc %s", QUOTE_NOTIFY_TO, QUOTE_NOTIFY_CC)
+        return True
+    except Exception as e:  # noqa: BLE001
+        app.logger.warning("[quote-email] send failed: %s", e)
+        return False
+
+
 @app.route("/api/quote/confirm", methods=["POST"])
 def api_quote_confirm():
     """Andrew 报价确认 — 存 SQLite 留底（邮件待配密码后补充）。
@@ -745,8 +907,11 @@ def api_quote_confirm():
     conn.commit()
     conn.close()
 
-    # TODO: 邮件发送 — 待 Gmail 应用专用密码配置后，在此处加 SMTP 发信逻辑
-    # 目标：发 robin@snailai.ai（抄送 robin12300@gmail.com），内容=勾选清单+付款进程
+    # 邮件通知（失败不影响确认结果）
+    try:
+        _send_quote_email(data, confirmed_by)
+    except Exception as e:  # noqa: BLE001
+        app.logger.warning("[quote-email] unexpected error: %s", e)
 
     return jsonify({"ok": True, "quoteId": quote_id})
 
