@@ -277,6 +277,18 @@ def init_db():
       created_at TEXT DEFAULT (datetime('now'))
     );
     CREATE INDEX IF NOT EXISTS idx_rate_limits_key_time ON rate_limits(rl_key, hit_at);
+    CREATE TABLE IF NOT EXISTS quote_confirmations(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      quote_id TEXT NOT NULL,
+      client TEXT NOT NULL,
+      selections TEXT NOT NULL,
+      oneoff_total INTEGER DEFAULT 0,
+      monthly_total INTEGER DEFAULT 0,
+      deposit_total INTEGER DEFAULT 0,
+      payment_schedule TEXT,
+      confirmed_at TEXT DEFAULT (datetime('now')),
+      email_sent INTEGER DEFAULT 0
+    );
     """)
     conn.commit()
 
@@ -663,6 +675,34 @@ def _options():
 
 
 # ---------------------------------------------------------------- API
+
+@app.route("/api/quote/confirm", methods=["POST"])
+def api_quote_confirm():
+    """Andrew 报价确认 — 存 SQLite 留底（邮件待配密码后补充）。"""
+    data = request.get_json(silent=True) or {}
+    quote_id = data.get("quoteId", "")
+    client = data.get("client", "")
+    selections = json.dumps(data.get("selections", []), ensure_ascii=False)
+    oneoff_total = data.get("oneoffTotal", 0)
+    monthly_total = data.get("monthlyTotal", 0)
+    deposit_total = data.get("depositTotal", 0)
+    payment_schedule = json.dumps(data.get("paymentSchedule", []), ensure_ascii=False)
+    ts = data.get("timestamp") or datetime.datetime.utcnow().isoformat()
+
+    conn = db_conn()
+    conn.execute(
+        "INSERT INTO quote_confirmations(quote_id, client, selections, oneoff_total, monthly_total, deposit_total, payment_schedule, confirmed_at) VALUES(?,?,?,?,?,?,?,?)",
+        (quote_id, client, selections, oneoff_total, monthly_total, deposit_total, payment_schedule, ts),
+    )
+    conn.commit()
+    conn.close()
+
+    # TODO: 邮件发送 — 待 Gmail 应用专用密码配置后，在此处加 SMTP 发信逻辑
+    # 目标：发 robin@snailai.ai（抄送 robin12300@gmail.com），内容=勾选清单+付款进程
+
+    return jsonify({"ok": True, "quoteId": quote_id})
+
+
 @app.route("/api/login", methods=["POST"])
 @_rate_limit_deco(_RL_LOGIN_LIMIT, _RL_LOGIN_WINDOW, by_user=False)
 def api_login():
