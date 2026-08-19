@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-title-zh="蜗牛 AI · 企业AI服务 + 企业AI教育 | 悉尼" data-title-en="Snail AI · Enterprise AI Services + Corporate Education | Sydney">
+<html lang="en" data-title-zh="蜗牛 AI · 企业AI服务 + 企业AI教育 | 悉尼" data-title-en="Snail AI · Enterprise AI Services + Corporate Education | Sydney">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1686,7 +1686,7 @@
     <a href="/enterprise/" data-zh="企业服务" data-en="Enterprise">企业服务</a>
     <a href="https://www.youtube.com/playlist?list=PLrAXtmRdnEQy6nuLMfO9tV4rnQ5w8e6yA" target="_blank" data-zh="YouTube" data-en="YouTube">YouTube</a>
   </div>
-  <div class="version" id="version-tag">V2.0.0 · 2026-08-19 · SnailAI Website</div>
+  <div class="version" id="version-tag">V2.0.2 · 2026-08-19 · SnailAI Website</div>
 </footer>
 
 <script>
@@ -1708,8 +1708,8 @@
     btn.addEventListener('click', () => applyLang(btn.dataset.lang));
   });
   // Init
-  let savedLang = 'zh';
-  try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {}
+  let savedLang = 'en';
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'en'; } catch(e) {}
   applyLang(savedLang);
 
   // ===== Version tag (read from version.json) =====

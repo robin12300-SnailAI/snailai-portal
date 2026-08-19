@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-title-zh="蜗牛AI · 企业AI级服务 — 悉尼中小企业AI落地专家" data-title-en="Snail AI · Enterprise AI Services — Hands-On AI for Sydney SMEs">
+<html lang="en" data-title-zh="蜗牛AI · 企业AI级服务 — 悉尼中小企业AI落地专家" data-title-en="Snail AI · Enterprise AI Services — Hands-On AI for Sydney SMEs">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -309,7 +309,7 @@
     try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
   }
   document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', () => applyLang(btn.dataset.lang)));
-  let savedLang = 'zh'; try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {} applyLang(savedLang);
+  let savedLang = 'en'; try { savedLang = localStorage.getItem(LANG_KEY) || 'en'; } catch(e) {} applyLang(savedLang);
   document.querySelectorAll('.faq-q').forEach(q => q.addEventListener('click', () => q.parentElement.classList.toggle('open')));
 </script>
 </body>
