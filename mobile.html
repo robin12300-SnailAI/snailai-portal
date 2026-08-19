@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-title-zh="蜗牛 AI · 澳洲华人AI 应用教育学院" data-title-en="SnailAI · AI Training for Chinese Australians">
+<html lang="zh-CN" data-title-zh="蜗牛 AI · 企业AI服务 + 企业AI教育 | 悉尼" data-title-en="Snail AI · Enterprise AI Services + Corporate Education | Sydney">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>蜗牛 AI · 澳洲华人AI 应用教育学院</title>
-<meta name="description" content="蜗牛 AI 是面向澳洲华人的 AI 应用教育学院，提供线上课、线下课、财富管理课、企业微信社群、1 对 1 咨询。学会用 AI，把 AI 当成你的机甲。立即报名，开启 AI 之旅。">
+<title>蜗牛 AI · 企业AI服务 + 企业AI教育 | 悉尼</title>
+<meta name="description" content="蜗牛 AI 为悉尼中小企业提供企业级 AI 服务（AI 流程化、软件加 AI 模块、端到端交付），同时提供企业 AI 教育培训。CEO 亲自免费上门 2 小时，从诊断到交付全程带队。">
 <link rel="icon" type="image/png" href="assets/snailai_logo.png">
 <link rel="canonical" href="https://snailai.ai/mobile.html">
 <link rel="alternate" hreflang="zh-CN" href="https://snailai.ai/mobile.html">
 <link rel="alternate" hreflang="en" href="https://snailai.ai/mobile.html">
 <link rel="alternate" hreflang="x-default" href="https://snailai.ai/">
-<meta property="og:title" content="蜗牛 AI · 澳洲华人AI 应用教育学院 | SnailAI">
-<meta property="og:description" content="蜗牛 AI 是面向澳洲华人的 AI 应用教育学院。线上课、线下课、财富管理课，学会用 AI，把 AI 当成你的机甲。">
+<meta property="og:title" content="蜗牛 AI · 企业AI服务 + 企业AI教育 | 悉尼 | Snail AI">
+<meta property="og:description" content="蜗牛 AI 为悉尼中小企业提供企业级 AI 服务与企业 AI 教育培训。CEO 亲自免费上门 2 小时，从诊断到交付全程带队。">
 <meta property="og:image" content="https://snailai.ai/assets/snailai_logo.png">
 <meta property="og:url" content="https://snailai.ai/mobile.html">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="蜗牛 AI · 澳洲华人AI 应用教育学院 | SnailAI">
-<meta name="twitter:description" content="蜗牛 AI 是面向澳洲华人的 AI 应用教育学院。线上课、线下课、财富管理课，学会用 AI，把 AI 当成你的机甲。">
+<meta name="twitter:title" content="蜗牛 AI · 企业AI服务 + 企业AI教育 | 悉尼 | Snail AI">
+<meta name="twitter:description" content="蜗牛 AI 为悉尼中小企业提供企业级 AI 服务与企业 AI 教育培训。CEO 亲自免费上门 2 小时，从诊断到交付全程带队。">
 <meta name="twitter:image" content="https://snailai.ai/assets/snailai_logo.png">
 <style>
   :root {
@@ -228,6 +228,69 @@
     display: inline-block;
     font-size: 0.95rem; font-weight: 700;
     color: var(--accent);
+  }
+
+  /* ===== Hero Split Gate ===== */
+  .hero.hero--split {
+    min-height: 92vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 120px 20px 50px;
+    max-width: 720px; margin: 0 auto;
+    text-align: center;
+  }
+  .hero-gate-title {
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+    font-weight: 900; letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+  .hero-gate-sub {
+    font-size: 1rem;
+    color: var(--ink-3);
+    margin-bottom: 28px;
+    padding: 0 10px;
+    line-height: 1.55;
+  }
+  .hero-choice-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    width: 100%;
+  }
+  .hero-choice-card {
+    position: relative;
+    display: flex; flex-direction: column;
+    align-items: flex-start; text-align: left;
+    padding: 28px 24px;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--line);
+    background: white;
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .hero-choice-card:active { transform: scale(0.98); }
+  .hero-choice-card .gate-icon { font-size: 2.4rem; line-height: 1; margin-bottom: 14px; }
+  .hero-choice-card h2 {
+    font-size: 1.35rem; font-weight: 900; letter-spacing: -0.02em;
+    margin-bottom: 8px; color: var(--ink);
+  }
+  .hero-choice-card p {
+    font-size: 0.92rem; line-height: 1.55;
+    color: var(--ink-3); margin-bottom: 18px; flex: 1;
+  }
+  .hero-choice-card .gate-cta {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 11px 18px; border-radius: 100px;
+    font-size: 13px; font-weight: 800;
+  }
+  .gate-enterprise .gate-cta { background: var(--accent); color: white; }
+  .gate-education .gate-cta { background: var(--ink); color: white; }
+  .gate-enterprise .pill { background: var(--accent-light); color: var(--accent); }
+  .gate-education .pill { background: var(--paper-2); color: var(--ink); }
+  .gate-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .gate-pills .pill {
+    padding: 4px 10px; border-radius: 100px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.02em;
   }
 
   /* ===== Section base ===== */
@@ -807,48 +870,35 @@
   </div>
 </nav>
 
-<!-- ===== HERO ===== -->
-<section class="hero">
+<!-- ===== HERO SPLIT GATE ===== -->
+<section class="hero hero--split">
   <div class="hero-bg-blob"></div>
-  <img src="assets/snailai_logo.png" alt="蜗牛 AI Logo" class="hero-logo">
-  <div class="hero-tag" data-zh="🦄 澳洲华人 AI 应用教育学院" data-en="🦄 Australian Chinese AI Education Institute">🦄 澳洲华人 AI 应用教育学院</div>
-  <h1>
-    <span data-zh="打败你的不是 AI，是" data-en="AI won't replace you, ">打败你的不是 AI，是</span>
-    <span class="accent" data-zh="会使用 AI 的人" data-en="a person using AI will">会使用 AI 的人</span>
-  </h1>
-  <p class="subtitle" data-zh="AI 不是你的对手，而是你的机甲。蜗牛 AI 帮你把 AI 真正用到澳洲生活、学习、工作和投资里。" data-en="AI is not your opponent, it's your mecha. Snail AI helps you actually apply AI in Australian life, learning, work, and investing.">AI 不是你的对手，而是你的机甲。蜗牛 AI 帮你把 AI 真正用到澳洲生活、学习、工作和投资里。</p>
-  <div class="hero-lobster" data-zh="🦞 龙虾自由：手把手协助你安装 AI 终极武器-龙虾🦞，而且教会你熟练使用龙虾🦞，从此你多了一个 24 小时的超级 AI 龙虾🦞助手" data-en="🦞 Lobster Freedom: We'll help you install and master your ultimate AI weapon — Lobster🦞, so you gain a 24/7 super AI lobster🦞 assistant">🦞 龙虾自由：手把手协助你安装 AI 终极武器-龙虾🦞，而且教会你熟练使用龙虾🦞，从此你多了一个 24 小时的超级 AI 龙虾🦞助手</div>
-  <div class="hero-badge-row">
-    <span class="hero-badge hero-badge--orange" data-zh="🇦🇺 蜗牛 AI 专注澳洲华人 AI 应用教育" data-en="🇦🇺 Snail AI — Australian Chinese AI Education">🇦🇺 蜗牛 AI 专注澳洲华人 AI 应用教育</span>
-    <span class="hero-badge hero-badge--ink" data-zh="🎓 首创输出式教学" data-en="🎓 Pioneer of Output-Driven Teaching">🎓 首创输出式教学</span>
-    <span class="hero-badge hero-badge--warm" data-zh="🏆 澳大利亚最优质的华人 AI 应用培训机构" data-en="🏆 Australia's Premier Chinese AI Training Institute">🏆 澳大利亚最优质的华人 AI 应用培训机构</span>
-    <span class="hero-badge hero-badge--outline" data-zh="📌 专门针对澳洲工作、生活等应用场景" data-en="📌 Tailored for Australian Work & Life Scenarios">📌 专门针对澳洲工作、生活等应用场景</span>
-  </div>
-  <div class="hero-cta">
-    <a href="#services" class="btn btn-primary" data-zh="查看课程 →" data-en="View Courses →">查看课程 →</a>
-    <a href="/faq/mobile" class="btn btn-secondary" data-zh="FAQ 常见问题" data-en="FAQ">FAQ 常见问题</a>
-  </div>
-  <div class="hero-quote">
-    <div class="quote-main" data-zh="打败你的不是 AI，是会使用 AI 的人。AI 不是你的对手，而是你的机甲。" data-en="AI won't replace you. A person using AI will. AI is not your rival — it's your exosuit.">打败你的不是 AI，是会使用 AI 的人。AI 不是你的对手，而是你的机甲。</div>
-    <div class="quote-sub" data-zh="就像变形金刚穿上机甲就变得超级强大 — 在这个时代，你不用 AI，有的是其他人用 AI。不主动学习的人，会被 AI 时代悄悄淘汰。" data-en="Just like a Transformer becomes super-powered in its exosuit — in this era, if you don't use AI, someone else will. Those who don't choose to learn will be quietly left behind.">就像变形金刚穿上机甲就变得超级强大 — 在这个时代，你不用 AI，有的是其他人用 AI。不主动学习的人，会被 AI 时代悄悄淘汰。</div>
-    <div class="quote-cta" data-zh="→ 主动选择学习 AI，成为 AI 时代的先行者" data-en="→ Choose to learn AI. Become a pioneer of the AI era.">→ 主动选择学习 AI，成为 AI 时代的先行者</div>
-  </div>
-</section>
+  <img src="assets/snailai_logo.png" alt="蜗牛 AI Logo" class="hero-logo" style="margin-bottom:14px; width:80px">
+  <div class="hero-tag" data-zh="澳洲 AI 应用实践者" data-en="AI Application Practice for Australia">澳洲 AI 应用实践者</div>
+  <h1 class="hero-gate-title" data-zh="请选择你的方向" data-en="Choose Your Path">请选择你的方向</h1>
+  <p class="hero-gate-sub" data-zh="蜗牛 AI 两大业务：为企业落地 AI，也教企业和个人真正会用 AI。" data-en="Snail AI's two missions: bring AI into businesses, and teach businesses and individuals to use it.">蜗牛 AI 两大业务：为企业落地 AI，也教企业和个人真正会用 AI。</p>
 
-<!-- ===== DUAL SERVICE CARDS ===== -->
-<section id="dual-services" style="background:var(--paper-2); padding:60px 20px">
-  <div style="max-width:1280px; margin:0 auto">
-    <div class="section-tag" data-zh="Two Pillars" data-en="Two Pillars">Two Pillars</div>
-    <h2 class="section-title" data-zh="两大服务" data-en="Two Pillars">两大服务</h2>
-    <a href="/enterprise/mobile.html" style="text-decoration:none; background:white; border:1px solid var(--line); border-radius:var(--r-lg); padding:28px 24px; display:flex; flex-direction:column; margin-bottom:16px" >
-      <div style="font-size:28px; margin-bottom:12px">🏢</div>
-      <h3 style="font-size:1.15rem; font-weight:900; margin-bottom:6px; color:var(--ink)" data-zh="企业 AI 级服务" data-en="Enterprise AI Services">企业 AI 级服务</h3>
-      <p style="font-size:0.88rem; color:var(--ink-3); line-height:1.55; margin-bottom:12px" data-zh="悉尼中小企业 AI 落地 · CEO 亲自免费上门 2 小时 · from $2,500" data-en="Hands-on AI for Sydney SMEs · Free 2-hour CEO visit · from $2,500">悉尼中小企业 AI 落地 · CEO 亲自免费上门 2 小时 · from $2,500</p>
+  <div class="hero-choice-grid">
+    <a href="/enterprise/mobile.html" class="hero-choice-card gate-enterprise">
+      <div class="gate-icon">🏢</div>
+      <div class="gate-pills">
+        <span class="pill" data-zh="from $2,500" data-en="from $2,500">from $2,500</span>
+        <span class="pill" data-zh="CEO 免费上门 2 小时" data-en="Free 2-Hour CEO Visit">CEO 免费上门 2 小时</span>
+      </div>
+      <h2 data-zh="企业 AI 级服务" data-en="Enterprise AI Services">企业 AI 级服务</h2>
+      <p data-zh="为悉尼 200 人以下中小企业提供 AI 流程化、软件加 AI 模块、端到端交付。从诊断、报价、方案到上线，CEO Robin 亲自带队。" data-en="For Sydney SMEs under 200 staff: AI workflow automation, AI-enabled software modules, end-to-end delivery. CEO Robin leads from discovery to go-live.">为悉尼 200 人以下中小企业提供 AI 流程化、软件加 AI 模块、端到端交付。从诊断、报价、方案到上线，CEO Robin 亲自带队。</p>
+      <div class="gate-cta" data-zh="进入企业服务 →" data-en="Enterprise Services →">进入企业服务 →</div>
     </a>
-    <a href="/corporate-training/mobile.html" style="text-decoration:none; background:white; border:1px solid var(--line); border-radius:var(--r-lg); padding:28px 24px; display:flex; flex-direction:column" >
-      <div style="font-size:28px; margin-bottom:12px">🎓</div>
-      <h3 style="font-size:1.15rem; font-weight:900; margin-bottom:6px; color:var(--ink)" data-zh="企业教育服务" data-en="Corporate Education">企业教育服务</h3>
-      <p style="font-size:0.88rem; color:var(--ink-3); line-height:1.55; margin-bottom:12px" data-zh="企业内训 + AI 课程 · 系统培训 · AI 平台搭建 · 输出式教学" data-en="Corporate training + AI courses · System adoption · AI platform setup · Output-driven">企业内训 + AI 课程 · 系统培训 · AI 平台搭建 · 输出式教学</p>
+
+    <a href="/corporate-training/mobile.html" class="hero-choice-card gate-education">
+      <div class="gate-icon">🎓</div>
+      <div class="gate-pills">
+        <span class="pill" data-zh="企业内训" data-en="Corporate Training">企业内训</span>
+        <span class="pill" data-zh="输出式教学" data-en="Output-Driven Teaching">输出式教学</span>
+      </div>
+      <h2 data-zh="企业教育服务" data-en="Corporate Education">企业教育服务</h2>
+      <p data-zh="企业内训 + AI 应用课程：系统使用培训、AI 平台搭建培训、团队 AI 能力工作坊。让企业团队真正驾驭 AI。" data-en="Corporate training + AI courses: system adoption, AI platform setup, and team AI workshops. We train your people to own AI, not rent it.">企业内训 + AI 应用课程：系统使用培训、AI 平台搭建培训、团队 AI 能力工作坊。让企业团队真正驾驭 AI。</p>
+      <div class="gate-cta" data-zh="进入教育服务 →" data-en="Education Services →">进入教育服务 →</div>
     </a>
   </div>
 </section>

@@ -1,9 +1,10 @@
 {
   "name": "snailai-portal",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "release_date": "2026-08-19",
   "last_updated": "2026-08-19",
   "changelog": [
+    "2.0.1 (2026-08-19): 主页重构为双入口选择页 — 进入后直接看到「企业 AI 级服务」与「企业教育服务」两大入口；同步更新桌面版、手机版标题与 SEO meta；整站 bump v2.0.1",
     "2.0.0 (2026-08-19): 重大升级 — 新增企业AI级服务页 (/enterprise/) + 企业内训页 (/corporate-training/), 各含桌面版+手机版; 主页新增双卡区块+导航入口; 链接大全加4条; sitemap+结构化数据+FAQ schema; 整站 bump v2.0.0",
     "1.0.3 (2026-07-10): 全面审查报告：修复 snailai-pitch-2026/mobile 链接、更新链接大全 GitHub Pages 引用、同步 version.json",
     "1.0.1 (2026-07-09): 修复学员学堂 welcome 页「我的 AI 刚需」面板在初始加载时未渲染的问题",
