@@ -969,17 +969,20 @@ def api_quote_admin_test_user():
     import secrets as _sec
     salt = _sec.token_hex(16)
     pw_hash = _hash_pw(password, salt)
-    c = _get_db()
-    existing = c.execute("SELECT id FROM users WHERE username = ? COLLATE NOCASE",
-                         (username,)).fetchone()
-    if existing:
-        c.execute("UPDATE users SET pw_hash=?, salt=?, name=?, role=?, must_change_pw=0 WHERE id=?",
-                  (pw_hash, salt, name, role, existing["id"]))
-    else:
-        c.execute("INSERT INTO users (username, name, role, pw_hash, salt, must_change_pw) "
-                  "VALUES (?,?,?,?,?,0)", (username, name, role, pw_hash, salt))
-    c.commit()
-    app.logger.info("[admin] test user %s created/reset (role=%s)", username, role)
+    c = db_conn()
+    try:
+        existing = c.execute("SELECT id FROM users WHERE username = ? COLLATE NOCASE",
+                             (username,)).fetchone()
+        if existing:
+            c.execute("UPDATE users SET password_hash=?, salt=?, name=?, role=?, must_change_pw=0 WHERE id=?",
+                      (pw_hash, salt, name, role, existing["id"]))
+        else:
+            c.execute("INSERT INTO users (username, name, role, password_hash, salt, must_change_pw) "
+                      "VALUES (?,?,?,?,?,0)", (username, name, role, pw_hash, salt))
+        c.commit()
+        app.logger.info("[admin] test user %s created/reset (role=%s)", username, role)
+    finally:
+        c.close()
     return jsonify({"ok": True, "username": username, "name": name, "role": role,
                     "password": password, "message": "Test user ready for login"})
 
