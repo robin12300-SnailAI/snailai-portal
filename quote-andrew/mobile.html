@@ -367,6 +367,42 @@
     }
     .quote-item.selected .sub-modules { display: block; }
 
+    /* ===== CATEGORY SECTIONS (V1.5.0) ===== */
+    .cat-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin: 26px 0 10px; padding-bottom: 7px;
+      border-bottom: 2px solid var(--line-2);
+    }
+    .cat-title {
+      font-size: 12px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.6px; color: var(--ink-2);
+    }
+    .cat-subtotal { font-size: 11px; font-weight: 600; color: var(--ink-3); }
+    .badge {
+      display: inline-block; margin-left: 7px; padding: 1px 8px;
+      border-radius: 20px; font-size: 10px; font-weight: 700;
+      vertical-align: 2px; letter-spacing: 0.3px;
+    }
+    .badge-core { background: var(--accent-light); color: var(--accent-2); border: 1px solid rgba(255,91,31,0.35); }
+    .badge-send { background: var(--accent-warm); color: var(--accent); border: 1px solid rgba(255,91,31,0.3); }
+    .badge-dep { background: var(--green-light); color: var(--green); border: 1px solid rgba(46,125,50,0.3); }
+    .item-hint { margin-top: 3px; font-size: 10.5px; font-style: italic; color: var(--ink-3); }
+    .helix-info {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 11px 14px; margin-bottom: 10px;
+      background: var(--paper-2); border: 1.5px dashed var(--line-2); border-radius: 10px;
+    }
+    .hi-badge {
+      flex-shrink: 0; margin-top: 2px; padding: 2px 9px; border-radius: 20px;
+      font-size: 10px; font-weight: 800; color: var(--green);
+      background: var(--green-light); border: 1px solid rgba(46,125,50,0.3);
+    }
+    .hi-body { flex: 1; min-width: 0; }
+    .hi-name { font-size: 14px; font-weight: 700; color: var(--ink-2); }
+    .hi-ref { font-weight: 600; font-size: 11px; color: var(--ink-3); }
+    .hi-text { font-size: 11.5px; color: var(--ink-3); line-height: 1.5; margin: 2px 0 3px; }
+    .hi-price { flex-shrink: 0; margin-left: auto; font-size: 13px; font-weight: 800; color: var(--green); }
+
     /* ===== DETAIL PANEL ===== */
     #detail-panel {
       display: none;
@@ -841,7 +877,7 @@
       <div class="brand-header">
         <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
         <span class="brand-name">SnailAI<span class="brand-ai">.AI</span></span>
-        <span class="app-version">V1.4.0</span>
+        <span class="app-version">V1.5.0</span>
       </div>
       <h2 data-zh="Skin Cancer Laser Centre 模块化报价" data-en="Skin Cancer Laser Centre Modular Quotation">Skin Cancer Laser Centre Modular Quotation</h2>
       <span class="quote-id">SCLC-QUOTE-2026-001 &middot; v1.0</span>
@@ -864,7 +900,7 @@
 
     <div class="recommended-path" id="recommended-note">
       <strong data-zh="推荐签约路径：" data-en="Recommended path:">Recommended path:</strong>
-      <span data-zh="第一阶段：网站完整包 $14,000 + Helix 迁移协调 $2,800 = $16,800。以下已为您预勾选第一阶段推荐项，您可以自行增减。" data-en="Stage One: Complete website $14,000 + Helix migration coordination $2,800 = $16,800. The recommended first-stage items are pre-selected below; you may add or remove as needed.">Stage One: Complete website $14,000 + Helix migration coordination $2,800 = $16,800. The recommended first-stage items are pre-selected below; you may add or remove as needed.</span>
+      <span data-zh="第一阶段推荐：第一类网站模块 W1–W8 合计 $14,000。以下已为您预勾选 W1–W8，所有单项均可自由增减。" data-en="Stage One recommendation: Category 1 website modules W1–W8 total $14,000. W1–W8 are pre-selected below; every module can be freely added or removed.">Stage One recommendation: Category 1 website modules W1–W8 total $14,000. W1–W8 are pre-selected below; every module can be freely added or removed.</span>
     </div>
 
     <!-- ONE-OFF SERVICES -->
@@ -1016,221 +1052,391 @@
 <script>
 // ===== DATA =====
 const ITEMS = [
+  // ===== 第一类 · 专业诊所网站 =====
   {
-    id: 'website', type: 'oneoff', price: 14000,
-    ref: { zh: 'W1\u2013W8', en: 'W1\u2013W8' },
-    name: { zh: '\u4e13\u4e1a\u8bca\u6240\u7f51\u7ad9\u5b8c\u6574\u5305', en: 'Complete Professional Clinic Website' },
-    sub: 'W1 Discovery $950 \u00b7 W2 Design $2,400 \u00b7 W3 Build $4,800 \u00b7 W4 Booking $1,350 \u00b7 W5 Payment $950 \u00b7 W6 SEO $1,650 \u00b7 W7 QA & Launch $1,250 \u00b7 W8 Training $650',
+    id: 'w1', type: 'oneoff', price: 950, cat: 'web', badge: 'dep',
+    ref: { zh: 'W1', en: 'W1' },
+    name: { zh: 'Discovery、信息架构与集成规划', en: 'Discovery, Information Architecture & Integration Plan' },
+    sub: 'Requirements workshop, site map, Helix/booking/payment data flow, risks and launch plan',
     preselected: true,
     detail: {
-      objective: {
-        zh: '\u5efa\u8bbe\u6700\u591a 38 \u9875\u7684\u4e13\u4e1a\u533b\u7597\u7f51\u7ad9\uff0c\u63a5\u5165\u7ecf Helix \u8ba4\u53ef\u7684\u9884\u7ea6\u548c\u4ed8\u6b3e\u670d\u52a1\uff0c\u7f51\u7ad9\u4e0d\u8fde\u63a5\u4e34\u5e8a\u6570\u636e\u5e93\uff0c\u4e0d\u4fdd\u5b58\u94f6\u884c\u5361\u8d44\u6599\u3002',
-        en: 'Build a professional clinic website of up to 38 pages and connect it to an approved booking and hosted payment service. The website will not connect directly to the Helix clinical database and will not store card details.'
-      },
-      deliverables: {
-        zh: ['\u7ecf\u6279\u51c6\u7684\u7f51\u7ad9\u4fe1\u606f\u67b6\u6784\u548c\u7ebf\u6846\u56fe', '\u54cd\u5e94\u5f0f\u89c6\u89c9\u8bbe\u8ba1\u7cfb\u7edf\u548c\u6700\u591a 6 \u79cd\u6a21\u677f', '\u6700\u591a 38 \u4e2a\u9875\u9762', '\u4e00\u5957\u9884\u7ea6 Provider \u63a5\u5165', '\u4e00\u5957\u6258\u7ba1\u4ed8\u6b3e\u63a5\u5165', '\u6280\u672f/\u672c\u5730 SEO\u3001\u5206\u6790\u3001\u7ad9\u70b9\u5730\u56fe\u548c\u7ed3\u6784\u5316\u6570\u636e', '\u9690\u79c1/\u5b89\u5168\u6280\u672f\u8bbe\u7f6e', 'staging \u9884\u89c8\u7ad9\u3001\u751f\u4ea7\u7ad9\u548c\u53d1\u5e03/\u56de\u6eda\u8bf4\u660e', '\u4e00\u6b21 Andrew \u7ba1\u7406\u57f9\u8bad\u548c\u4ea4\u63a5\u6587\u4ef6'],
-        en: ['Approved site map and wireframes', 'Responsive design system and up to six page templates', 'Up to 38 pages', 'One booking-provider integration', 'One hosted-payment integration', 'Technical/local SEO, analytics, sitemap and structured data', 'Privacy/security settings and third-party embed disclosure', 'Staging site, production site and release/rollback instructions', 'One administrator training session and handover guide']
-      },
-      acceptance: {
-        zh: ['\u7ea6\u5b9a\u9875\u9762\u5728\u624b\u673a\u3001\u5e73\u677f\u548c\u684c\u9762\u7aef\u6b63\u5e38\u663e\u793a', '\u9884\u7ea6\u6d4b\u8bd5\u53ef\u4ece\u7f51\u7ad9\u5b8c\u6210\u5230 Provider \u7684\u786e\u8ba4', '\u4ed8\u6b3e\u4f7f\u7528 Provider \u6d4b\u8bd5\u6a21\u5f0f\u9a8c\u8bc1', '\u7f51\u7ad9\u4e0d\u4fdd\u5b58\u5361\u53f7\uff0c\u4e0d\u80fd\u8bfb\u53d6 Helix \u4e34\u5e8a\u8bb0\u5f55', '\u65e0\u963b\u65ad\u7ea7\u9519\u8bef\uff0c\u5173\u952e\u9875\u9762\u53ef\u88ab\u641c\u7d22\u5f15\u64ce\u6293\u53d6', 'Andrew \u4e66\u9762\u6279\u51c6\u5168\u90e8\u516c\u5f00\u533b\u7597\u5185\u5bb9\u548c\u4ef7\u683c'],
-        en: ['Agreed pages render correctly on common mobile, tablet and desktop browsers', 'A test booking completes from the website to provider confirmation', 'Payment is validated in provider test mode', 'The website stores no card number and cannot access Helix clinical records', 'No release-blocking defects and key pages are crawlable', 'Andrew gives written approval to all public medical content and fees']
-      },
-      boundary: {
-        zh: 'W1\u3001W2\u3001W3 \u548c W7 \u4e3a\u7f51\u7ad9\u5efa\u8bbe\u7684\u57fa\u7840\u4f9d\u8d56\u3002W4 \u9700 Andrew \u76f4\u63a5\u62e5\u6709\u5e76\u652f\u4ed8 Helix/\u9884\u7ea6 Provider \u8d26\u53f7\u3002W5 \u4ec5\u5728\u652f\u4ed8 Provider \u548c\u9884\u7ea6\u6d41\u7a0b\u786e\u8ba4\u517c\u5bb9\u540e\u5b9e\u65bd\u300238 \u9875\u4e3a\u91c7\u7528\u65e2\u5b9a\u8bbe\u8ba1\u7cfb\u7edf\u7684\u516c\u5f00\u9875\u9762\uff0c\u6bcf\u9875\u4e0d\u662f\u72ec\u7acb\u5b9a\u5236\u8bbe\u8ba1\u3002Andrew \u5fc5\u987b\u63d0\u4f9b\u6216\u6279\u51c6\u533b\u7597\u5185\u5bb9\u3001\u8d44\u8d28\u3001\u4ef7\u683c\u3001\u6cbb\u7597\u4e3b\u5f20\u3001\u56fe\u7247\u6388\u6743\u548c\u6cd5\u5f8b\u9875\u9762\u5185\u5bb9\u3002',
-        en: 'W1, W2, W3 and W7 are core website dependencies. W4 requires a Helix/booking-provider account owned and paid directly by Andrew. W5 starts only after payment-provider and booking-flow compatibility is confirmed. The 38-page allowance uses the approved design system; it is not 38 bespoke layouts. Andrew must provide or approve medical content, qualifications, fees, claims, image rights and legal-page content.'
-      }
+      objective: { zh: '明确网站目标、页面结构和 Helix/预约/付款的数据流，识别风险并制定上线计划。', en: 'Define website goals, page structure and the Helix/booking/payment data flow, identify risks and set the launch plan.' },
+      deliverables: { zh: ['需求会议与记录', '页面地图（site map）', 'Helix/预约/付款数据流图', '风险清单与上线计划'], en: ['Requirements workshop and notes', 'Site map', 'Helix/booking/payment data-flow diagram', 'Risk register and launch plan'] },
+      acceptance: { zh: ['Andrew 书面批准页面地图与数据流', '风险清单与上线计划获确认'], en: ['Andrew approves the site map and data flow in writing', 'Risk register and launch plan confirmed'] },
+      boundary: { zh: '不含视觉设计与开发。W1 为网站建设的基础依赖模块。', en: 'Excludes visual design and development. W1 is a core website dependency.' }
     }
   },
   {
-    id: 'helix', type: 'oneoff', price: 0,
+    id: 'w2', type: 'oneoff', price: 2400, cat: 'web', badge: 'dep',
+    ref: { zh: 'W2', en: 'W2' },
+    name: { zh: '定制响应式视觉系统', en: 'Custom Responsive Design System' },
+    sub: 'Homepage direction, colour/type/components, mobile/desktop design, up to 6 page templates, 2 revision rounds',
+    preselected: true,
+    detail: {
+      objective: { zh: '建立诊所专属的响应式视觉系统：首页方向、色彩/字体/组件规范，覆盖手机与桌面。', en: 'Establish the clinic\'s own responsive design system: homepage direction, colour/type/component specifications, covering mobile and desktop.' },
+      deliverables: { zh: ['首页设计方向', '色彩、字体与组件规范', '手机/桌面端设计', '最多 6 种页面模板', '2 轮集中修改'], en: ['Homepage design direction', 'Colour, type and component specs', 'Mobile/desktop designs', 'Up to six page templates', 'Two consolidated revision rounds'] },
+      acceptance: { zh: ['设计方向获 Andrew 批准', '2 轮集中修改完成并确认'], en: ['Design direction approved by Andrew', 'Two revision rounds completed and confirmed'] },
+      boundary: { zh: '38 页采用既定设计系统与最多 6 种模板，每页不是独立定制设计。W2 为基础依赖模块。', en: 'The 38-page allowance uses the approved design system and up to six templates; not 38 bespoke layouts. W2 is a core dependency.' }
+    }
+  },
+  {
+    id: 'w3', type: 'oneoff', price: 4800, cat: 'web', badge: 'dep',
+    ref: { zh: 'W3', en: 'W3' },
+    name: { zh: '基础网站建设（最多 38 页）', en: 'Core Website Build (up to 38 pages)' },
+    sub: 'Deployable website, up to 38 URLs, template-based content population, maintainable content/file structure',
+    preselected: true,
+    detail: {
+      objective: { zh: '建设最多 38 页的诊所网站，按批准的模板排版 Andrew 提供并批准的内容，保持可维护的内容与文件结构。', en: 'Build the clinic website of up to 38 pages, populating Andrew-supplied and approved content on approved templates with a maintainable structure.' },
+      deliverables: { zh: ['部署型网站', '最多 38 个 URL', '按模板排版批准内容', '基础内容/文件结构'], en: ['Deployable website', 'Up to 38 URLs', 'Template-based population of approved content', 'Maintainable content/file structure'] },
+      acceptance: { zh: ['约定页面在手机、平板和桌面端正常显示', '内容按模板排版完成并获确认'], en: ['Agreed pages render correctly on mobile, tablet and desktop', 'Content populated on templates and confirmed'] },
+      boundary: { zh: '38 页为采用既定设计系统的公开页面。Andrew 必须提供或批准医疗内容、资质、价格、治疗主张、图片授权和法律页面内容。W3 为基础依赖模块。', en: 'The 38-page allowance covers public pages using the approved design system. Andrew must provide or approve medical content, qualifications, fees, claims, image rights and legal-page content. W3 is a core dependency.' }
+    }
+  },
+  {
+    id: 'w4', type: 'oneoff', price: 1350, cat: 'web',
+    ref: { zh: 'W4', en: 'W4' },
+    name: { zh: 'Booking System 对接', en: 'Booking System Integration' },
+    sub: 'One Helix-compatible provider via widget, hosted page or official API; test the booking journey',
+    hint: { zh: 'Helix/预约 Provider 账号需由客户直接拥有并支付。', en: 'Requires a Helix/booking-provider account owned and paid directly by the client.' },
+    preselected: true,
+    detail: {
+      objective: { zh: '接入一套经 Helix 认可的预约 Provider，并完成预约流程测试。', en: 'Connect one Helix-compatible booking provider and test the booking journey.' },
+      deliverables: { zh: ['一套预约 Provider 接入（widget/托管页/正式 API）', '预约流程测试'], en: ['One booking-provider integration (widget/hosted page/official API)', 'Booking-journey testing'] },
+      acceptance: { zh: ['测试预约可从网站完成到 Provider 确认'], en: ['A test booking completes from the website to provider confirmation'] },
+      boundary: { zh: 'Andrew 必须直接拥有并支付 Helix/预约 Provider 账号。网站不连接 Helix 临床数据库。', en: 'Andrew must own and pay the Helix/booking-provider account directly. The website does not connect to the Helix clinical database.' }
+    }
+  },
+  {
+    id: 'w5', type: 'oneoff', price: 950, cat: 'web',
+    ref: { zh: 'W5', en: 'W5' },
+    name: { zh: 'Payment System 对接', en: 'Payment System Integration' },
+    sub: 'One provider-hosted/Tyro/compatible hosted payment flow; test status; no card data stored on site',
+    hint: { zh: '需支付 Provider 与预约流程确认兼容后实施；商户开户/KYC/退款/拒付不在范围内。', en: 'Starts only after payment-provider and booking-flow compatibility is confirmed; merchant onboarding/KYC/refunds/chargebacks excluded.' },
+    preselected: true,
+    detail: {
+      objective: { zh: '接入一套托管付款流程，测试付款状态；网站不保存银行卡资料。', en: 'Connect one hosted payment flow, test payment status; no card data stored on the site.' },
+      deliverables: { zh: ['一套托管付款流程接入', '付款状态测试'], en: ['One hosted payment-flow integration', 'Payment-status testing'] },
+      acceptance: { zh: ['付款使用 Provider 测试模式验证', '网站不保存任何卡号'], en: ['Payment validated in provider test mode', 'The website stores no card number'] },
+      boundary: { zh: '仅在支付 Provider 和预约流程确认兼容后实施。商户开户、KYC、退款和拒付不在本服务内。', en: 'Starts only after payment-provider and booking-flow compatibility is confirmed. Merchant onboarding, KYC, refunds and chargebacks are excluded.' }
+    }
+  },
+  {
+    id: 'w6', type: 'oneoff', price: 1650, cat: 'web',
+    ref: { zh: 'W6', en: 'W6' },
+    name: { zh: '技术 SEO 与本地 SEO 基础', en: 'Technical & Local SEO Foundation' },
+    sub: 'Keyword/page map, metadata, sitemap, schema, GA4, Search Console, local page rules',
+    hint: { zh: '需客户提供 Google Business Profile 和 Google 账号权限。', en: 'Requires client access to Google Business Profile and a Google account.' },
+    preselected: true,
+    detail: {
+      objective: { zh: '完成技术与本地 SEO 基础配置，使关键页面可被搜索引擎正确抓取并具备本地搜索规则。', en: 'Complete technical and local SEO foundations so key pages are crawlable and local search rules are in place.' },
+      deliverables: { zh: ['关键词/页面映射', 'metadata、sitemap、schema', 'GA4 与 Search Console 配置', '本地页面规则'], en: ['Keyword/page map', 'Metadata, sitemap, schema', 'GA4 and Search Console setup', 'Local page rules'] },
+      acceptance: { zh: ['关键页面可被搜索引擎抓取', 'GA4/Search Console 配置完成并可访问'], en: ['Key pages are crawlable', 'GA4/Search Console configured and accessible'] },
+      boundary: { zh: 'Andrew 需提供 Google Business Profile 和 Google 账号权限。不含持续 SEO 运营与内容创作。', en: 'Requires access to the clinic\'s Google Business Profile and Google account. Ongoing SEO operation and content creation are excluded.' }
+    }
+  },
+  {
+    id: 'w7', type: 'oneoff', price: 1250, cat: 'web', badge: 'dep',
+    ref: { zh: 'W7', en: 'W7' },
+    name: { zh: '隐私、安全、性能、QA 与上线', en: 'Privacy, Security, Performance, QA & Launch' },
+    sub: 'Third-party embed review, SSL/headers, browser/mobile tests, performance, backup/rollback, production release',
+    preselected: true,
+    detail: {
+      objective: { zh: '完成隐私与安全检查、跨浏览器/移动端测试、性能优化、备份/回滚方案并正式上线。', en: 'Complete privacy and security checks, cross-browser/mobile testing, performance optimisation, backup/rollback planning and production launch.' },
+      deliverables: { zh: ['第三方嵌入检查', 'SSL/headers 配置', '浏览器/移动测试与性能检查', '备份/回滚说明', '正式上线'], en: ['Third-party embed review', 'SSL/headers configuration', 'Browser/mobile tests and performance checks', 'Backup/rollback instructions', 'Production release'] },
+      acceptance: { zh: ['无阻断级错误', '正式上线完成并可公开访问'], en: ['No release-blocking defects', 'Production launch complete and publicly accessible'] },
+      boundary: { zh: 'W7 为基础依赖模块。第三方 Provider 保存的数据之备份或恢复不在范围内。', en: 'W7 is a core dependency. Backup or recovery of data stored by third-party providers is excluded.' }
+    }
+  },
+  {
+    id: 'w8', type: 'oneoff', price: 650, cat: 'web',
+    ref: { zh: 'W8', en: 'W8' },
+    name: { zh: '内容导入培训与交接', en: 'Content Population Training & Handover' },
+    sub: 'Batch population assistance, one 90-minute training session, publishing/maintenance SOP',
+    preselected: true,
+    detail: {
+      objective: { zh: '协助批量导入内容，提供一次 90 分钟管理培训，交付发布与日常维护 SOP。', en: 'Assist with batch content population, deliver one 90-minute administrator training session and a publishing/maintenance SOP.' },
+      deliverables: { zh: ['批量导入协助', '一次 90 分钟培训', '发布及日常维护 SOP'], en: ['Batch population assistance', 'One 90-minute training session', 'Publishing/maintenance SOP'] },
+      acceptance: { zh: ['培训完成', 'SOP 交付并确认'], en: ['Training completed', 'SOP delivered and confirmed'] },
+      boundary: { zh: '不含后续内容制作、医学 copywriting 与翻译。', en: 'Ongoing content production, medical copywriting and translation are excluded.' }
+    }
+  },
+  {
+    id: 'helix-info', type: 'oneoff', price: 0, cat: 'web', info: true,
     ref: { zh: '1A', en: '1A' },
-    name: { zh: 'Helix \u8fc1\u79fb\u534f\u8c03\u4e0e\u9a8c\u6536\u652f\u6301', en: 'Helix Migration Coordination & Acceptance Support' },
-    sub: 'Included in website package. SNAILAI not responsible for clinical DB migration. Extra coordination at $160/hr with written approval.',
-    preselected: true,
+    name: { zh: 'Helix 迁移协调与验收支持', en: 'Helix Migration Coordination & Acceptance Support' },
+    sub: 'Included: one Helix/booking-system coordination meeting + launch testing of the website booking entry point. Extra coordination at $160/hr with written approval. SNAILAI is not responsible for clinical database migration.',
     detail: {
-      objective: {
-        zh: 'Helix \u8fc1\u79fb\u7531 Andrew \u76f4\u63a5\u59d4\u6258\u5e76\u652f\u4ed8 Helix \u5b8c\u6210\u3002SNAILAI \u4e0d\u8d1f\u8d23\u4e34\u5e8a\u6570\u636e\u5e93\u8fc1\u79fb\u6216\u4e34\u5e8a\u6570\u636e\u51c6\u786e\u6027\u3002\u7f51\u7ad9\u5957\u9910\u5305\u542b\u4e00\u6b21 Helix/\u9884\u7ea6\u7cfb\u7edf\u534f\u8c03\u4f1a\u8bae\u53ca\u7f51\u7ad9\u9884\u7ea6\u5165\u53e3\u7684\u4e0a\u7ebf\u6d4b\u8bd5\u3002\u989d\u5916\u8fc1\u79fb\u534f\u8c03\u5de5\u4f5c\u6309 A$160/\u5c0f\u65f6\u6536\u8d39\uff0c\u5f00\u59cb\u524d\u53d6\u5f97 Andrew \u4e66\u9762\u6279\u51c6\u3002',
-        en: 'Helix migration is commissioned and paid for directly by Andrew with Helix. SNAILAI is not responsible for clinical database migration or the accuracy of clinical data. The website package includes one Helix/booking-system coordination meeting and launch testing of the website booking entry point. Additional migration coordination work, if required, is charged at A$160/hour with Andrew\'s written approval obtained before commencement.'
-      },
-      deliverables: {
-        zh: ['\u4e00\u6b21 Helix/\u9884\u7ea6\u7cfb\u7edf\u534f\u8c03\u4f1a\u8bae', '\u7f51\u7ad9\u9884\u7ea6\u5165\u53e3\u4e0a\u7ebf\u6d4b\u8bd5', '\u989d\u5916\u534f\u8c03\u6309 $160/\u5c0f\u65f6\u53e6\u8ba1\uff08\u9700\u4e66\u9762\u6279\u51c6\uff09'],
-        en: ['One Helix/booking-system coordination meeting', 'Website booking entry-point launch testing', 'Additional coordination at $160/hr (requires written approval)']
-      },
-      acceptance: {
-        zh: ['\u534f\u8c03\u4f1a\u8bae\u5df2\u5b8c\u6210', '\u7f51\u7ad9\u9884\u7ea6\u5165\u53e3\u53ef\u6b63\u5e38\u8df3\u8f6c\u81f3\u9884\u7ea6\u7cfb\u7edf'],
-        en: ['Coordination meeting completed', 'Website booking entry point links correctly to the booking system']
-      },
-      boundary: {
-        zh: '\u6b64\u9879\u4e0d\u5305\u62ec Helix \u6570\u636e\u8fc1\u79fb\u8d39\u7528\u6216 Andrew \u7684 Helix \u5e74\u8d39\u3002\u4e34\u5e8a\u6570\u636e\u5e93\u8fc1\u79fb\u7531 MedicalDirector/Helix \u6267\u884c\u3002\u670d\u52a1\u65b9\u4e0d\u4fdd\u8bc1\u7b2c\u4e09\u65b9\u8fc1\u79fb\u7ed3\u679c\u3002',
-        en: 'This does not include the Helix data-migration charge or Andrew\'s Helix licence fees. Clinical database migration is performed by MedicalDirector/Helix. The Service Provider does not warrant the third party\'s migration result.'
-      }
+      objective: { zh: 'Helix 迁移由 Andrew 直接委托并支付 Helix 完成。SNAILAI 不负责临床数据库迁移或临床数据准确性。网站套餐包含一次 Helix/预约系统协调会议及网站预约入口的上线测试。', en: 'Helix migration is commissioned and paid for directly by Andrew with Helix. SNAILAI is not responsible for clinical database migration or the accuracy of clinical data. The website package includes one Helix/booking-system coordination meeting and launch testing of the website booking entry point.' },
+      deliverables: { zh: ['一次 Helix/预约系统协调会议', '网站预约入口上线测试', '额外协调按 $160/小时另计（需书面批准）'], en: ['One Helix/booking-system coordination meeting', 'Website booking entry-point launch testing', 'Additional coordination at $160/hr (requires written approval)'] },
+      acceptance: { zh: ['协调会议已完成', '网站预约入口可正常跳转至预约系统'], en: ['Coordination meeting completed', 'Website booking entry point links correctly to the booking system'] },
+      boundary: { zh: '此项不含 Helix 数据迁移费用或 Andrew 的 Helix 年费。临床数据库迁移由 MedicalDirector/Helix 执行。服务方不保证第三方迁移结果。', en: 'This does not include the Helix data-migration charge or Andrew\'s Helix licence fees. Clinical database migration is performed by MedicalDirector/Helix. The Service Provider does not warrant the third party\'s migration result.' }
     }
   },
+  // ===== 第二类 · AI 工作协助系统 =====
   {
-    id: 'ai-core', type: 'oneoff', price: 13800,
-    ref: { zh: 'A1\u2013A6, A10', en: 'A1\u2013A6, A10' },
-    name: { zh: 'AI \u5de5\u4f5c\u534f\u52a9\u7cfb\u7edf\u6838\u5fc3\u7248', en: 'Core AI Work Assistance System' },
-    sub: 'A1 Discovery $1,500 \u00b7 A2 Local App $2,200 \u00b7 A3 CSV Import $2,400 \u00b7 A4 Filters $1,800 \u00b7 A5 AI Drafting $2,400 \u00b7 A6 Consent & Audit $2,300 \u00b7 A10 Training $1,200',
+    id: 'a1', type: 'oneoff', price: 1500, cat: 'ai', badge: 'core',
+    ref: { zh: 'A1', en: 'A1' },
+    name: { zh: 'Discovery、数据地图与隐私/同意设计', en: 'Discovery, Data Map & Privacy/Consent Design' },
+    sub: 'Purposes, fields, retention, consent, opt-out, roles and PIA input document',
     preselected: false,
     detail: {
-      objective: {
-        zh: '\u5728 Andrew \u7684 Windows 11 Pro \u5de5\u4f5c\u7535\u8111\u4e0a\u5b89\u88c5\u672c\u5730\u5e94\u7528\uff0c\u5bfc\u5165\u7ecf\u6700\u5c0f\u5316\u5904\u7406\u7684\u8054\u7cfb\u8d44\u6599\u3001\u6309\u5730\u533a\u53ca\u5408\u89c4\u72b6\u6001\u7b5b\u9009\u3001\u534f\u52a9\u8d77\u8349\u901a\u8baf\u5185\u5bb9\uff0c\u4eba\u5de5\u5ba1\u6838\u540e\u624d\u53ef\u53d1\u9001\u3002AI \u4e0d\u4f5c\u8bca\u65ad\u3001\u4e0d\u51b3\u5b9a\u6cbb\u7597\u3001\u4e0d\u81ea\u52a8\u9009\u62e9\u60a3\u8005\u3002',
-        en: 'Install a local application on Andrew\'s Windows 11 Pro workstation to import minimised contact data, filter by location and consent status, and assist with drafting communications \u2014 sent only after human approval. The AI will not diagnose, recommend treatment, select patients or access clinical records.'
-      },
-      deliverables: {
-        zh: ['\u9690\u79c1/\u6570\u636e\u6d41\u548c\u5b57\u6bb5\u5b57\u5178', '\u672c\u5730\u52a0\u5bc6\u8054\u7cfb\u8d44\u6599\u5e93', 'CSV \u5bfc\u5165\u3001\u6821\u9a8c\u3001\u53bb\u91cd', '\u5730\u533a\u3001\u6e20\u9053\u3001\u540c\u610f\u548c\u9000\u8ba2\u7684\u89c4\u5219\u5f0f\u7b5b\u9009', '\u65e0\u4e2a\u4eba\u8d44\u6599\u7684 AI \u6587\u6848\u8d77\u8349', '\u4eba\u5de5\u5ba1\u6279\u3001\u5ba1\u8ba1\u3001suppression list', '\u57f9\u8bad\u3001SOP\u3001\u6d4b\u8bd5\u4e0e\u6062\u590d\u8bf4\u660e'],
-        en: ['Data-flow design and field dictionary', 'Encrypted local contact store', 'CSV import, validation and deduplication', 'Deterministic region, channel, consent and suppression filtering', 'AI drafting without personal data', 'Human approval, audit and suppression workflow', 'Training, SOP, testing and recovery guide']
-      },
-      acceptance: {
-        zh: ['\u6d4b\u8bd5\u8d44\u6599\u53ef\u4ee5\u6b63\u786e\u5bfc\u5165\u3001\u53bb\u91cd\u548c\u7b5b\u9009', '\u4e34\u5e8a\u5b57\u6bb5\u88ab\u62d2\u7edd\u6216\u5ffd\u7565', 'AI \u8bf7\u6c42\u4e2d\u4e0d\u51fa\u73b0\u8eab\u4efd\u5b57\u6bb5', '\u672a\u7ecf\u5ba1\u6279\u4e0d\u80fd\u53d1\u9001\uff1b\u65e0\u9002\u5f53\u540c\u610f\u8bb0\u5f55\u88ab suppression', '\u9000\u8ba2\u548c\u53d1\u9001\u5931\u8d25\u53ef\u8bb0\u5f55', '\u8bbe\u5907\u52a0\u5bc6\u3001\u6743\u9650\u3001\u5907\u4efd\u4e0e\u6062\u590d\u901a\u8fc7\u6d4b\u8bd5'],
-        en: ['Test data imports, deduplicates and filters correctly', 'Clinical fields are rejected or ignored', 'No identity field appears in an AI request', 'Sending is impossible without approval; ineligible records are suppressed', 'Delivery failure and unsubscribe status can be recorded', 'Encryption, access, backup and recovery are tested']
-      },
-      boundary: {
-        zh: '\u542f\u7528 SMS/Email \u524d\u5fc5\u987b\u5b8c\u6210\uff1aAndrew \u4e66\u9762\u786e\u8ba4\u6bcf\u7c7b\u901a\u8baf\u7684\u5408\u6cd5\u4f9d\u636e\uff1b\u53ef\u9760\u540c\u610f/\u9000\u8ba2\u4fe1\u606f\u53ef\u4ece Helix \u83b7\u53d6\uff1b\u6fb3\u6d32\u9690\u79c1\u4e13\u4e1a\u4eba\u58eb\u786e\u8ba4\u5904\u7406\u89c4\u5219\uff1b\u6bcf\u6761\u5546\u4e1a\u901a\u8baf\u5305\u542b\u9000\u8ba2\u673a\u5236\uff1bAndrew \u6279\u51c6\u6700\u7ec8\u6a21\u677f\u548c\u6536\u4ef6\u540d\u5355\u3002',
-        en: 'Before production SMS/email: Andrew must document the legal basis for each communication category; reliable consent/opt-out data must be available; an Australian privacy professional must confirm treatment rules; each commercial message must include unsubscribe; Andrew must approve the final template and each recipient list.'
-      }
+      objective: { zh: '明确每类数据的用途、字段、保存期、同意与退订机制、角色分工，并产出隐私影响评估（PIA）输入文件。', en: 'Define the purpose, fields, retention, consent and opt-out mechanisms and roles for each data category, producing a PIA input document.' },
+      deliverables: { zh: ['数据地图与字段字典', '同意/退订机制设计', '角色与权限分工', 'PIA 输入文件'], en: ['Data map and field dictionary', 'Consent/opt-out mechanism design', 'Roles and permission allocation', 'PIA input document'] },
+      acceptance: { zh: ['数据流与字段字典获 Andrew 批准', 'PIA 输入文件交付'], en: ['Data flow and field dictionary approved by Andrew', 'PIA input document delivered'] },
+      boundary: { zh: 'AI 核心模块之一。不含法律意见或合规认证。', en: 'A core module of the AI system. Excludes legal advice or compliance certification.' }
     }
   },
   {
-    id: 'sms', type: 'oneoff', price: 2600,
+    id: 'a2', type: 'oneoff', price: 2200, cat: 'ai', badge: 'core',
+    ref: { zh: 'A2', en: 'A2' },
+    name: { zh: 'Windows 11 本地应用与加密资料库', en: 'Windows 11 Local App & Encrypted Store' },
+    sub: 'Local runtime, permissions, encryption, baseline backup and configuration',
+    preselected: false,
+    detail: {
+      objective: { zh: '在 Andrew 的 Windows 11 工作电脑上安装本地应用，建立加密联系资料库、权限与基础备份机制。', en: 'Install the local application on Andrew\'s Windows 11 workstation and establish the encrypted contact store, permissions and baseline backup.' },
+      deliverables: { zh: ['本地应用安装与配置', '加密资料库', '权限设置', '基础备份与配置管理'], en: ['Local app installation and configuration', 'Encrypted store', 'Permission settings', 'Baseline backup and configuration management'] },
+      acceptance: { zh: ['设备加密、权限、备份与恢复通过测试'], en: ['Encryption, access, backup and recovery are tested'] },
+      boundary: { zh: 'AI 核心模块之一。不含临床资料或完整患者数据库导入。', en: 'A core module of the AI system. Excludes import of clinical data or a complete patient database.' }
+    }
+  },
+  {
+    id: 'a3', type: 'oneoff', price: 2400, cat: 'ai', badge: 'core',
+    ref: { zh: 'A3', en: 'A3' },
+    name: { zh: 'Helix CSV 导入、校验和去重', en: 'Helix CSV Import, Validation & Dedup' },
+    sub: 'Minimal-field import, format checks, duplicates, rejection of clinical fields, error report',
+    preselected: false,
+    detail: {
+      objective: { zh: '导入经最小化处理的 Helix CSV 联系资料，进行格式校验、去重，并拒绝临床字段。', en: 'Import minimised Helix CSV contact data with format validation, deduplication and rejection of clinical fields.' },
+      deliverables: { zh: ['最小字段 CSV 导入', '格式校验与去重', '临床字段拒绝机制', '错误报告'], en: ['Minimal-field CSV import', 'Format validation and deduplication', 'Clinical-field rejection', 'Error report'] },
+      acceptance: { zh: ['测试资料可正确导入、去重和筛选', '临床字段被拒绝或忽略'], en: ['Test data imports, deduplicates and filters correctly', 'Clinical fields are rejected or ignored'] },
+      boundary: { zh: 'AI 核心模块之一。不绕过 Helix 导出机制直接查询底层数据库。', en: 'A core module of the AI system. Does not bypass Helix exports to query the underlying database.' }
+    }
+  },
+  {
+    id: 'a4', type: 'oneoff', price: 1800, cat: 'ai', badge: 'core',
+    ref: { zh: 'A4', en: 'A4' },
+    name: { zh: '地区/渠道/状态规则筛选', en: 'Deterministic Region/Channel/Status Filters' },
+    sub: 'Postcode, suburb, channel preference, consent and suppression filtering',
+    preselected: false,
+    detail: {
+      objective: { zh: '按 postcode、suburb、渠道偏好、同意/退订状态进行确定性筛选。', en: 'Deterministic filtering by postcode, suburb, channel preference, consent and suppression status.' },
+      deliverables: { zh: ['地区/渠道/同意状态筛选规则', 'suppression 名单机制'], en: ['Region/channel/consent filtering rules', 'Suppression-list mechanism'] },
+      acceptance: { zh: ['筛选结果与规则一致可复现'], en: ['Filter results are consistent and reproducible'] },
+      boundary: { zh: 'AI 核心模块之一。不做基于诊断或治疗历史的销售筛选。', en: 'A core module of the AI system. No sales targeting based on diagnosis or treatment history.' }
+    }
+  },
+  {
+    id: 'a5', type: 'oneoff', price: 2400, cat: 'ai', badge: 'core',
+    ref: { zh: 'A5', en: 'A5' },
+    name: { zh: 'AI 通用文案起草与修订', en: 'AI-assisted Generic Drafting & Revision' },
+    sub: 'AI receives a non-identifying brief only; templates, tone, proofreading and variants',
+    preselected: false,
+    detail: {
+      objective: { zh: 'AI 只接收无身份资料的 brief，协助起草通用通讯文案、模板、语气与多版本草稿。', en: 'The AI receives a non-identifying brief only and assists with generic drafting, templates, tone and variants.' },
+      deliverables: { zh: ['文案模板系统', '语气与拼写规范', '多版本草稿生成'], en: ['Copy template system', 'Tone and proofreading standards', 'Multi-variant drafting'] },
+      acceptance: { zh: ['AI 请求中不出现身份字段'], en: ['No identity field appears in an AI request'] },
+      boundary: { zh: 'AI 核心模块之一。AI 不做诊断、分诊、处方、治疗建议或患者适用性判断。', en: 'A core module of the AI system. The AI does not diagnose, triage, prescribe, advise treatment or judge patient suitability.' }
+    }
+  },
+  {
+    id: 'a6', type: 'oneoff', price: 2300, cat: 'ai', badge: 'send',
+    ref: { zh: 'A6', en: 'A6' },
+    name: { zh: '同意、退订、suppression、审批和审计', en: 'Consent, Opt-out, Suppression, Approval & Audit' },
+    sub: 'No sending without approval; suppression; minimum audit; Andrew approval',
+    preselected: false,
+    detail: {
+      objective: { zh: '建立"无批准不发送"的控制机制：黑名单、最小审计日志、Andrew 审批流程。', en: 'Establish no-sending-without-approval controls: suppression list, minimum audit logging and Andrew\'s approval workflow.' },
+      deliverables: { zh: ['审批工作流', 'suppression list', '最小审计日志'], en: ['Approval workflow', 'Suppression list', 'Minimum audit log'] },
+      acceptance: { zh: ['未经审批不能发送', '无适当同意记录被 suppression', '退订和发送失败可记录'], en: ['Sending is impossible without approval', 'Ineligible records are suppressed', 'Delivery failure and unsubscribe status can be recorded'] },
+      boundary: { zh: '任何发送功能启用时的必选模块。', en: 'Mandatory whenever any sending capability is enabled.' }
+    }
+  },
+  {
+    id: 'a7', type: 'oneoff', price: 2600, cat: 'ai',
     ref: { zh: 'A7', en: 'A7' },
-    name: { zh: 'SMS Provider \u63a5\u5165', en: 'SMS Provider Integration' },
+    name: { zh: 'SMS Provider 接入', en: 'SMS Provider Integration' },
     sub: 'One approved SMS provider, templates, opt-out and failure status',
+    hint: { zh: '需先选择 AI 核心模块（A1–A6、A10）。', en: 'Requires the AI core modules (A1–A6, A10) to be selected first.' },
     preselected: false,
     detail: {
-      objective: { zh: '\u63a5\u5165\u4e00\u5957\u83b7\u6279\u77ed\u4fe1 Provider\uff0c\u63d0\u4f9b\u6a21\u677f\u3001\u9000\u8ba2\u548c\u5931\u8d25\u72b6\u6001\u8ffd\u8e2a\u3002', en: 'Integrate one approved SMS provider with templates, opt-out handling and failure status tracking.' },
-      deliverables: { zh: ['SMS Provider \u8fde\u63a5\u4e0e\u914d\u7f6e', '\u6d88\u606f\u6a21\u677f\u7cfb\u7edf', '\u9000\u8ba2\u4e0e\u5931\u8d25\u72b6\u6001\u8bb0\u5f55'], en: ['SMS provider connection and configuration', 'Message template system', 'Opt-out and failure status recording'] },
-      acceptance: { zh: ['\u6d4b\u8bd5\u6d88\u606f\u53ef\u6210\u529f\u53d1\u9001\u5230\u6d4b\u8bd5\u53f7\u7801', '\u9000\u8ba2\u72b6\u6001\u6b63\u786e\u66f4\u65b0', '\u53d1\u9001\u5931\u8d25\u6709\u8bb0\u5f55'], en: ['Test message can be sent to a test number', 'Opt-out status is correctly updated', 'Delivery failures are recorded'] },
-      boundary: { zh: 'A7 \u4ec5\u5728 AI \u6838\u5fc3\u7248\uff08A1\u2013A6, A10\uff09\u5df2\u9009\u62e9\u65f6\u624d\u53ef\u5b9e\u65bd\u3002SMS \u8ba2\u9605\u548c\u7528\u91cf\u8d39\u7531 Andrew \u76f4\u63a5\u652f\u4ed8\u3002', en: 'A7 can only be implemented if the core AI system (A1\u2013A6, A10) is selected. SMS subscription and usage charges are paid directly by Andrew.' }
+      objective: { zh: '接入一套获批短信 Provider，提供模板、退订和失败状态追踪。', en: 'Integrate one approved SMS provider with templates, opt-out handling and failure status tracking.' },
+      deliverables: { zh: ['SMS Provider 连接与配置', '消息模板系统', '退订与失败状态记录'], en: ['SMS provider connection and configuration', 'Message template system', 'Opt-out and failure status recording'] },
+      acceptance: { zh: ['测试消息可成功发送到测试号码', '退订状态正确更新', '发送失败有记录'], en: ['Test message can be sent to a test number', 'Opt-out status is correctly updated', 'Delivery failures are recorded'] },
+      boundary: { zh: '需先选择 AI 核心模块。SMS 订阅和用量费由 Andrew 直接支付。生产群发需满足隐私/同意前置条件。', en: 'Requires the AI core modules first. SMS subscription and usage charges are paid directly by Andrew. Production bulk sending requires the privacy/consent prerequisites.' }
     }
   },
   {
-    id: 'email', type: 'oneoff', price: 1900,
+    id: 'a8', type: 'oneoff', price: 1900, cat: 'ai',
     ref: { zh: 'A8', en: 'A8' },
-    name: { zh: 'Email Provider \u63a5\u5165', en: 'Email Provider Integration' },
+    name: { zh: 'Email Provider 接入', en: 'Email Provider Integration' },
     sub: 'One approved email provider, unsubscribe and SPF/DKIM/DMARC',
+    hint: { zh: '需先选择 AI 核心模块（A1–A6、A10）。', en: 'Requires the AI core modules (A1–A6, A10) to be selected first.' },
     preselected: false,
     detail: {
-      objective: { zh: '\u63a5\u5165\u4e00\u5957\u83b7\u6279 Email Provider\uff0c\u63d0\u4f9b\u9000\u8ba2\u548c SPF/DKIM/DMARC \u914d\u7f6e\u3002', en: 'Integrate one approved email provider with unsubscribe and SPF/DKIM/DMARC configuration.' },
-      deliverables: { zh: ['Email Provider \u8fde\u63a5\u4e0e\u914d\u7f6e', 'SPF/DKIM/DMARC \u8bbe\u7f6e', '\u9000\u8ba2\u673a\u5236'], en: ['Email provider connection and configuration', 'SPF/DKIM/DMARC setup', 'Unsubscribe mechanism'] },
-      acceptance: { zh: ['\u6d4b\u8bd5\u90ae\u4ef6\u53ef\u6210\u529f\u53d1\u9001', '\u9000\u8ba2\u94fe\u63a5\u6b63\u5e38\u8fd0\u4f5c', 'SPF/DKIM/DMARC \u9a8c\u8bc1\u901a\u8fc7'], en: ['Test email can be sent successfully', 'Unsubscribe link functions correctly', 'SPF/DKIM/DMARC verification passes'] },
-      boundary: { zh: 'A8 \u4ec5\u5728 AI \u6838\u5fc3\u7248\u5df2\u9009\u62e9\u65f6\u624d\u53ef\u5b9e\u65bd\u3002Email \u8ba2\u9605\u548c\u7528\u91cf\u8d39\u7531 Andrew \u76f4\u63a5\u652f\u4ed8\u3002', en: 'A8 can only be implemented if the core AI system is selected. Email subscription and usage charges are paid directly by Andrew.' }
+      objective: { zh: '接入一套获批 Email Provider，提供退订和 SPF/DKIM/DMARC 配置。', en: 'Integrate one approved email provider with unsubscribe and SPF/DKIM/DMARC configuration.' },
+      deliverables: { zh: ['Email Provider 连接与配置', 'SPF/DKIM/DMARC 设置', '退订机制'], en: ['Email provider connection and configuration', 'SPF/DKIM/DMARC setup', 'Unsubscribe mechanism'] },
+      acceptance: { zh: ['测试邮件可成功发送', '退订链接正常运作', 'SPF/DKIM/DMARC 验证通过'], en: ['Test email can be sent successfully', 'Unsubscribe link functions correctly', 'SPF/DKIM/DMARC verification passes'] },
+      boundary: { zh: '需先选择 AI 核心模块。Email 订阅和用量费由 Andrew 直接支付。生产群发需满足隐私/同意前置条件。', en: 'Requires the AI core modules first. Email subscription and usage charges are paid directly by Andrew. Production bulk sending requires the privacy/consent prerequisites.' }
     }
   },
   {
-    id: 'report', type: 'oneoff', price: 1200,
+    id: 'a9', type: 'oneoff', price: 1200, cat: 'ai',
     ref: { zh: 'A9', en: 'A9' },
-    name: { zh: '\u6c47\u603b\u62a5\u544a\u4e0e\u5bfc\u51fa', en: 'Aggregate Reporting & Export' },
+    name: { zh: '汇总报告与导出', en: 'Aggregate Reporting & Export' },
     sub: 'Send, success/failure and opt-out counts by activity; no individual profiling',
+    hint: { zh: '需先选择 AI 核心模块（A1–A6、A10）。', en: 'Requires the AI core modules (A1–A6, A10) to be selected first.' },
     preselected: false,
     detail: {
-      objective: { zh: '\u63d0\u4f9b\u53d1\u9001\u91cf\u3001\u6210\u529f/\u5931\u8d25\u3001\u9000\u8ba2\u548c\u6d3b\u52a8\u7ea7\u6c47\u603b\u62a5\u8868\uff1b\u4e0d\u505a\u4e2a\u4eba\u753b\u50cf\u3002', en: 'Provide aggregate reports on send volume, success/failure and opt-out counts by activity. No individual profiling.' },
-      deliverables: { zh: ['\u6d3b\u52a8\u7ea7\u6c47\u603b\u62a5\u8868', '\u6210\u529f/\u5931\u8d25/\u9000\u8ba2\u7edf\u8ba1', '\u6570\u636e\u5bfc\u51fa\u529f\u80fd'], en: ['Activity-level aggregate reports', 'Success/failure/opt-out statistics', 'Data export functionality'] },
-      acceptance: { zh: ['\u62a5\u8868\u6570\u636e\u4e0e\u5b9e\u9645\u53d1\u9001\u8bb0\u5f55\u4e00\u81f4', '\u5bfc\u51fa\u683c\u5f0f\u6b63\u786e', '\u4e0d\u542b\u4e2a\u4eba\u8eab\u4efd\u4fe1\u606f'], en: ['Report data matches actual send records', 'Export format is correct', 'No personal identity information included'] },
-      boundary: { zh: '\u4ec5\u505a\u805a\u5408\u7edf\u8ba1\uff0c\u4e0d\u505a\u4e2a\u4eba\u753b\u50cf\u6216\u884c\u4e3a\u8ffd\u8e2a\u3002', en: 'Aggregated statistics only. No individual profiling or behaviour tracking.' }
+      objective: { zh: '提供发送量、成功/失败、退订和活动级汇总报表；不做个人画像。', en: 'Provide aggregate reports on send volume, success/failure and opt-out counts by activity. No individual profiling.' },
+      deliverables: { zh: ['活动级汇总报表', '成功/失败/退订统计', '数据导出功能'], en: ['Activity-level aggregate reports', 'Success/failure/opt-out statistics', 'Data export functionality'] },
+      acceptance: { zh: ['报表数据与实际发送记录一致', '不含个人身份信息'], en: ['Report data matches actual send records', 'No personal identity information included'] },
+      boundary: { zh: '仅做聚合统计，不做个人画像或行为追踪。', en: 'Aggregated statistics only. No individual profiling or behaviour tracking.' }
     }
   },
   {
-    id: 'workbuddy', type: 'oneoff', price: 3000,
-    ref: { zh: 'B1\u2013B2', en: 'B1\u2013B2' },
-    name: { zh: 'WorkBuddy AI \u5de5\u4f5c\u53f0\u5b89\u88c5\u4e0e\u5b9a\u5236\u6280\u80fd', en: 'WorkBuddy AI Workspace & Custom Skills' },
-    sub: 'B1 Website Sync-Edit Skill $1,000 \u00b7 B2 Customer Data Processing Skill $2,000',
+    id: 'a10', type: 'oneoff', price: 1200, cat: 'ai', badge: 'core',
+    ref: { zh: 'A10', en: 'A10' },
+    name: { zh: '培训、UAT 与 SOP', en: 'Training, UAT & SOP' },
+    sub: 'Test data, recovery and approval rehearsal, one training session',
     preselected: false,
     detail: {
-      objective: {
-        zh: '\u4e3a Andrew \u5b89\u88c5\u3001\u914d\u7f6e\u5e76\u521d\u59cb\u5316 WorkBuddy AI \u5de5\u4f5c\u53f0\uff0c\u5e76\u6784\u5efa\u4e24\u9879\u5b9a\u5236 AI \u6280\u80fd\uff1a\u7f51\u7ad9\u540c\u6b65\u4fee\u6539\u4e0e\u90e8\u7f72\u6280\u80fd\u3001\u5ba2\u6237\u8d44\u6599\u5904\u7406\u6280\u80fd\u3002',
-        en: 'Install, configure and initialise the WorkBuddy AI workspace for Andrew, then build two custom AI skills: a website sync-edit and deployment skill, and a customer-data processing skill.'
-      },
-      deliverables: {
-        zh: ['WorkBuddy \u5de5\u4f5c\u53f0\u5b89\u88c5\u3001\u914d\u7f6e\u4e0e\u521d\u59cb\u5316', '\u7f51\u7ad9\u540c\u6b65\u4fee\u6539\u4e0e\u90e8\u7f72\u6280\u80fd\uff08B1\uff09', '\u5ba2\u6237\u8d44\u6599\u5904\u7406\u6280\u80fd\uff08B2\uff09', '\u57f9\u8bad\u4e0e\u4ea4\u63a5\u6587\u4ef6'],
-        en: ['WorkBuddy workspace installation, configuration and initialisation', 'Website sync-edit and deployment skill (B1)', 'Customer-data processing skill (B2)', 'Training and handover']
-      },
-      acceptance: {
-        zh: ['Andrew \u80fd\u901a\u8fc7 WorkBuddy \u4fee\u6539\u7f51\u7ad9\u5185\u5bb9\u5e76\u540c\u6b65\u90e8\u7f72\u5230\u751f\u4ea7\u73af\u5883', '\u5ba2\u6237\u8d44\u6599\u6280\u80fd\u53ef\u6b63\u5e38\u7b5b\u9009\u3001\u6838\u5bf9\u4e0e\u603b\u7ed3', 'Token \u4e0e\u51ed\u636e\u4e0d\u5199\u5165\u6280\u80fd\u6216\u4ee3\u7801\u5e93'],
-        en: ['Andrew can edit website content through WorkBuddy and sync to production', 'Customer-data skill correctly screens, checks and summarises imported data', 'Tokens and credentials are not written into the skill or source repository']
-      },
-      boundary: {
-        zh: 'WorkBuddy \u5de5\u4f5c\u53f0\u7531 Andrew \u81ea\u884c\u62e5\u6709\uff1b\u670d\u52a1\u65b9\u4ec5\u8d1f\u8d23\u5b89\u88c5\u3001\u914d\u7f6e\u4e0e\u521d\u59cb\u5316\u3002\u5ba2\u6237\u8d44\u6599\u5904\u7406\u6280\u80fd\u4ec5\u5904\u7406 Andrew \u81ea\u884c\u5bfc\u5165\u7684\u8d44\u6599\uff0c\u4e0d\u8fde\u63a5 Helix \u75c5\u5386\u3001\u60a3\u8005\u8054\u7cfb\u8d44\u6599\u6216\u4ed8\u6b3e\u5361\u8d44\u6599\u3002\u7f51\u7ad9\u540c\u6b65\u4fee\u6539\u6280\u80fd\u4ec5\u8bbf\u95ee\u7f51\u7ad9\u4ee3\u7801\u4ed3\u5e93\uff0c\u4e0d\u63a5\u89e6\u4e34\u5e8a\u8d44\u6599\u3002',
-        en: 'The WorkBuddy workspace is owned by Andrew; the Service Provider only installs, configures and initialises it. The customer-data skill processes only data Andrew imports himself and does not connect to Helix records, patient-contact data or payment-card data. The website sync-edit skill accesses only the website code repository and does not touch clinical data.'
-      }
+      objective: { zh: '提供测试资料、恢复演练、发送审批演练和一次培训，交付 SOP。', en: 'Provide test data, recovery and approval rehearsal and one training session, with SOP delivery.' },
+      deliverables: { zh: ['测试资料与恢复演练', '发送审批演练', '一次培训与 SOP'], en: ['Test data and recovery rehearsal', 'Send-approval rehearsal', 'One training session and SOP'] },
+      acceptance: { zh: ['培训完成', 'SOP 交付并确认'], en: ['Training completed', 'SOP delivered and confirmed'] },
+      boundary: { zh: 'AI 核心模块之一。不含后续新员工培训。', en: 'A core module of the AI system. Ongoing new-staff training is excluded.' }
+    }
+  },
+  // ===== 第三类 · 桌面AI Agent 生产力工具 =====
+  {
+    id: 'b1', type: 'oneoff', price: 1000, cat: 'agent',
+    ref: { zh: 'B1', en: 'B1' },
+    name: { zh: '网站同步修改与部署技能', en: 'Website Sync-Edit & Deployment Skill' },
+    sub: 'A custom skill to edit website content directly and synchronise changes to production',
+    preselected: false,
+    detail: {
+      objective: { zh: '构建定制技能，使 Andrew 可通过桌面AI Agent 生产力工具直接修改网站内容，并将变更同步部署至生产环境。', en: 'Build a custom skill that lets Andrew edit his website content directly through the desktop AI agent productivity tool and synchronise the changes to production.' },
+      deliverables: { zh: ['网站同步修改与部署技能构建', '网站仓库访问配置', '同步部署流程与说明'], en: ['Website sync-edit and deployment skill build', 'Website repository access configuration', 'Sync-deployment process and instructions'] },
+      acceptance: { zh: ['Andrew 能通过工具修改一个页面并同步到生产环境'], en: ['Andrew can edit one page through the tool and sync it to production'] },
+      boundary: { zh: '技能仅访问网站代码仓库，不接触临床资料。', en: 'The skill accesses only the website code repository and does not touch clinical data.' }
     }
   },
   {
-    id: 'k0', type: 'oneoff', price: 2000,
+    id: 'b2', type: 'oneoff', price: 2000, cat: 'agent',
+    ref: { zh: 'B2', en: 'B2' },
+    name: { zh: '客户资料处理技能', en: 'Customer-Data Processing Skill' },
+    sub: 'A custom skill to screen, check and summarise imported customer data and draft client-communication documents',
+    preselected: false,
+    detail: {
+      objective: { zh: '构建定制技能，基于 Andrew 导入的客户资料，按其指令进行 AI 筛选、核对与总结，并自动撰写用于客户沟通的相应文件。', en: 'Build a custom skill that screens, checks and summarises Andrew\'s imported customer data per his instructions and drafts the corresponding client-communication documents.' },
+      deliverables: { zh: ['客户资料处理技能构建', '资料导入格式约定', '筛选/核对/总结流程', '客户沟通文件模板'], en: ['Customer-data processing skill build', 'Agreed import format', 'Screening/checking/summarising workflow', 'Client-communication document templates'] },
+      acceptance: { zh: ['技能可正常筛选、核对与总结测试资料', '沟通文件草稿符合约定格式'], en: ['The skill correctly screens, checks and summarises test data', 'Communication drafts match the agreed format'] },
+      boundary: { zh: '仅处理 Andrew 自行导入的资料，不连接 Helix 病历、患者联系资料或付款卡资料。', en: 'Processes only data Andrew imports himself and does not connect to Helix records, patient-contact data or payment-card data.' }
+    }
+  },
+  // ===== 第四类 · 知识资产计划 =====
+  {
+    id: 'k0', type: 'oneoff', price: 2000, cat: 'knowledge',
     ref: { zh: 'K0', en: 'K0' },
-    name: { zh: '\u77e5\u8bc6\u8ba1\u5212 K0\uff08\u5148\u884c\u53ef\u884c\u6027\uff09', en: 'Knowledge Program K0 (Feasibility Gate)' },
-    sub: 'Feasibility, claim/evidence and regulatory scope; risk register; go/no-go report \u00b7 4\u20136 weeks',
+    name: { zh: '知识计划 K0（先行可行性）', en: 'Knowledge Program K0 (Feasibility Gate)' },
+    sub: 'Feasibility, claim/evidence and regulatory scope; risk register; go/no-go report · 4–6 weeks',
     preselected: false,
     detail: {
-      objective: {
-        zh: '\u8bc4\u4f30\u77e5\u8bc6\u5546\u4e1a\u5316\u7684\u53ef\u884c\u6027\uff1a\u5b9a\u4e49\u670d\u52a1\u3001\u76ee\u6807\u4eba\u7fa4\u3001\u8bc1\u636e\u3001\u5904\u65b9\u836f/\u5668\u68b0/\u6fc0\u5149\u6d89\u53ca\u8303\u56f4\u3001\u5e7f\u544a\u9650\u5236\u3001\u4fdd\u9669\u53ca\u98ce\u9669\uff1b\u5f62\u6210 go/no-go \u62a5\u544a\u3002',
-        en: 'Assess knowledge commercialisation feasibility: define the proposed service, target population, evidence, prescription medicine/device/laser elements, advertising limits, insurance and key risks; produce a go/no-go report.'
-      },
-      deliverables: {
-        zh: ['\u53ef\u884c\u6027\u4e0e\u76d1\u7ba1\u8303\u56f4\u62a5\u544a', '\u98ce\u9669\u6e05\u5355', 'go/no-go \u51b3\u7b56\u62a5\u544a'],
-        en: ['Feasibility and regulatory scope report', 'Risk register', 'Go/no-go decision report']
-      },
-      acceptance: {
-        zh: ['\u62a5\u544a\u8986\u76d6\u7ea6\u5b9a\u8303\u56f4\u7684\u6240\u6709\u98ce\u9669\u548c\u76d1\u7ba1\u95ee\u9898', 'Andrew \u5bf9 go/no-go \u7ed3\u8bba\u505a\u51fa\u4e66\u9762\u51b3\u5b9a'],
-        en: ['Report covers all agreed risk and regulatory items', 'Andrew makes a written decision on the go/no-go conclusion']
-      },
-      boundary: {
-        zh: 'K0 \u5b8c\u6210\u4e0d\u627f\u8bfa\u6700\u7ec8\u4ea7\u54c1\u53ef\u63a8\u5e7f\u6216\u53ef\u6ce8\u518c\u3002Andrew \u53ef\u4ee5\u5b8c\u6210 K0 \u540e\u505c\u6b62\uff0c\u4e0d\u9700\u8981\u627f\u8bfa\u540e\u7eed $47,500\u3002\u4ed8\u6b3e\uff1a\u7b7e\u7ea6\u4ed8 50%\uff0c\u4ea4\u4ed8\u62a5\u544a\u4ed8 50%\u3002',
-        en: 'Completing K0 does not promise the proposed service can be marketed, registered or franchised. Andrew may stop after K0 with no obligation to commit the remaining $47,500. Payment: 50% on signing, 50% on report delivery.'
-      }
+      objective: { zh: '评估知识商业化的可行性：定义服务、目标人群、证据、处方药/器械/激光涉及范围、广告限制、保险及风险；形成 go/no-go 报告。', en: 'Assess knowledge commercialisation feasibility: define the proposed service, target population, evidence, prescription medicine/device/laser elements, advertising limits, insurance and key risks; produce a go/no-go report.' },
+      deliverables: { zh: ['可行性与监管范围报告', '风险清单', 'go/no-go 决策报告'], en: ['Feasibility and regulatory scope report', 'Risk register', 'Go/no-go decision report'] },
+      acceptance: { zh: ['报告覆盖约定范围的所有风险和监管问题', 'Andrew 对 go/no-go 结论做出书面决定'], en: ['Report covers all agreed risk and regulatory items', 'Andrew makes a written decision on the go/no-go conclusion'] },
+      boundary: { zh: 'K0 完成不承诺最终产品可推广或可注册。Andrew 可以完成 K0 后停止，不需要承诺后续 $47,500。付款：签约付 50%，交付报告付 50%。', en: 'Completing K0 does not promise the proposed service can be marketed, registered or franchised. Andrew may stop after K0 with no obligation to commit the remaining $47,500. Payment: 50% on signing, 50% on report delivery.' }
     }
   },
-  // MONTHLY
+  // ===== 月度维护 =====
   {
     id: 'care-std', type: 'monthly', price: 290,
     ref: { zh: '', en: '' },
     name: { zh: 'Website Care Standard', en: 'Website Care Standard' },
-    sub: 'Daily backup \u00b7 SSL/uptime monitoring \u00b7 Monthly booking/payment check \u00b7 Broken link scan \u00b7 Monthly report \u00b7 1hr support/mo',
+    sub: 'Daily backup · SSL/uptime monitoring · Monthly booking/payment check · Broken link scan · Monthly report · 1hr support/mo',
     preselected: false,
     detail: {
-      objective: { zh: '\u7f51\u7ad9\u65e5\u5e38\u7ef4\u62a4\u5957\u9910\uff1a\u6bcf\u65e5\u5907\u4efd\u3001SSL/\u8fd0\u884c\u76d1\u6d4b\u3001\u6708\u5ea6\u9884\u7ea6/\u4ed8\u6b3e\u5165\u53e3\u68c0\u67e5\u3001\u65ad\u94fe/\u6027\u80fd\u68c0\u67e5\u3001\u6708\u5ea6\u62a5\u544a\u3001\u6bcf\u6708 1 \u5c0f\u65f6\u652f\u6301\u3002', en: 'Routine website care: daily backup, SSL/uptime monitoring, monthly booking/payment entry-point test, broken-link/performance check, monthly report, 1 hour of minor edits/support per month.' },
-      deliverables: { zh: ['\u6bcf\u65e5\u4ee3\u7801/\u5185\u5bb9\u5907\u4efd', 'SSL\u3001\u8fd0\u884c\u548c\u4f9d\u8d56\u76d1\u6d4b', '\u6708\u5ea6\u9884\u7ea6/\u4ed8\u6b3e\u5165\u53e3\u68c0\u67e5', '\u65ad\u94fe\u548c\u57fa\u7840\u6027\u80fd\u68c0\u67e5', '\u6708\u5ea6\u7ef4\u62a4\u62a5\u544a', '\u6bcf\u6708 1 \u5c0f\u65f6\u5c0f\u4fee\u6539/\u652f\u6301'], en: ['Daily repository/content snapshot', 'SSL, uptime and dependency monitoring', 'Monthly booking/payment entry-point test', 'Broken-link and basic performance check', 'Monthly maintenance report', '1 hour of minor edits/support per month'] },
-      acceptance: { zh: ['\u5907\u4efd\u53ef\u6062\u590d', '\u6708\u5ea6\u62a5\u544a\u6309\u65f6\u63d0\u4ea4'], en: ['Backup is restorable', 'Monthly report delivered on time'] },
-      boundary: { zh: '\u4ec5\u8986\u76d6\u7f51\u7ad9\u4ee3\u7801\u3001\u516c\u5f00\u5185\u5bb9\u548c\u914d\u7f6e\u3002Helix/\u9884\u7ea6/\u4ed8\u6b3e Provider \u7684\u6570\u636e\u7531\u5404\u81ea\u5907\u4efd\u3002\u5efa\u8bae\u81f3\u5c11 6 \u4e2a\u6708\uff1b\u6309\u6708\u9884\u4ed8\uff0c30 \u5929\u4e66\u9762\u901a\u77e5\u53ef\u53d6\u6d88\u3002', en: 'Covers only website code, public content and configuration. Helix/booking/payment provider data remains under their backup arrangements. Recommended minimum six months; cancellable on 30 days\' written notice.' }
+      objective: { zh: '网站日常维护套餐：每日备份、SSL/运行监测、月度预约/付款入口检查、断链/性能检查、月度报告、每月 1 小时支持。', en: 'Routine website care: daily backup, SSL/uptime monitoring, monthly booking/payment entry-point test, broken-link/performance check, monthly report, 1 hour of minor edits/support per month.' },
+      deliverables: { zh: ['每日代码/内容备份', 'SSL、运行和依赖监测', '月度预约/付款入口检查', '断链和基础性能检查', '月度维护报告', '每月 1 小时小修改/支持'], en: ['Daily repository/content snapshot', 'SSL, uptime and dependency monitoring', 'Monthly booking/payment entry-point test', 'Broken-link and basic performance check', 'Monthly maintenance report', '1 hour of minor edits/support per month'] },
+      acceptance: { zh: ['备份可恢复', '月度报告按时提交'], en: ['Backup is restorable', 'Monthly report delivered on time'] },
+      boundary: { zh: '仅覆盖网站代码、公开内容和配置。Helix/预约/付款 Provider 的数据由各自备份。建议至少 6 个月；按月预付，30 天书面通知可取消。', en: 'Covers only website code, public content and configuration. Helix/booking/payment provider data remains under their backup arrangements. Recommended minimum six months; cancellable on 30 days\' written notice.' }
     }
   },
   {
     id: 'care-plus', type: 'monthly', price: 490,
     ref: { zh: '', en: '' },
     name: { zh: 'Website Care Plus', en: 'Website Care Plus' },
-    sub: 'All Standard services \u00b7 3hr support/mo \u00b7 GA4/Search Console summary \u00b7 Up to 2 content releases/mo \u00b7 Higher priority',
+    sub: 'All Standard services · 3hr support/mo · GA4/Search Console summary · Up to 2 content releases/mo · Higher priority',
     preselected: false,
     detail: {
-      objective: { zh: '\u589e\u5f3a\u7f51\u7ad9\u7ef4\u62a4\u5957\u9910\uff1aStandard \u5168\u90e8 + \u6bcf\u6708 3 \u5c0f\u65f6\u652f\u6301 + GA4/\u641c\u7d22\u6458\u8981 + \u6bcf\u6708 2 \u6b21\u5185\u5bb9\u53d1\u5e03 + \u4f18\u5148\u7ea7\u63d0\u9ad8\u3002', en: 'Enhanced website care: all Standard services + 3 hours of minor editing/design support per month + GA4/Search Console summary + up to two template-based content releases per month + higher priority.' },
-      deliverables: { zh: ['Standard \u5168\u90e8\u5185\u5bb9', '\u6bcf\u6708 3 \u5c0f\u65f6\u5c0f\u4fee\u6539/\u8bbe\u8ba1\u652f\u6301', 'GA4/Search Console \u6458\u8981', '\u6bcf\u6708\u6700\u591a 2 \u6b21\u6a21\u677f\u5185\u5185\u5bb9\u53d1\u5e03', '\u4f18\u5148\u7ea7\u63d0\u9ad8'], en: ['All Standard services', '3 hours of minor editing/design support per month', 'GA4/Search Console summary', 'Up to two template-based content releases per month', 'Higher priority'] },
-      acceptance: { zh: ['\u6240\u6709 Standard \u9a8c\u6536\u6761\u4ef6\u901a\u8fc7', 'GA4 \u6570\u636e\u53ef\u8bbf\u95ee'], en: ['All Standard acceptance criteria pass', 'GA4 data is accessible'] },
-      boundary: { zh: '\u540c Standard \u8fb9\u754c\u3002\u989d\u5916\u652f\u6301\u65f6\u95f4\u4e0d\u7ed3\u8f6c\u3002', en: 'Same boundaries as Standard. Unused support time does not roll over.' }
+      objective: { zh: '增强网站维护套餐：Standard 全部 + 每月 3 小时支持 + GA4/搜索摘要 + 每月 2 次内容发布 + 优先级提高。', en: 'Enhanced website care: all Standard services + 3 hours of minor editing/design support per month + GA4/Search Console summary + up to two template-based content releases per month + higher priority.' },
+      deliverables: { zh: ['Standard 全部内容', '每月 3 小时小修改/设计支持', 'GA4/Search Console 摘要', '每月最多 2 次模板内内容发布', '优先级提高'], en: ['All Standard services', '3 hours of minor editing/design support per month', 'GA4/Search Console summary', 'Up to two template-based content releases per month', 'Higher priority'] },
+      acceptance: { zh: ['所有 Standard 验收条件通过', 'GA4 数据可访问'], en: ['All Standard acceptance criteria pass', 'GA4 data is accessible'] },
+      boundary: { zh: '同 Standard 边界。额外支持时间不结转。', en: 'Same boundaries as Standard. Unused support time does not roll over.' }
+    }
+  },
+  {
+    id: 'ai-care', type: 'monthly', price: 380,
+    ref: { zh: '', en: '' },
+    name: { zh: 'AI Assistant Care', en: 'AI Assistant Care' },
+    sub: 'Core app updates · Import-rule check · AI/token cost monitoring · Encrypted-backup check · 1hr support · Quarterly recovery test',
+    preselected: false,
+    detail: {
+      objective: { zh: 'AI 助手系统维护：核心程序更新、导入规则检查、AI/Token 成本监测、加密备份检查、每月 1 小时支持、季度恢复测试。', en: 'AI assistant system care: core application updates, import-rule check, AI/token cost monitoring, encrypted-backup check, 1 hour of support per month and a quarterly recovery test.' },
+      deliverables: { zh: ['核心程序更新', '导入规则检查', 'AI/Token 成本监测', '加密备份检查', '每月 1 小时支持', '季度恢复测试'], en: ['Core application updates', 'Import-rule check', 'AI/token cost monitoring', 'Encrypted-backup check', '1 hour support per month', 'Quarterly recovery test'] },
+      acceptance: { zh: ['更新与检查按计划执行', '恢复测试通过'], en: ['Updates and checks performed on schedule', 'Recovery test passes'] },
+      boundary: { zh: 'AI、SMS、Email API 的订阅和用量费另计。未使用支持时间不结转。', en: 'AI, SMS and email API subscription and usage charges are excluded. Unused support time does not roll over.' }
+    }
+  },
+  {
+    id: 'ai-comms-care', type: 'monthly', price: 520,
+    ref: { zh: '', en: '' },
+    name: { zh: 'AI Communications Care', en: 'AI Communications Care' },
+    sub: 'AI Assistant Care + SMS/Email connector health · Unsubscribe/suppression test · 2hr support · Usage charges excluded',
+    preselected: false,
+    detail: {
+      objective: { zh: '含通讯的 AI 维护：AI Assistant Care 全部 + SMS/Email connector 健康检查、退订/suppression 测试、每月 2 小时支持。', en: 'AI care with communications: all AI Assistant Care services + SMS/email connector health checks, unsubscribe/suppression testing and 2 hours of support per month.' },
+      deliverables: { zh: ['AI Assistant Care 全部内容', 'SMS/Email connector 健康检查', '退订/suppression 测试', '每月 2 小时支持'], en: ['All AI Assistant Care services', 'SMS/email connector health checks', 'Unsubscribe/suppression testing', '2 hours support per month'] },
+      acceptance: { zh: ['connector 健康检查正常', '退订/suppression 测试通过'], en: ['Connector health checks pass', 'Unsubscribe/suppression tests pass'] },
+      boundary: { zh: 'SMS/Email 用量费另计。其余同 AI Assistant Care。', en: 'SMS/email usage charges are excluded. Otherwise same as AI Assistant Care.' }
+    }
+  },
+  {
+    id: 'agent-care', type: 'monthly', price: 220,
+    ref: { zh: '', en: '' },
+    name: { zh: '桌面AI Agent 部署维护', en: 'Desktop AI Agent Deployment Care' },
+    sub: 'Skill/pipeline health · Dependency updates · One deployment/rollback assistance · 1hr support',
+    preselected: false,
+    detail: {
+      objective: { zh: '桌面AI Agent 生产力工具的部署维护：技能和流程健康检查、依赖更新、一次部署/回滚协助、每月 1 小时支持。', en: 'Deployment care for the desktop AI agent productivity tool: skill/pipeline health checks, dependency updates, one deployment/rollback assistance and 1 hour of support per month.' },
+      deliverables: { zh: ['技能/流程健康检查', '依赖更新', '一次部署/回滚协助', '每月 1 小时支持'], en: ['Skill/pipeline health checks', 'Dependency updates', 'One deployment/rollback assistance', '1 hour support per month'] },
+      acceptance: { zh: ['技能与流程检查按计划执行'], en: ['Skill and pipeline checks performed on schedule'] },
+      boundary: { zh: '不含新技能开发与重大流程重构。未使用支持时间不结转。', en: 'Excludes new skill development and major pipeline rebuilds. Unused support time does not roll over.' }
     }
   },
   {
     id: 'care-combined', type: 'monthly', price: 850,
     ref: { zh: '', en: '' },
     name: { zh: 'Combined Digital Operations Care', en: 'Combined Digital Operations Care' },
-    sub: 'Website Standard + AI Assistant Care + WorkBuddy Care \u00b7 Up to 4hr support/mo',
+    sub: 'Website Standard + AI Assistant Care + Desktop AI Agent Care · Up to 4hr support/mo',
     preselected: false,
     detail: {
-      objective: { zh: '\u7efc\u5408\u8fd0\u7ef4\u5957\u9910\uff1a\u7f51\u7ad9 Standard + AI \u52a9\u624b\u7ef4\u62a4 + WorkBuddy \u90e8\u7f72\u7ef4\u62a4\uff1b\u6bcf\u6708\u6700\u591a 4 \u5c0f\u65f6\u652f\u6301\u3002', en: 'combined operations care: Website Standard + AI Assistant Care + WorkBuddy Deployment Care; up to 4 total hours of minor edits/support per month.' },
-      deliverables: { zh: ['\u7f51\u7ad9 Standard \u5168\u90e8', 'AI \u6838\u5fc3\u7a0b\u5e8f\u66f4\u65b0\u4e0e\u6210\u672c\u76d1\u6d4b', 'WorkBuddy Skill/Pipeline \u68c0\u67e5', '\u6bcf\u6708\u6700\u591a 4 \u5c0f\u65f6\u652f\u6301'], en: ['All Website Standard services', 'AI core application updates and cost monitoring', 'WorkBuddy skill/pipeline health checks', 'Up to 4 total hours of support per month'] },
-      acceptance: { zh: ['\u6240\u6709\u5b50\u670d\u52a1\u9a8c\u6536\u6761\u4ef6\u901a\u8fc7'], en: ['All sub-service acceptance criteria pass'] },
-      boundary: { zh: '\u672a\u4f7f\u7528\u652f\u6301\u65f6\u95f4\u4e0d\u7ed3\u8f6c\u3002\u7b2c\u4e09\u65b9\u8ba2\u9605\u3001SMS\u3001Email\u3001AI token \u548c\u4ea4\u6613\u8d39\u53e6\u8ba1\u3002', en: 'Unused support time does not roll over. Third-party subscriptions, SMS, email, AI tokens and transaction charges are excluded.' }
+      objective: { zh: '综合运维套餐：网站 Standard + AI 助手维护 + 桌面AI Agent 部署维护；每月最多 4 小时支持。', en: 'Combined operations care: Website Standard + AI Assistant Care + Desktop AI Agent Deployment Care; up to 4 total hours of minor edits/support per month.' },
+      deliverables: { zh: ['网站 Standard 全部', 'AI 核心程序更新与成本监测', '桌面AI Agent 技能/流程检查', '每月最多 4 小时支持'], en: ['All Website Standard services', 'AI core application updates and cost monitoring', 'Desktop AI agent skill/pipeline health checks', 'Up to 4 total hours of support per month'] },
+      acceptance: { zh: ['所有子服务验收条件通过'], en: ['All sub-service acceptance criteria pass'] },
+      boundary: { zh: '未使用支持时间不结转。第三方订阅、SMS、Email、AI token 和交易费另计。', en: 'Unused support time does not roll over. Third-party subscriptions, SMS, email, AI tokens and transaction charges are excluded.' }
     }
   },
   {
     id: 'care-comms', type: 'monthly', price: 990,
     ref: { zh: '', en: '' },
     name: { zh: 'Combined Care with Communications', en: 'Combined Care with Communications' },
-    sub: 'Website Standard + AI Communications Care + WorkBuddy Care \u00b7 Up to 5hr support/mo',
+    sub: 'Website Standard + AI Communications Care + Desktop AI Agent Care · Up to 5hr support/mo',
     preselected: false,
     detail: {
-      objective: { zh: '\u542b\u901a\u8baf\u7684\u7efc\u5408\u8fd0\u7ef4\u5957\u9910\uff1a\u7f51\u7ad9 Standard + AI \u901a\u8baf\u7ef4\u62a4\uff08\u542b SMS/Email\uff09 + WorkBuddy \u90e8\u7f72\u7ef4\u62a4\uff1b\u6bcf\u6708\u6700\u591a 5 \u5c0f\u65f6\u652f\u6301\u3002', en: 'Combined care with communications: Website Standard + AI Communications Care (incl. SMS/email) + WorkBuddy Deployment Care; up to 5 total hours of support per month.' },
-      deliverables: { zh: ['\u7f51\u7ad9 Standard \u5168\u90e8', 'AI \u901a\u8baf\u7ef4\u62a4\uff08\u542b SMS/Email connector\uff09', 'WorkBuddy Skill/Pipeline \u68c0\u67e5', '\u6bcf\u6708\u6700\u591a 5 \u5c0f\u65f6\u652f\u6301'], en: ['All Website Standard services', 'AI communications care incl. SMS/email connector health', 'WorkBuddy skill/pipeline health checks', 'Up to 5 total hours of support per month'] },
-      acceptance: { zh: ['\u6240\u6709\u5b50\u670d\u52a1\u9a8c\u6536\u6761\u4ef6\u901a\u8fc7', 'SMS/Email connector \u5065\u5eb7\u68c0\u67e5\u6b63\u5e38'], en: ['All sub-service acceptance criteria pass', 'SMS/email connector health check passes'] },
-      boundary: { zh: 'SMS/Email \u7528\u91cf\u8d39\u53e6\u8ba1\u3002\u5176\u4f59\u540c Combined Digital Operations Care\u3002', en: 'SMS/email usage charges excluded. Otherwise same as Combined Digital Operations Care.' }
+      objective: { zh: '含通讯的综合运维套餐：网站 Standard + AI 通讯维护（含 SMS/Email）+ 桌面AI Agent 部署维护；每月最多 5 小时支持。', en: 'Combined care with communications: Website Standard + AI Communications Care (incl. SMS/email) + Desktop AI Agent Deployment Care; up to 5 total hours of support per month.' },
+      deliverables: { zh: ['网站 Standard 全部', 'AI 通讯维护（含 SMS/Email connector）', '桌面AI Agent 技能/流程检查', '每月最多 5 小时支持'], en: ['All Website Standard services', 'AI communications care incl. SMS/email connector health', 'Desktop AI agent skill/pipeline health checks', 'Up to 5 total hours of support per month'] },
+      acceptance: { zh: ['所有子服务验收条件通过', 'SMS/Email connector 健康检查正常'], en: ['All sub-service acceptance criteria pass', 'SMS/email connector health check passes'] },
+      boundary: { zh: 'SMS/Email 用量费另计。其余同 Combined Digital Operations Care。', en: 'SMS/email usage charges excluded. Otherwise same as Combined Digital Operations Care.' }
     }
   }
 ];
@@ -1326,6 +1532,14 @@ function gstBlockHtml(subtotal, label) {
   '</div>';
 }
 
+// ===== CATEGORIES =====
+var CATS = [
+  { id: 'web', zh: '第一类 · 专业诊所网站', en: 'Category 1 · Professional Clinic Website' },
+  { id: 'ai', zh: '第二类 · AI 工作协助系统', en: 'Category 2 · AI Work Assistance System' },
+  { id: 'agent', zh: '第三类 · 桌面AI Agent 生产力工具', en: 'Category 3 · Desktop AI Agent Productivity Tool' },
+  { id: 'knowledge', zh: '第四类 · 知识资产计划（未来可选）', en: 'Category 4 · Knowledge Asset Program (Future Option)' }
+];
+
 // ===== RENDER ITEMS =====
 function renderItems() {
   var oneoffContainer = document.getElementById('oneoff-items');
@@ -1333,42 +1547,81 @@ function renderItems() {
   oneoffContainer.innerHTML = '';
   monthlyContainer.innerHTML = '';
 
-  ITEMS.forEach(function(item) {
-    var isSelected = selectedItems[item.id] || false;
-    var container = item.type === 'oneoff' ? oneoffContainer : monthlyContainer;
-
-    var div = document.createElement('div');
-    div.className = 'quote-item' + (isSelected ? ' selected' : '');
-    div.dataset.id = item.id;
-
-    var refText = item.ref[currentLang] ? ' (' + item.ref[currentLang] + ')' : '';
-    var priceStr = item.type === 'monthly'
-      ? fmtPrice(item.price) + '<span class="per-month">/' + (currentLang==='zh'?'月':'mo') + '</span>'
-      : fmtPrice(item.price);
-
-    div.innerHTML =
-      '<div class="checkbox"></div>' +
-      '<div class="item-content">' +
-        '<div class="item-top">' +
-          '<div>' +
-            '<div class="item-name">' + item.name[currentLang] + refText + '</div>' +
-            '<span class="item-ref">' + item.sub + '</span>' +
-          '</div>' +
-          '<div class="item-price ' + item.type + '">' + priceStr + '</div>' +
-        '</div>' +
-        '<a class="item-detail-link" onclick="event.stopPropagation();showDetail(\'' + item.id + '\')">' + (currentLang==='zh'?'查看详情':'View details') + '</a>' +
-        (item.detail.deliverables ? '<div class="sub-modules">' + item.sub + '</div>' : '') +
-      '</div>';
-
-    div.addEventListener('click', function() { toggleItem(item.id); });
-    container.appendChild(div);
+  CATS.forEach(function(cat) {
+    var catItems = ITEMS.filter(function(i) { return i.cat === cat.id && i.type === 'oneoff'; });
+    if (!catItems.length) return;
+    var selCount = 0, selSum = 0;
+    catItems.forEach(function(i) { if (selectedItems[i.id]) { selCount++; selSum += i.price; } });
+    var header = document.createElement('div');
+    header.className = 'cat-header';
+    header.innerHTML = '<span class="cat-title">' + cat[currentLang] + '</span>' +
+      '<span class="cat-subtotal">' + (selCount > 0
+        ? (currentLang === 'zh' ? '已选 ' + selCount + ' 项 · ' : selCount + ' selected · ') + fmtPrice(selSum)
+        : (currentLang === 'zh' ? '未选择' : 'none selected')) + '</span>';
+    oneoffContainer.appendChild(header);
+    catItems.forEach(function(item) { renderItemRow(item, oneoffContainer); });
   });
+
+  ITEMS.filter(function(i) { return i.type === 'monthly'; }).forEach(function(item) {
+    renderItemRow(item, monthlyContainer);
+  });
+}
+
+function renderItemRow(item, container) {
+  var div = document.createElement('div');
+
+  if (item.info) {
+    div.className = 'helix-info';
+    div.innerHTML =
+      '<div class="hi-badge">' + (currentLang === 'zh' ? '已含' : 'INCL') + '</div>' +
+      '<div class="hi-body">' +
+        '<div class="hi-name">' + item.name[currentLang] + (item.ref[currentLang] ? ' <span class="hi-ref">(' + item.ref[currentLang] + ')</span>' : '') + '</div>' +
+        '<div class="hi-text">' + item.sub + '</div>' +
+        '<a class="item-detail-link" onclick="showDetail(\'' + item.id + '\')">' + (currentLang === 'zh' ? '查看详情' : 'View details') + '</a>' +
+      '</div>' +
+      '<div class="hi-price">' + (currentLang === 'zh' ? '$0' : '$0') + '</div>';
+    container.appendChild(div);
+    return;
+  }
+
+  var isSelected = selectedItems[item.id] || false;
+  div.className = 'quote-item' + (isSelected ? ' selected' : '');
+  div.dataset.id = item.id;
+
+  var refText = item.ref[currentLang] ? ' (' + item.ref[currentLang] + ')' : '';
+  var priceStr = item.type === 'monthly'
+    ? fmtPrice(item.price) + '<span class="per-month">/' + (currentLang === 'zh' ? '月' : 'mo') + '</span>'
+    : fmtPrice(item.price);
+
+  var badgeHtml = '';
+  if (item.badge === 'core') badgeHtml = '<span class="badge badge-core">' + (currentLang === 'zh' ? '核心必选' : 'Core') + '</span>';
+  else if (item.badge === 'send') badgeHtml = '<span class="badge badge-send">' + (currentLang === 'zh' ? '发送必选' : 'For sending') + '</span>';
+  else if (item.badge === 'dep') badgeHtml = '<span class="badge badge-dep">' + (currentLang === 'zh' ? '基础依赖' : 'Dependency') + '</span>';
+
+  var hintHtml = item.hint ? '<div class="item-hint">' + item.hint[currentLang] + '</div>' : '';
+
+  div.innerHTML =
+    '<div class="checkbox"></div>' +
+    '<div class="item-content">' +
+      '<div class="item-top">' +
+        '<div>' +
+          '<div class="item-name">' + item.name[currentLang] + refText + badgeHtml + '</div>' +
+          '<span class="item-ref">' + item.sub + '</span>' +
+          hintHtml +
+        '</div>' +
+        '<div class="item-price ' + item.type + '">' + priceStr + '</div>' +
+      '</div>' +
+      '<a class="item-detail-link" onclick="event.stopPropagation();showDetail(\'' + item.id + '\')">' + (currentLang === 'zh' ? '查看详情' : 'View details') + '</a>' +
+    '</div>';
+
+  div.addEventListener('click', function() { toggleItem(item.id); });
+  container.appendChild(div);
 }
 
 function toggleItem(id) {
   selectedItems[id] = !selectedItems[id];
   if (!selectedItems[id]) delete selectedItems[id];
-  localStorage.setItem('quote-selections', JSON.stringify(selectedItems));
+  localStorage.setItem('quote-selections-v2', JSON.stringify(selectedItems));
   renderItems();
   updateSummary();
 }
@@ -1888,14 +2141,14 @@ function renderSuccessCard() {
 
 // ===== INIT =====
 function initQuote() {
-  var saved = localStorage.getItem('quote-selections');
+  var saved = localStorage.getItem('quote-selections-v2');
   if (saved) {
     try { selectedItems = JSON.parse(saved); } catch(e) {}
   } else {
     ITEMS.forEach(function(item) {
       if (item.preselected) selectedItems[item.id] = true;
     });
-    localStorage.setItem('quote-selections', JSON.stringify(selectedItems));
+    localStorage.setItem('quote-selections-v2', JSON.stringify(selectedItems));
   }
 
   setLang(currentLang);
