@@ -367,13 +367,13 @@
     }
     .quote-item.selected .sub-modules { display: block; }
 
-    /* ===== LOCKED MANDATORY ITEMS (V1.6.0) ===== */
+    /* ===== LOCKED MANDATORY ITEMS (V1.6.1) ===== */
     .badge-required { background: rgba(232,74,15,0.10); color: var(--accent-2); border: 1px solid rgba(232,74,15,0.45); }
     .quote-item.locked { cursor: default; }
     .quote-item.locked .checkbox { background: var(--accent-2); border-color: var(--accent-2); }
     .quote-item.locked .item-name { color: var(--ink-2); }
 
-    /* ===== CATEGORY SECTIONS (V1.6.0) ===== */
+    /* ===== CATEGORY SECTIONS (V1.6.1) ===== */
     .cat-header {
       display: flex; justify-content: space-between; align-items: baseline;
       margin: 26px 0 10px; padding-bottom: 7px;
@@ -883,7 +883,7 @@
       <div class="brand-header">
         <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
         <span class="brand-name">SnailAI<span class="brand-ai">.AI</span></span>
-        <span class="app-version">V1.6.0</span>
+        <span class="app-version">V1.6.1</span>
       </div>
       <h2 data-zh="Skin Cancer Laser Centre 模块化报价" data-en="Skin Cancer Laser Centre Modular Quotation">Skin Cancer Laser Centre Modular Quotation</h2>
       <span class="quote-id">SCLC-QUOTE-2026-001 &middot; v1.0</span>
@@ -1205,20 +1205,6 @@ const ITEMS = [
       boundary: { zh: '仅处理 Andrew 自行导入的资料，不连接 Helix 病历、患者联系资料或付款卡资料。SMS、Email 订阅和用量费由 Andrew 直接支付。生产群发前须满足隐私/同意前置条件：书面确认每类通讯的合法依据、可靠同意/退订信息、每条商业通讯含退订机制、Andrew 批准最终模板和收件名单。', en: 'Processes only data Andrew imports himself and does not connect to Helix records, patient-contact data or payment-card data. SMS and email subscription and usage charges are paid directly by Andrew. Before production bulk sending: the legal basis for each communication category must be documented, reliable consent/opt-out data must be available, each commercial message must include unsubscribe, and Andrew must approve the final template and each recipient list.' }
     }
   },
-  // ===== 第三类 · 知识资产计划 =====
-  {
-    id: 'k0', type: 'oneoff', price: 2000, cat: 'knowledge',
-    ref: { zh: 'K0', en: 'K0' },
-    name: { zh: '知识计划 K0（先行可行性）', en: 'Knowledge Program K0 (Feasibility Gate)' },
-    sub: 'Feasibility, claim/evidence and regulatory scope; risk register; go/no-go report · 4–6 weeks',
-    preselected: false,
-    detail: {
-      objective: { zh: '评估知识商业化的可行性：定义服务、目标人群、证据、处方药/器械/激光涉及范围、广告限制、保险及风险；形成 go/no-go 报告。', en: 'Assess knowledge commercialisation feasibility: define the proposed service, target population, evidence, prescription medicine/device/laser elements, advertising limits, insurance and key risks; produce a go/no-go report.' },
-      deliverables: { zh: ['可行性与监管范围报告', '风险清单', 'go/no-go 决策报告'], en: ['Feasibility and regulatory scope report', 'Risk register', 'Go/no-go decision report'] },
-      acceptance: { zh: ['报告覆盖约定范围的所有风险和监管问题', 'Andrew 对 go/no-go 结论做出书面决定'], en: ['Report covers all agreed risk and regulatory items', 'Andrew makes a written decision on the go/no-go conclusion'] },
-      boundary: { zh: 'K0 完成不承诺最终产品可推广或可注册。Andrew 可以完成 K0 后停止，不需要承诺后续 $47,500。付款：签约付 50%，交付报告付 50%。', en: 'Completing K0 does not promise the proposed service can be marketed, registered or franchised. Andrew may stop after K0 with no obligation to commit the remaining $47,500. Payment: 50% on signing, 50% on report delivery.' }
-    }
-  },
   // ===== 月度维护 =====
   {
     id: 'care-std', type: 'monthly', price: 290,
@@ -1380,9 +1366,9 @@ function gstBlockHtml(subtotal, label) {
 
 // ===== CATEGORIES =====
 var CATS = [
-  { id: 'web', zh: '第一类 · 专业诊所网站', en: 'Category 1 · Professional Clinic Website' },
-  { id: 'agent', zh: '第二类 · 桌面AI Agent 生产力工具', en: 'Category 2 · Desktop AI Agent Productivity Tool' },
-  { id: 'knowledge', zh: '第三类 · 知识资产计划（未来可选）', en: 'Category 3 · Knowledge Asset Program (Future Option)' }
+  { id: 'web', zh: '第一类 · 专业诊所网站', en: 'Category 1 · Professional Clinic Website',
+    note: { zh: '收到第一笔首期款的 20 天内交付。（客户方 Andrew/诊所须配合开通并提供相应的对接服务账号和 API）', en: 'Delivered within 20 days of receipt of the first commencement payment. (The client, Andrew/the clinic, must cooperate in opening and providing the required integration service accounts and APIs.)' } },
+  { id: 'agent', zh: '第二类 · 桌面AI Agent 生产力工具', en: 'Category 2 · Desktop AI Agent Productivity Tool' }
 ];
 
 // ===== RENDER ITEMS =====
@@ -1404,6 +1390,12 @@ function renderItems() {
         ? (currentLang === 'zh' ? '已选 ' + selCount + ' 项 · ' : selCount + ' selected · ') + fmtPrice(selSum)
         : (currentLang === 'zh' ? '未选择' : 'none selected')) + '</span>';
     oneoffContainer.appendChild(header);
+    if (cat.note) {
+      var note = document.createElement('div');
+      note.className = 'cat-note';
+      note.innerHTML = '<strong>' + (currentLang === 'zh' ? '网站交付期：' : 'Website delivery: ') + '</strong>' + cat.note[currentLang];
+      oneoffContainer.appendChild(note);
+    }
     catItems.forEach(function(item) { renderItemRow(item, oneoffContainer); });
   });
 
