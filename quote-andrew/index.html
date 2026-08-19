@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function(){ if (window.innerWidth <= 768 && !location.pathname.endsWith('index.html')) location.replace('mobile.html'); })();
+  </script>
   <title>Skin Cancer Laser Centre — Modular Quotation</title>
   <style>
     :root {
@@ -877,7 +880,7 @@ const ITEMS = [
     detail: {
       objective: { zh: '含通讯的综合运维套餐：网站 Standard + AI 通讯维护（含 SMS/Email） + WorkBuddy 部署维护；每月最多 5 小时支持。', en: 'Combined care with communications: Website Standard + AI Communications Care (incl. SMS/email) + WorkBuddy Deployment Care; up to 5 total hours of support per month.' },
       deliverables: { zh: ['网站 Standard 全部', 'AI 通讯维护（含 SMS/Email connector）', 'WorkBuddy Skill/Pipeline 检查', '每月最多 5 小时支持'], en: ['All Website Standard services', 'AI communications care incl. SMS/email connector health', 'WorkBuddy skill/pipeline health checks', 'Up to 5 total hours of support per month'] },
-3456789012345678901234567890123456789012345678901234567890123456789012345678901234567890      acceptance: { zh: ['所有子服务验收条件通过', 'SMS/Email connector 健康检查正常'], en: ['All sub-service acceptance criteria pass', 'SMS/email connector health check passes'] },
+      acceptance: { zh: ['所有子服务验收条件通过', 'SMS/Email connector 健康检查正常'], en: ['All sub-service acceptance criteria pass', 'SMS/email connector health check passes'] },
       boundary: { zh: 'SMS/Email 用量费另计。其余同 Combined Digital Operations Care。', en: 'SMS/email usage charges excluded. Otherwise same as Combined Digital Operations Care.' }
     }
   }
