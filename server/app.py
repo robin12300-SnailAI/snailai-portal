@@ -717,6 +717,7 @@ GMAIL_USER = os.environ.get("GMAIL_USER", "robin12300@gmail.com")
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "")
 QUOTE_NOTIFY_TO = os.environ.get("QUOTE_NOTIFY_TO", "robin@snailai.ai")
 QUOTE_NOTIFY_CC = os.environ.get("QUOTE_NOTIFY_CC", "robin12300@gmail.com")
+QUOTE_ADMIN_TOKEN = os.environ.get("QUOTE_ADMIN_TOKEN", "")  # 非空才启用管理清理接口
 
 
 def _fmt_aud(n):
@@ -914,6 +915,30 @@ def api_quote_confirm():
         app.logger.warning("[quote-email] unexpected error: %s", e)
 
     return jsonify({"ok": True, "quoteId": quote_id})
+
+
+@app.route("/api/quote/admin/cleanup", methods=["POST"])
+def api_quote_admin_cleanup():
+    """清空报价确认测试数据（交付前清场用）。需 X-Admin-Token 匹配 QUOTE_ADMIN_TOKEN。"""
+    if not QUOTE_ADMIN_TOKEN or request.headers.get("X-Admin-Token") != QUOTE_ADMIN_TOKEN:
+        return jsonify({"ok": False, "error": "unauthorised"}), 401
+    conn = db_conn()
+    try:
+        before = conn.execute("SELECT COUNT(*) FROM quote_confirmations").fetchone()[0]
+        rows = conn.execute(
+            "SELECT quote_id, client, confirmed_at FROM quote_confirmations ORDER BY confirmed_at DESC LIMIT 50"
+        ).fetchall()
+        conn.execute("DELETE FROM quote_confirmations")
+        conn.commit()
+        after = conn.execute("SELECT COUNT(*) FROM quote_confirmations").fetchone()[0]
+    finally:
+        conn.close()
+    return jsonify({
+        "ok": True,
+        "deletedCount": before - after,
+        "remaining": after,
+        "deletedRows": [{"quoteId": r[0], "client": r[1], "confirmedAt": r[2]} for r in rows],
+    })
 
 
 @app.route("/api/login", methods=["POST"])

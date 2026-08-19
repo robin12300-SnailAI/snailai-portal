@@ -876,7 +876,7 @@
       <div class="brand-header">
         <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
         <span class="brand-name">SnailAI<span class="brand-ai">.AI</span></span>
-        <span class="app-version">V1.6.3</span>
+        <span class="app-version">V1.6.4</span>
       </div>
       <h2 data-zh="Skin Cancer Laser Centre 模块化报价" data-en="Skin Cancer Laser Centre Modular Quotation">Skin Cancer Laser Centre Modular Quotation</h2>
       <span class="quote-id">SCLC-QUOTE-2026-001 &middot; v1.0</span>
@@ -1416,7 +1416,7 @@ function toggleItem(id) {
   if (it && it.locked) return;
   selectedItems[id] = !selectedItems[id];
   if (!selectedItems[id]) delete selectedItems[id];
-  localStorage.setItem('quote-selections-v3', JSON.stringify(selectedItems));
+  localStorage.setItem('quote-selections-v4', JSON.stringify(selectedItems));
   renderItems();
   updateSummary();
 }
@@ -1618,7 +1618,7 @@ document.getElementById('ci-continue-btn').addEventListener('click', function() 
 });
 
 function loadClientInfo() {
-  var saved = localStorage.getItem('quote-client-info');
+  var saved = localStorage.getItem('quote-client-info-v2');
   if (saved) {
     try {
       clientInfo = JSON.parse(saved);
@@ -1642,7 +1642,7 @@ function saveClientInfo() {
     email: document.getElementById('ci-email').value.trim(),
     phone: document.getElementById('ci-phone').value.trim()
   };
-  localStorage.setItem('quote-client-info', JSON.stringify(clientInfo));
+  localStorage.setItem('quote-client-info-v2', JSON.stringify(clientInfo));
 }
 
 function getClientInfo() {
@@ -1937,14 +1937,14 @@ function renderSuccessCard() {
 
 // ===== INIT =====
 function initQuote() {
-  var saved = localStorage.getItem('quote-selections-v3');
+  var saved = localStorage.getItem('quote-selections-v4');
   if (saved) {
     try { selectedItems = JSON.parse(saved); } catch(e) {}
   } else {
     ITEMS.forEach(function(item) {
       if (item.preselected) selectedItems[item.id] = true;
     });
-    localStorage.setItem('quote-selections-v3', JSON.stringify(selectedItems));
+    localStorage.setItem('quote-selections-v4', JSON.stringify(selectedItems));
   }
 
   ITEMS.forEach(function(item) { if (item.locked) selectedItems[item.id] = true; });
