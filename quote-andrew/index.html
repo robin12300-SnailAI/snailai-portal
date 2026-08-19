@@ -366,7 +366,13 @@
     }
     .quote-item.selected .sub-modules { display: block; }
 
-    /* ===== CATEGORY SECTIONS (V1.5.0) ===== */
+    /* ===== LOCKED MANDATORY ITEMS (V1.5.1) ===== */
+    .badge-required { background: rgba(232,74,15,0.10); color: var(--accent-2); border: 1px solid rgba(232,74,15,0.45); }
+    .quote-item.locked { cursor: default; }
+    .quote-item.locked .checkbox { background: var(--accent-2); border-color: var(--accent-2); }
+    .quote-item.locked .item-name { color: var(--ink-2); }
+
+    /* ===== CATEGORY SECTIONS (V1.5.1) ===== */
     .cat-header {
       display: flex; justify-content: space-between; align-items: baseline;
       margin: 26px 0 10px; padding-bottom: 7px;
@@ -870,7 +876,7 @@
       <div class="brand-header">
         <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
         <span class="brand-name">SnailAI<span class="brand-ai">.AI</span></span>
-        <span class="app-version">V1.5.0</span>
+        <span class="app-version">V1.5.1</span>
       </div>
       <h2 data-zh="Skin Cancer Laser Centre 模块化报价" data-en="Skin Cancer Laser Centre Modular Quotation">Skin Cancer Laser Centre Modular Quotation</h2>
       <span class="quote-id">SCLC-QUOTE-2026-001 &middot; v1.0</span>
@@ -893,7 +899,7 @@
 
     <div class="recommended-path" id="recommended-note">
       <strong data-zh="推荐签约路径：" data-en="Recommended path:">Recommended path:</strong>
-      <span data-zh="第一阶段推荐：第一类网站模块 W1–W8 合计 $14,000。以下已为您预勾选 W1–W8，所有单项均可自由增减。" data-en="Stage One recommendation: Category 1 website modules W1–W8 total $14,000. W1–W8 are pre-selected below; every module can be freely added or removed.">Stage One recommendation: Category 1 website modules W1–W8 total $14,000. W1–W8 are pre-selected below; every module can be freely added or removed.</span>
+      <span data-zh="W1、W2、W3 为必选模块（合计 $5,350，不可取消）；W4–W8 已为您预勾选，可自由增减。" data-en="W1–W3 are mandatory modules ($5,350 total, cannot be removed); W4–W8 are pre-selected and can be freely adjusted.">W1–W3 are mandatory modules ($5,350 total, cannot be removed); W4–W8 are pre-selected and can be freely adjusted.</span>
     </div>
 
     <!-- ONE-OFF SERVICES -->
@@ -1043,7 +1049,7 @@
 const ITEMS = [
   // ===== 第一类 · 专业诊所网站 =====
   {
-    id: 'w1', type: 'oneoff', price: 950, cat: 'web', badge: 'dep',
+    id: 'w1', type: 'oneoff', price: 850, cat: 'web', badge: 'required', locked: true,
     ref: { zh: 'W1', en: 'W1' },
     name: { zh: 'Discovery、信息架构与集成规划', en: 'Discovery, Information Architecture & Integration Plan' },
     sub: 'Requirements workshop, site map, Helix/booking/payment data flow, risks and launch plan',
@@ -1056,7 +1062,7 @@ const ITEMS = [
     }
   },
   {
-    id: 'w2', type: 'oneoff', price: 2400, cat: 'web', badge: 'dep',
+    id: 'w2', type: 'oneoff', price: 1500, cat: 'web', badge: 'required', locked: true,
     ref: { zh: 'W2', en: 'W2' },
     name: { zh: '定制响应式视觉系统', en: 'Custom Responsive Design System' },
     sub: 'Homepage direction, colour/type/components, mobile/desktop design, up to 6 page templates, 2 revision rounds',
@@ -1069,7 +1075,7 @@ const ITEMS = [
     }
   },
   {
-    id: 'w3', type: 'oneoff', price: 4800, cat: 'web', badge: 'dep',
+    id: 'w3', type: 'oneoff', price: 3000, cat: 'web', badge: 'required', locked: true,
     ref: { zh: 'W3', en: 'W3' },
     name: { zh: '基础网站建设（最多 38 页）', en: 'Core Website Build (up to 38 pages)' },
     sub: 'Deployable website, up to 38 URLs, template-based content population, maintainable content/file structure',
@@ -1574,7 +1580,7 @@ function renderItemRow(item, container) {
   }
 
   var isSelected = selectedItems[item.id] || false;
-  div.className = 'quote-item' + (isSelected ? ' selected' : '');
+  div.className = 'quote-item' + (isSelected || item.locked ? ' selected' : '') + (item.locked ? ' locked' : '');
   div.dataset.id = item.id;
 
   var refText = item.ref[currentLang] ? ' (' + item.ref[currentLang] + ')' : '';
@@ -1583,7 +1589,8 @@ function renderItemRow(item, container) {
     : fmtPrice(item.price);
 
   var badgeHtml = '';
-  if (item.badge === 'core') badgeHtml = '<span class="badge badge-core">' + (currentLang === 'zh' ? '核心必选' : 'Core') + '</span>';
+  if (item.badge === 'required') badgeHtml = '<span class="badge badge-required">' + (currentLang === 'zh' ? '必选' : 'Required') + '</span>';
+  else if (item.badge === 'core') badgeHtml = '<span class="badge badge-core">' + (currentLang === 'zh' ? '核心必选' : 'Core') + '</span>';
   else if (item.badge === 'send') badgeHtml = '<span class="badge badge-send">' + (currentLang === 'zh' ? '发送必选' : 'For sending') + '</span>';
   else if (item.badge === 'dep') badgeHtml = '<span class="badge badge-dep">' + (currentLang === 'zh' ? '基础依赖' : 'Dependency') + '</span>';
 
@@ -1603,11 +1610,17 @@ function renderItemRow(item, container) {
       '<a class="item-detail-link" onclick="event.stopPropagation();showDetail(\'' + item.id + '\')">' + (currentLang === 'zh' ? '查看详情' : 'View details') + '</a>' +
     '</div>';
 
-  div.addEventListener('click', function() { toggleItem(item.id); });
+  if (item.locked) {
+    div.title = currentLang === 'zh' ? '必选模块，不可取消' : 'Mandatory module, cannot be removed';
+  } else {
+    div.addEventListener('click', function() { toggleItem(item.id); });
+  }
   container.appendChild(div);
 }
 
 function toggleItem(id) {
+  var it = ITEMS.find(function(i) { return i.id === id; });
+  if (it && it.locked) return;
   selectedItems[id] = !selectedItems[id];
   if (!selectedItems[id]) delete selectedItems[id];
   localStorage.setItem('quote-selections-v2', JSON.stringify(selectedItems));
@@ -2140,6 +2153,7 @@ function initQuote() {
     localStorage.setItem('quote-selections-v2', JSON.stringify(selectedItems));
   }
 
+  ITEMS.forEach(function(item) { if (item.locked) selectedItems[item.id] = true; });
   setLang(currentLang);
   renderItems();
   updateSummary();
