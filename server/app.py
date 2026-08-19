@@ -500,7 +500,7 @@ def _seed_capabilities(c):
 # ---------------------------------------------------------------- 鉴权辅助
 def _auth_user(username, password):
     conn = db_conn()
-    row = conn.execute("SELECT * FROM users WHERE username=?", (username,)).fetchone()
+    row = conn.execute("SELECT * FROM users WHERE username=? COLLATE NOCASE", (username,)).fetchone()
     conn.close()
     if not row:
         return None
@@ -744,7 +744,7 @@ def api_login():
     user = _auth_user(username, password)
     if not user:
         return jsonify(ok=False, error="用户名或密码错误"), 401
-    token = _create_session(username)
+    token = _create_session(user["username"])
     ip = _client_ip()
     ua = request.headers.get("User-Agent", "")
     country, region, city = _geo_lookup(ip)
@@ -752,7 +752,7 @@ def api_login():
     conn.execute(
         "INSERT INTO login_events(username, ip, ua, country, region, city, login_at) "
         "VALUES(?,?,?,?,?,?, datetime('now'))",
-        (username, ip, ua, country, region, city))
+        (user["username"], ip, ua, country, region, city))
     conn.commit()
     conn.close()
     return jsonify(ok=True, token=token, user=_public_user(user))
