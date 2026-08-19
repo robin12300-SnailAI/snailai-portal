@@ -367,13 +367,13 @@
     }
     .quote-item.selected .sub-modules { display: block; }
 
-    /* ===== LOCKED MANDATORY ITEMS (V1.5.1) ===== */
+    /* ===== LOCKED MANDATORY ITEMS (V1.6.0) ===== */
     .badge-required { background: rgba(232,74,15,0.10); color: var(--accent-2); border: 1px solid rgba(232,74,15,0.45); }
     .quote-item.locked { cursor: default; }
     .quote-item.locked .checkbox { background: var(--accent-2); border-color: var(--accent-2); }
     .quote-item.locked .item-name { color: var(--ink-2); }
 
-    /* ===== CATEGORY SECTIONS (V1.5.1) ===== */
+    /* ===== CATEGORY SECTIONS (V1.6.0) ===== */
     .cat-header {
       display: flex; justify-content: space-between; align-items: baseline;
       margin: 26px 0 10px; padding-bottom: 7px;
@@ -883,7 +883,7 @@
       <div class="brand-header">
         <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
         <span class="brand-name">SnailAI<span class="brand-ai">.AI</span></span>
-        <span class="app-version">V1.5.1</span>
+        <span class="app-version">V1.6.0</span>
       </div>
       <h2 data-zh="Skin Cancer Laser Centre 模块化报价" data-en="Skin Cancer Laser Centre Modular Quotation">Skin Cancer Laser Centre Modular Quotation</h2>
       <span class="quote-id">SCLC-QUOTE-2026-001 &middot; v1.0</span>
@@ -1178,141 +1178,7 @@ const ITEMS = [
       boundary: { zh: '此项不含 Helix 数据迁移费用或 Andrew 的 Helix 年费。临床数据库迁移由 MedicalDirector/Helix 执行。服务方不保证第三方迁移结果。', en: 'This does not include the Helix data-migration charge or Andrew\'s Helix licence fees. Clinical database migration is performed by MedicalDirector/Helix. The Service Provider does not warrant the third party\'s migration result.' }
     }
   },
-  // ===== 第二类 · AI 工作协助系统 =====
-  {
-    id: 'a1', type: 'oneoff', price: 1500, cat: 'ai', badge: 'core',
-    ref: { zh: 'A1', en: 'A1' },
-    name: { zh: 'Discovery、数据地图与隐私/同意设计', en: 'Discovery, Data Map & Privacy/Consent Design' },
-    sub: 'Purposes, fields, retention, consent, opt-out, roles and PIA input document',
-    preselected: false,
-    detail: {
-      objective: { zh: '明确每类数据的用途、字段、保存期、同意与退订机制、角色分工，并产出隐私影响评估（PIA）输入文件。', en: 'Define the purpose, fields, retention, consent and opt-out mechanisms and roles for each data category, producing a PIA input document.' },
-      deliverables: { zh: ['数据地图与字段字典', '同意/退订机制设计', '角色与权限分工', 'PIA 输入文件'], en: ['Data map and field dictionary', 'Consent/opt-out mechanism design', 'Roles and permission allocation', 'PIA input document'] },
-      acceptance: { zh: ['数据流与字段字典获 Andrew 批准', 'PIA 输入文件交付'], en: ['Data flow and field dictionary approved by Andrew', 'PIA input document delivered'] },
-      boundary: { zh: 'AI 核心模块之一。不含法律意见或合规认证。', en: 'A core module of the AI system. Excludes legal advice or compliance certification.' }
-    }
-  },
-  {
-    id: 'a2', type: 'oneoff', price: 2200, cat: 'ai', badge: 'core',
-    ref: { zh: 'A2', en: 'A2' },
-    name: { zh: 'Windows 11 本地应用与加密资料库', en: 'Windows 11 Local App & Encrypted Store' },
-    sub: 'Local runtime, permissions, encryption, baseline backup and configuration',
-    preselected: false,
-    detail: {
-      objective: { zh: '在 Andrew 的 Windows 11 工作电脑上安装本地应用，建立加密联系资料库、权限与基础备份机制。', en: 'Install the local application on Andrew\'s Windows 11 workstation and establish the encrypted contact store, permissions and baseline backup.' },
-      deliverables: { zh: ['本地应用安装与配置', '加密资料库', '权限设置', '基础备份与配置管理'], en: ['Local app installation and configuration', 'Encrypted store', 'Permission settings', 'Baseline backup and configuration management'] },
-      acceptance: { zh: ['设备加密、权限、备份与恢复通过测试'], en: ['Encryption, access, backup and recovery are tested'] },
-      boundary: { zh: 'AI 核心模块之一。不含临床资料或完整患者数据库导入。', en: 'A core module of the AI system. Excludes import of clinical data or a complete patient database.' }
-    }
-  },
-  {
-    id: 'a3', type: 'oneoff', price: 2400, cat: 'ai', badge: 'core',
-    ref: { zh: 'A3', en: 'A3' },
-    name: { zh: 'Helix CSV 导入、校验和去重', en: 'Helix CSV Import, Validation & Dedup' },
-    sub: 'Minimal-field import, format checks, duplicates, rejection of clinical fields, error report',
-    preselected: false,
-    detail: {
-      objective: { zh: '导入经最小化处理的 Helix CSV 联系资料，进行格式校验、去重，并拒绝临床字段。', en: 'Import minimised Helix CSV contact data with format validation, deduplication and rejection of clinical fields.' },
-      deliverables: { zh: ['最小字段 CSV 导入', '格式校验与去重', '临床字段拒绝机制', '错误报告'], en: ['Minimal-field CSV import', 'Format validation and deduplication', 'Clinical-field rejection', 'Error report'] },
-      acceptance: { zh: ['测试资料可正确导入、去重和筛选', '临床字段被拒绝或忽略'], en: ['Test data imports, deduplicates and filters correctly', 'Clinical fields are rejected or ignored'] },
-      boundary: { zh: 'AI 核心模块之一。不绕过 Helix 导出机制直接查询底层数据库。', en: 'A core module of the AI system. Does not bypass Helix exports to query the underlying database.' }
-    }
-  },
-  {
-    id: 'a4', type: 'oneoff', price: 1800, cat: 'ai', badge: 'core',
-    ref: { zh: 'A4', en: 'A4' },
-    name: { zh: '地区/渠道/状态规则筛选', en: 'Deterministic Region/Channel/Status Filters' },
-    sub: 'Postcode, suburb, channel preference, consent and suppression filtering',
-    preselected: false,
-    detail: {
-      objective: { zh: '按 postcode、suburb、渠道偏好、同意/退订状态进行确定性筛选。', en: 'Deterministic filtering by postcode, suburb, channel preference, consent and suppression status.' },
-      deliverables: { zh: ['地区/渠道/同意状态筛选规则', 'suppression 名单机制'], en: ['Region/channel/consent filtering rules', 'Suppression-list mechanism'] },
-      acceptance: { zh: ['筛选结果与规则一致可复现'], en: ['Filter results are consistent and reproducible'] },
-      boundary: { zh: 'AI 核心模块之一。不做基于诊断或治疗历史的销售筛选。', en: 'A core module of the AI system. No sales targeting based on diagnosis or treatment history.' }
-    }
-  },
-  {
-    id: 'a5', type: 'oneoff', price: 2400, cat: 'ai', badge: 'core',
-    ref: { zh: 'A5', en: 'A5' },
-    name: { zh: 'AI 通用文案起草与修订', en: 'AI-assisted Generic Drafting & Revision' },
-    sub: 'AI receives a non-identifying brief only; templates, tone, proofreading and variants',
-    preselected: false,
-    detail: {
-      objective: { zh: 'AI 只接收无身份资料的 brief，协助起草通用通讯文案、模板、语气与多版本草稿。', en: 'The AI receives a non-identifying brief only and assists with generic drafting, templates, tone and variants.' },
-      deliverables: { zh: ['文案模板系统', '语气与拼写规范', '多版本草稿生成'], en: ['Copy template system', 'Tone and proofreading standards', 'Multi-variant drafting'] },
-      acceptance: { zh: ['AI 请求中不出现身份字段'], en: ['No identity field appears in an AI request'] },
-      boundary: { zh: 'AI 核心模块之一。AI 不做诊断、分诊、处方、治疗建议或患者适用性判断。', en: 'A core module of the AI system. The AI does not diagnose, triage, prescribe, advise treatment or judge patient suitability.' }
-    }
-  },
-  {
-    id: 'a6', type: 'oneoff', price: 2300, cat: 'ai', badge: 'send',
-    ref: { zh: 'A6', en: 'A6' },
-    name: { zh: '同意、退订、suppression、审批和审计', en: 'Consent, Opt-out, Suppression, Approval & Audit' },
-    sub: 'No sending without approval; suppression; minimum audit; Andrew approval',
-    preselected: false,
-    detail: {
-      objective: { zh: '建立"无批准不发送"的控制机制：黑名单、最小审计日志、Andrew 审批流程。', en: 'Establish no-sending-without-approval controls: suppression list, minimum audit logging and Andrew\'s approval workflow.' },
-      deliverables: { zh: ['审批工作流', 'suppression list', '最小审计日志'], en: ['Approval workflow', 'Suppression list', 'Minimum audit log'] },
-      acceptance: { zh: ['未经审批不能发送', '无适当同意记录被 suppression', '退订和发送失败可记录'], en: ['Sending is impossible without approval', 'Ineligible records are suppressed', 'Delivery failure and unsubscribe status can be recorded'] },
-      boundary: { zh: '任何发送功能启用时的必选模块。', en: 'Mandatory whenever any sending capability is enabled.' }
-    }
-  },
-  {
-    id: 'a7', type: 'oneoff', price: 2600, cat: 'ai',
-    ref: { zh: 'A7', en: 'A7' },
-    name: { zh: 'SMS Provider 接入', en: 'SMS Provider Integration' },
-    sub: 'One approved SMS provider, templates, opt-out and failure status',
-    hint: { zh: '需先选择 AI 核心模块（A1–A6、A10）。', en: 'Requires the AI core modules (A1–A6, A10) to be selected first.' },
-    preselected: false,
-    detail: {
-      objective: { zh: '接入一套获批短信 Provider，提供模板、退订和失败状态追踪。', en: 'Integrate one approved SMS provider with templates, opt-out handling and failure status tracking.' },
-      deliverables: { zh: ['SMS Provider 连接与配置', '消息模板系统', '退订与失败状态记录'], en: ['SMS provider connection and configuration', 'Message template system', 'Opt-out and failure status recording'] },
-      acceptance: { zh: ['测试消息可成功发送到测试号码', '退订状态正确更新', '发送失败有记录'], en: ['Test message can be sent to a test number', 'Opt-out status is correctly updated', 'Delivery failures are recorded'] },
-      boundary: { zh: '需先选择 AI 核心模块。SMS 订阅和用量费由 Andrew 直接支付。生产群发需满足隐私/同意前置条件。', en: 'Requires the AI core modules first. SMS subscription and usage charges are paid directly by Andrew. Production bulk sending requires the privacy/consent prerequisites.' }
-    }
-  },
-  {
-    id: 'a8', type: 'oneoff', price: 1900, cat: 'ai',
-    ref: { zh: 'A8', en: 'A8' },
-    name: { zh: 'Email Provider 接入', en: 'Email Provider Integration' },
-    sub: 'One approved email provider, unsubscribe and SPF/DKIM/DMARC',
-    hint: { zh: '需先选择 AI 核心模块（A1–A6、A10）。', en: 'Requires the AI core modules (A1–A6, A10) to be selected first.' },
-    preselected: false,
-    detail: {
-      objective: { zh: '接入一套获批 Email Provider，提供退订和 SPF/DKIM/DMARC 配置。', en: 'Integrate one approved email provider with unsubscribe and SPF/DKIM/DMARC configuration.' },
-      deliverables: { zh: ['Email Provider 连接与配置', 'SPF/DKIM/DMARC 设置', '退订机制'], en: ['Email provider connection and configuration', 'SPF/DKIM/DMARC setup', 'Unsubscribe mechanism'] },
-      acceptance: { zh: ['测试邮件可成功发送', '退订链接正常运作', 'SPF/DKIM/DMARC 验证通过'], en: ['Test email can be sent successfully', 'Unsubscribe link functions correctly', 'SPF/DKIM/DMARC verification passes'] },
-      boundary: { zh: '需先选择 AI 核心模块。Email 订阅和用量费由 Andrew 直接支付。生产群发需满足隐私/同意前置条件。', en: 'Requires the AI core modules first. Email subscription and usage charges are paid directly by Andrew. Production bulk sending requires the privacy/consent prerequisites.' }
-    }
-  },
-  {
-    id: 'a9', type: 'oneoff', price: 1200, cat: 'ai',
-    ref: { zh: 'A9', en: 'A9' },
-    name: { zh: '汇总报告与导出', en: 'Aggregate Reporting & Export' },
-    sub: 'Send, success/failure and opt-out counts by activity; no individual profiling',
-    hint: { zh: '需先选择 AI 核心模块（A1–A6、A10）。', en: 'Requires the AI core modules (A1–A6, A10) to be selected first.' },
-    preselected: false,
-    detail: {
-      objective: { zh: '提供发送量、成功/失败、退订和活动级汇总报表；不做个人画像。', en: 'Provide aggregate reports on send volume, success/failure and opt-out counts by activity. No individual profiling.' },
-      deliverables: { zh: ['活动级汇总报表', '成功/失败/退订统计', '数据导出功能'], en: ['Activity-level aggregate reports', 'Success/failure/opt-out statistics', 'Data export functionality'] },
-      acceptance: { zh: ['报表数据与实际发送记录一致', '不含个人身份信息'], en: ['Report data matches actual send records', 'No personal identity information included'] },
-      boundary: { zh: '仅做聚合统计，不做个人画像或行为追踪。', en: 'Aggregated statistics only. No individual profiling or behaviour tracking.' }
-    }
-  },
-  {
-    id: 'a10', type: 'oneoff', price: 1200, cat: 'ai', badge: 'core',
-    ref: { zh: 'A10', en: 'A10' },
-    name: { zh: '培训、UAT 与 SOP', en: 'Training, UAT & SOP' },
-    sub: 'Test data, recovery and approval rehearsal, one training session',
-    preselected: false,
-    detail: {
-      objective: { zh: '提供测试资料、恢复演练、发送审批演练和一次培训，交付 SOP。', en: 'Provide test data, recovery and approval rehearsal and one training session, with SOP delivery.' },
-      deliverables: { zh: ['测试资料与恢复演练', '发送审批演练', '一次培训与 SOP'], en: ['Test data and recovery rehearsal', 'Send-approval rehearsal', 'One training session and SOP'] },
-      acceptance: { zh: ['培训完成', 'SOP 交付并确认'], en: ['Training completed', 'SOP delivered and confirmed'] },
-      boundary: { zh: 'AI 核心模块之一。不含后续新员工培训。', en: 'A core module of the AI system. Ongoing new-staff training is excluded.' }
-    }
-  },
-  // ===== 第三类 · 桌面AI Agent 生产力工具 =====
+  // ===== 第二类 · 桌面AI Agent 生产力工具 =====
   {
     id: 'b1', type: 'oneoff', price: 1000, cat: 'agent',
     ref: { zh: 'B1', en: 'B1' },
@@ -1326,20 +1192,20 @@ const ITEMS = [
       boundary: { zh: '技能仅访问网站代码仓库，不接触临床资料。', en: 'The skill accesses only the website code repository and does not touch clinical data.' }
     }
   },
-  {
-    id: 'b2', type: 'oneoff', price: 2000, cat: 'agent',
+    {
+    id: 'b2', type: 'oneoff', price: 3800, cat: 'agent',
     ref: { zh: 'B2', en: 'B2' },
-    name: { zh: '客户资料处理技能', en: 'Customer-Data Processing Skill' },
-    sub: 'A custom skill to screen, check and summarise imported customer data and draft client-communication documents',
+    name: { zh: '客户资料处理技能（含 SMS 与 Email 群发接入）', en: 'Customer-Data Processing Skill (incl. SMS & Email Integration)' },
+    sub: 'Customer-data screening/checking/summarising + SMS provider integration + bulk email system integration',
     preselected: false,
     detail: {
-      objective: { zh: '构建定制技能，基于 Andrew 导入的客户资料，按其指令进行 AI 筛选、核对与总结，并自动撰写用于客户沟通的相应文件。', en: 'Build a custom skill that screens, checks and summarises Andrew\'s imported customer data per his instructions and drafts the corresponding client-communication documents.' },
-      deliverables: { zh: ['客户资料处理技能构建', '资料导入格式约定', '筛选/核对/总结流程', '客户沟通文件模板'], en: ['Customer-data processing skill build', 'Agreed import format', 'Screening/checking/summarising workflow', 'Client-communication document templates'] },
-      acceptance: { zh: ['技能可正常筛选、核对与总结测试资料', '沟通文件草稿符合约定格式'], en: ['The skill correctly screens, checks and summarises test data', 'Communication drafts match the agreed format'] },
-      boundary: { zh: '仅处理 Andrew 自行导入的资料，不连接 Helix 病历、患者联系资料或付款卡资料。', en: 'Processes only data Andrew imports himself and does not connect to Helix records, patient-contact data or payment-card data.' }
+      objective: { zh: '构建定制技能，基于 Andrew 导入的客户资料，按其指令进行 AI 筛选、核对与总结，并自动撰写用于客户沟通的相应文件；同时包含短信 SMS Provider 接入和 Email 群发系统接入，发送前须经人工审批。', en: 'Build a custom skill that screens, checks and summarises Andrew\'s imported customer data per his instructions and drafts the corresponding client-communication documents; also includes SMS provider integration and bulk email system integration, with human approval required before any sending.' },
+      deliverables: { zh: ['客户资料处理技能构建（筛选/核对/总结）', 'SMS Provider 接入（模板、退订、失败状态）', 'Email 群发系统接入（退订、SPF/DKIM/DMARC）', '客户沟通文件模板', '发送审批流程'], en: ['Customer-data processing skill build (screening/checking/summarising)', 'SMS provider integration (templates, opt-out, failure status)', 'Bulk email system integration (unsubscribe, SPF/DKIM/DMARC)', 'Client-communication document templates', 'Send-approval workflow'] },
+      acceptance: { zh: ['技能可正常筛选、核对与总结测试资料', '测试短信可成功发送到测试号码，退订状态正确更新', '测试邮件可成功发送且退订链接正常运作', '未经审批不能发送'], en: ['The skill correctly screens, checks and summarises test data', 'A test SMS reaches a test number and opt-out status updates correctly', 'A test email sends successfully and the unsubscribe link works', 'Sending is impossible without approval'] },
+      boundary: { zh: '仅处理 Andrew 自行导入的资料，不连接 Helix 病历、患者联系资料或付款卡资料。SMS、Email 订阅和用量费由 Andrew 直接支付。生产群发前须满足隐私/同意前置条件：书面确认每类通讯的合法依据、可靠同意/退订信息、每条商业通讯含退订机制、Andrew 批准最终模板和收件名单。', en: 'Processes only data Andrew imports himself and does not connect to Helix records, patient-contact data or payment-card data. SMS and email subscription and usage charges are paid directly by Andrew. Before production bulk sending: the legal basis for each communication category must be documented, reliable consent/opt-out data must be available, each commercial message must include unsubscribe, and Andrew must approve the final template and each recipient list.' }
     }
   },
-  // ===== 第四类 · 知识资产计划 =====
+  // ===== 第三类 · 知识资产计划 =====
   {
     id: 'k0', type: 'oneoff', price: 2000, cat: 'knowledge',
     ref: { zh: 'K0', en: 'K0' },
@@ -1381,32 +1247,6 @@ const ITEMS = [
     }
   },
   {
-    id: 'ai-care', type: 'monthly', price: 380,
-    ref: { zh: '', en: '' },
-    name: { zh: 'AI Assistant Care', en: 'AI Assistant Care' },
-    sub: 'Core app updates · Import-rule check · AI/token cost monitoring · Encrypted-backup check · 1hr support · Quarterly recovery test',
-    preselected: false,
-    detail: {
-      objective: { zh: 'AI 助手系统维护：核心程序更新、导入规则检查、AI/Token 成本监测、加密备份检查、每月 1 小时支持、季度恢复测试。', en: 'AI assistant system care: core application updates, import-rule check, AI/token cost monitoring, encrypted-backup check, 1 hour of support per month and a quarterly recovery test.' },
-      deliverables: { zh: ['核心程序更新', '导入规则检查', 'AI/Token 成本监测', '加密备份检查', '每月 1 小时支持', '季度恢复测试'], en: ['Core application updates', 'Import-rule check', 'AI/token cost monitoring', 'Encrypted-backup check', '1 hour support per month', 'Quarterly recovery test'] },
-      acceptance: { zh: ['更新与检查按计划执行', '恢复测试通过'], en: ['Updates and checks performed on schedule', 'Recovery test passes'] },
-      boundary: { zh: 'AI、SMS、Email API 的订阅和用量费另计。未使用支持时间不结转。', en: 'AI, SMS and email API subscription and usage charges are excluded. Unused support time does not roll over.' }
-    }
-  },
-  {
-    id: 'ai-comms-care', type: 'monthly', price: 520,
-    ref: { zh: '', en: '' },
-    name: { zh: 'AI Communications Care', en: 'AI Communications Care' },
-    sub: 'AI Assistant Care + SMS/Email connector health · Unsubscribe/suppression test · 2hr support · Usage charges excluded',
-    preselected: false,
-    detail: {
-      objective: { zh: '含通讯的 AI 维护：AI Assistant Care 全部 + SMS/Email connector 健康检查、退订/suppression 测试、每月 2 小时支持。', en: 'AI care with communications: all AI Assistant Care services + SMS/email connector health checks, unsubscribe/suppression testing and 2 hours of support per month.' },
-      deliverables: { zh: ['AI Assistant Care 全部内容', 'SMS/Email connector 健康检查', '退订/suppression 测试', '每月 2 小时支持'], en: ['All AI Assistant Care services', 'SMS/email connector health checks', 'Unsubscribe/suppression testing', '2 hours support per month'] },
-      acceptance: { zh: ['connector 健康检查正常', '退订/suppression 测试通过'], en: ['Connector health checks pass', 'Unsubscribe/suppression tests pass'] },
-      boundary: { zh: 'SMS/Email 用量费另计。其余同 AI Assistant Care。', en: 'SMS/email usage charges are excluded. Otherwise same as AI Assistant Care.' }
-    }
-  },
-  {
     id: 'agent-care', type: 'monthly', price: 220,
     ref: { zh: '', en: '' },
     name: { zh: '桌面AI Agent 部署维护', en: 'Desktop AI Agent Deployment Care' },
@@ -1423,11 +1263,11 @@ const ITEMS = [
     id: 'care-combined', type: 'monthly', price: 850,
     ref: { zh: '', en: '' },
     name: { zh: 'Combined Digital Operations Care', en: 'Combined Digital Operations Care' },
-    sub: 'Website Standard + AI Assistant Care + Desktop AI Agent Care · Up to 4hr support/mo',
+    sub: 'Website Standard + Desktop AI Agent Care + customer-data skill care · Up to 4hr support/mo',
     preselected: false,
     detail: {
       objective: { zh: '综合运维套餐：网站 Standard + AI 助手维护 + 桌面AI Agent 部署维护；每月最多 4 小时支持。', en: 'Combined operations care: Website Standard + AI Assistant Care + Desktop AI Agent Deployment Care; up to 4 total hours of minor edits/support per month.' },
-      deliverables: { zh: ['网站 Standard 全部', 'AI 核心程序更新与成本监测', '桌面AI Agent 技能/流程检查', '每月最多 4 小时支持'], en: ['All Website Standard services', 'AI core application updates and cost monitoring', 'Desktop AI agent skill/pipeline health checks', 'Up to 4 total hours of support per month'] },
+      deliverables: { zh: ['网站 Standard 全部', '客户资料处理技能维护与更新', '桌面AI Agent 技能/流程检查', '每月最多 4 小时支持'], en: ['All Website Standard services', 'Customer-data processing skill maintenance and updates', 'Desktop AI agent skill/pipeline health checks', 'Up to 4 total hours of support per month'] },
       acceptance: { zh: ['所有子服务验收条件通过'], en: ['All sub-service acceptance criteria pass'] },
       boundary: { zh: '未使用支持时间不结转。第三方订阅、SMS、Email、AI token 和交易费另计。', en: 'Unused support time does not roll over. Third-party subscriptions, SMS, email, AI tokens and transaction charges are excluded.' }
     }
@@ -1436,11 +1276,11 @@ const ITEMS = [
     id: 'care-comms', type: 'monthly', price: 990,
     ref: { zh: '', en: '' },
     name: { zh: 'Combined Care with Communications', en: 'Combined Care with Communications' },
-    sub: 'Website Standard + AI Communications Care + Desktop AI Agent Care · Up to 5hr support/mo',
+    sub: 'Website Standard + customer-data skill care (incl. SMS/Email connector) + Desktop AI Agent Care · Up to 5hr support/mo',
     preselected: false,
     detail: {
-      objective: { zh: '含通讯的综合运维套餐：网站 Standard + AI 通讯维护（含 SMS/Email）+ 桌面AI Agent 部署维护；每月最多 5 小时支持。', en: 'Combined care with communications: Website Standard + AI Communications Care (incl. SMS/email) + Desktop AI Agent Deployment Care; up to 5 total hours of support per month.' },
-      deliverables: { zh: ['网站 Standard 全部', 'AI 通讯维护（含 SMS/Email connector）', '桌面AI Agent 技能/流程检查', '每月最多 5 小时支持'], en: ['All Website Standard services', 'AI communications care incl. SMS/email connector health', 'Desktop AI agent skill/pipeline health checks', 'Up to 5 total hours of support per month'] },
+      objective: { zh: '含通讯的综合运维套餐：网站 Standard + 客户资料处理技能维护（含 SMS/Email connector）+ 桌面AI Agent 部署维护；每月最多 5 小时支持。', en: 'Combined care with communications: Website Standard + customer-data skill care (incl. SMS/email connector) + Desktop AI Agent Deployment Care; up to 5 total hours of support per month.' },
+      deliverables: { zh: ['网站 Standard 全部', '客户资料处理技能维护（含 SMS/Email connector）', '桌面AI Agent 技能/流程检查', '每月最多 5 小时支持'], en: ['All Website Standard services', 'Customer-data skill care incl. SMS/email connector health', 'Desktop AI agent skill/pipeline health checks', 'Up to 5 total hours of support per month'] },
       acceptance: { zh: ['所有子服务验收条件通过', 'SMS/Email connector 健康检查正常'], en: ['All sub-service acceptance criteria pass', 'SMS/email connector health check passes'] },
       boundary: { zh: 'SMS/Email 用量费另计。其余同 Combined Digital Operations Care。', en: 'SMS/email usage charges excluded. Otherwise same as Combined Digital Operations Care.' }
     }
@@ -1541,9 +1381,8 @@ function gstBlockHtml(subtotal, label) {
 // ===== CATEGORIES =====
 var CATS = [
   { id: 'web', zh: '第一类 · 专业诊所网站', en: 'Category 1 · Professional Clinic Website' },
-  { id: 'ai', zh: '第二类 · AI 工作协助系统', en: 'Category 2 · AI Work Assistance System' },
-  { id: 'agent', zh: '第三类 · 桌面AI Agent 生产力工具', en: 'Category 3 · Desktop AI Agent Productivity Tool' },
-  { id: 'knowledge', zh: '第四类 · 知识资产计划（未来可选）', en: 'Category 4 · Knowledge Asset Program (Future Option)' }
+  { id: 'agent', zh: '第二类 · 桌面AI Agent 生产力工具', en: 'Category 2 · Desktop AI Agent Productivity Tool' },
+  { id: 'knowledge', zh: '第三类 · 知识资产计划（未来可选）', en: 'Category 3 · Knowledge Asset Program (Future Option)' }
 ];
 
 // ===== RENDER ITEMS =====
@@ -1634,7 +1473,7 @@ function toggleItem(id) {
   if (it && it.locked) return;
   selectedItems[id] = !selectedItems[id];
   if (!selectedItems[id]) delete selectedItems[id];
-  localStorage.setItem('quote-selections-v2', JSON.stringify(selectedItems));
+  localStorage.setItem('quote-selections-v3', JSON.stringify(selectedItems));
   renderItems();
   updateSummary();
 }
@@ -2020,8 +1859,9 @@ async function doRealConfirm() {
         timestamp: d.now.toISOString(),
         selections: Object.keys(selectedItems).map(function(id) {
           var item = ITEMS.find(function(i) { return i.id === id; });
+          if (!item) return null;
           return { id: id, name: item.name, price: item.price, type: item.type };
-        }),
+        }).filter(function(x) { return x; }),
         oneoffTotal: d.oneoffTotal,
         monthlyTotal: d.monthlyTotal,
         depositTotal: d.depositTotal,
@@ -2154,14 +1994,14 @@ function renderSuccessCard() {
 
 // ===== INIT =====
 function initQuote() {
-  var saved = localStorage.getItem('quote-selections-v2');
+  var saved = localStorage.getItem('quote-selections-v3');
   if (saved) {
     try { selectedItems = JSON.parse(saved); } catch(e) {}
   } else {
     ITEMS.forEach(function(item) {
       if (item.preselected) selectedItems[item.id] = true;
     });
-    localStorage.setItem('quote-selections-v2', JSON.stringify(selectedItems));
+    localStorage.setItem('quote-selections-v3', JSON.stringify(selectedItems));
   }
 
   ITEMS.forEach(function(item) { if (item.locked) selectedItems[item.id] = true; });
