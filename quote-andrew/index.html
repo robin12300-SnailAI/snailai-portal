@@ -100,6 +100,29 @@
       display: none;
       font-weight: 600;
     }
+    .login-brand {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+    .login-logo {
+      width: 76px;
+      height: 76px;
+      object-fit: contain;
+      margin: 0 auto 10px;
+      display: block;
+    }
+    .login-brand-name {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--ink-2);
+    }
+    .login-brand-name span {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
     /* ===== MAIN APP ===== */
     #app-view { display: none; }
     .top-bar {
@@ -535,6 +558,10 @@
 <!-- ===== LOGIN VIEW ===== -->
 <div id="login-view">
   <div class="login-card">
+    <div class="login-brand">
+      <img src="../assets/snailai_logo.png" alt="Snail AI" class="login-logo">
+      <div class="login-brand-name">snail<span>.ai</span></div>
+    </div>
     <h1 data-zh="报价查看" data-en="View Quotation">View Quotation</h1>
     <p class="subtitle" data-zh="请输入账号和密码" data-en="Enter your credentials">Enter your credentials</p>
     <div class="field">
