@@ -315,6 +315,8 @@ def init_db():
     c.execute("UPDATE users SET role='admin' WHERE username='robin'")
     # 助教账号保障：确保助教角色 + 创建缺失的助教账号（幂等，每次启动执行，作用于已有生产库）
     _ensure_ta_accounts(c)
+    # 客户账号保障：确保 customer 角色账号存在（幂等，每次启动执行，作用于已有生产库）
+    _ensure_customer_accounts(c)
     # 管理员 robin 密码重置保障：仅当当前不是 12345 时重置（幂等，避免覆盖用户自改密码）
     _ensure_admin_pw(c)
     conn.commit()
@@ -439,6 +441,23 @@ def _ensure_ta_accounts(c):
         c.execute(
             "INSERT OR IGNORE INTO users(username, name, role, password_hash, salt) "
             "VALUES(?,?,'ta',?,?)",
+            (username, name, pw_hash, salt),
+        )
+
+
+def _ensure_customer_accounts(c):
+    """确保 customer 角色账号存在（幂等：每次服务启动都执行，对已有生产库生效）。
+    已存在的账号不改动（保留用户可能已改的密码）；缺失的按初始密码创建。"""
+    CUSTOMER_ACCOUNTS = {
+        # username: (name, initial_password)
+        "andrew": ("Andrew Li", "success888"),
+    }
+    for username, (name, pw) in CUSTOMER_ACCOUNTS.items():
+        salt = secrets.token_hex(16)
+        pw_hash = _hash_pw(pw, salt)
+        c.execute(
+            "INSERT OR IGNORE INTO users(username, name, role, password_hash, salt, must_change_pw) "
+            "VALUES(?,?,'customer',?,?,0)",
             (username, name, pw_hash, salt),
         )
 
