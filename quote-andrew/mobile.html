@@ -175,6 +175,17 @@
     .confirm-notice { margin-top: 20px; background: var(--accent-warm); border-radius: 8px; padding: 14px 16px; font-size: 12px; line-height: 1.7; }
     .confirm-notice strong { color: var(--accent); }
     .confirm-lang-row { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+    /* ===== REVIEW VIEW ===== */
+    #review-view { display: none; min-height: 100vh; background: var(--bg); padding-bottom: 110px; }
+    .review-warn { background: #FFF3E0; border: 2px solid #FF9800; border-radius: 10px; padding: 16px 18px; margin-bottom: 18px; text-align: center; }
+    .review-warn-icon { font-size: 28px; margin-bottom: 6px; }
+    .review-warn h2 { font-size: 15px; font-weight: 800; color: #E65100; margin-bottom: 4px; }
+    .review-warn p { font-size: 12px; color: #BF360C; margin: 0; }
+    .review-card { background: var(--paper); border-radius: 12px; padding: 20px 18px; }
+    .review-actions { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--paper); border-top: 1px solid var(--line); padding: 12px 16px; display: flex; gap: 10px; box-shadow: 0 -4px 12px rgba(0,0,0,0.06); }
+    .review-btn-back { flex: 1; height: 52px; border: 2px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; }
+    .review-btn-submit { flex: 1; height: 52px; border: none; background: var(--accent); color: #fff; border-radius: 10px; font-size: 15px; font-weight: 800; cursor: pointer; }
+    .review-btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
   </style>
 </head>
 <body>
@@ -236,7 +247,17 @@
   <div class="detail-body" id="detail-body"></div>
 </div>
 
-<!-- ===== CONFIRM VIEW ===== -->
+<!-- ===== REVIEW VIEW (confirmation step 1) ===== -->
+<div id="review-view">
+  <div class="confirm-lang-row"><div class="lang-switch"><button class="lang-btn" data-lang="zh">中文</button><button class="lang-btn active" data-lang="en">EN</button></div></div>
+  <div class="review-card" id="review-card"></div>
+  <div class="review-actions">
+    <button class="review-btn-back" id="review-back-btn" type="button" data-zh="← 返回修改" data-en="← Back to Edit">← Back to Edit</button>
+    <button class="review-btn-submit" id="review-submit-btn" type="button" data-zh="确认提交" data-en="Confirm & Submit">Confirm & Submit</button>
+  </div>
+</div>
+
+<!-- ===== CONFIRM VIEW (success) ===== -->
 <div id="confirm-view">
   <div class="confirm-lang-row"><div class="lang-switch"><button class="lang-btn" data-lang="zh">中文</button><button class="lang-btn active" data-lang="en">EN</button></div></div>
   <div class="confirm-card" id="confirm-card"></div>
@@ -365,12 +386,20 @@ document.getElementById('detail-back').addEventListener('click',()=>{document.ge
 
 document.getElementById('confirm-btn').addEventListener('click',()=>{
   document.getElementById('app-view').style.display='none';
-  document.getElementById('confirm-view').style.display='block';
-  renderConfirmCard();
+  document.getElementById('review-view').style.display='block';
+  renderReviewCard();
+  window.scrollTo(0,0);
 });
 
-function renderConfirmCard(){
-  const L=currentLang;const card=document.getElementById('confirm-card');
+document.getElementById('review-back-btn').addEventListener('click',()=>{
+  document.getElementById('review-view').style.display='none';
+  document.getElementById('app-view').style.display='block';
+});
+
+document.getElementById('review-submit-btn').addEventListener('click',doRealConfirm);
+
+function renderReviewCard(){
+  const L=currentLang;const card=document.getElementById('review-card');
   let ot=0,mt=0,ps=[];
   let ih='';
   ITEMS.forEach(item=>{
@@ -390,9 +419,43 @@ function renderConfirmCard(){
     if(s.t==='304030')ph+=`<div class="payment-row"><span class="pr-label">${s.name}</span><span class="pr-amount">30%: ${fmtPrice(s.p30)} → 40%: ${fmtPrice(s.p40)} → 30%: ${fmtPrice(s.p30b)}</span></div>`;
     else ph+=`<div class="payment-row"><span class="pr-label">${s.name}</span><span class="pr-amount">50%: ${fmtPrice(s.p50a)} → 50%: ${fmtPrice(s.p50b)}</span></div>`;
   });
-  if(mt>0)ph+=`<div class="payment-row"><span class="pr-label">${L==='zh'?'月度维护':'Monthly care'}</span><span class="pr-amount">${L==='zh'?'按月预付':'Monthly prepay'}</span></div>`;
-  card.innerHTML=`<div class="success-icon">✓</div><h2>${L==='zh'?'报价已确认':'Quotation Confirmed'}</h2><p class="confirm-subtitle">${L==='zh'?'确认已发往':'Confirmation sent to'} <strong>robin@snailai.ai</strong></p><div style="margin-bottom:8px;font-size:11px;color:var(--ink-3);">${ts}</div>${ih}<div class="confirm-total"><div class="total-row"><span>${L==='zh'?'一次性合计':'One-off Total'}</span><span class="tv">${fmtPrice(ot)}</span></div>${mt>0?`<div class="total-row"><span>${L==='zh'?'月度合计':'Monthly Total'}</span><span class="tv">${fmtPrice(mt)}/${L==='zh'?'月':'mo'}</span></div>`:''}<div class="total-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line);"><span>${L==='zh'?'首期应付':'Deposit Due'}</span><span class="tv">${fmtPrice(dep)}</span></div></div><div class="payment-schedule"><h3>${L==='zh'?'付款进程':'Payment Schedule'}</h3>${ph}</div><div class="confirm-notice"><strong>${L==='zh'?'📋 下一步':'📋 Next Step'}</strong> ${L==='zh'?'随后您将收到详细技术服务合同和技术服务书，双方签署后正式开始工作。':'You will receive a detailed Technical Services Agreement and Proposal for both parties to sign before work commences.'}</div>`;
-  try{fetch('/api/quote/confirm',{method:'POST',headers:{'Content-Type':'application/json','X-Auth-Token':localStorage.getItem('quote_token')||''},body:JSON.stringify({client:'Andrew',quoteId:'SCLC-QUOTE-2026-001',timestamp:now.toISOString(),selections:Object.keys(selectedItems).map(id=>{const item=ITEMS.find(i=>i.id===id);return{id,name:item.name,price:item.price,type:item.type};}),oneoffTotal:ot,monthlyTotal:mt,depositTotal:dep,paymentSchedule:ps})}).catch(()=>{});}catch(e){}
+  if(mt>0)ph+=`<div class="payment-row"><span class="pr-label">${L==='zh'?'月度维护':'Monthly Care'}</span><span class="pr-amount">${L==='zh'?'按月预付':'Monthly prepay'}</span></div>`;
+  window._confirmData={oneoffTotal:ot,monthlyTotal:mt,depositTotal:dep,paymentSchedule:ps,now};
+  card.innerHTML=`<div class="review-warn"><div class="review-warn-icon">⚠️</div><h2>${L==='zh'?'请仔细检查您的勾选清单':'Please Review Your Selections Carefully'}</h2><p>${L==='zh'?'提交后将立即通知 Robin，且无法撤回':'Once submitted, Robin will be notified immediately and this cannot be undone'}</p></div><div style="margin-bottom:8px;font-size:11px;color:var(--ink-3);">${L==='zh'?'报价编号':'Quote ID'}: SCLC-QUOTE-2026-001 · ${ts}</div>${ih}<div class="confirm-total"><div class="total-row"><span>${L==='zh'?'一次性合计':'One-off Total'}</span><span class="tv">${fmtPrice(ot)}</span></div>${mt>0?`<div class="total-row"><span>${L==='zh'?'月度合计':'Monthly Total'}</span><span class="tv">${fmtPrice(mt)}/${L==='zh'?'月':'mo'}</span></div>`:''}<div class="total-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line);"><span>${L==='zh'?'首期应付':'Deposit Due'}</span><span class="tv">${fmtPrice(dep)}</span></div></div><div class="payment-schedule"><h3>${L==='zh'?'付款进程':'Payment Schedule'}</h3>${ph}</div>`;
+  const btn=document.getElementById('review-submit-btn');
+  btn.disabled=false;
+  btn.textContent=L==='zh'?'确认提交':'Confirm & Submit';
+}
+
+async function doRealConfirm(){
+  const btn=document.getElementById('review-submit-btn');
+  const L=currentLang;
+  btn.disabled=true;
+  btn.textContent=L==='zh'?'提交中...':'Submitting...';
+  const d=window._confirmData;
+  try{await fetch('/api/quote/confirm',{method:'POST',headers:{'Content-Type':'application/json','X-Auth-Token':localStorage.getItem('quote_token')||''},body:JSON.stringify({client:'Andrew',quoteId:'SCLC-QUOTE-2026-001',timestamp:d.now.toISOString(),selections:Object.keys(selectedItems).map(id=>{const item=ITEMS.find(i=>i.id===id);return{id,name:item.name,price:item.price,type:item.type};}),oneoffTotal:d.oneoffTotal,monthlyTotal:d.monthlyTotal,depositTotal:d.depositTotal,paymentSchedule:d.paymentSchedule})}).catch(()=>{});}catch(e){}
+  document.getElementById('review-view').style.display='none';
+  document.getElementById('confirm-view').style.display='block';
+  renderSuccessCard();
+}
+
+function renderSuccessCard(){
+  const L=currentLang;const card=document.getElementById('confirm-card');
+  const d=window._confirmData||{};
+  const ts=d.now?d.now.toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'}):'';
+  let ih='';
+  ITEMS.forEach(item=>{
+    if(!selectedItems[item.id])return;
+    const ref=item.ref[L]?` (${item.ref[L]})`:'';
+    const ps2=item.type==='monthly'?`${fmtPrice(item.price)}/${L==='zh'?'月':'mo'}`:fmtPrice(item.price);
+    ih+=`<div class="confirm-item"><span class="ci-name">☑ ${item.name[L]}${ref}</span><span class="ci-price">${ps2}</span></div>`;
+  });
+  let ph='';(d.paymentSchedule||[]).forEach(s=>{
+    if(s.t==='304030')ph+=`<div class="payment-row"><span class="pr-label">${s.name}</span><span class="pr-amount">30%: ${fmtPrice(s.p30)} → 40%: ${fmtPrice(s.p40)} → 30%: ${fmtPrice(s.p30b)}</span></div>`;
+    else ph+=`<div class="payment-row"><span class="pr-label">${s.name}</span><span class="pr-amount">50%: ${fmtPrice(s.p50a)} → 50%: ${fmtPrice(s.p50b)}</span></div>`;
+  });
+  if((d.monthlyTotal||0)>0)ph+=`<div class="payment-row"><span class="pr-label">${L==='zh'?'月度维护':'Monthly Care'}</span><span class="pr-amount">${L==='zh'?'按月预付':'Monthly prepay'}</span></div>`;
+  card.innerHTML=`<div class="success-icon">✓</div><h2>${L==='zh'?'报价已确认':'Quotation Confirmed'}</h2><p class="confirm-subtitle">${L==='zh'?'确认已发往':'Confirmation sent to'} <strong>robin@snailai.ai</strong></p><div style="margin-bottom:8px;font-size:11px;color:var(--ink-3);">${ts}</div>${ih}<div class="confirm-total"><div class="total-row"><span>${L==='zh'?'一次性合计':'One-off Total'}</span><span class="tv">${fmtPrice(d.oneoffTotal||0)}</span></div>${(d.monthlyTotal||0)>0?`<div class="total-row"><span>${L==='zh'?'月度合计':'Monthly Total'}</span><span class="tv">${fmtPrice(d.monthlyTotal||0)}/${L==='zh'?'月':'mo'}</span></div>`:''}<div class="total-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line);"><span>${L==='zh'?'首期应付':'Deposit Due'}</span><span class="tv">${fmtPrice(d.depositTotal||0)}</span></div></div><div class="payment-schedule"><h3>${L==='zh'?'付款进程':'Payment Schedule'}</h3>${ph}</div><div class="confirm-notice"><strong>${L==='zh'?'📋 下一步':'📋 Next Step'}</strong> ${L==='zh'?'随后您将收到详细技术服务合同和技术服务书，双方签署后正式开始工作。':'You will receive a detailed Technical Services Agreement and Proposal for both parties to sign before work commences.'}</div>`;
 }
 
 function initQuote(){
