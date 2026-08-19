@@ -33,6 +33,20 @@
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
+
+    /* ===== BRAND HEADER ===== */
+    .brand-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 24px; background: var(--paper-2);
+      border-bottom: 1px solid var(--line);
+    }
+    .brand-logo { width: 28px; height: 28px; object-fit: contain; }
+    .brand-name { font-size: 16px; font-weight: 900; color: var(--ink-2); letter-spacing: -0.3px; }
+    .brand-ai {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--gold) 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
     /* ===== LOGIN VIEW ===== */
     #login-view {
       min-height: 100vh;
@@ -126,6 +140,7 @@
       background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+
     /* ===== MAIN APP ===== */
     #app-view { display: none; }
     .top-bar {
@@ -155,6 +170,14 @@
       opacity: 0.6;
       letter-spacing: 0.3px;
     }
+    .top-bar .brand-header {
+      background: transparent;
+      border-bottom: none;
+      padding: 0;
+      margin-right: 12px;
+    }
+    .top-bar .brand-logo { filter: brightness(2); }
+    .top-bar .brand-name { color: var(--paper); }
     .lang-switch {
       display: flex;
       gap: 0;
@@ -176,6 +199,7 @@
       background: rgba(255,255,255,0.15);
       color: #fff;
     }
+
     /* ===== QUOTE CONTENT ===== */
     .container {
       max-width: 960px;
@@ -207,6 +231,7 @@
       line-height: 1.7;
     }
     .recommended-path strong { color: var(--accent); }
+
     /* ===== SERVICE GROUPS ===== */
     .group-title {
       font-size: 11px;
@@ -309,7 +334,8 @@
       margin-top: 6px;
     }
     .item-detail-link:hover { text-decoration: underline; }
-    .item-detail-link::after { content: '→'; }
+    .item-detail-link::after { content: '\2192'; }
+
     /* ===== SUB-MODULES (expandable) ===== */
     .sub-modules {
       margin-top: 10px;
@@ -321,6 +347,7 @@
       line-height: 1.8;
     }
     .quote-item.selected .sub-modules { display: block; }
+
     /* ===== DETAIL PANEL ===== */
     #detail-panel {
       display: none;
@@ -400,6 +427,7 @@
       font-size: 13px;
       line-height: 1.7;
     }
+
     /* ===== SUMMARY BAR (sticky bottom) ===== */
     .summary-bar {
       position: fixed;
@@ -442,6 +470,13 @@
       font-weight: 700;
     }
     .summary-deposit .dep-val { color: var(--accent); }
+    .summary-gst-note {
+      font-size: 11px;
+      opacity: 0.55;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .summary-gst-note .gst-val { color: var(--accent); }
     .confirm-btn {
       padding: 12px 32px;
       background: var(--accent);
@@ -458,19 +493,212 @@
       opacity: 0.4;
       cursor: not-allowed;
     }
-    /* ===== CONFIRM VIEW ===== */
+
+    /* ===== CLIENT-INFO VIEW ===== */
+    #client-info-view { display: none; min-height: 100vh; background: var(--paper); }
+    .client-info-card {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1.5px solid var(--paper-3);
+      border-radius: 16px;
+      padding: 36px 40px;
+    }
+    .client-info-card h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .client-info-card .subtitle {
+      font-size: 13px;
+      color: var(--ink-3);
+      margin-bottom: 28px;
+    }
+    .ci-field {
+      margin-bottom: 20px;
+    }
+    .ci-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--ink-3);
+      margin-bottom: 6px;
+    }
+    .ci-field input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--paper-3);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      background: var(--paper);
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .ci-field input:focus { border-color: var(--accent); }
+    .ci-field input.ci-error { border-color: #D32F2F; }
+    .ci-field .ci-err-msg {
+      color: #D32F2F;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 4px;
+      display: none;
+    }
+    .ci-field .ci-err-msg.show { display: block; }
+    .ci-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      margin-top: 28px;
+    }
+    .ci-btn-back {
+      flex: 1;
+      max-width: 200px;
+      height: 48px;
+      border: 2px solid var(--line);
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .ci-btn-back:hover { border-color: var(--ink); }
+    .ci-btn-continue {
+      flex: 1;
+      max-width: 260px;
+      height: 48px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .ci-btn-continue:hover { opacity: 0.92; }
+    .ci-btn-continue:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ===== GST 3-LINE DISPLAY ===== */
+    .gst-block {
+      margin-top: 4px;
+    }
+    .gst-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      font-size: 13px;
+    }
+    .gst-row.gst-line { color: var(--ink-3); }
+    .gst-row.total-line { font-weight: 800; font-size: 15px; }
+    .gst-row .gst-val { color: var(--accent); font-weight: 800; }
+    .gst-row.total-line .gst-val { font-size: 15px; }
+
+    /* ===== PAYMENT DUAL COLUMN ===== */
+    .payment-dual-row {
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--line);
+      font-size: 13px;
+    }
+    .payment-dual-row:last-child { border-bottom: none; }
+    .payment-dual-row .pdr-name { color: var(--ink-2); font-weight: 600; margin-bottom: 4px; }
+    .payment-dual-row .pdr-cols {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+    }
+    .payment-dual-row .pdr-col {
+      flex: 1;
+    }
+    .payment-dual-row .pdr-col-label {
+      color: var(--ink-3);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 2px;
+    }
+    .payment-dual-row .pdr-col-amount { font-weight: 800; color: var(--ink); }
+
+    /* ===== REVIEW VIEW ===== */
+    #review-view { display: none; min-height: 100vh; background: var(--paper); padding-bottom: 100px; }
+    .review-warn {
+      background: #FFF3E0; border: 2px solid #FF9800; border-radius: 12px;
+      padding: 20px 24px; margin-bottom: 24px; text-align: center;
+    }
+    .review-warn-icon { font-size: 32px; margin-bottom: 8px; }
+    .review-warn h2 { font-size: 18px; font-weight: 800; color: #E65100; margin-bottom: 6px; }
+    .review-warn p { font-size: 13px; color: #BF360C; margin: 0; }
+    .review-card {
+      max-width: 680px; margin: 0 auto; background: var(--paper);
+      border-radius: 16px; padding: 32px 40px;
+    }
+    .review-company-block {
+      background: var(--paper-2);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    .review-company-block h4 {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--ink-3);
+      margin-bottom: 8px;
+    }
+    .review-company-block .rcb-row {
+      display: flex;
+      gap: 8px;
+    }
+    .review-company-block .rcb-label {
+      color: var(--ink-3);
+      min-width: 120px;
+      font-weight: 600;
+    }
+    .review-company-block .rcb-val { color: var(--ink-2); }
+    .review-actions {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      background: var(--paper); border-top: 1px solid var(--line);
+      padding: 16px 24px; display: flex; gap: 12px; justify-content: center;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+    }
+    .review-btn-back {
+      flex: 1; max-width: 260px; height: 56px; border: 2px solid var(--line);
+      background: var(--paper); color: var(--ink); border-radius: 12px;
+      font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+    }
+    .review-btn-back:hover { border-color: var(--ink); }
+    .review-btn-submit {
+      flex: 1; max-width: 260px; height: 56px; border: none;
+      background: var(--accent); color: #fff; border-radius: 12px;
+      font-size: 16px; font-weight: 800; cursor: pointer; transition: all 0.15s;
+    }
+    .review-btn-submit:hover { opacity: 0.92; }
+    .review-btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ===== CONFIRM VIEW (success) ===== */
     #confirm-view {
       display: none;
       min-height: 100vh;
-      padding: 60px 24px;
+      padding: 0 24px 60px;
+      background: var(--paper);
     }
     .confirm-card {
       max-width: 680px;
       margin: 0 auto;
       background: var(--paper);
+      border: 1.5px solid var(--paper-3);
       border-radius: 16px;
       padding: 48px 40px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
     }
     .confirm-card .success-icon {
       width: 56px;
@@ -552,38 +780,7 @@
       line-height: 1.7;
     }
     .confirm-notice strong { color: var(--accent); }
-    /* ===== REVIEW VIEW ===== */
-    #review-view { display: none; min-height: 100vh; background: var(--bg); padding-bottom: 100px; }
-    .review-warn {
-      background: #FFF3E0; border: 2px solid #FF9800; border-radius: 12px;
-      padding: 20px 24px; margin-bottom: 24px; text-align: center;
-    }
-    .review-warn-icon { font-size: 32px; margin-bottom: 8px; }
-    .review-warn h2 { font-size: 18px; font-weight: 800; color: #E65100; margin-bottom: 6px; }
-    .review-warn p { font-size: 13px; color: #BF360C; margin: 0; }
-    .review-card {
-      max-width: 680px; margin: 0 auto; background: var(--paper);
-      border-radius: 16px; padding: 32px 40px;
-    }
-    .review-actions {
-      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
-      background: var(--paper); border-top: 1px solid var(--line);
-      padding: 16px 24px; display: flex; gap: 12px; justify-content: center;
-      box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
-    }
-    .review-btn-back {
-      flex: 1; max-width: 260px; height: 56px; border: 2px solid var(--line);
-      background: var(--paper); color: var(--ink); border-radius: 12px;
-      font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.15s;
-    }
-    .review-btn-back:hover { border-color: var(--ink); }
-    .review-btn-submit {
-      flex: 1; max-width: 260px; height: 56px; border: none;
-      background: var(--accent); color: #fff; border-radius: 12px;
-      font-size: 16px; font-weight: 800; cursor: pointer; transition: all 0.15s;
-    }
-    .review-btn-submit:hover { opacity: 0.92; }
-    .review-btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
     /* ===== HIDDEN utility ===== */
     .hidden { display: none !important; }
   </style>
@@ -616,8 +813,12 @@
 <div id="app-view">
   <div class="top-bar">
     <div class="top-bar-left">
+      <div class="brand-header">
+        <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
+        <span class="brand-name">snail<span class="brand-ai">.ai</span></span>
+      </div>
       <h2 data-zh="Skin Cancer Laser Centre 模块化报价" data-en="Skin Cancer Laser Centre Modular Quotation">Skin Cancer Laser Centre Modular Quotation</h2>
-      <span class="quote-id">SCLC-QUOTE-2026-001 · v1.0</span>
+      <span class="quote-id">SCLC-QUOTE-2026-001 &middot; v1.0</span>
     </div>
     <div class="lang-switch">
       <button class="lang-btn" data-lang="zh">中文</button>
@@ -629,8 +830,8 @@
     <div class="header-section">
       <h1 data-zh="选择您需要的服务模块" data-en="Select Your Service Modules">Select Your Service Modules</h1>
       <p class="meta-line">
-        <span data-zh="有效期至" data-en="Valid until">Valid until</span> <strong>2026-09-02</strong> ·
-        <span data-zh="币种" data-en="Currency">Currency</span> <strong>AUD</strong> ·
+        <span data-zh="有效期至" data-en="Valid until">Valid until</span> <strong>2026-09-02</strong> &middot;
+        <span data-zh="币种" data-en="Currency">Currency</span> <strong>AUD</strong> &middot;
         <span data-zh="不含 GST" data-en="ex GST">ex GST</span>
       </p>
     </div>
@@ -642,12 +843,10 @@
 
     <!-- ONE-OFF SERVICES -->
     <div class="group-title" data-zh="一次性服务" data-en="One-off Services">One-off Services</div>
-
     <div id="oneoff-items"></div>
 
     <!-- MONTHLY SERVICES -->
     <div class="group-title" data-zh="月度维护套餐" data-en="Monthly Care Plans">Monthly Care Plans</div>
-
     <div id="monthly-items"></div>
   </div>
 
@@ -657,14 +856,17 @@
       <div class="summary-amount">
         <span class="label" data-zh="一次性合计" data-en="One-off Total">One-off Total</span>
         <span class="val" id="sum-oneoff">$0</span>
+        <div class="summary-gst-note" id="sum-oneoff-gst"></div>
       </div>
       <div class="summary-amount monthly">
         <span class="label" data-zh="月度合计" data-en="Monthly Total">Monthly Total</span>
         <span class="val" id="sum-monthly">$0<span style="font-size:11px;opacity:0.6">/mo</span></span>
+        <div class="summary-gst-note" id="sum-monthly-gst"></div>
       </div>
       <div class="summary-deposit">
         <span data-zh="首期应付" data-en="Deposit due">Deposit due</span>
         <span class="dep-val" id="sum-deposit"> $0</span>
+        <div class="summary-gst-note" id="sum-deposit-gst"></div>
       </div>
     </div>
     <button class="confirm-btn" id="confirm-btn" data-zh="确认报价" data-en="Confirm Quotation">Confirm Quotation</button>
@@ -674,43 +876,111 @@
 <!-- ===== DETAIL PANEL ===== -->
 <div id="detail-panel">
   <div class="detail-header">
-    <button class="detail-back" id="detail-back" data-zh="← 返回报价" data-en="← Back to Quotation">← Back to Quotation</button>
+    <button class="detail-back" id="detail-back" data-zh="\u2190 返回报价" data-en="\u2190 Back to Quotation">\u2190 Back to Quotation</button>
     <div class="lang-switch">
       <button class="lang-btn" data-lang="zh">中文</button>
       <button class="lang-btn active" data-lang="en">EN</button>
     </div>
   </div>
+  <div class="brand-header">
+    <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
+    <span class="brand-name">snail<span class="brand-ai">.ai</span></span>
+  </div>
   <div class="detail-body" id="detail-body"></div>
 </div>
 
-<!-- ===== REVIEW VIEW (confirmation step 1) ===== -->
-<div id="review-view">
-  <div style="max-width:680px;margin:0 auto;padding:20px 24px 0;">
-    <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
-      <div class="lang-switch">
-        <button class="lang-btn" data-lang="zh">中文</button>
-        <button class="lang-btn active" data-lang="en">EN</button>
+<!-- ===== CLIENT-INFO VIEW ===== -->
+<div id="client-info-view">
+  <div class="brand-header">
+    <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
+    <span class="brand-name">snail<span class="brand-ai">.ai</span></span>
+    <div style="flex:1;"></div>
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="zh">中文</button>
+      <button class="lang-btn active" data-lang="en">EN</button>
+    </div>
+  </div>
+  <div style="max-width:680px;margin:0 auto;padding:24px;">
+    <div class="client-info-card">
+      <h2 data-zh="请填写公司信息" data-en="Please Complete Your Company Information">Please Complete Your Company Information</h2>
+      <p class="subtitle" data-zh="此信息将用于准备正式合同" data-en="This information will be used to prepare the formal contract.">This information will be used to prepare the formal contract.</p>
+
+      <div class="ci-field">
+        <label data-zh="公司名称" data-en="Company Name">Company Name</label>
+        <input type="text" id="ci-company" autocomplete="organization" spellcheck="false">
+        <div class="ci-err-msg" id="ci-company-err"></div>
       </div>
+
+      <div class="ci-field">
+        <label data-zh="ABN" data-en="ABN">ABN</label>
+        <input type="text" id="ci-abn" maxlength="14" autocomplete="off" spellcheck="false" placeholder="e.g. 51 824 753 556">
+        <div class="ci-err-msg" id="ci-abn-err"></div>
+      </div>
+
+      <div class="ci-field">
+        <label data-zh="公司地址" data-en="Address">Address</label>
+        <input type="text" id="ci-address" autocomplete="street-address" spellcheck="false">
+        <div class="ci-err-msg" id="ci-address-err"></div>
+      </div>
+
+      <div class="ci-field">
+        <label data-zh="联系人" data-en="Contact Person">Contact Person</label>
+        <input type="text" id="ci-contact" autocomplete="name" spellcheck="false">
+        <div class="ci-err-msg" id="ci-contact-err"></div>
+      </div>
+
+      <div class="ci-field">
+        <label data-zh="Email" data-en="Email">Email</label>
+        <input type="email" id="ci-email" autocomplete="email" spellcheck="false">
+        <div class="ci-err-msg" id="ci-email-err"></div>
+      </div>
+
+      <div class="ci-field">
+        <label data-zh="手机" data-en="Phone">Phone</label>
+        <input type="tel" id="ci-phone" autocomplete="tel" spellcheck="false" placeholder="e.g. 0412 345 678">
+        <div class="ci-err-msg" id="ci-phone-err"></div>
+      </div>
+
+      <div class="ci-actions">
+        <button type="button" class="ci-btn-back" id="ci-back-btn" data-zh="\u2190 返回" data-en="\u2190 Back">\u2190 Back</button>
+        <button type="button" class="ci-btn-continue" id="ci-continue-btn" data-zh="继续复核 \u2192" data-en="Continue to Review \u2192" disabled>Continue to Review \u2192</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REVIEW VIEW ===== -->
+<div id="review-view">
+  <div class="brand-header">
+    <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
+    <span class="brand-name">snail<span class="brand-ai">.ai</span></span>
+    <div style="flex:1;"></div>
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="zh">中文</button>
+      <button class="lang-btn active" data-lang="en">EN</button>
     </div>
   </div>
   <div class="review-card" id="review-card"></div>
   <div class="review-actions">
-    <button class="review-btn-back" id="review-back-btn" type="button" data-zh="← 返回修改" data-en="← Back to Edit">← Back to Edit</button>
-    <button class="review-btn-submit" id="review-submit-btn" type="button" data-zh="确认提交" data-en="Confirm & Submit">Confirm & Submit</button>
+    <button class="review-btn-back" id="review-back-btn" type="button" data-zh="\u2190 返回修改" data-en="\u2190 Back to Edit">\u2190 Back to Edit</button>
+    <button class="review-btn-submit" id="review-submit-btn" type="button" data-zh="确认提交" data-en="Confirm &amp; Submit">Confirm &amp; Submit</button>
   </div>
 </div>
 
 <!-- ===== CONFIRM VIEW (success) ===== -->
 <div id="confirm-view">
-  <div style="max-width:680px;margin:0 auto;padding:20px 24px;">
-    <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
-      <div class="lang-switch">
-        <button class="lang-btn" data-lang="zh">中文</button>
-        <button class="lang-btn active" data-lang="en">EN</button>
-      </div>
+  <div class="brand-header">
+    <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
+    <span class="brand-name">snail<span class="brand-ai">.ai</span></span>
+    <div style="flex:1;"></div>
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="zh">中文</button>
+      <button class="lang-btn active" data-lang="en">EN</button>
     </div>
   </div>
-  <div class="confirm-card" id="confirm-card"></div>
+  <div style="padding:0 24px;">
+    <div class="confirm-card" id="confirm-card"></div>
+  </div>
 </div>
 
 <script>
@@ -718,75 +988,75 @@
 const ITEMS = [
   {
     id: 'website', type: 'oneoff', price: 14000,
-    ref: { zh: 'W1–W8', en: 'W1–W8' },
-    name: { zh: '专业诊所网站完整包', en: 'Complete Professional Clinic Website' },
-    sub: 'W1 Discovery $950 · W2 Design $2,400 · W3 Build $4,800 · W4 Booking $1,350 · W5 Payment $950 · W6 SEO $1,650 · W7 QA & Launch $1,250 · W8 Training $650',
+    ref: { zh: 'W1\u2013W8', en: 'W1\u2013W8' },
+    name: { zh: '\u4E13\u4E1A\u8BCA\u6240\u7F51\u7AD9\u5B8C\u6574\u5305', en: 'Complete Professional Clinic Website' },
+    sub: 'W1 Discovery $950 \u00B7 W2 Design $2,400 \u00B7 W3 Build $4,800 \u00B7 W4 Booking $1,350 \u00B7 W5 Payment $950 \u00B7 W6 SEO $1,650 \u00B7 W7 QA & Launch $1,250 \u00B7 W8 Training $650',
     preselected: true,
     detail: {
       objective: {
-        zh: '建设最多 38 页的专业医疗网站，接入经 Helix 认可的预约和付款服务，网站不连接临床数据库，不保存银行卡资料。',
+        zh: '\u5EFA\u8BBE\u6700\u591A 38 \u9875\u7684\u4E13\u4E1A\u533B\u7597\u7F51\u7AD9\uFF0C\u63A5\u5165\u7ECF Helix \u8BA4\u53EF\u7684\u9884\u7EA6\u548C\u4ED8\u6B3E\u670D\u52A1\uFF0C\u7F51\u7AD9\u4E0D\u8FDE\u63A5\u4E34\u5E8A\u6570\u636E\u5E93\uFF0C\u4E0D\u4FDD\u5B58\u94F6\u884C\u5361\u8D44\u6599\u3002',
         en: 'Build a professional clinic website of up to 38 pages and connect it to an approved booking and hosted payment service. The website will not connect directly to the Helix clinical database and will not store card details.'
       },
       deliverables: {
-        zh: ['经批准的网站信息架构和线框图', '响应式视觉设计系统和最多 6 种模板', '最多 38 个页面', '一套预约 Provider 接入', '一套托管付款接入', '技术/本地 SEO、分析、站点地图和结构化数据', '隐私/安全技术设置', 'staging 预览站、生产站和发布/回滚说明', '一次 Andrew 管理培训和交接文件'],
+        zh: ['\u7ECF\u6279\u51C6\u7684\u7F51\u7AD9\u4FE1\u606F\u67B6\u6784\u548C\u7EBF\u6846\u56FE', '\u54CD\u5E94\u5F0F\u89C6\u89C9\u8BBE\u8BA1\u7CFB\u7EDF\u548C\u6700\u591A 6 \u79CD\u6A21\u677F', '\u6700\u591A 38 \u4E2A\u9875\u9762', '\u4E00\u5957\u9884\u7EA6 Provider \u63A5\u5165', '\u4E00\u5957\u6258\u7BA1\u4ED8\u6B3E\u63A5\u5165', '\u6280\u672F/\u672C\u5730 SEO\u3001\u5206\u6790\u3001\u7AD9\u70B9\u5730\u56FE\u548C\u7ED3\u6784\u5316\u6570\u636E', '\u9690\u79C1/\u5B89\u5168\u6280\u672F\u8BBE\u7F6E', 'staging \u9884\u89C8\u7AD9\u3001\u751F\u4EA7\u7AD9\u548C\u53D1\u5E03/\u56DE\u6EDA\u8BF4\u660E', '\u4E00\u6B21 Andrew \u7BA1\u7406\u57F9\u8BAD\u548C\u4EA4\u63A5\u6587\u4EF6'],
         en: ['Approved site map and wireframes', 'Responsive design system and up to six page templates', 'Up to 38 pages', 'One booking-provider integration', 'One hosted-payment integration', 'Technical/local SEO, analytics, sitemap and structured data', 'Privacy/security settings and third-party embed disclosure', 'Staging site, production site and release/rollback instructions', 'One administrator training session and handover guide']
       },
       acceptance: {
-        zh: ['约定页面在手机、平板和桌面端正常显示', '预约测试可从网站完成到 Provider 的确认', '付款使用 Provider 测试模式验证', '网站不保存卡号，不能读取 Helix 临床记录', '无阻断级错误，关键页面可被搜索引擎抓取', 'Andrew 书面批准全部公开医疗内容和价格'],
+        zh: ['\u7EA6\u5B9A\u9875\u9762\u5728\u624B\u673A\u3001\u5E73\u677F\u548C\u684C\u9762\u7AEF\u6B63\u5E38\u663E\u793A', '\u9884\u7EA6\u6D4B\u8BD5\u53EF\u4ECE\u7F51\u7AD9\u5B8C\u6210\u5230 Provider \u7684\u786E\u8BA4', '\u4ED8\u6B3E\u4F7F\u7528 Provider \u6D4B\u8BD5\u6A21\u5F0F\u9A8C\u8BC1', '\u7F51\u7AD9\u4E0D\u4FDD\u5B58\u5361\u53F7\uFF0C\u4E0D\u80FD\u8BFB\u53D6 Helix \u4E34\u5E8A\u8BB0\u5F55', '\u65E0\u963B\u65AD\u7EA7\u9519\u8BEF\uFF0C\u5173\u952E\u9875\u9762\u53EF\u88AB\u641C\u7D22\u5F15\u64CE\u6293\u53D6', 'Andrew \u4E66\u9762\u6279\u51C6\u5168\u90E8\u516C\u5F00\u533B\u7597\u5185\u5BB9\u548C\u4EF7\u683C'],
         en: ['Agreed pages render correctly on common mobile, tablet and desktop browsers', 'A test booking completes from the website to provider confirmation', 'Payment is validated in provider test mode', 'The website stores no card number and cannot access Helix clinical records', 'No release-blocking defects and key pages are crawlable', 'Andrew gives written approval to all public medical content and fees']
       },
       boundary: {
-        zh: 'W1、W2、W3 和 W7 为网站建设的基础依赖。W4 需 Andrew 直接拥有并支付 Helix/预约 Provider 账号。W5 仅在支付 Provider 和预约流程确认兼容后实施。38 页为采用既定设计系统的公开页面，每页不是独立定制设计。Andrew 必须提供或批准医疗内容、资质、价格、治疗主张、图片授权和法律页面内容。',
+        zh: 'W1\u3001W2\u3001W3 \u548C W7 \u4E3A\u7F51\u7AD9\u5EFA\u8BBE\u7684\u57FA\u7840\u4F9D\u8D56\u3002W4 \u9700 Andrew \u76F4\u63A5\u62E5\u6709\u5E76\u652F\u4ED8 Helix/\u9884\u7EA6 Provider \u8D26\u53F7\u3002W5 \u4EC5\u5728\u652F\u4ED8 Provider \u548C\u9884\u7EA6\u6D41\u7A0B\u786E\u8BA4\u517C\u5BB9\u540E\u5B9E\u65BD\u300238 \u9875\u4E3A\u91C7\u7528\u65E2\u5B9A\u8BBE\u8BA1\u7CFB\u7EDF\u7684\u516C\u5F00\u9875\u9762\uFF0C\u6BCF\u9875\u4E0D\u662F\u72EC\u7ACB\u5B9A\u5236\u8BBE\u8BA1\u3002Andrew \u5FC5\u987B\u63D0\u4F9B\u6216\u6279\u51C6\u533B\u7597\u5185\u5BB9\u3001\u8D44\u8D28\u3001\u4EF7\u683C\u3001\u6CBB\u7597\u4E3B\u5F20\u3001\u56FE\u7247\u6388\u6743\u548C\u6CD5\u5F8B\u9875\u9762\u5185\u5BB9\u3002',
         en: 'W1, W2, W3 and W7 are core website dependencies. W4 requires a Helix/booking-provider account owned and paid directly by Andrew. W5 starts only after payment-provider and booking-flow compatibility is confirmed. The 38-page allowance uses the approved design system; it is not 38 bespoke layouts. Andrew must provide or approve medical content, qualifications, fees, claims, image rights and legal-page content.'
       }
     }
   },
   {
     id: 'helix', type: 'oneoff', price: 2800,
-    ref: { zh: 'H1–H4', en: 'H1–H4' },
-    name: { zh: 'Helix 迁移协调与验收支持', en: 'Helix Migration Coordination & Acceptance Support' },
-    sub: 'H1 Preparation $700 · H2 Vendor Coordination $700 · H3 UAT & Acceptance $900 · H4 Cutover & Test $500',
+    ref: { zh: 'H1\u2013H4', en: 'H1\u2013H4' },
+    name: { zh: 'Helix \u8FC1\u79FB\u534F\u8C03\u4E0E\u9A8C\u6536\u652F\u6301', en: 'Helix Migration Coordination & Acceptance Support' },
+    sub: 'H1 Preparation $700 \u00B7 H2 Vendor Coordination $700 \u00B7 H3 UAT & Acceptance $900 \u00B7 H4 Cutover & Test $500',
     preselected: true,
     detail: {
       objective: {
-        zh: '协调 MedicalDirector/Helix 的数据迁移，记录现状清单、协调测试迁移、UAT 验收及正式切换和网站联调。不自行执行迁移。',
-        en: 'Coordinate MedicalDirector/Helix data migration — document current state, coordinate test migration, UAT acceptance, production cutover and website integration testing. Does not execute the migration itself.'
+        zh: '\u534F\u8C03 MedicalDirector/Helix \u7684\u6570\u636E\u8FC1\u79FB\uFF0C\u8BB0\u5F55\u73B0\u72B6\u6E05\u5355\u3001\u534F\u8C03\u6D4B\u8BD5\u8FC1\u79FB\u3001UAT \u9A8C\u6536\u53CA\u6B63\u5F0F\u5207\u6362\u548C\u7F51\u7AD9\u8054\u8C03\u3002\u4E0D\u81EA\u884C\u6267\u884C\u8FC1\u79FB\u3002',
+        en: 'Coordinate MedicalDirector/Helix data migration \u2014 document current state, coordinate test migration, UAT acceptance, production cutover and website integration testing. Does not execute the migration itself.'
       },
       deliverables: {
-        zh: ['旧环境清单与迁移准备', '厂商协调及测试迁移记录', 'UAT 与抽样验收支持', '正式切换和网站预约联调'],
+        zh: ['\u65E7\u73AF\u5883\u6E05\u5355\u4E0E\u8FC1\u79FB\u51C6\u5907', '\u5382\u5546\u534F\u8C03\u53CA\u6D4B\u8BD5\u8FC1\u79FB\u8BB0\u5F55', 'UAT \u4E0E\u62BD\u6837\u9A8C\u6536\u652F\u6301', '\u6B63\u5F0F\u5207\u6362\u548C\u7F51\u7AD9\u9884\u7EA6\u8054\u8C03'],
         en: ['Current-state inventory and migration preparation', 'Vendor coordination and test migration records', 'UAT and sample acceptance support', 'Production cutover and website booking test']
       },
       acceptance: {
-        zh: ['Andrew 随机核对约定数量的患者身份、记录、附件、处方、预约及账务', '用户权限、MFA、审计、备份/恢复已确认', '新旧系统记录总量及异常差异有书面结果', '旧服务器在保留期内隔离、只读、加密'],
+        zh: ['Andrew \u968F\u673A\u6838\u5BF9\u7EA6\u5B9A\u6570\u91CF\u7684\u60A3\u8005\u8EAB\u4EFD\u3001\u8BB0\u5F55\u3001\u9644\u4EF6\u3001\u5904\u65B9\u3001\u9884\u7EA6\u53CA\u8D26\u52A1', '\u7528\u6237\u6743\u9650\u3001MFA\u3001\u5BA1\u8BA1\u3001\u5907\u4EFD/\u6062\u590D\u5DF2\u786E\u8BA4', '\u65B0\u65E7\u7CFB\u7EDF\u8BB0\u5F55\u603B\u91CF\u53CA\u5F02\u5E38\u5DEE\u5F02\u6709\u4E66\u9762\u7ED3\u679C', '\u65E7\u670D\u52A1\u5668\u5728\u4FDD\u7559\u671F\u5185\u9694\u79BB\u3001\u53EA\u8BFB\u3001\u52A0\u5BC6'],
         en: ['Andrew samples an agreed number of patient identities, records, attachments, prescriptions, appointments and billing', 'User access, MFA, audit logging, backup/recovery confirmed', 'Record counts and migration exceptions have a written outcome', 'The old server is isolated, encrypted and read-only during retention']
       },
       boundary: {
-        zh: '这笔费用不是 Helix 的约 $2,000 数据迁移费，也不包括 Andrew 的 Helix 年费。完整临床数据库的提取、转换、上传和修复必须由 MedicalDirector/Helix 或其授权方执行。服务方不保证第三方迁移结果，但会提供结构化验收和联调支持。',
+        zh: '\u8FD9\u7B14\u8D39\u7528\u4E0D\u662F Helix \u7684\u7EA6 $2,000 \u6570\u636E\u8FC1\u79FB\u8D39\uFF0C\u4E5F\u4E0D\u5305\u62EC Andrew \u7684 Helix \u5E74\u8D39\u3002\u5B8C\u6574\u4E34\u5E8A\u6570\u636E\u5E93\u7684\u63D0\u53D6\u3001\u8F6C\u6362\u3001\u4E0A\u4F20\u548C\u4FEE\u590D\u5FC5\u987B\u7531 MedicalDirector/Helix \u6216\u5176\u6388\u6743\u65B9\u6267\u884C\u3002\u670D\u52A1\u65B9\u4E0D\u4FDD\u8BC1\u7B2C\u4E09\u65B9\u8FC1\u79FB\u7ED3\u679C\uFF0C\u4F46\u4F1A\u63D0\u4F9B\u7ED3\u6784\u5316\u9A8C\u6536\u548C\u8054\u8C03\u652F\u6301\u3002',
         en: 'This is not the ~$2,000 Helix data-migration charge and does not include Andrew\'s Helix licence fees. Extraction, transformation and upload of the complete clinical database must be performed by MedicalDirector/Helix or an authorised provider. The Service Provider does not warrant the third party\'s migration result but provides structured acceptance and integration support.'
       }
     }
   },
   {
     id: 'ai-core', type: 'oneoff', price: 13800,
-    ref: { zh: 'A1–A6, A10', en: 'A1–A6, A10' },
-    name: { zh: 'AI 工作协助系统核心版', en: 'Core AI Work Assistance System' },
-    sub: 'A1 Discovery $1,500 · A2 Local App $2,200 · A3 CSV Import $2,400 · A4 Filters $1,800 · A5 AI Drafting $2,400 · A6 Consent & Audit $2,300 · A10 Training $1,200',
+    ref: { zh: 'A1\u2013A6, A10', en: 'A1\u2013A6, A10' },
+    name: { zh: 'AI \u5DE5\u4F5C\u534F\u52A9\u7CFB\u7EDF\u6838\u5FC3\u7248', en: 'Core AI Work Assistance System' },
+    sub: 'A1 Discovery $1,500 \u00B7 A2 Local App $2,200 \u00B7 A3 CSV Import $2,400 \u00B7 A4 Filters $1,800 \u00B7 A5 AI Drafting $2,400 \u00B7 A6 Consent & Audit $2,300 \u00B7 A10 Training $1,200',
     preselected: false,
     detail: {
       objective: {
-        zh: '在 Andrew 的 Windows 11 Pro 工作电脑上安装本地应用，导入经最小化处理的联系资料、按地区及合规状态筛选、协助起草通讯内容，人工审核后才可发送。AI 不作诊断、不决定治疗、不自动选择患者。',
-        en: 'Install a local application on Andrew\'s Windows 11 Pro workstation to import minimised contact data, filter by location and consent status, and assist with drafting communications — sent only after human approval. The AI will not diagnose, recommend treatment, select patients or access clinical records.'
+        zh: '\u5728 Andrew \u7684 Windows 11 Pro \u5DE5\u4F5C\u7535\u8111\u4E0A\u5B89\u88C5\u672C\u5730\u5E94\u7528\uFF0C\u5BFC\u5165\u7ECF\u6700\u5C0F\u5316\u5904\u7406\u7684\u8054\u7CFB\u8D44\u6599\u3001\u6309\u5730\u533A\u53CA\u5408\u89C4\u72B6\u6001\u7B5B\u9009\u3001\u534F\u52A9\u8D77\u8349\u901A\u8BAF\u5185\u5BB9\uFF0C\u4EBA\u5DE5\u5BA1\u6838\u540E\u624D\u53EF\u53D1\u9001\u3002AI \u4E0D\u4F5C\u8BCA\u65AD\u3001\u4E0D\u51B3\u5B9A\u6CBB\u7597\u3001\u4E0D\u81EA\u52A8\u9009\u62E9\u60A3\u8005\u3002',
+        en: 'Install a local application on Andrew\'s Windows 11 Pro workstation to import minimised contact data, filter by location and consent status, and assist with drafting communications \u2014 sent only after human approval. The AI will not diagnose, recommend treatment, select patients or access clinical records.'
       },
       deliverables: {
-        zh: ['隐私/数据流和字段字典', '本地加密联系资料库', 'CSV 导入、校验、去重', '地区、渠道、同意和退订的规则式筛选', '无个人资料的 AI 文案起草', '人工审批、审计、suppression list', '培训、SOP、测试与恢复说明'],
+        zh: ['\u9690\u79C1/\u6570\u636E\u6D41\u548C\u5B57\u6BB5\u5B57\u5178', '\u672C\u5730\u52A0\u5BC6\u8054\u7CFB\u8D44\u6599\u5E93', 'CSV \u5BFC\u5165\u3001\u6821\u9A8C\u3001\u53BB\u91CD', '\u5730\u533A\u3001\u6E20\u9053\u3001\u540C\u610F\u548C\u9000\u8BA2\u7684\u89C4\u5219\u5F0F\u7B5B\u9009', '\u65E0\u4E2A\u4EBA\u8D44\u6599\u7684 AI \u6587\u6848\u8D77\u8349', '\u4EBA\u5DE5\u5BA1\u6279\u3001\u5BA1\u8BA1\u3001suppression list', '\u57F9\u8BAD\u3001SOP\u3001\u6D4B\u8BD5\u4E0E\u6062\u590D\u8BF4\u660E'],
         en: ['Data-flow design and field dictionary', 'Encrypted local contact store', 'CSV import, validation and deduplication', 'Deterministic region, channel, consent and suppression filtering', 'AI drafting without personal data', 'Human approval, audit and suppression workflow', 'Training, SOP, testing and recovery guide']
       },
       acceptance: {
-        zh: ['测试资料可以正确导入、去重和筛选', '临床字段被拒绝或忽略', 'AI 请求中不出现身份字段', '未经审批不能发送；无适当同意记录被 suppression', '退订和发送失败可记录', '设备加密、权限、备份与恢复通过测试'],
+        zh: ['\u6D4B\u8BD5\u8D44\u6599\u53EF\u4EE5\u6B63\u786E\u5BFC\u5165\u3001\u53BB\u91CD\u548C\u7B5B\u9009', '\u4E34\u5E8A\u5B57\u6BB5\u88AB\u62D2\u7EDD\u6216\u5FFD\u7565', 'AI \u8BF7\u6C42\u4E2D\u4E0D\u51FA\u73B0\u8EAB\u4EFD\u5B57\u6BB5', '\u672A\u7ECF\u5BA1\u6279\u4E0D\u80FD\u53D1\u9001\uFF1B\u65E0\u9002\u5F53\u540C\u610F\u8BB0\u5F55\u88AB suppression', '\u9000\u8BA2\u548C\u53D1\u9001\u5931\u8D25\u53EF\u8BB0\u5F55', '\u8BBE\u5907\u52A0\u5BC6\u3001\u6743\u9650\u3001\u5907\u4EFD\u4E0E\u6062\u590D\u901A\u8FC7\u6D4B\u8BD5'],
         en: ['Test data imports, deduplicates and filters correctly', 'Clinical fields are rejected or ignored', 'No identity field appears in an AI request', 'Sending is impossible without approval; ineligible records are suppressed', 'Delivery failure and unsubscribe status can be recorded', 'Encryption, access, backup and recovery are tested']
       },
       boundary: {
-        zh: '启用 SMS/Email 前必须完成：Andrew 书面确认每类通讯的合法依据；可靠同意/退订信息可从 Helix 获取；澳洲隐私专业人士确认处理规则；每条商业通讯包含退订机制；Andrew 批准最终模板和收件名单。',
+        zh: '\u542F\u7528 SMS/Email \u524D\u5FC5\u987B\u5B8C\u6210\uFF1AAndrew \u4E66\u9762\u786E\u8BA4\u6BCF\u7C7B\u901A\u8BAF\u7684\u5408\u6CD5\u4F9D\u636E\uFF1B\u53EF\u9760\u540C\u610F/\u9000\u8BA2\u4FE1\u606F\u53EF\u4ECE Helix \u83B7\u53D6\uFF1B\u6FB3\u6D32\u9690\u79C1\u4E13\u4E1A\u4EBA\u58EB\u786E\u8BA4\u5904\u7406\u89C4\u5219\uFF1B\u6BCF\u6761\u5546\u4E1A\u901A\u8BAF\u5305\u542B\u9000\u8BA2\u673A\u5236\uFF1BAndrew \u6279\u51C6\u6700\u7EC8\u6A21\u677F\u548C\u6536\u4EF6\u540D\u5355\u3002',
         en: 'Before production SMS/email: Andrew must document the legal basis for each communication category; reliable consent/opt-out data must be available; an Australian privacy professional must confirm treatment rules; each commercial message must include unsubscribe; Andrew must approve the final template and each recipient list.'
       }
     }
@@ -794,63 +1064,63 @@ const ITEMS = [
   {
     id: 'sms', type: 'oneoff', price: 2600,
     ref: { zh: 'A7', en: 'A7' },
-    name: { zh: 'SMS Provider 接入', en: 'SMS Provider Integration' },
+    name: { zh: 'SMS Provider \u63A5\u5165', en: 'SMS Provider Integration' },
     sub: 'One approved SMS provider, templates, opt-out and failure status',
     preselected: false,
     detail: {
-      objective: { zh: '接入一套获批短信 Provider，提供模板、退订和失败状态追踪。', en: 'Integrate one approved SMS provider with templates, opt-out handling and failure status tracking.' },
-      deliverables: { zh: ['SMS Provider 连接与配置', '消息模板系统', '退订与失败状态记录'], en: ['SMS provider connection and configuration', 'Message template system', 'Opt-out and failure status recording'] },
-      acceptance: { zh: ['测试消息可成功发送到测试号码', '退订状态正确更新', '发送失败有记录'], en: ['Test message can be sent to a test number', 'Opt-out status is correctly updated', 'Delivery failures are recorded'] },
-      boundary: { zh: 'A7 仅在 AI 核心版（A1–A6, A10）已选择时才可实施。SMS 订阅和用量费由 Andrew 直接支付。', en: 'A7 can only be implemented if the core AI system (A1–A6, A10) is selected. SMS subscription and usage charges are paid directly by Andrew.' }
+      objective: { zh: '\u63A5\u5165\u4E00\u5957\u83B7\u6279\u77ED\u4FE1 Provider\uFF0C\u63D0\u4F9B\u6A21\u677F\u3001\u9000\u8BA2\u548C\u5931\u8D25\u72B6\u6001\u8FFD\u8E2A\u3002', en: 'Integrate one approved SMS provider with templates, opt-out handling and failure status tracking.' },
+      deliverables: { zh: ['SMS Provider \u8FDE\u63A5\u4E0E\u914D\u7F6E', '\u6D88\u606F\u6A21\u677F\u7CFB\u7EDF', '\u9000\u8BA2\u4E0E\u5931\u8D25\u72B6\u6001\u8BB0\u5F55'], en: ['SMS provider connection and configuration', 'Message template system', 'Opt-out and failure status recording'] },
+      acceptance: { zh: ['\u6D4B\u8BD5\u6D88\u606F\u53EF\u6210\u529F\u53D1\u9001\u5230\u6D4B\u8BD5\u53F7\u7801', '\u9000\u8BA2\u72B6\u6001\u6B63\u786E\u66F4\u65B0', '\u53D1\u9001\u5931\u8D25\u6709\u8BB0\u5F55'], en: ['Test message can be sent to a test number', 'Opt-out status is correctly updated', 'Delivery failures are recorded'] },
+      boundary: { zh: 'A7 \u4EC5\u5728 AI \u6838\u5FC3\u7248\uFF08A1\u2013A6, A10\uFF09\u5DF2\u9009\u62E9\u65F6\u624D\u53EF\u5B9E\u65BD\u3002SMS \u8BA2\u9605\u548C\u7528\u91CF\u8D39\u7531 Andrew \u76F4\u63A5\u652F\u4ED8\u3002', en: 'A7 can only be implemented if the core AI system (A1\u2013A6, A10) is selected. SMS subscription and usage charges are paid directly by Andrew.' }
     }
   },
   {
     id: 'email', type: 'oneoff', price: 1900,
     ref: { zh: 'A8', en: 'A8' },
-    name: { zh: 'Email Provider 接入', en: 'Email Provider Integration' },
+    name: { zh: 'Email Provider \u63A5\u5165', en: 'Email Provider Integration' },
     sub: 'One approved email provider, unsubscribe and SPF/DKIM/DMARC',
     preselected: false,
     detail: {
-      objective: { zh: '接入一套获批 Email Provider，提供退订和 SPF/DKIM/DMARC 配置。', en: 'Integrate one approved email provider with unsubscribe and SPF/DKIM/DMARC configuration.' },
-      deliverables: { zh: ['Email Provider 连接与配置', 'SPF/DKIM/DMARC 设置', '退订机制'], en: ['Email provider connection and configuration', 'SPF/DKIM/DMARC setup', 'Unsubscribe mechanism'] },
-      acceptance: { zh: ['测试邮件可成功发送', '退订链接正常运作', 'SPF/DKIM/DMARC 验证通过'], en: ['Test email can be sent successfully', 'Unsubscribe link functions correctly', 'SPF/DKIM/DMARC verification passes'] },
-      boundary: { zh: 'A8 仅在 AI 核心版已选择时才可实施。Email 订阅和用量费由 Andrew 直接支付。', en: 'A8 can only be implemented if the core AI system is selected. Email subscription and usage charges are paid directly by Andrew.' }
+      objective: { zh: '\u63A5\u5165\u4E00\u5957\u83B7\u6279 Email Provider\uFF0C\u63D0\u4F9B\u9000\u8BA2\u548C SPF/DKIM/DMARC \u914D\u7F6E\u3002', en: 'Integrate one approved email provider with unsubscribe and SPF/DKIM/DMARC configuration.' },
+      deliverables: { zh: ['Email Provider \u8FDE\u63A5\u4E0E\u914D\u7F6E', 'SPF/DKIM/DMARC \u8BBE\u7F6E', '\u9000\u8BA2\u673A\u5236'], en: ['Email provider connection and configuration', 'SPF/DKIM/DMARC setup', 'Unsubscribe mechanism'] },
+      acceptance: { zh: ['\u6D4B\u8BD5\u90AE\u4EF6\u53EF\u6210\u529F\u53D1\u9001', '\u9000\u8BA2\u94FE\u63A5\u6B63\u5E38\u8FD0\u4F5C', 'SPF/DKIM/DMARC \u9A8C\u8BC1\u901A\u8FC7'], en: ['Test email can be sent successfully', 'Unsubscribe link functions correctly', 'SPF/DKIM/DMARC verification passes'] },
+      boundary: { zh: 'A8 \u4EC5\u5728 AI \u6838\u5FC3\u7248\u5DF2\u9009\u62E9\u65F6\u624D\u53EF\u5B9E\u65BD\u3002Email \u8BA2\u9605\u548C\u7528\u91CF\u8D39\u7531 Andrew \u76F4\u63A5\u652F\u4ED8\u3002', en: 'A8 can only be implemented if the core AI system is selected. Email subscription and usage charges are paid directly by Andrew.' }
     }
   },
   {
     id: 'report', type: 'oneoff', price: 1200,
     ref: { zh: 'A9', en: 'A9' },
-    name: { zh: '汇总报告与导出', en: 'Aggregate Reporting & Export' },
+    name: { zh: '\u6C47\u603B\u62A5\u544A\u4E0E\u5BFC\u51FA', en: 'Aggregate Reporting & Export' },
     sub: 'Send, success/failure and opt-out counts by activity; no individual profiling',
     preselected: false,
     detail: {
-      objective: { zh: '提供发送量、成功/失败、退订和活动级汇总报表；不做个人画像。', en: 'Provide aggregate reports on send volume, success/failure and opt-out counts by activity. No individual profiling.' },
-      deliverables: { zh: ['活动级汇总报表', '成功/失败/退订统计', '数据导出功能'], en: ['Activity-level aggregate reports', 'Success/failure/opt-out statistics', 'Data export functionality'] },
-      acceptance: { zh: ['报表数据与实际发送记录一致', '导出格式正确', '不含个人身份信息'], en: ['Report data matches actual send records', 'Export format is correct', 'No personal identity information included'] },
-      boundary: { zh: '仅做聚合统计，不做个人画像或行为追踪。', en: 'Aggregated statistics only. No individual profiling or behaviour tracking.' }
+      objective: { zh: '\u63D0\u4F9B\u53D1\u9001\u91CF\u3001\u6210\u529F/\u5931\u8D25\u3001\u9000\u8BA2\u548C\u6D3B\u52A8\u7EA7\u6C47\u603B\u62A5\u8868\uFF1B\u4E0D\u505A\u4E2A\u4EBA\u753B\u50CF\u3002', en: 'Provide aggregate reports on send volume, success/failure and opt-out counts by activity. No individual profiling.' },
+      deliverables: { zh: ['\u6D3B\u52A8\u7EA7\u6C47\u603B\u62A5\u8868', '\u6210\u529F/\u5931\u8D25/\u9000\u8BA2\u7EDF\u8BA1', '\u6570\u636E\u5BFC\u51FA\u529F\u80FD'], en: ['Activity-level aggregate reports', 'Success/failure/opt-out statistics', 'Data export functionality'] },
+      acceptance: { zh: ['\u62A5\u8868\u6570\u636E\u4E0E\u5B9E\u9645\u53D1\u9001\u8BB0\u5F55\u4E00\u81F4', '\u5BFC\u51FA\u683C\u5F0F\u6B63\u786E', '\u4E0D\u542B\u4E2A\u4EBA\u8EAB\u4EFD\u4FE1\u606F'], en: ['Report data matches actual send records', 'Export format is correct', 'No personal identity information included'] },
+      boundary: { zh: '\u4EC5\u505A\u805A\u5408\u7EDF\u8BA1\uFF0C\u4E0D\u505A\u4E2A\u4EBA\u753B\u50CF\u6216\u884C\u4E3A\u8FFD\u8E2A\u3002', en: 'Aggregated statistics only. No individual profiling or behaviour tracking.' }
     }
   },
   {
     id: 'workbuddy', type: 'oneoff', price: 7600,
-    ref: { zh: 'B1–B6', en: 'B1–B6' },
-    name: { zh: 'WorkBuddy 网站维护与部署工作台', en: 'WorkBuddy Website Editing & Deployment Workspace' },
-    sub: 'B1 Install $650 · B2 Accounts $650 · B3 Edit Skill $2,400 · B4 Git+Render $1,800 · B5 Provider Config $1,200 · B6 Training $900',
+    ref: { zh: 'B1\u2013B6', en: 'B1\u2013B6' },
+    name: { zh: 'WorkBuddy \u7F51\u7AD9\u7EF4\u62A4\u4E0E\u90E8\u7F72\u5DE5\u4F5C\u53F0', en: 'WorkBuddy Website Editing & Deployment Workspace' },
+    sub: 'B1 Install $650 \u00B7 B2 Accounts $650 \u00B7 B3 Edit Skill $2,400 \u00B7 B4 Git+Render $1,800 \u00B7 B5 Provider Config $1,200 \u00B7 B6 Training $900',
     preselected: false,
     detail: {
       objective: {
-        zh: '让 Andrew 可以用自然语言提出网站修改，但不能绕过代码审查、医学审批或发布控制。修改 → staging 预览 → Andrew 审批 → 一键 production。',
-        en: 'Allow Andrew to request website changes in natural language without bypassing code checks, medical review or release controls. Change → staging preview → Andrew approval → one-click production.'
+        zh: '\u8BA9 Andrew \u53EF\u4EE5\u7528\u81EA\u7136\u8BED\u8A00\u63D0\u51FA\u7F51\u7AD9\u4FEE\u6539\uFF0C\u4F46\u4E0D\u80FD\u7ED5\u8FC7\u4EE3\u7801\u5BA1\u67E5\u3001\u533B\u5B66\u5BA1\u6279\u6216\u53D1\u5E03\u63A7\u5236\u3002\u4FEE\u6539 \u2192 staging \u9884\u89C8 \u2192 Andrew \u5BA1\u6279 \u2192 \u4E00\u952E production\u3002',
+        en: 'Allow Andrew to request website changes in natural language without bypassing code checks, medical review or release controls. Change \u2192 staging preview \u2192 Andrew approval \u2192 one-click production.'
       },
       deliverables: {
-        zh: ['Windows 11 WorkBuddy 安装与验证', '账号和 Token 安全管理', '仅限网站 repo 的定制编辑技能', 'Git + Render staging/production 流程', '预约/付款 Provider 配置', '培训、UAT 与 SOP'],
+        zh: ['Windows 11 WorkBuddy \u5B89\u88C5\u4E0E\u9A8C\u8BC1', '\u8D26\u53F7\u548C Token \u5B89\u5168\u7BA1\u7406', '\u4EC5\u9650\u7F51\u7AD9 repo \u7684\u5B9A\u5236\u7F16\u8F91\u6280\u80FD', 'Git + Render staging/production \u6D41\u7A0B', '\u9884\u7EA6/\u4ED8\u6B3E Provider \u914D\u7F6E', '\u57F9\u8BAD\u3001UAT \u4E0E SOP'],
         en: ['Windows 11 WorkBuddy installation and verification', 'Secure account and token management', 'Website-only custom editing skill', 'Git + Render staging/production pipeline', 'Booking/payment provider configuration', 'Training, UAT and SOP']
       },
       acceptance: {
-        zh: ['Andrew 能在培训场景中修改一个页面', '修改先进入 staging，production 需单独批准', '构建失败可回到上一个稳定版本', 'Token 未出现在代码库或日志'],
+        zh: ['Andrew \u80FD\u5728\u57F9\u8BAD\u573A\u666F\u4E2D\u4FEE\u6539\u4E00\u4E2A\u9875\u9762', '\u4FEE\u6539\u5148\u8FDB\u5165 staging\uFF0Cproduction \u9700\u5355\u72EC\u6279\u51C6', '\u6784\u5EFA\u5931\u8D25\u53EF\u56DE\u5230\u4E0A\u4E00\u4E2A\u7A33\u5B9A\u7248\u672C', 'Token \u672A\u51FA\u73B0\u5728\u4EE3\u7801\u5E93\u6216\u65E5\u5FD7'],
         en: ['Andrew can update one page during training', 'Every change first reaches staging; production requires separate approval', 'Build failure returns to the prior stable version', 'Tokens are absent from source control and logs']
       },
       boundary: {
-        zh: 'WorkBuddy 不连接 Helix 临床数据库、不读取患者名单，也不存储卡资料。不允许直接从聊天自动发布至 production。"一键部署"指受控审批后的一步操作。',
+        zh: 'WorkBuddy \u4E0D\u8FDE\u63A5 Helix \u4E34\u5E8A\u6570\u636E\u5E93\u3001\u4E0D\u8BFB\u53D6\u60A3\u8005\u540D\u5355\uFF0C\u4E5F\u4E0D\u5B58\u50A8\u5361\u8D44\u6599\u3002\u4E0D\u5141\u8BB8\u76F4\u63A5\u4ECE\u804A\u5929\u81EA\u52A8\u53D1\u5E03\u81F3 production\u3002\u201C\u4E00\u952E\u90E8\u7F72\u201D\u6307\u53D7\u63A7\u5BA1\u6279\u540E\u7684\u4E00\u6B65\u64CD\u4F5C\u3002',
         en: 'WorkBuddy will not connect to Helix clinical records, patient contact lists or card data. No direct chat-to-production publishing. "One-click deployment" means one action after controlled approval.'
       }
     }
@@ -858,24 +1128,24 @@ const ITEMS = [
   {
     id: 'k0', type: 'oneoff', price: 2000,
     ref: { zh: 'K0', en: 'K0' },
-    name: { zh: '知识计划 K0（先行可行性）', en: 'Knowledge Program K0 (Feasibility Gate)' },
-    sub: 'Feasibility, claim/evidence and regulatory scope; risk register; go/no-go report · 4–6 weeks',
+    name: { zh: '\u77E5\u8BC6\u8BA1\u5212 K0\uFF08\u5148\u884C\u53EF\u884C\u6027\uFF09', en: 'Knowledge Program K0 (Feasibility Gate)' },
+    sub: 'Feasibility, claim/evidence and regulatory scope; risk register; go/no-go report \u00B7 4\u20136 weeks',
     preselected: false,
     detail: {
       objective: {
-        zh: '评估知识商业化的可行性：定义服务、目标人群、证据、处方药/器械/激光涉及范围、广告限制、保险及风险；形成 go/no-go 报告。',
+        zh: '\u8BC4\u4F30\u77E5\u8BC6\u5546\u4E1A\u5316\u7684\u53EF\u884C\u6027\uFF1A\u5B9A\u4E49\u670D\u52A1\u3001\u76EE\u6807\u4EBA\u7FA4\u3001\u8BC1\u636E\u3001\u5904\u65B9\u836F/\u5668\u68B0/\u6FC0\u5149\u6D89\u53CA\u8303\u56F4\u3001\u5E7F\u544A\u9650\u5236\u3001\u4FDD\u9669\u53CA\u98CE\u9669\uFF1B\u5F62\u6210 go/no-go \u62A5\u544A\u3002',
         en: 'Assess knowledge commercialisation feasibility: define the proposed service, target population, evidence, prescription medicine/device/laser elements, advertising limits, insurance and key risks; produce a go/no-go report.'
       },
       deliverables: {
-        zh: ['可行性与监管范围报告', '风险清单', 'go/no-go 决策报告'],
+        zh: ['\u53EF\u884C\u6027\u4E0E\u76D1\u7BA1\u8303\u56F4\u62A5\u544A', '\u98CE\u9669\u6E05\u5355', 'go/no-go \u51B3\u7B56\u62A5\u544A'],
         en: ['Feasibility and regulatory scope report', 'Risk register', 'Go/no-go decision report']
       },
       acceptance: {
-        zh: ['报告覆盖约定范围的所有风险和监管问题', 'Andrew 对 go/no-go 结论做出书面决定'],
+        zh: ['\u62A5\u544A\u8986\u76D6\u7EA6\u5B9A\u8303\u56F4\u7684\u6240\u6709\u98CE\u9669\u548C\u76D1\u7BA1\u95EE\u9898', 'Andrew \u5BF9 go/no-go \u7ED3\u8BBA\u505A\u51FA\u4E66\u9762\u51B3\u5B9A'],
         en: ['Report covers all agreed risk and regulatory items', 'Andrew makes a written decision on the go/no-go conclusion']
       },
       boundary: {
-        zh: 'K0 完成不承诺最终产品可推广或可注册。Andrew 可以完成 K0 后停止，不需要承诺后续 $47,500。付款：签约付 50%，交付报告付 50%。',
+        zh: 'K0 \u5B8C\u6210\u4E0D\u627F\u8BFA\u6700\u7EC8\u4EA7\u54C1\u53EF\u63A8\u5E7F\u6216\u53EF\u6CE8\u518C\u3002Andrew \u53EF\u4EE5\u5B8C\u6210 K0 \u540E\u505C\u6B62\uFF0C\u4E0D\u9700\u8981\u627F\u8BFA\u540E\u7EED $47,500\u3002\u4ED8\u6B3E\uFF1A\u7B7E\u7EA6\u4ED8 50%\uFF0C\u4EA4\u4ED8\u62A5\u544A\u4ED8 50%\u3002',
         en: 'Completing K0 does not promise the proposed service can be marketed, registered or franchised. Andrew may stop after K0 with no obligation to commit the remaining $47,500. Payment: 50% on signing, 50% on report delivery.'
       }
     }
@@ -885,89 +1155,86 @@ const ITEMS = [
     id: 'care-std', type: 'monthly', price: 290,
     ref: { zh: '', en: '' },
     name: { zh: 'Website Care Standard', en: 'Website Care Standard' },
-    sub: 'Daily backup · SSL/uptime monitoring · Monthly booking/payment check · Broken link scan · Monthly report · 1hr support/mo',
+    sub: 'Daily backup \u00B7 SSL/uptime monitoring \u00B7 Monthly booking/payment check \u00B7 Broken link scan \u00B7 Monthly report \u00B7 1hr support/mo',
     preselected: false,
     detail: {
-      objective: { zh: '网站日常维护套餐：每日备份、SSL/运行监测、月度预约/付款入口检查、断链/性能检查、月度报告、每月 1 小时支持。', en: 'Routine website care: daily backup, SSL/uptime monitoring, monthly booking/payment entry-point test, broken-link/performance check, monthly report, 1 hour of minor edits/support per month.' },
-      deliverables: { zh: ['每日代码/内容备份', 'SSL、运行和依赖监测', '月度预约/付款入口检查', '断链和基础性能检查', '月度维护报告', '每月 1 小时小修改/支持'], en: ['Daily repository/content snapshot', 'SSL, uptime and dependency monitoring', 'Monthly booking/payment entry-point test', 'Broken-link and basic performance check', 'Monthly maintenance report', '1 hour of minor edits/support per month'] },
-      acceptance: { zh: ['备份可恢复', '月度报告按时提交'], en: ['Backup is restorable', 'Monthly report delivered on time'] },
-      boundary: { zh: '仅覆盖网站代码、公开内容和配置。Helix/预约/付款 Provider 的数据由各自备份。建议至少 6 个月；按月预付，30 天书面通知可取消。', en: 'Covers only website code, public content and configuration. Helix/booking/payment provider data remains under their backup arrangements. Recommended minimum six months; cancellable on 30 days\' written notice.' }
+      objective: { zh: '\u7F51\u7AD9\u65E5\u5E38\u7EF4\u62A4\u5957\u9910\uFF1A\u6BCF\u65E5\u5907\u4EFD\u3001SSL/\u8FD0\u884C\u76D1\u6D4B\u3001\u6708\u5EA6\u9884\u7EA6/\u4ED8\u6B3E\u5165\u53E3\u68C0\u67E5\u3001\u65AD\u94FE/\u6027\u80FD\u68C0\u67E5\u3001\u6708\u5EA6\u62A5\u544A\u3001\u6BCF\u6708 1 \u5C0F\u65F6\u652F\u6301\u3002', en: 'Routine website care: daily backup, SSL/uptime monitoring, monthly booking/payment entry-point test, broken-link/performance check, monthly report, 1 hour of minor edits/support per month.' },
+      deliverables: { zh: ['\u6BCF\u65E5\u4EE3\u7801/\u5185\u5BB9\u5907\u4EFD', 'SSL\u3001\u8FD0\u884C\u548C\u4F9D\u8D56\u76D1\u6D4B', '\u6708\u5EA6\u9884\u7EA6/\u4ED8\u6B3E\u5165\u53E3\u68C0\u67E5', '\u65AD\u94FE\u548C\u57FA\u7840\u6027\u80FD\u68C0\u67E5', '\u6708\u5EA6\u7EF4\u62A4\u62A5\u544A', '\u6BCF\u6708 1 \u5C0F\u65F6\u5C0F\u4FEE\u6539/\u652F\u6301'], en: ['Daily repository/content snapshot', 'SSL, uptime and dependency monitoring', 'Monthly booking/payment entry-point test', 'Broken-link and basic performance check', 'Monthly maintenance report', '1 hour of minor edits/support per month'] },
+      acceptance: { zh: ['\u5907\u4EFD\u53EF\u6062\u590D', '\u6708\u5EA6\u62A5\u544A\u6309\u65F6\u63D0\u4EA4'], en: ['Backup is restorable', 'Monthly report delivered on time'] },
+      boundary: { zh: '\u4EC5\u8986\u76D6\u7F51\u7AD9\u4EE3\u7801\u3001\u516C\u5F00\u5185\u5BB9\u548C\u914D\u7F6E\u3002Helix/\u9884\u7EA6/\u4ED8\u6B3E Provider \u7684\u6570\u636E\u7531\u5404\u81EA\u5907\u4EFD\u3002\u5EFA\u8BAE\u81F3\u5C11 6 \u4E2A\u6708\uFF1B\u6309\u6708\u9884\u4ED8\uFF0C30 \u5929\u4E66\u9762\u901A\u77E5\u53EF\u53D6\u6D88\u3002', en: 'Covers only website code, public content and configuration. Helix/booking/payment provider data remains under their backup arrangements. Recommended minimum six months; cancellable on 30 days\' written notice.' }
     }
   },
   {
     id: 'care-plus', type: 'monthly', price: 490,
     ref: { zh: '', en: '' },
     name: { zh: 'Website Care Plus', en: 'Website Care Plus' },
-    sub: 'All Standard services · 3hr support/mo · GA4/Search Console summary · Up to 2 content releases/mo · Higher priority',
+    sub: 'All Standard services \u00B7 3hr support/mo \u00B7 GA4/Search Console summary \u00B7 Up to 2 content releases/mo \u00B7 Higher priority',
     preselected: false,
     detail: {
-      objective: { zh: '增强网站维护套餐：Standard 全部 + 每月 3 小时支持 + GA4/搜索摘要 + 每月 2 次内容发布 + 优先级提高。', en: 'Enhanced website care: all Standard services + 3 hours of minor editing/design support per month + GA4/Search Console summary + up to two template-based content releases per month + higher priority.' },
-      deliverables: { zh: ['Standard 全部内容', '每月 3 小时小修改/设计支持', 'GA4/Search Console 摘要', '每月最多 2 次模板内内容发布', '优先级提高'], en: ['All Standard services', '3 hours of minor editing/design support per month', 'GA4/Search Console summary', 'Up to two template-based content releases per month', 'Higher priority'] },
-      acceptance: { zh: ['所有 Standard 验收条件通过', 'GA4 数据可访问'], en: ['All Standard acceptance criteria pass', 'GA4 data is accessible'] },
-      boundary: { zh: '同 Standard 边界。额外支持时间不结转。', en: 'Same boundaries as Standard. Unused support time does not roll over.' }
+      objective: { zh: '\u589E\u5F3A\u7F51\u7AD9\u7EF4\u62A4\u5957\u9910\uFF1AStandard \u5168\u90E8 + \u6BCF\u6708 3 \u5C0F\u65F6\u652F\u6301 + GA4/\u641C\u7D22\u6458\u8981 + \u6BCF\u6708 2 \u6B21\u5185\u5BB9\u53D1\u5E03 + \u4F18\u5148\u7EA7\u63D0\u9AD8\u3002', en: 'Enhanced website care: all Standard services + 3 hours of minor editing/design support per month + GA4/Search Console summary + up to two template-based content releases per month + higher priority.' },
+      deliverables: { zh: ['Standard \u5168\u90E8\u5185\u5BB9', '\u6BCF\u6708 3 \u5C0F\u65F6\u5C0F\u4FEE\u6539/\u8BBE\u8BA1\u652F\u6301', 'GA4/Search Console \u6458\u8981', '\u6BCF\u6708\u6700\u591A 2 \u6B21\u6A21\u677F\u5185\u5185\u5BB9\u53D1\u5E03', '\u4F18\u5148\u7EA7\u63D0\u9AD8'], en: ['All Standard services', '3 hours of minor editing/design support per month', 'GA4/Search Console summary', 'Up to two template-based content releases per month', 'Higher priority'] },
+      acceptance: { zh: ['\u6240\u6709 Standard \u9A8C\u6536\u6761\u4EF6\u901A\u8FC7', 'GA4 \u6570\u636E\u53EF\u8BBF\u95EE'], en: ['All Standard acceptance criteria pass', 'GA4 data is accessible'] },
+      boundary: { zh: '\u540C Standard \u8FB9\u754C\u3002\u989D\u5916\u652F\u6301\u65F6\u95F4\u4E0D\u7ED3\u8F6C\u3002', en: 'Same boundaries as Standard. Unused support time does not roll over.' }
     }
   },
   {
     id: 'care-combined', type: 'monthly', price: 850,
     ref: { zh: '', en: '' },
     name: { zh: 'Combined Digital Operations Care', en: 'Combined Digital Operations Care' },
-    sub: 'Website Standard + AI Assistant Care + WorkBuddy Care · Up to 4hr support/mo',
+    sub: 'Website Standard + AI Assistant Care + WorkBuddy Care \u00B7 Up to 4hr support/mo',
     preselected: false,
     detail: {
-      objective: { zh: '综合运维套餐：网站 Standard + AI 助手维护 + WorkBuddy 部署维护；每月最多 4 小时支持。', en: 'Combined operations care: Website Standard + AI Assistant Care + WorkBuddy Deployment Care; up to 4 total hours of minor edits/support per month.' },
-      deliverables: { zh: ['网站 Standard 全部', 'AI 核心程序更新与成本监测', 'WorkBuddy Skill/Pipeline 检查', '每月最多 4 小时支持'], en: ['All Website Standard services', 'AI core application updates and cost monitoring', 'WorkBuddy skill/pipeline health checks', 'Up to 4 total hours of support per month'] },
-      acceptance: { zh: ['所有子服务验收条件通过'], en: ['All sub-service acceptance criteria pass'] },
-      boundary: { zh: '未使用支持时间不结转。第三方订阅、SMS、Email、AI token 和交易费另计。', en: 'Unused support time does not roll over. Third-party subscriptions, SMS, email, AI tokens and transaction charges are excluded.' }
+      objective: { zh: '\u7EFC\u5408\u8FD0\u7EF4\u5957\u9910\uFF1A\u7F51\u7AD9 Standard + AI \u52A9\u624B\u7EF4\u62A4 + WorkBuddy \u90E8\u7F72\u7EF4\u62A4\uFF1B\u6BCF\u6708\u6700\u591A 4 \u5C0F\u65F6\u652F\u6301\u3002', en: 'Combined operations care: Website Standard + AI Assistant Care + WorkBuddy Deployment Care; up to 4 total hours of minor edits/support per month.' },
+      deliverables: { zh: ['\u7F51\u7AD9 Standard \u5168\u90E8', 'AI \u6838\u5FC3\u7A0B\u5E8F\u66F4\u65B0\u4E0E\u6210\u672C\u76D1\u6D4B', 'WorkBuddy Skill/Pipeline \u68C0\u67E5', '\u6BCF\u6708\u6700\u591A 4 \u5C0F\u65F6\u652F\u6301'], en: ['All Website Standard services', 'AI core application updates and cost monitoring', 'WorkBuddy skill/pipeline health checks', 'Up to 4 total hours of support per month'] },
+      acceptance: { zh: ['\u6240\u6709\u5B50\u670D\u52A1\u9A8C\u6536\u6761\u4EF6\u901A\u8FC7'], en: ['All sub-service acceptance criteria pass'] },
+      boundary: { zh: '\u672A\u4F7F\u7528\u652F\u6301\u65F6\u95F4\u4E0D\u7ED3\u8F6C\u3002\u7B2C\u4E09\u65B9\u8BA2\u9605\u3001SMS\u3001Email\u3001AI token \u548C\u4EA4\u6613\u8D39\u53E6\u8BA1\u3002', en: 'Unused support time does not roll over. Third-party subscriptions, SMS, email, AI tokens and transaction charges are excluded.' }
     }
   },
   {
     id: 'care-comms', type: 'monthly', price: 990,
     ref: { zh: '', en: '' },
     name: { zh: 'Combined Care with Communications', en: 'Combined Care with Communications' },
-    sub: 'Website Standard + AI Communications Care + WorkBuddy Care · Up to 5hr support/mo',
+    sub: 'Website Standard + AI Communications Care + WorkBuddy Care \u00B7 Up to 5hr support/mo',
     preselected: false,
     detail: {
-      objective: { zh: '含通讯的综合运维套餐：网站 Standard + AI 通讯维护（含 SMS/Email） + WorkBuddy 部署维护；每月最多 5 小时支持。', en: 'Combined care with communications: Website Standard + AI Communications Care (incl. SMS/email) + WorkBuddy Deployment Care; up to 5 total hours of support per month.' },
-      deliverables: { zh: ['网站 Standard 全部', 'AI 通讯维护（含 SMS/Email connector）', 'WorkBuddy Skill/Pipeline 检查', '每月最多 5 小时支持'], en: ['All Website Standard services', 'AI communications care incl. SMS/email connector health', 'WorkBuddy skill/pipeline health checks', 'Up to 5 total hours of support per month'] },
-      acceptance: { zh: ['所有子服务验收条件通过', 'SMS/Email connector 健康检查正常'], en: ['All sub-service acceptance criteria pass', 'SMS/email connector health check passes'] },
-      boundary: { zh: 'SMS/Email 用量费另计。其余同 Combined Digital Operations Care。', en: 'SMS/email usage charges excluded. Otherwise same as Combined Digital Operations Care.' }
+      objective: { zh: '\u542B\u901A\u8BAF\u7684\u7EFC\u5408\u8FD0\u7EF4\u5957\u9910\uFF1A\u7F51\u7AD9 Standard + AI \u901A\u8BAF\u7EF4\u62A4\uFF08\u542B SMS/Email\uFF09 + WorkBuddy \u90E8\u7F72\u7EF4\u62A4\uFF1B\u6BCF\u6708\u6700\u591A 5 \u5C0F\u65F6\u652F\u6301\u3002', en: 'Combined care with communications: Website Standard + AI Communications Care (incl. SMS/email) + WorkBuddy Deployment Care; up to 5 total hours of support per month.' },
+      deliverables: { zh: ['\u7F51\u7AD9 Standard \u5168\u90E8', 'AI \u901A\u8BAF\u7EF4\u62A4\uFF08\u542B SMS/Email connector\uFF09', 'WorkBuddy Skill/Pipeline \u68C0\u67E5', '\u6BCF\u6708\u6700\u591A 5 \u5C0F\u65F6\u652F\u6301'], en: ['All Website Standard services', 'AI communications care incl. SMS/email connector health', 'WorkBuddy skill/pipeline health checks', 'Up to 5 total hours of support per month'] },
+      acceptance: { zh: ['\u6240\u6709\u5B50\u670D\u52A1\u9A8C\u6536\u6761\u4EF6\u901A\u8FC7', 'SMS/Email connector \u5065\u5EB7\u68C0\u67E5\u6B63\u5E38'], en: ['All sub-service acceptance criteria pass', 'SMS/email connector health check passes'] },
+      boundary: { zh: 'SMS/Email \u7528\u91CF\u8D39\u53E6\u8BA1\u3002\u5176\u4F59\u540C Combined Digital Operations Care\u3002', en: 'SMS/email usage charges excluded. Otherwise same as Combined Digital Operations Care.' }
     }
   }
 ];
 
+// ===== CONSTANTS =====
+const GST_RATE = 0.10;
+
 // ===== STATE =====
 let selectedItems = {};
 let currentLang = localStorage.getItem('snailai-lang') || 'en';
+let clientInfo = {};
 
 // ===== LOGIN =====
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-// Pre-computed SHA-256 of "success888"
-const PASS_HASH = 'a4ae9b28e0ae9c42e6e7a8f8e7f6e5e4d3d2d1d0c9c8c7c6c5c4c3c2c1c0b9b8b7b6b5'; // placeholder
-
 document.getElementById('login-btn').addEventListener('click', doLogin);
-document.getElementById('login-user').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('login-user').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
+document.getElementById('login-pass').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
 
 async function doLogin() {
-  const user = document.getElementById('login-user').value.trim();
-  const pass = document.getElementById('login-pass').value.trim();
-  const btn = document.getElementById('login-btn');
-  const err = document.getElementById('login-error');
+  var user = document.getElementById('login-user').value.trim();
+  var pass = document.getElementById('login-pass').value.trim();
+  var btn = document.getElementById('login-btn');
+  var err = document.getElementById('login-error');
   err.style.display = 'none';
   btn.disabled = true;
   try {
-    const r = await fetch('/api/login', {
+    var r = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: user, password: pass })
     });
-    const d = await r.json();
+    var d = await r.json();
     if (r.ok && d.ok) {
       if (d.user.role !== 'customer') {
-        err.textContent = 'This account is not authorised to view this quotation. / 此账号无权查看本报价';
+        err.textContent = 'This account is not authorised to view this quotation.';
         err.style.display = 'block';
         return;
       }
@@ -979,7 +1246,7 @@ async function doLogin() {
       err.style.display = 'block';
     }
   } catch (e) {
-    err.textContent = 'Network error. Please retry. / 网络错误，请重试';
+    err.textContent = 'Network error. Please retry.';
     err.style.display = 'block';
   } finally {
     btn.disabled = false;
@@ -989,19 +1256,18 @@ async function doLogin() {
 // ===== LANGUAGE =====
 function setLang(lang) {
   currentLang = lang;
-  document.querySelectorAll('[data-zh]').forEach(el => {
-    const val = el.getAttribute('data-' + lang);
+  document.querySelectorAll('[data-zh]').forEach(function(el) {
+    var val = el.getAttribute('data-' + lang);
     if (val) el.textContent = val;
   });
-  document.querySelectorAll('.lang-btn').forEach(b => {
+  document.querySelectorAll('.lang-btn').forEach(function(b) {
     b.classList.toggle('active', b.dataset.lang === lang);
   });
   localStorage.setItem('snailai-lang', lang);
-  // Re-render items text
   renderItems();
   updateSummary();
 }
-document.addEventListener('click', e => {
+document.addEventListener('click', function(e) {
   if (e.target.classList.contains('lang-btn')) {
     setLang(e.target.dataset.lang);
   }
@@ -1012,42 +1278,59 @@ function fmtPrice(n) {
   return '$' + n.toLocaleString('en-AU');
 }
 
+function fmtGst(subtotal) {
+  return Math.round(subtotal * GST_RATE);
+}
+function fmtInclGst(subtotal) {
+  return subtotal + fmtGst(subtotal);
+}
+
+// ===== GST 3-LINE HTML =====
+function gstBlockHtml(subtotal, label) {
+  var gst = fmtGst(subtotal);
+  var total = subtotal + gst;
+  return '<div class="gst-block">' +
+    '<div class="gst-row"><span>' + label + ' (ex GST)</span><span class="gst-val">' + fmtPrice(subtotal) + '</span></div>' +
+    '<div class="gst-row gst-line"><span>GST (10%)</span><span class="gst-val">' + fmtPrice(gst) + '</span></div>' +
+    '<div class="gst-row total-line"><span>Total (incl. GST)</span><span class="gst-val">' + fmtPrice(total) + '</span></div>' +
+  '</div>';
+}
+
 // ===== RENDER ITEMS =====
 function renderItems() {
-  const oneoffContainer = document.getElementById('oneoff-items');
-  const monthlyContainer = document.getElementById('monthly-items');
+  var oneoffContainer = document.getElementById('oneoff-items');
+  var monthlyContainer = document.getElementById('monthly-items');
   oneoffContainer.innerHTML = '';
   monthlyContainer.innerHTML = '';
 
-  ITEMS.forEach(item => {
-    const isSelected = selectedItems[item.id] || false;
-    const container = item.type === 'oneoff' ? oneoffContainer : monthlyContainer;
+  ITEMS.forEach(function(item) {
+    var isSelected = selectedItems[item.id] || false;
+    var container = item.type === 'oneoff' ? oneoffContainer : monthlyContainer;
 
-    const div = document.createElement('div');
+    var div = document.createElement('div');
     div.className = 'quote-item' + (isSelected ? ' selected' : '');
     div.dataset.id = item.id;
 
-    const refText = item.ref[currentLang] ? ` (${item.ref[currentLang]})` : '';
-    const priceStr = item.type === 'monthly'
-      ? `${fmtPrice(item.price)}<span class="per-month">/${currentLang==='zh'?'月':'mo'}</span>`
+    var refText = item.ref[currentLang] ? ' (' + item.ref[currentLang] + ')' : '';
+    var priceStr = item.type === 'monthly'
+      ? fmtPrice(item.price) + '<span class="per-month">/' + (currentLang==='zh'?'月':'mo') + '</span>'
       : fmtPrice(item.price);
 
-    div.innerHTML = `
-      <div class="checkbox"></div>
-      <div class="item-content">
-        <div class="item-top">
-          <div>
-            <div class="item-name">${item.name[currentLang]}${refText}</div>
-            <span class="item-ref">${item.sub}</span>
-          </div>
-          <div class="item-price ${item.type}">${priceStr}</div>
-        </div>
-        <a class="item-detail-link" data-zh="查看详情" data-en="View details" onclick="event.stopPropagation();showDetail('${item.id}')">${currentLang==='zh'?'查看详情':'View details'}</a>
-        ${item.detail.deliverables ? `<div class="sub-modules">${item.sub}</div>` : ''}
-      </div>
-    `;
+    div.innerHTML =
+      '<div class="checkbox"></div>' +
+      '<div class="item-content">' +
+        '<div class="item-top">' +
+          '<div>' +
+            '<div class="item-name">' + item.name[currentLang] + refText + '</div>' +
+            '<span class="item-ref">' + item.sub + '</span>' +
+          '</div>' +
+          '<div class="item-price ' + item.type + '">' + priceStr + '</div>' +
+        '</div>' +
+        '<a class="item-detail-link" onclick="event.stopPropagation();showDetail(\'' + item.id + '\')">' + (currentLang==='zh'?'查看详情':'View details') + '</a>' +
+        (item.detail.deliverables ? '<div class="sub-modules">' + item.sub + '</div>' : '') +
+      '</div>';
 
-    div.addEventListener('click', () => toggleItem(item.id));
+    div.addEventListener('click', function() { toggleItem(item.id); });
     container.appendChild(div);
   });
 }
@@ -1062,11 +1345,11 @@ function toggleItem(id) {
 
 // ===== SUMMARY =====
 function updateSummary() {
-  let oneoffTotal = 0;
-  let monthlyTotal = 0;
-  let depositTotal = 0;
+  var oneoffTotal = 0;
+  var monthlyTotal = 0;
+  var depositTotal = 0;
 
-  ITEMS.forEach(item => {
+  ITEMS.forEach(function(item) {
     if (selectedItems[item.id]) {
       if (item.type === 'oneoff') {
         oneoffTotal += item.price;
@@ -1082,43 +1365,69 @@ function updateSummary() {
   });
 
   document.getElementById('sum-oneoff').textContent = fmtPrice(oneoffTotal);
-  document.getElementById('sum-monthly').innerHTML = fmtPrice(monthlyTotal) + `<span style="font-size:11px;opacity:0.6">/${currentLang==='zh'?'月':'mo'}</span>`;
-  document.getElementById('sum-deposit').innerHTML = ` ${fmtPrice(depositTotal)}`;
+  document.getElementById('sum-monthly').innerHTML = fmtPrice(monthlyTotal) + '<span style="font-size:11px;opacity:0.6">/' + (currentLang==='zh'?'月':'mo') + '</span>';
+  document.getElementById('sum-deposit').innerHTML = ' ' + fmtPrice(depositTotal);
   document.getElementById('confirm-btn').disabled = (oneoffTotal + monthlyTotal) === 0;
+
+  // GST notes in summary bar
+  var L = currentLang;
+  if (oneoffTotal > 0) {
+    var oneoffGst = fmtGst(oneoffTotal);
+    var oneoffIncl = oneoffTotal + oneoffGst;
+    document.getElementById('sum-oneoff-gst').innerHTML = 'GST ' + fmtPrice(oneoffGst) + ' &middot; Incl. GST ' + fmtPrice(oneoffIncl);
+  } else {
+    document.getElementById('sum-oneoff-gst').innerHTML = '';
+  }
+
+  if (monthlyTotal > 0) {
+    var monthlyGst = fmtGst(monthlyTotal);
+    var monthlyIncl = monthlyTotal + monthlyGst;
+    document.getElementById('sum-monthly-gst').innerHTML = 'GST ' + fmtPrice(monthlyGst) + '/mo &middot; Incl. GST ' + fmtPrice(monthlyIncl) + '/mo';
+  } else {
+    document.getElementById('sum-monthly-gst').innerHTML = '';
+  }
+
+  if (depositTotal > 0) {
+    var depGst = fmtGst(depositTotal);
+    var depIncl = depositTotal + depGst;
+    document.getElementById('sum-deposit-gst').innerHTML = 'Incl. GST ' + fmtPrice(depIncl);
+  } else {
+    document.getElementById('sum-deposit-gst').innerHTML = '';
+  }
 }
 
 // ===== DETAIL PANEL =====
 function showDetail(id) {
-  const item = ITEMS.find(i => i.id === id);
+  var item = ITEMS.find(function(i) { return i.id === id; });
   if (!item || !item.detail) return;
 
-  const panel = document.getElementById('detail-panel');
-  const body = document.getElementById('detail-body');
-  const L = currentLang;
+  var panel = document.getElementById('detail-panel');
+  var body = document.getElementById('detail-body');
+  var L = currentLang;
 
-  const refText = item.ref[L] ? ` (${item.ref[L]})` : '';
-  const priceStr = item.type === 'monthly' ? `${fmtPrice(item.price)}/${L==='zh'?'月':'mo'}` : fmtPrice(item.price);
+  var refText = item.ref[L] ? ' (' + item.ref[L] + ')' : '';
+  var priceStr = item.type === 'monthly' ? fmtPrice(item.price) + '/' + (L==='zh'?'月':'mo') : fmtPrice(item.price);
 
-  let html = `<h2>${item.name[L]}${refText}</h2>`;
-  html += `<div class="detail-price">${priceStr}</div>`;
+  var html = '<h2>' + item.name[L] + refText + '</h2>';
+  html += '<div class="detail-price">' + priceStr + '</div>';
 
   if (item.detail.objective) {
-    html += `<h3 data-zh="目标" data-en="Objective">${L==='zh'?'目标':'Objective'}</h3>`;
-    html += `<p>${item.detail.objective[L]}</p>`;
+    html += '<h3>' + (L==='zh'?'目标':'Objective') + '</h3>';
+    html += '<p>' + item.detail.objective[L] + '</p>';
   }
 
   if (item.detail.deliverables) {
-    html += `<h3 data-zh="交付物" data-en="Deliverables">${L==='zh'?'交付物':'Deliverables'}</h3>`;
-    html += '<ul>' + item.detail.deliverables[L].map(d => `<li>${d}</li>`).join('') + '</ul>';
+    html += '<h3>' + (L==='zh'?'交付物':'Deliverables') + '</h3>';
+    html += '<ul>' + item.detail.deliverables[L].map(function(d) { return '<li>' + d + '</li>'; }).join('') + '</ul>';
   }
 
   if (item.detail.acceptance) {
-    html += `<h3 data-zh="验收条件" data-en="Acceptance Criteria">${L==='zh'?'验收条件':'Acceptance Criteria'}</h3>`;
-    html += '<ul>' + item.detail.acceptance[L].map(a => `<li>${a}</li>`).join('') + '</ul>';
+    html += '<h3>' + (L==='zh'?'验收条件':'Acceptance Criteria') + '</h3>';
+    html += '<ul>' + item.detail.acceptance[L].map(function(a) { return '<li>' + a + '</li>'; }).join('') + '</ul>';
   }
 
   if (item.detail.boundary) {
-    html += `<div class="boundary-box"><strong>${L==='zh'?'⚠ 责任边界':'⚠ Boundaries'}</strong><p style="margin-top:6px">${item.detail.boundary[L]}</p></div>`;
+    html += '<div class="boundary-box"><strong>' + (L==='zh'?'\u26A0 责任边界':'\u26A0 Boundaries') + '</strong><p style="margin-top:6px">' + item.detail.boundary[L] + '</p></div>';
   }
 
   body.innerHTML = html;
@@ -1126,109 +1435,285 @@ function showDetail(id) {
   document.body.style.overflow = 'hidden';
 }
 
-document.getElementById('detail-back').addEventListener('click', () => {
+document.getElementById('detail-back').addEventListener('click', function() {
   document.getElementById('detail-panel').style.display = 'none';
   document.body.style.overflow = '';
 });
 
-// ===== CONFIRM (two-step: review → submit) =====
-document.getElementById('confirm-btn').addEventListener('click', showReviewView);
-
-function showReviewView() {
-  document.getElementById('app-view').style.display = 'none';
-  const view = document.getElementById('review-view');
-  view.style.display = 'block';
-  renderReviewCard();
-  window.scrollTo(0, 0);
+// ===== ABN VALIDATION =====
+function validateABN(abn) {
+  var digits = abn.replace(/\D/g, '');
+  if (digits.length !== 11) return false;
+  var weights = [10,1,3,5,7,9,11,13,15,17,19];
+  var sum = 0;
+  for (var i = 0; i < 11; i++) {
+    var d = parseInt(digits[i]);
+    if (i === 0) d -= 1;
+    sum += d * weights[i];
+  }
+  return sum % 89 === 0;
 }
 
-// "Back to Edit" returns to main selection page
-document.getElementById('review-back-btn').addEventListener('click', () => {
-  document.getElementById('review-view').style.display = 'none';
+// ===== CLIENT-INFO VALIDATION =====
+function validateField(fieldId) {
+  var input = document.getElementById(fieldId);
+  var errEl = document.getElementById(fieldId + '-err');
+  var val = input.value.trim();
+  var error = '';
+
+  switch (fieldId) {
+    case 'ci-company':
+      if (val.length < 2) error = currentLang === 'zh' ? '至少2个字符' : 'At least 2 characters required';
+      break;
+    case 'ci-abn':
+      if (!validateABN(val)) error = currentLang === 'zh' ? '请输入有效的11位ABN' : 'Please enter a valid 11-digit ABN';
+      break;
+    case 'ci-address':
+      if (val.length < 2) error = currentLang === 'zh' ? '至少2个字符' : 'At least 2 characters required';
+      break;
+    case 'ci-contact':
+      if (val.length < 2) error = currentLang === 'zh' ? '至少2个字符' : 'At least 2 characters required';
+      break;
+    case 'ci-email':
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) error = currentLang === 'zh' ? '请输入有效的Email地址' : 'Please enter a valid email address';
+      break;
+    case 'ci-phone':
+      var phoneDigits = val.replace(/[\s\-()]/g, '');
+      if (!/^(\+614|04)\d{8}$/.test(phoneDigits)) error = currentLang === 'zh' ? '请输入有效的澳洲手机号 (04XXXXXXXX 或 +614XXXXXXXX)' : 'Please enter a valid Australian mobile (04XXXXXXXX or +614XXXXXXXX)';
+      break;
+  }
+
+  if (error) {
+    input.classList.add('ci-error');
+    errEl.textContent = error;
+    errEl.classList.add('show');
+    return false;
+  } else {
+    input.classList.remove('ci-error');
+    errEl.textContent = '';
+    errEl.classList.remove('show');
+    return true;
+  }
+}
+
+function validateAllClientInfo() {
+  var fields = ['ci-company', 'ci-abn', 'ci-address', 'ci-contact', 'ci-email', 'ci-phone'];
+  var allValid = true;
+  fields.forEach(function(f) {
+    if (!validateField(f)) allValid = false;
+  });
+  document.getElementById('ci-continue-btn').disabled = !allValid;
+  return allValid;
+}
+
+// Add blur listeners for real-time validation
+['ci-company', 'ci-abn', 'ci-address', 'ci-contact', 'ci-email', 'ci-phone'].forEach(function(fieldId) {
+  document.getElementById(fieldId).addEventListener('blur', function() {
+    validateField(fieldId);
+    validateAllClientInfo();
+  });
+  document.getElementById(fieldId).addEventListener('input', function() {
+    validateAllClientInfo();
+  });
+});
+
+// ===== CLIENT-INFO VIEW =====
+document.getElementById('confirm-btn').addEventListener('click', function() {
+  document.getElementById('app-view').style.display = 'none';
+  document.getElementById('client-info-view').style.display = 'block';
+  loadClientInfo();
+  window.scrollTo(0, 0);
+});
+
+document.getElementById('ci-back-btn').addEventListener('click', function() {
+  document.getElementById('client-info-view').style.display = 'none';
   document.getElementById('app-view').style.display = 'block';
 });
 
-// "Confirm & Submit" fires the real submission
+document.getElementById('ci-continue-btn').addEventListener('click', function() {
+  if (!validateAllClientInfo()) return;
+  saveClientInfo();
+  document.getElementById('client-info-view').style.display = 'none';
+  document.getElementById('review-view').style.display = 'block';
+  renderReviewCard();
+  window.scrollTo(0, 0);
+});
+
+function loadClientInfo() {
+  var saved = localStorage.getItem('quote-client-info');
+  if (saved) {
+    try {
+      clientInfo = JSON.parse(saved);
+      document.getElementById('ci-company').value = clientInfo.companyName || '';
+      document.getElementById('ci-abn').value = clientInfo.abn || '';
+      document.getElementById('ci-address').value = clientInfo.address || '';
+      document.getElementById('ci-contact').value = clientInfo.contactPerson || '';
+      document.getElementById('ci-email').value = clientInfo.email || '';
+      document.getElementById('ci-phone').value = clientInfo.phone || '';
+    } catch(e) {}
+  }
+  validateAllClientInfo();
+}
+
+function saveClientInfo() {
+  clientInfo = {
+    companyName: document.getElementById('ci-company').value.trim(),
+    abn: document.getElementById('ci-abn').value.trim(),
+    address: document.getElementById('ci-address').value.trim(),
+    contactPerson: document.getElementById('ci-contact').value.trim(),
+    email: document.getElementById('ci-email').value.trim(),
+    phone: document.getElementById('ci-phone').value.trim()
+  };
+  localStorage.setItem('quote-client-info', JSON.stringify(clientInfo));
+}
+
+function getClientInfo() {
+  return clientInfo;
+}
+
+// ===== REVIEW VIEW =====
+document.getElementById('review-back-btn').addEventListener('click', function() {
+  document.getElementById('review-view').style.display = 'none';
+  document.getElementById('client-info-view').style.display = 'block';
+  loadClientInfo();
+});
+
 document.getElementById('review-submit-btn').addEventListener('click', doRealConfirm);
 
 function renderReviewCard() {
-  const L = currentLang;
-  const card = document.getElementById('review-card');
-  let oneoffTotal = 0, monthlyTotal = 0;
-  let paymentSchedule = [];
+  var L = currentLang;
+  var card = document.getElementById('review-card');
+  var oneoffTotal = 0, monthlyTotal = 0;
+  var paymentSchedule = [];
 
-  let itemsHtml = '';
-  ITEMS.forEach(item => {
+  var itemsHtml = '';
+  ITEMS.forEach(function(item) {
     if (!selectedItems[item.id]) return;
-    const refText = item.ref[L] ? ` (${item.ref[L]})` : '';
-    const priceStr = item.type === 'monthly' ? `${fmtPrice(item.price)}/${L==='zh'?'月':'mo'}` : fmtPrice(item.price);
-    itemsHtml += `<div class="confirm-item"><span class="ci-name">☑ ${item.name[L]}${refText}</span><span class="ci-price">${priceStr}</span></div>`;
+    var refText = item.ref[L] ? ' (' + item.ref[L] + ')' : '';
+    var priceStr = item.type === 'monthly' ? fmtPrice(item.price) + '/' + (L==='zh'?'月':'mo') : fmtPrice(item.price);
+    itemsHtml += '<div class="confirm-item"><span class="ci-name">\u2611 ' + item.name[L] + refText + '</span><span class="ci-price">' + priceStr + '</span></div>';
 
     if (item.type === 'oneoff') {
       oneoffTotal += item.price;
       if (item.price >= 2000) {
-        paymentSchedule.push({ name: item.name[L], p30: Math.round(item.price*0.3), p40: Math.round(item.price*0.4), p30b: Math.round(item.price*0.3), type: '304030' });
+        paymentSchedule.push({ name: item.name[L], price: item.price, p30: Math.round(item.price*0.3), p40: Math.round(item.price*0.4), p30b: Math.round(item.price*0.3), type: '304030' });
       } else {
-        paymentSchedule.push({ name: item.name[L], p50a: Math.round(item.price*0.5), p50b: Math.round(item.price*0.5), type: '5050' });
+        paymentSchedule.push({ name: item.name[L], price: item.price, p50a: Math.round(item.price*0.5), p50b: Math.round(item.price*0.5), type: '5050' });
       }
     } else {
       monthlyTotal += item.price;
     }
   });
 
-  let depositTotal = 0;
-  paymentSchedule.forEach(s => { depositTotal += s.type === '304030' ? s.p30 : s.p50a; });
+  var depositTotal = 0;
+  paymentSchedule.forEach(function(s) { depositTotal += s.type === '304030' ? s.p30 : s.p50a; });
 
-  const now = new Date();
-  const ts = now.toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' });
+  var now = new Date();
+  var ts = now.toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' });
 
-  let payHtml = '';
-  paymentSchedule.forEach(s => {
+  // Company info block
+  var ci = getClientInfo();
+  var companyHtml = '';
+  if (ci.companyName) {
+    companyHtml = '<div class="review-company-block">' +
+      '<h4>' + (L==='zh'?'公司信息':'Company Information') + '</h4>' +
+      '<div class="rcb-row"><span class="rcb-label">' + (L==='zh'?'公司名称':'Company Name') + '</span><span class="rcb-val">' + escHtml(ci.companyName) + '</span></div>' +
+      '<div class="rcb-row"><span class="rcb-label">ABN</span><span class="rcb-val">' + escHtml(ci.abn) + '</span></div>' +
+      '<div class="rcb-row"><span class="rcb-label">' + (L==='zh'?'地址':'Address') + '</span><span class="rcb-val">' + escHtml(ci.address) + '</span></div>' +
+      '<div class="rcb-row"><span class="rcb-label">' + (L==='zh'?'联系人':'Contact') + '</span><span class="rcb-val">' + escHtml(ci.contactPerson) + '</span></div>' +
+      '<div class="rcb-row"><span class="rcb-label">Email</span><span class="rcb-val">' + escHtml(ci.email) + '</span></div>' +
+      '<div class="rcb-row"><span class="rcb-label">' + (L==='zh'?'手机':'Phone') + '</span><span class="rcb-val">' + escHtml(ci.phone) + '</span></div>' +
+    '</div>';
+  }
+
+  // GST calculations
+  var oneoffGst = fmtGst(oneoffTotal);
+  var oneoffIncl = oneoffTotal + oneoffGst;
+  var monthlyGst = fmtGst(monthlyTotal);
+  var monthlyIncl = monthlyTotal + monthlyGst;
+  var depGst = fmtGst(depositTotal);
+  var depIncl = depositTotal + depGst;
+
+  // Payment schedule with dual columns
+  var payHtml = '';
+  paymentSchedule.forEach(function(s) {
+    var exGstParts, inclGstParts;
     if (s.type === '304030') {
-      payHtml += `<div class="payment-row"><span class="pr-label">${s.name}</span><span class="pr-amount">30%: ${fmtPrice(s.p30)} → 40%: ${fmtPrice(s.p40)} → 30%: ${fmtPrice(s.p30b)}</span></div>`;
+      exGstParts = '30%: ' + fmtPrice(s.p30) + ' \u2192 40%: ' + fmtPrice(s.p40) + ' \u2192 30%: ' + fmtPrice(s.p30b);
+      var p30g = fmtGst(s.p30), p40g = fmtGst(s.p40), p30bg = fmtGst(s.p30b);
+      inclGstParts = '30%: ' + fmtPrice(s.p30+p30g) + ' \u2192 40%: ' + fmtPrice(s.p40+p40g) + ' \u2192 30%: ' + fmtPrice(s.p30b+p30bg);
     } else {
-      payHtml += `<div class="payment-row"><span class="pr-label">${s.name}</span><span class="pr-amount">50%: ${fmtPrice(s.p50a)} → 50%: ${fmtPrice(s.p50b)}</span></div>`;
+      exGstParts = '50%: ' + fmtPrice(s.p50a) + ' \u2192 50%: ' + fmtPrice(s.p50b);
+      var p50ag = fmtGst(s.p50a), p50bg = fmtGst(s.p50b);
+      inclGstParts = '50%: ' + fmtPrice(s.p50a+p50ag) + ' \u2192 50%: ' + fmtPrice(s.p50b+p50bg);
     }
+    payHtml += '<div class="payment-dual-row">' +
+      '<div class="pdr-name">' + escHtml(s.name) + '</div>' +
+      '<div class="pdr-cols">' +
+        '<div class="pdr-col"><div class="pdr-col-label">Ex GST</div><div class="pdr-col-amount">' + exGstParts + '</div></div>' +
+        '<div class="pdr-col"><div class="pdr-col-label">Incl. GST</div><div class="pdr-col-amount">' + inclGstParts + '</div></div>' +
+      '</div>' +
+    '</div>';
   });
   if (monthlyTotal > 0) {
-    payHtml += `<div class="payment-row"><span class="pr-label">${L==='zh'?'月度维护':'Monthly Care'}</span><span class="pr-amount">${L==='zh'?'按月预付':'Monthly prepay'}</span></div>`;
+    payHtml += '<div class="payment-dual-row">' +
+      '<div class="pdr-name">' + (L==='zh'?'月度维护':'Monthly Care') + '</div>' +
+      '<div class="pdr-cols">' +
+        '<div class="pdr-col"><div class="pdr-col-label">Ex GST</div><div class="pdr-col-amount">' + (L==='zh'?'按月预付':'Monthly prepay') + '</div></div>' +
+        '<div class="pdr-col"><div class="pdr-col-label">Incl. GST</div><div class="pdr-col-amount">' + (L==='zh'?'按月预付':'Monthly prepay') + '</div></div>' +
+      '</div>' +
+    '</div>';
   }
 
   // Store for doRealConfirm
-  window._confirmData = { oneoffTotal, monthly4Total: monthlyTotal, depositTotal, paymentSchedule, now };
+  window._confirmData = { oneoffTotal: oneoffTotal, monthlyTotal: monthlyTotal, depositTotal: depositTotal, paymentSchedule: paymentSchedule, now: now, oneoffGst: oneoffGst, oneoffInclGst: oneoffIncl, monthlyGst: monthlyGst, monthlyInclGst: monthlyIncl, depGst: depGst, depInclGst: depIncl };
 
-  card.innerHTML = `
-    <div class="review-warn">
-      <div class="review-warn-icon">⚠️</div>
-      <h2 data-zh="请仔细检查您的勾选清单" data-en="Please Review Your Selections Carefully">${L==='zh'?'请仔细检查您的勾选清单':'Please Review Your Selections Carefully'}</h2>
-      <p data-zh="提交后将立即通知 Robin，且无法撤回" data-en="Once submitted, Robin will be notified immediately and this cannot be undone">${L==='zh'?'提交后将立即通知 Robin，且无法撤回':'Once submitted, Robin will be notified immediately and this cannot be undone'}</p>
-    </div>
-    <div style="margin-bottom:8px;font-size:12px;color:var(--ink-3);">${L==='zh'?'报价编号':'Quote ID'}: SCLC-QUOTE-2026-001 · ${ts}</div>
-    ${itemsHtml}
-    <div class="confirm-total">
-      <div class="total-row"><span>${L==='zh'?'一次性费用合计':'One-off Total'}</span><span class="tv">${fmtPrice(oneoffTotal)}</span></div>
-      ${monthlyTotal > 0 ? `<div class="total-row"><span>${L==='zh'?'月度费用合计':'Monthly Total'}</span><span class="tv">${fmtPrice(monthlyTotal)}/${L==='zh'?'月':'mo'}</span></div>` : ''}
-      <div class="total-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line);"><span>${L==='zh'?'首期应付':'Deposit Due'}</span><span class="tv">${fmtPrice(depositTotal)}</span></div>
-    </div>
-    <div class="payment-schedule">
-      <h3 data-zh="付款进程" data-en="Payment Schedule">${L==='zh'?'付款进程':'Payment Schedule'}</h3>
-      ${payHtml}
-    </div>
-  `;
+  card.innerHTML =
+    '<div class="review-warn">' +
+      '<div class="review-warn-icon">\u26A0\uFE0F</div>' +
+      '<h2>' + (L==='zh'?'请仔细检查您的勾选清单':'Please Review Your Selections Carefully') + '</h2>' +
+      '<p>' + (L==='zh'?'提交后将立即通知 Robin，且无法撤回':'Once submitted, Robin will be notified immediately and this cannot be undone') + '</p>' +
+    '</div>' +
+    '<div style="margin-bottom:8px;font-size:12px;color:var(--ink-3);">' + (L==='zh'?'报价编号':'Quote ID') + ': SCLC-QUOTE-2026-001 &middot; ' + ts + '</div>' +
+    companyHtml +
+    itemsHtml +
+    '<div class="confirm-total">' +
+      '<div class="total-row"><span>' + (L==='zh'?'一次性费用':'One-off') + ' (ex GST)</span><span class="tv">' + fmtPrice(oneoffTotal) + '</span></div>' +
+      '<div class="total-row" style="color:var(--ink-3);font-size:13px;"><span>GST (10%)</span><span class="tv">' + fmtPrice(oneoffGst) + '</span></div>' +
+      '<div class="total-row" style="font-weight:800;"><span>' + (L==='zh'?'一次性费用':'One-off') + ' (incl. GST)</span><span class="tv">' + fmtPrice(oneoffIncl) + '</span></div>' +
+      (monthlyTotal > 0 ?
+        '<div class="total-row" style="margin-top:8px;"><span>' + (L==='zh'?'月度费用':'Monthly') + ' (ex GST)</span><span class="tv">' + fmtPrice(monthlyTotal) + '/' + (L==='zh'?'月':'mo') + '</span></div>' +
+        '<div class="total-row" style="color:var(--ink-3);font-size:13px;"><span>GST (10%)</span><span class="tv">' + fmtPrice(monthlyGst) + '/' + (L==='zh'?'月':'mo') + '</span></div>' +
+        '<div class="total-row" style="font-weight:800;"><span>' + (L==='zh'?'月度费用':'Monthly') + ' (incl. GST)</span><span class="tv">' + fmtPrice(monthlyIncl) + '/' + (L==='zh'?'月':'mo') + '</span></div>'
+      : '') +
+      '<div class="total-row" style="margin-top:12px;padding-top:12px;border-top:2px solid var(--ink);"><span>' + (L==='zh'?'首期应付':'Deposit') + ' (ex GST)</span><span class="tv">' + fmtPrice(depositTotal) + '</span></div>' +
+      '<div class="total-row" style="color:var(--ink-3);font-size:13px;"><span>GST (10%)</span><span class="tv">' + fmtPrice(depGst) + '</span></div>' +
+      '<div class="total-row grand"><span>' + (L==='zh'?'首期应付':'Deposit') + ' (incl. GST)</span><span class="tv">' + fmtPrice(depIncl) + '</span></div>' +
+    '</div>' +
+    '<div class="payment-schedule">' +
+      '<h3>' + (L==='zh'?'付款进程':'Payment Schedule') + '</h3>' +
+      payHtml +
+    '</div>';
 
-  // Reset submit button state
-  const btn = document.getElementById('review-submit-btn');
+  var btn = document.getElementById('review-submit-btn');
   btn.disabled = false;
   btn.textContent = L === 'zh' ? '确认提交' : 'Confirm & Submit';
 }
 
+function escHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ===== SUBMIT =====
 async function doRealConfirm() {
-  const btn = document.getElementById('review-submit-btn');
-  const L = currentLang;
+  var btn = document.getElementById('review-submit-btn');
+  var L = currentLang;
   btn.disabled = true;
   btn.textContent = L === 'zh' ? '提交中...' : 'Submitting...';
 
-  const d = window._confirmData;
+  var d = window._confirmData;
+  var ci = getClientInfo();
   try {
     await fetch('/api/quote/confirm', {
       method: 'POST',
@@ -1237,90 +1722,152 @@ async function doRealConfirm() {
         client: 'Andrew',
         quoteId: 'SCLC-QUOTE-2026-001',
         timestamp: d.now.toISOString(),
-        selections: Object.keys(selectedItems).map(id => {
-          const item = ITEMS.find(i => i.id === id);
-          return { id, name: item.name, price: item.price, type: item.type };
+        selections: Object.keys(selectedItems).map(function(id) {
+          var item = ITEMS.find(function(i) { return i.id === id; });
+          return { id: id, name: item.name, price: item.price, type: item.type };
         }),
         oneoffTotal: d.oneoffTotal,
-        monthlyTotal: d.monthly4Total,
+        monthlyTotal: d.monthlyTotal,
         depositTotal: d.depositTotal,
-        paymentSchedule: d.paymentSchedule
+        paymentSchedule: d.paymentSchedule,
+        companyName: ci.companyName,
+        abn: ci.abn,
+        address: ci.address,
+        contactPerson: ci.contactPerson,
+        email: ci.email,
+        phone: ci.phone,
+        gstRate: GST_RATE,
+        oneoffGst: d.oneoffGst,
+        oneoffInclGst: d.oneoffInclGst,
+        monthlyGst: d.monthlyGst,
+        monthlyInclGst: d.monthlyInclGst,
+        depositInclGst: d.depInclGst
       })
     });
   } catch(e) {}
 
-  // Switch to success view
   document.getElementById('review-view').style.display = 'none';
   document.getElementById('confirm-view').style.display = 'block';
   renderSuccessCard();
+  window.scrollTo(0, 0);
 }
 
+// ===== SUCCESS CARD =====
 function renderSuccessCard() {
-  const L = currentLang;
-  const card = document.getElementById('confirm-card');
-  const d = window._confirmData || {};
-  const ts = d.now ? d.now.toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+  var L = currentLang;
+  var card = document.getElementById('confirm-card');
+  var d = window._confirmData || {};
+  var ci = getClientInfo();
+  var ts = d.now ? d.now.toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' }) : '';
 
-  let itemsHtml = '';
-  ITEMS.forEach(item => {
+  var itemsHtml = '';
+  ITEMS.forEach(function(item) {
     if (!selectedItems[item.id]) return;
-    const refText = item.ref[L] ? ` (${item.ref[L]})` : '';
-    const priceStr = item.type === 'monthly' ? `${fmtPrice(item.price)}/${L==='zh'?'月':'mo'}` : fmtPrice(item.price);
-    itemsHtml += `<div class="confirm-item"><span class="ci-name">☑ ${item.name[L]}${refText}</span><span class="ci-price">${priceStr}</span></div>`;
+    var refText = item.ref[L] ? ' (' + item.ref[L] + ')' : '';
+    var priceStr = item.type === 'monthly' ? fmtPrice(item.price) + '/' + (L==='zh'?'月':'mo') : fmtPrice(item.price);
+    itemsHtml += '<div class="confirm-item"><span class="ci-name">\u2611 ' + item.name[L] + refText + '</span><span class="ci-price">' + priceStr + '</span></div>';
   });
 
-  let payHtml = '';
-  (d.paymentSchedule || []).forEach(s => {
-    if (s.type === '304030') {
-      payHtml += `<div class="payment-row"><span class="pr-label">${s.name}</span><span class="pr-amount">30%: ${fmtPrice(s.p30)} → 40%: ${fmtPrice(s.p40)} → 30%: ${fmtPrice(s.p30b)}</span></div>`;
-    } else {
-      payHtml += `<div class="payment-row"><span class="pr-label">${s.name}</span><span class="pr-amount">50%: ${fmtPrice(s.p50a)} → 50%: ${fmtPrice(s.p50b)}</span></div>`;
-    }
-  });
-  if ((d.monthly4Total || 0) > 0) {
-    payHtml += `<div class="payment-row"><span class="pr-label">${L==='zh'?'月度维护':'Monthly Care'}</span><span class="pr-amount">${L==='zh'?'按月预付':'Monthly prepay'}</span></div>`;
+  var oneoffTotal = d.oneoffTotal || 0;
+  var monthlyTotal = d.monthlyTotal || 0;
+  var depositTotal = d.depositTotal || 0;
+  var oneoffGst = d.oneoffGst || fmtGst(oneoffTotal);
+  var oneoffIncl = d.oneoffInclGst || (oneoffTotal + oneoffGst);
+  var monthlyGst = d.monthlyGst || fmtGst(monthlyTotal);
+  var monthlyIncl = d.monthlyInclGst || (monthlyTotal + monthlyGst);
+  var depGst = d.depGst || fmtGst(depositTotal);
+  var depIncl = d.depInclGst || (depositTotal + depGst);
+
+  // Company info block
+  var companyHtml = '';
+  if (ci.companyName) {
+    companyHtml = '<div class="review-company-block">' +
+      '<h4>' + (L==='zh'?'公司信息':'Company Information') + '</h4>' +
+      '<div class="rcb-row"><span class="rcb-label">' + (L==='zh'?'公司名称':'Company Name') + '</span><span class="rcb-val">' + escHtml(ci.companyName) + '</span></div>' +
+      '<div class="rcb-row"><span class="rcb-label">ABN</span><span class="rcb-val">' + escHtml(ci.abn) + '</span></div>' +
+      '<div class="rcb-row"><span class="rcb-label">' + (L==='zh'?'地址':'Address') + '</span><span class="rcb-val">' + escHtml(ci.address) + '</span></div>' +
+      '<div class="rcb-row"><span class="rcb-label">' + (L==='zh'?'联系人':'Contact') + '</span><span class="rcb-val">' + escHtml(ci.contactPerson) + '</span></div>' +
+      '<div class="rcb-row"><span class="rcb-label">Email</span><span class="rcb-val">' + escHtml(ci.email) + '</span></div>' +
+      '<div class="rcb-row"><span class="rcb-label">' + (L==='zh'?'手机':'Phone') + '</span><span class="rcb-val">' + escHtml(ci.phone) + '</span></div>' +
+    '</div>';
   }
 
-  card.innerHTML = `
-    <div class="success-icon">✓</div>
-    <h2 data-zh="报价已确认" data-en="Quotation Confirmed">${L==='zh'?'报价已确认':'Quotation Confirmed'}</h2>
-    <p class="confirm-subtitle">
-      <span data-zh="确认已发往" data-en="Confirmation sent to">${L==='zh'?'确认已发往':'Confirmation sent to'}</span>
-      <strong>robin@snailai.ai</strong>
-    </p>
-    <div style="margin-bottom:8px;font-size:12px;color:var(--ink-3);">${ts}</div>
-    ${itemsHtml}
-    <div class="confirm-total">
-      <div class="total-row"><span>${L==='zh'?'一次性费用合计':'One-off Total'}</span><span class="tv">${fmtPrice(d.oneoffTotal||0)}</span></div>
-      ${(d.monthly4Total||0) > 0 ? `<div class="total-row"><span>${L==='zh'?'月度费用合计':'Monthly Total'}</span><span class="tv">${fmtPrice(d.monthly4Total||0)}/${L==='zh'?'月':'mo'}</span></div>` : ''}
-      <div class="total-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line);"><span>${L==='zh'?'首期应付':'Deposit Due'}</span><span class="tv">${fmtPrice(d.depositTotal||0)}</span></div>
-    </div>
-    <div class="payment-schedule">
-      <h3 data-zh="付款进程" data-en="Payment Schedule">${L==='zh'?'付款进程':'Payment Schedule'}</h3>
-      ${payHtml}
-    </div>
-    <div class="confirm-notice">
-      <strong data-zh="📋 下一步" data-en="📋 Next Step">${L==='zh'?'📋 下一步':'📋 Next Step'}</strong>
-      <span data-zh="随后您将收到详细技术服务合同和技术服务书，双方签署后正式开始工作。" data-en="You will receive a detailed Technical Services Agreement and Technical Services Proposal for both parties to sign before work commences.">${L==='zh'?'随后您将收到详细技术服务合同和技术服务书，双方签署后正式开始工作。':'You will receive a detailed Technical Services Agreement and Technical Services Proposal for both parties to sign before work commences.'}</span>
-    </div>
-  `;
+  // Payment dual columns
+  var payHtml = '';
+  (d.paymentSchedule || []).forEach(function(s) {
+    var exGstParts, inclGstParts;
+    if (s.type === '304030') {
+      exGstParts = '30%: ' + fmtPrice(s.p30) + ' \u2192 40%: ' + fmtPrice(s.p40) + ' \u2192 30%: ' + fmtPrice(s.p30b);
+      var p30g = fmtGst(s.p30), p40g = fmtGst(s.p40), p30bg = fmtGst(s.p30b);
+      inclGstParts = '30%: ' + fmtPrice(s.p30+p30g) + ' \u2192 40%: ' + fmtPrice(s.p40+p40g) + ' \u2192 30%: ' + fmtPrice(s.p30b+p30bg);
+    } else {
+      exGstParts = '50%: ' + fmtPrice(s.p50a) + ' \u2192 50%: ' + fmtPrice(s.p50b);
+      var p50ag = fmtGst(s.p50a), p50bg = fmtGst(s.p50b);
+      inclGstParts = '50%: ' + fmtPrice(s.p50a+p50ag) + ' \u2192 50%: ' + fmtPrice(s.p50b+p50bg);
+    }
+    payHtml += '<div class="payment-dual-row">' +
+      '<div class="pdr-name">' + escHtml(s.name) + '</div>' +
+      '<div class="pdr-cols">' +
+        '<div class="pdr-col"><div class="pdr-col-label">Ex GST</div><div class="pdr-col-amount">' + exGstParts + '</div></div>' +
+        '<div class="pdr-col"><div class="pdr-col-label">Incl. GST</div><div class="pdr-col-amount">' + inclGstParts + '</div></div>' +
+      '</div>' +
+    '</div>';
+  });
+  if (monthlyTotal > 0) {
+    payHtml += '<div class="payment-dual-row">' +
+      '<div class="pdr-name">' + (L==='zh'?'月度维护':'Monthly Care') + '</div>' +
+      '<div class="pdr-cols">' +
+        '<div class="pdr-col"><div class="pdr-col-label">Ex GST</div><div class="pdr-col-amount">' + (L==='zh'?'按月预付':'Monthly prepay') + '</div></div>' +
+        '<div class="pdr-col"><div class="pdr-col-label">Incl. GST</div><div class="pdr-col-amount">' + (L==='zh'?'按月预付':'Monthly prepay') + '</div></div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  card.innerHTML =
+    '<div class="success-icon">\u2713</div>' +
+    '<h2>' + (L==='zh'?'报价已确认':'Quotation Confirmed') + '</h2>' +
+    '<p class="confirm-subtitle">' +
+      '<span>' + (L==='zh'?'确认已发往':'Confirmation sent to') + '</span>' +
+      ' <strong>robin@snailai.ai</strong>' +
+    '</p>' +
+    '<div style="margin-bottom:8px;font-size:12px;color:var(--ink-3);">' + ts + '</div>' +
+    companyHtml +
+    itemsHtml +
+    '<div class="confirm-total">' +
+      '<div class="total-row"><span>' + (L==='zh'?'一次性费用':'One-off') + ' (ex GST)</span><span class="tv">' + fmtPrice(oneoffTotal) + '</span></div>' +
+      '<div class="total-row" style="color:var(--ink-3);font-size:13px;"><span>GST (10%)</span><span class="tv">' + fmtPrice(oneoffGst) + '</span></div>' +
+      '<div class="total-row" style="font-weight:800;"><span>' + (L==='zh'?'一次性费用':'One-off') + ' (incl. GST)</span><span class="tv">' + fmtPrice(oneoffIncl) + '</span></div>' +
+      (monthlyTotal > 0 ?
+        '<div class="total-row" style="margin-top:8px;"><span>' + (L==='zh'?'月度费用':'Monthly') + ' (ex GST)</span><span class="tv">' + fmtPrice(monthlyTotal) + '/' + (L==='zh'?'月':'mo') + '</span></div>' +
+        '<div class="total-row" style="color:var(--ink-3);font-size:13px;"><span>GST (10%)</span><span class="tv">' + fmtPrice(monthlyGst) + '/' + (L==='zh'?'月':'mo') + '</span></div>' +
+        '<div class="total-row" style="font-weight:800;"><span>' + (L==='zh'?'月度费用':'Monthly') + ' (incl. GST)</span><span class="tv">' + fmtPrice(monthlyIncl) + '/' + (L==='zh'?'月':'mo') + '</span></div>'
+      : '') +
+      '<div class="total-row" style="margin-top:12px;padding-top:12px;border-top:2px solid var(--ink);"><span>' + (L==='zh'?'首期应付':'Deposit') + ' (ex GST)</span><span class="tv">' + fmtPrice(depositTotal) + '</span></div>' +
+      '<div class="total-row" style="color:var(--ink-3);font-size:13px;"><span>GST (10%)</span><span class="tv">' + fmtPrice(depGst) + '</span></div>' +
+      '<div class="total-row grand"><span>' + (L==='zh'?'首期应付':'Deposit') + ' (incl. GST)</span><span class="tv">' + fmtPrice(depIncl) + '</span></div>' +
+    '</div>' +
+    '<div class="payment-schedule">' +
+      '<h3>' + (L==='zh'?'付款进程':'Payment Schedule') + '</h3>' +
+      payHtml +
+    '</div>' +
+    '<div class="confirm-notice">' +
+      '<strong>' + (L==='zh'?'📋 下一步':'📋 Next Step') + '</strong> ' +
+      '<span>' + (L==='zh'?'随后您将收到详细技术服务合同和技术服务书，双方签署后正式开始工作。':'You will receive a detailed Technical Services Agreement and Technical Services Proposal for both parties to sign before work commences.') + '</span>' +
+    '</div>';
 }
 
 // ===== INIT =====
 function initQuote() {
-  // Restore selections from localStorage
-  const saved = localStorage.getItem('quote-selections');
+  var saved = localStorage.getItem('quote-selections');
   if (saved) {
     try { selectedItems = JSON.parse(saved); } catch(e) {}
   } else {
-    // Pre-select recommended first stage
-    ITEMS.forEach(item => {
+    ITEMS.forEach(function(item) {
       if (item.preselected) selectedItems[item.id] = true;
     });
     localStorage.setItem('quote-selections', JSON.stringify(selectedItems));
   }
 
-  // Set initial language
   setLang(currentLang);
   renderItems();
   updateSummary();

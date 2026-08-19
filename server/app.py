@@ -300,6 +300,18 @@ def init_db():
         "ALTER TABLE capabilities ADD COLUMN points INTEGER DEFAULT 10",
         "ALTER TABLE capabilities ADD COLUMN sort_order INTEGER",
         "ALTER TABLE quote_confirmations ADD COLUMN confirmed_by TEXT",
+        "ALTER TABLE quote_confirmations ADD COLUMN company_name TEXT",
+        "ALTER TABLE quote_confirmations ADD COLUMN abn TEXT",
+        "ALTER TABLE quote_confirmations ADD COLUMN address TEXT",
+        "ALTER TABLE quote_confirmations ADD COLUMN contact_person TEXT",
+        "ALTER TABLE quote_confirmations ADD COLUMN email TEXT",
+        "ALTER TABLE quote_confirmations ADD COLUMN phone TEXT",
+        "ALTER TABLE quote_confirmations ADD COLUMN gst_rate REAL DEFAULT 0.10",
+        "ALTER TABLE quote_confirmations ADD COLUMN oneoff_gst INTEGER DEFAULT 0",
+        "ALTER TABLE quote_confirmations ADD COLUMN oneoff_incl_gst INTEGER DEFAULT 0",
+        "ALTER TABLE quote_confirmations ADD COLUMN monthly_gst INTEGER DEFAULT 0",
+        "ALTER TABLE quote_confirmations ADD COLUMN monthly_incl_gst INTEGER DEFAULT 0",
+        "ALTER TABLE quote_confirmations ADD COLUMN deposit_incl_gst INTEGER DEFAULT 0",
     ]:
         try:
             c.execute(sql)
@@ -723,8 +735,12 @@ def api_quote_confirm():
 
     conn = db_conn()
     conn.execute(
-        "INSERT INTO quote_confirmations(quote_id, client, selections, oneoff_total, monthly_total, deposit_total, payment_schedule, confirmed_at, confirmed_by) VALUES(?,?,?,?,?,?,?,?,?)",
-        (quote_id, client, selections, oneoff_total, monthly_total, deposit_total, payment_schedule, ts, confirmed_by),
+        "INSERT INTO quote_confirmations(quote_id, client, selections, oneoff_total, monthly_total, deposit_total, payment_schedule, confirmed_at, confirmed_by, company_name, abn, address, contact_person, email, phone, gst_rate, oneoff_gst, oneoff_incl_gst, monthly_gst, monthly_incl_gst, deposit_incl_gst) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        (quote_id, client, selections, oneoff_total, monthly_total, deposit_total, payment_schedule, ts, confirmed_by,
+         data.get("companyName",""), data.get("abn",""), data.get("address",""),
+         data.get("contactPerson",""), data.get("email",""), data.get("phone",""),
+         data.get("gstRate",0.10), data.get("oneoffGst",0), data.get("oneoffInclGst",0),
+         data.get("monthlyGst",0), data.get("monthlyInclGst",0), data.get("depositInclGst",0)),
     )
     conn.commit()
     conn.close()
