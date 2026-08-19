@@ -953,6 +953,37 @@ def api_quote_admin_cleanup():
     })
 
 
+@app.route("/api/quote/admin/test-user", methods=["POST"])
+def api_quote_admin_test_user():
+    """Create or reset a test user for the quotation system.
+    Requires X-Admin-Token header matching QUOTE_ADMIN_TOKEN env var.
+    Body: {"username": "demo", "password": "test888", "name": "Test User"}
+    Defaults: username=demo, password=test888, name=Demo User, role=customer"""
+    if not QUOTE_ADMIN_TOKEN or request.headers.get("X-Admin-Token") != QUOTE_ADMIN_TOKEN:
+        return jsonify({"error": "unauthorized"}), 401
+    data = request.get_json(silent=True) or {}
+    username = (data.get("username") or "demo").strip().lower()
+    password = data.get("password") or "test888"
+    name = data.get("name") or "Demo User"
+    role = "customer"
+    import secrets as _sec
+    salt = _sec.token_hex(16)
+    pw_hash = _hash_pw(password, salt)
+    c = _get_db()
+    existing = c.execute("SELECT id FROM users WHERE username = ? COLLATE NOCASE",
+                         (username,)).fetchone()
+    if existing:
+        c.execute("UPDATE users SET pw_hash=?, salt=?, name=?, role=?, must_change_pw=0 WHERE id=?",
+                  (pw_hash, salt, name, role, existing["id"]))
+    else:
+        c.execute("INSERT INTO users (username, name, role, pw_hash, salt, must_change_pw) "
+                  "VALUES (?,?,?,?,?,0)", (username, name, role, pw_hash, salt))
+    c.commit()
+    app.logger.info("[admin] test user %s created/reset (role=%s)", username, role)
+    return jsonify({"ok": True, "username": username, "name": name, "role": role,
+                    "password": password, "message": "Test user ready for login"})
+
+
 @app.route("/api/login", methods=["POST"])
 @_rate_limit_deco(_RL_LOGIN_LIMIT, _RL_LOGIN_WINDOW, by_user=False)
 def api_login():
