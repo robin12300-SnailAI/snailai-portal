@@ -883,7 +883,7 @@
       <div class="brand-header">
         <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
         <span class="brand-name">SnailAI<span class="brand-ai">.AI</span></span>
-        <span class="app-version">V1.6.6</span>
+        <span class="app-version">V1.6.7</span>
       </div>
       <h2 data-zh="Skin Cancer Laser Centre 模块化报价" data-en="Skin Cancer Laser Centre Modular Quotation">Skin Cancer Laser Centre Modular Quotation</h2>
       <span class="quote-id">SCLC-QUOTE-2026-001 &middot; v1.0</span>
@@ -1104,7 +1104,7 @@ const ITEMS = [
     name: { zh: 'Booking System 对接', en: 'Booking System Integration' },
     sub: 'One Helix-compatible provider via widget, hosted page or official API; test the booking journey',
     hint: { zh: 'Helix/预约 Provider 账号需由客户直接拥有并支付。', en: 'Requires a Helix/booking-provider account owned and paid directly by the client.' },
-    preselected: true,
+    preselected: false,
     detail: {
       objective: { zh: '接入一套经 Helix 认可的预约 Provider（如 AutoMed、HotDoc 等 MedicalDirector Marketplace 列出的兼容方案），让患者可从网站直接完成在线预约。优先使用 Provider 的品牌可配置 widget 或托管预约页面；如正式 API 可用，再评估 API 方案。', en: 'Connect one Helix-compatible booking provider (e.g. AutoMed or HotDoc, both listed on the MedicalDirector Marketplace as Helix-compatible) so patients can book online directly from the website. The provider\'s brand-configurable widget or hosted booking page is preferred; a formal API is evaluated only where available.' },
       deliverables: { zh: ['一套预约 Provider 接入（widget/托管页/正式 API 三选一，视 Provider 能力定）', '品牌一致性配置（预约入口配色、按钮样式与网站视觉统一）', '最小必要数据读取（仅可预约时段、服务类型、医生/地点，不查询患者病历）', '预约流程端到端测试（从网站入口到 Provider 测试/生产确认）', '若嵌入受浏览器安全政策限制，提供品牌化预约按钮/跳转方案'], en: ['One booking-provider integration (widget, hosted page or official API, per provider capability)', 'Brand-consistent configuration (booking entry colours and button styling unified with the site design)', 'Minimum-necessary data access (only bookable slots, service types and doctor/location - never patient records)', 'End-to-end booking journey testing (from the website entry to provider test/production confirmation)', 'Branded booking button / redirect fallback if embedding is restricted by browser or provider security policy'] },
@@ -1118,7 +1118,7 @@ const ITEMS = [
     name: { zh: 'Payment System 对接', en: 'Payment System Integration' },
     sub: 'One provider-hosted/Tyro/compatible hosted payment flow; test status; no card data stored on site',
     hint: { zh: '需支付 Provider 与预约流程确认兼容后实施；商户开户/KYC/退款/拒付不在范围内。', en: 'Starts only after payment-provider and booking-flow compatibility is confirmed; merchant onboarding/KYC/refunds/chargebacks excluded.' },
-    preselected: true,
+    preselected: false,
     detail: {
       objective: { zh: '接入一套托管付款流程（预约 Provider 支持的托管付款、Tyro 等经认可支付流程，或确认兼容后的 Stripe Hosted Checkout），让患者可在线支付。网站不收集、不记录、不处理完整银行卡号码或 CVV——付款资料直接进入支付 Provider。', en: 'Connect one hosted payment flow (a provider-supported hosted payment, a Tyro-style approved flow, or Stripe Hosted Checkout once compatibility is confirmed) so patients can pay online. The website never collects, records or processes full card numbers or CVV - payment details go directly to the payment provider.' },
       deliverables: { zh: ['一套托管付款流程接入（与预约 Provider 兼容方案优先）', '付款结果展示（仅显示支付成功/失败状态或订单参考号）', '付款流程测试（Provider 测试模式或小额生产交易验证）'], en: ['One hosted payment-flow integration (prioritising the booking-provider-compatible option)', 'Payment result display (showing only success/failure status or an order reference number)', 'Payment-flow testing (validated in provider test mode or via a small production transaction)'] },
@@ -1132,7 +1132,7 @@ const ITEMS = [
     ref: { zh: 'W6', en: 'W6' },
     name: { zh: '技术 SEO 与本地 SEO 基础', en: 'Technical & Local SEO Foundation' },
     sub: 'Keyword/page map, metadata, sitemap, schema, GA4, Search Console, local page rules',
-    preselected: true,
+    preselected: false,
     detail: {
       objective: { zh: '完成技术与本地 SEO 基础配置，使网站关键页面可被搜索引擎正确抓取和收录，并在本地搜索（皮肤科/皮肤检查 + 地区）中建立合规的优化基础，为后续自然流量增长打好地基。', en: 'Complete technical and local SEO foundations so key pages are correctly crawled and indexed by search engines, and establish a compliant optimisation base for local searches (skin cancer / skin check + suburb) that future organic growth builds upon.' },
       deliverables: { zh: ['搜索关键词与服务/地区页面映射表', '每页标题、描述、canonical 配置', 'XML sitemap 与 robots.txt', 'LocalBusiness/Physician/MedicalClinic 等适用的结构化数据（schema）', 'Google Search Console、Google Analytics 4 与 Google Business Profile 基础衔接', '图片压缩与 Core Web Vitals 基础优化', '移动端与常见浏览器兼容测试', '医疗内容的作者、审核人和复核日期字段（医疗内容可信度信号）'], en: ['Search keyword and service/suburb page mapping', 'Per-page title, description and canonical configuration', 'XML sitemap and robots.txt', 'Applicable structured data (schema) such as LocalBusiness / Physician / MedicalClinic', 'Google Search Console, Google Analytics 4 and Google Business Profile basic integration', 'Image compression and Core Web Vitals foundation optimisation', 'Mobile and common-browser compatibility testing', 'Author, reviewer and review-date fields for medical content (a credibility signal for health pages)'] },
@@ -1145,7 +1145,7 @@ const ITEMS = [
     ref: { zh: 'W7', en: 'W7' },
     name: { zh: '隐私、安全、性能、QA 与上线', en: 'Privacy, Security, Performance, QA & Launch' },
     sub: 'Third-party embed review, SSL/headers, browser/mobile tests, performance, backup/rollback, production release',
-    preselected: true,
+    preselected: false,
     detail: {
       objective: { zh: '上线前的最后质量关卡：完成隐私与安全检查、跨浏览器/移动端测试、性能优化、备份/回滚方案，并在 staging 预览验证通过后正式发布生产站，确保网站以可信、安全、快速的状态面对公众。', en: 'The final quality gate before launch: complete privacy and security checks, cross-browser/mobile testing, performance optimisation and backup/rollback planning, then release the production site after staging verification - ensuring the site faces the public in a credible, secure and fast state.' },
       deliverables: { zh: ['第三方嵌入审查（预约 widget、分析工具等的隐私影响与 Cookie/第三方嵌入说明）', 'SSL 与安全 headers 配置', '跨浏览器（Chrome/Safari/Edge/Firefox）与移动端测试', 'Core Web Vitals 性能检查与优化', '备份与回滚方案', 'staging 预览站全站验证', '医疗广告合规检查清单（不误导、不制造不合理疗效预期、价格/条件/取消费清楚显示）', '生产站正式发布'], en: ['Third-party embed review (privacy implications of the booking widget and analytics, with cookie/third-party embed notices)', 'SSL and security headers configuration', 'Cross-browser (Chrome/Safari/Edge/Firefox) and mobile testing', 'Core Web Vitals performance checks and optimisation', 'Backup and rollback plan', 'Full-site verification on the staging preview', 'Medical advertising compliance checklist (not misleading, no unreasonable efficacy expectations, fees/conditions/cancellation costs clearly displayed)', 'Production site release'] },
@@ -1158,7 +1158,7 @@ const ITEMS = [
     ref: { zh: 'W8', en: 'W8' },
     name: { zh: '内容导入培训与交接', en: 'Content Population Training & Handover' },
     sub: 'Batch population assistance, one 90-minute training session, publishing/maintenance SOP',
-    preselected: true,
+    preselected: false,
     detail: {
       objective: { zh: '协助批量导入内容，通过一次 90 分钟的管理培训让 Andrew 团队掌握日常发布与维护操作，并交付完整的 SOP 文档，实现平稳交接。', en: 'Assist with batch content population, equip Andrew\'s team with daily publishing and maintenance skills through one 90-minute administrator training session, and deliver complete SOP documentation for a smooth handover.' },
       deliverables: { zh: ['批量内容导入协助（按批次协助上线内容）', '一次 90 分钟 Andrew 管理培训（内容更新、发布流程、常见问题处理）', '发布、日常维护与回滚 SOP 文档', '交接文件（账号清单、配置说明、求助渠道）'], en: ['Batch content population assistance (helping bring content live in batches)', 'One 90-minute administrator training session for Andrew (content updates, publishing flow, common troubleshooting)', 'Publishing, routine maintenance and rollback SOP documentation', 'Handover pack (account inventory, configuration notes, support channels)'] },
@@ -1427,7 +1427,7 @@ function toggleItem(id) {
   if (it && it.locked) return;
   selectedItems[id] = !selectedItems[id];
   if (!selectedItems[id]) delete selectedItems[id];
-  localStorage.setItem('quote-selections-v4', JSON.stringify(selectedItems));
+  localStorage.setItem('quote-selections-v5', JSON.stringify(selectedItems));
   renderItems();
   updateSummary();
 }
@@ -1948,14 +1948,14 @@ function renderSuccessCard() {
 
 // ===== INIT =====
 function initQuote() {
-  var saved = localStorage.getItem('quote-selections-v4');
+  var saved = localStorage.getItem('quote-selections-v5');
   if (saved) {
     try { selectedItems = JSON.parse(saved); } catch(e) {}
   } else {
     ITEMS.forEach(function(item) {
       if (item.preselected) selectedItems[item.id] = true;
     });
-    localStorage.setItem('quote-selections-v4', JSON.stringify(selectedItems));
+    localStorage.setItem('quote-selections-v5', JSON.stringify(selectedItems));
   }
 
   ITEMS.forEach(function(item) { if (item.locked) selectedItems[item.id] = true; });
