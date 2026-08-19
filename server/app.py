@@ -822,8 +822,8 @@ def _build_quote_email_html(data, confirmed_by):
 <p style="font-size:13px;">Commencement deposit due (ex GST): <b>{deposit}</b></p>
 
 <p style="font-size:12px;color:#6A6A85;margin-top:24px;border-top:1px solid #eee;padding-top:10px;">
-This is an automated notification from the SnailAI.AI quotation system (quote-andrew).<br>
-Sent {sent_at} · Record saved to quote_confirmations database.
+This is an automated confirmation from the SnailAI.AI quotation system. Please keep this email for your records.<br>
+Sent {sent_at}
 </p>
 </body></html>""".format(
         quote_id=_esc(data.get("quoteId", "")),
@@ -843,10 +843,12 @@ Sent {sent_at} · Record saved to quote_confirmations database.
 
 
 def _send_quote_email(data, confirmed_by):
-    """通过 Gmail SMTP 发送报价确认通知。失败只记日志，不影响确认接口。"""
+    """通过 Gmail SMTP 发送报价确认通知。失败只记日志，不影响确认接口。
+    收件：robin@snailai.ai（To）+ robin12300@gmail.com（Cc）+ 客户自己填写的邮箱（Cc，留档）。"""
     if not GMAIL_APP_PASSWORD:
         app.logger.info("[quote-email] GMAIL_APP_PASSWORD not set; skip notification")
         return False
+    import re
     import smtplib
     from email.mime.multipart import MIMEMultipart
     from email.mime.text import MIMEText
@@ -855,20 +857,30 @@ def _send_quote_email(data, confirmed_by):
         data.get("quoteId", "quote"), data.get("companyName", "client"),
         _fmt_aud(data.get("oneoffTotal", 0)))
 
+    # 客户邮箱：格式校验 + 去重（避免与已有收件人重复）
+    client_email = (data.get("email") or "").strip()
+    if client_email and not re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", client_email):
+        client_email = ""
+    cc_list = [QUOTE_NOTIFY_CC] if QUOTE_NOTIFY_CC else []
+    if client_email:
+        known = {QUOTE_NOTIFY_TO.lower()} | {c.lower() for c in cc_list}
+        if client_email.lower() not in known:
+            cc_list.append(client_email)
+
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = "SnailAI.AI Quote <{}>".format(GMAIL_USER)
     msg["To"] = QUOTE_NOTIFY_TO
-    if QUOTE_NOTIFY_CC:
-        msg["Cc"] = QUOTE_NOTIFY_CC
+    if cc_list:
+        msg["Cc"] = ", ".join(cc_list)
     msg.attach(MIMEText(_build_quote_email_html(data, confirmed_by), "html", "utf-8"))
 
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20) as srv:
             srv.login(GMAIL_USER, GMAIL_APP_PASSWORD)
-            recipients = [QUOTE_NOTIFY_TO] + ([QUOTE_NOTIFY_CC] if QUOTE_NOTIFY_CC else [])
+            recipients = [QUOTE_NOTIFY_TO] + cc_list
             srv.sendmail(GMAIL_USER, recipients, msg.as_string())
-        app.logger.info("[quote-email] sent to %s cc %s", QUOTE_NOTIFY_TO, QUOTE_NOTIFY_CC)
+        app.logger.info("[quote-email] sent to %s cc %s", QUOTE_NOTIFY_TO, ", ".join(cc_list))
         return True
     except Exception as e:  # noqa: BLE001
         app.logger.warning("[quote-email] send failed: %s", e)
