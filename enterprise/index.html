@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-title-zh="蜗牛AI · 企业AI级服务 — 悉尼中小企业AI落地专家" data-title-en="Snail AI · Enterprise AI Services — Hands-On AI for Sydney SMEs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蜗牛AI · 企业AI级服务</title>
+<meta name="description" content="Snail AI provides hands-on AI solutions for Sydney small & medium businesses — from $2,500. Free 2-hour on-site consultation by our CEO. AI process automation, AI training, AI-enabling your software, end-to-end delivery.">
+<meta name="keywords" content="AI consulting Sydney, AI agency Sydney, AI automation small business, corporate AI training Sydney, AI solutions Australia, 悉尼AI顾问, 悉尼企业AI服务">
+<link rel="icon" type="image/png" href="../assets/snailai_logo.png">
+<link rel="canonical" href="https://snailai.ai/enterprise/">
+<link rel="alternate" hreflang="zh-CN" href="https://snailai.ai/enterprise/">
+<link rel="alternate" hreflang="en" href="https://snailai.ai/enterprise/">
+<link rel="alternate" hreflang="x-default" href="https://snailai.ai/enterprise/">
+<meta property="og:title" content="Snail AI · Enterprise AI Services for Sydney SMEs">
+<meta property="og:description" content="Hands-on AI solutions for Sydney small & medium businesses. Free on-site consultation. From $2,500.">
+<meta property="og:image" content="https://snailai.ai/assets/snailai_logo.png">
+<meta property="og:url" content="https://snailai.ai/enterprise/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Snail AI · Enterprise AI Services for Sydney SMEs">
+<meta name="twitter:description" content="Hands-on AI solutions for Sydney small & medium businesses. Free on-site consultation. From $2,500.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Snail AI Enterprise Services",
+  "description": "Hands-on AI solutions for Sydney small and medium businesses — AI process automation, AI training, AI-enabling software, end-to-end delivery.",
+  "url": "https://snailai.ai/enterprise/",
+  "telephone": "+61417993551",
+  "email": "robin@snailai.ai",
+  "areaServed": {"@type": "City", "name": "Sydney"},
+  "priceRange": "From $2,500",
+  "serviceType": ["AI Consulting", "AI Automation", "AI Training", "AI Software Integration"],
+  "provider": {"@type": "Organization", "name": "Snail AI", "url": "https://snailai.ai/"}
+}
+</script>
+<style>
+  :root {
+    --ink: #1A1A2E;
+    --ink-2: #2A2A40;
+    --ink-3: #6A6A85;
+    --paper: #FCFCFA;
+    --paper-2: #F5F4EE;
+    --paper-3: #E8E7E0;
+    --accent: #FF5B1F;
+    --accent-2: #E84A0F;
+    --accent-light: rgba(255,91,31,0.08);
+    --accent-warm: #FFF5EE;
+    --gold: #D4A547;
+    --line: rgba(26,26,46,0.08);
+    --shadow-sm: 0 1px 3px rgba(26,26,46,0.04), 0 2px 8px rgba(26,26,46,0.04);
+    --shadow-md: 0 4px 16px rgba(26,26,46,0.08);
+    --shadow-lg: 0 12px 36px rgba(26,26,46,0.12);
+    --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-xl: 24px;
+    --sans: 'Inter','Helvetica Neue','Helvetica','Arial','PingFang SC','Microsoft YaHei UI','Noto Sans SC',sans-serif;
+    --mono: 'JetBrains Mono','SF Mono','Menlo','Consolas',monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--paper); color: var(--ink); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+  /* Nav */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 16px 40px; background: linear-gradient(180deg, rgba(252,252,250,.96) 0%, rgba(252,252,250,.85) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .nav-logo img { height: 32px; width: auto; }
+  .nav-logo span { font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a { font-size: 13px; font-weight: 600; color: var(--ink-3); text-decoration: none; letter-spacing: 0.02em; transition: color .2s; }
+  .nav-links a:hover { color: var(--accent); }
+  .lang-switch { display: inline-flex; gap: 4px; border: 1px solid var(--line); border-radius: 100px; padding: 3px; background: white; }
+  .lang-btn { background: none; border: none; cursor: pointer; padding: 5px 12px; border-radius: 100px; font-size: 12px; font-weight: 700; color: var(--ink-3); transition: all .2s; }
+  .lang-btn.active { background: var(--ink); color: white; }
+
+  /* Hero */
+  .hero { position: relative; padding: 140px 40px 100px; max-width: 1280px; margin: 0 auto; text-align: center; }
+  .hero-bg-blob { position: absolute; top: -10%; left: 50%; transform: translateX(-50%); width: 800px; height: 800px; background: radial-gradient(circle, rgba(255,91,31,0.06) 0%, transparent 60%); z-index: -1; pointer-events: none; }
+  .hero-tag { display: inline-block; padding: 6px 16px; background: var(--accent-light); border: 1px solid rgba(255,91,31,0.18); color: var(--accent); border-radius: 100px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 28px; }
+  .hero h1 { font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 900; line-height: 1.15; letter-spacing: -0.025em; margin-bottom: 20px; }
+  .hero h1 .accent { color: var(--accent); }
+  .hero .subtitle { font-size: clamp(1rem, 1.6vw, 1.2rem); color: var(--ink-3); max-width: 720px; margin: 0 auto 40px; line-height: 1.65; }
+  .hero-badge-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 28px auto 40px; max-width: 820px; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: 100px; font-size: 13px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap; }
+  .hero-badge--orange { background: var(--accent); color: white; box-shadow: 0 4px 16px rgba(255,91,31,0.28); }
+  .hero-badge--ink { background: var(--ink); color: white; box-shadow: 0 4px 16px rgba(26,26,46,0.18); }
+  .hero-badge--outline { background: white; color: var(--ink); border: 1.5px solid var(--ink); }
+  .hero-badge--warm { background: var(--accent-warm); color: var(--accent); border: 1.5px solid rgba(255,91,31,0.2); }
+  .hero-cta { display: inline-flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 100px; font-size: 14px; font-weight: 700; text-decoration: none; transition: all .25s ease; border: 1px solid transparent; cursor: pointer; }
+  .btn-primary { background: var(--accent); color: white; box-shadow: 0 4px 16px rgba(255,91,31,0.24); }
+  .btn-primary:hover { background: var(--accent-2); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,91,31,0.36); }
+  .btn-secondary { background: white; color: var(--ink); border-color: var(--line); }
+  .btn-secondary:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+  /* Sections */
+  section { padding: 100px 40px; }
+  .section-inner { max-width: 1280px; margin: 0 auto; }
+  .section-tag { display: inline-block; padding: 5px 14px; background: var(--accent-light); color: var(--accent); border-radius: 100px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+  .section-title { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 900; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 16px; }
+  .section-desc { font-size: 1.05rem; color: var(--ink-3); max-width: 640px; margin-bottom: 56px; }
+
+  /* Card Grid */
+  .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .card-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .card { background: white; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 32px 28px; transition: all .3s ease; display: flex; flex-direction: column; }
+  .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: rgba(255,91,31,0.3); }
+  .card-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; }
+  .card h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 10px; }
+  .card p { font-size: 0.92rem; color: var(--ink-3); line-height: 1.6; flex: 1; }
+  .card .card-link { display: inline-block; margin-top: 16px; color: var(--accent); font-size: 0.88rem; font-weight: 700; text-decoration: none; }
+  .card .card-link:hover { color: var(--accent-2); }
+
+  /* Process Steps */
+  .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .step { text-align: center; padding: 28px 20px; background: white; border: 1px solid var(--line); border-radius: var(--r-lg); position: relative; }
+  .step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: white; font-weight: 900; font-size: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+  .step h3 { font-size: 1rem; font-weight: 800; margin-bottom: 8px; }
+  .step p { font-size: 0.88rem; color: var(--ink-3); line-height: 1.6; }
+  .step .free-tag { display: inline-block; margin-top: 12px; padding: 4px 12px; background: var(--accent-light); color: var(--accent); border-radius: 100px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; }
+
+  /* Comparison Table */
+  .compare-table { width: 100%; border-collapse: collapse; background: white; border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
+  .compare-table th { padding: 16px 24px; font-size: 14px; font-weight: 800; text-align: left; }
+  .compare-table th:first-child { background: var(--paper-2); color: var(--ink-3); }
+  .compare-table th:nth-child(2) { background: var(--paper-2); color: var(--ink-3); }
+  .compare-table th:nth-child(3) { background: var(--accent); color: white; }
+  .compare-table td { padding: 14px 24px; font-size: 0.92rem; border-top: 1px solid var(--line); }
+  .compare-table td:nth-child(3) { color: var(--accent); font-weight: 600; }
+  .compare-table td:nth-child(2) { color: var(--ink-3); }
+
+  /* FAQ */
+  .faq-list { max-width: 800px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid var(--line); padding: 24px 0; }
+  .faq-q { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .faq-q::after { content: '+'; font-size: 1.2rem; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+  .faq-item.open .faq-q::after { content: '\2212'; }
+  .faq-a { font-size: 0.92rem; color: var(--ink-3); line-height: 1.7; display: none; }
+  .faq-item.open .faq-a { display: block; }
+
+  /* Case Study */
+  .case-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .case-card { background: white; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; transition: all .3s ease; }
+  .case-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .case-card iframe { width: 100%; height: 260px; border: none; }
+  .case-body { padding: 24px 28px; }
+  .case-body h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
+  .case-body p { font-size: 0.9rem; color: var(--ink-3); line-height: 1.6; margin-bottom: 14px; }
+  .case-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .case-tags span { padding: 4px 10px; background: var(--accent-light); color: var(--accent); border-radius: 100px; font-size: 11px; font-weight: 700; }
+  .case-link { display: inline-block; margin-top: 14px; color: var(--accent); font-size: 0.88rem; font-weight: 700; text-decoration: none; }
+  .case-link:hover { color: var(--accent-2); }
+
+  /* Why Us */
+  .why-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+  .why-item { text-align: center; padding: 28px 16px; background: white; border: 1px solid var(--line); border-radius: var(--r-lg); transition: all .3s ease; }
+  .why-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: rgba(255,91,31,0.3); }
+  .why-icon { font-size: 32px; margin-bottom: 12px; }
+  .why-item h3 { font-size: 0.95rem; font-weight: 800; margin-bottom: 6px; }
+  .why-item p { font-size: 0.84rem; color: var(--ink-3); line-height: 1.55; }
+
+  /* Contact CTA */
+  .contact-cta { text-align: center; padding: 80px 40px; background: linear-gradient(135deg, var(--accent-warm), white); }
+  .contact-cta h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 900; margin-bottom: 16px; }
+  .contact-cta p { font-size: 1.05rem; color: var(--ink-3); margin-bottom: 28px; max-width: 600px; margin-left: auto; margin-right: auto; }
+  .contact-info { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+  .contact-item { display: flex; align-items: center; gap: 8px; font-size: 1.1rem; font-weight: 700; }
+  .contact-item a { color: var(--ink); text-decoration: none; }
+  .contact-item a:hover { color: var(--accent); }
+
+  /* Footer */
+  .footer { text-align: center; padding: 40px; border-top: 1px solid var(--line); }
+  .footer img { height: 28px; margin-bottom: 12px; }
+  .footer p { font-size: 0.84rem; color: var(--ink-3); }
+  .footer .version { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 8px; }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .card-grid-4, .process-steps { grid-template-columns: repeat(2, 1fr); }
+    .why-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .nav { padding: 12px 20px; }
+    .nav-links a:not(.btn) { display: none; }
+    .hero { padding: 110px 20px 70px; }
+    section { padding: 60px 20px; }
+    .card-grid, .card-grid-3, .card-grid-4, .process-steps, .case-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: 1fr 1fr; }
+    .compare-table { font-size: 0.82rem; }
+    .compare-table th, .compare-table td { padding: 10px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="../assets/snailai_logo.png" alt="Snail AI Logo">
+    <span data-zh="蜗牛 AI" data-en="Snail AI">蜗牛 AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="/" data-zh="首页" data-en="Home">首页</a>
+    <a href="#services" data-zh="四大服务" data-en="Services">四大服务</a>
+    <a href="#process" data-zh="服务流程" data-en="Process">服务流程</a>
+    <a href="#work" data-zh="案例" data-en="Work">案例</a>
+    <a href="#faq" data-zh="FAQ" data-en="FAQ">FAQ</a>
+    <a href="/corporate-training/" data-zh="企业内训" data-en="Corporate Training">企业内训</a>
+    <a href="#contact" data-zh="联系我们" data-en="Contact">联系我们</a>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ① Hero -->
+<section class="hero">
+  <div class="hero-bg-blob"></div>
+  <div class="hero-tag" data-zh="🏢 悉尼中小企业 AI 落地专家" data-en="🏢 Hands-On AI for Sydney SMEs">🏢 悉尼中小企业 AI 落地专家</div>
+  <h1>
+    <span data-zh="身边的企业级" data-en="Enterprise-Grade ">身边的企业级</span>
+    <span class="accent" data-zh="AI 服务" data-en="AI, Delivered Locally">AI 服务</span>
+  </h1>
+  <p class="subtitle" data-zh="面向悉尼 5–200 人中小企业，从业务 AI 流程化到软件加 AI 模块，一个团队全程负责。CEO 亲自免费上门 2 小时。" data-en="For Sydney businesses with 5–200 staff. From AI process automation to AI-enabling your software — one team, end to end. Our CEO visits your office free for 2 hours.">面向悉尼 5–200 人中小企业，从业务 AI 流程化到软件加 AI 模块，一个团队全程负责。CEO 亲自免费上门 2 小时。</p>
+  <div class="hero-badge-row">
+    <span class="hero-badge hero-badge--orange" data-zh="💰 from $2,500" data-en="💰 from $2,500">💰 from $2,500</span>
+    <span class="hero-badge hero-badge--ink" data-zh="🤝 免费 2 小时上门会面" data-en="🤝 Free 2-Hour On-Site Consultation">🤝 免费 2 小时上门会面</span>
+    <span class="hero-badge hero-badge--warm" data-zh="📋 免费书面方案与报价" data-en="📋 Free Written Proposal & Quote">📋 免费书面方案与报价</span>
+    <span class="hero-badge hero-badge--outline" data-zh="🇦🇺 悉尼都会区" data-en="🇦🇺 Sydney Metro Only">🇦🇺 悉尼都会区</span>
+  </div>
+  <div class="hero-cta">
+    <a href="tel:+61417993551" class="btn btn-primary" data-zh="📞 免费预约上门会面" data-en="📞 Book a Free On-Site Consultation">📞 免费预约上门会面</a>
+    <a href="#services" class="btn btn-secondary" data-zh="查看四大服务 →" data-en="View Our Services →">查看四大服务 →</a>
+  </div>
+</section>
+
+<!-- ② Who We Help -->
+<section id="who-we-help" style="background:var(--paper-2)">
+  <div class="section-inner">
+    <div class="section-tag" data-zh="Who We Help" data-en="Who We Help">Who We Help</div>
+    <h2 class="section-title" data-zh="我们服务谁" data-en="Who We Serve">我们服务谁</h2>
+    <p class="section-desc" data-zh="悉尼都会区 5–200 人的中小企业。你不需要有技术团队，只需要有想把业务用 AI 提效的决心。" data-en="Sydney Metro businesses with 5–200 staff. No tech team required — just the ambition to make AI work for your business.">悉尼都会区 5–200 人的中小企业。你不需要有技术团队，只需要有想把业务用 AI 提效的决心。</p>
+    <div class="card-grid-3">
+      <div class="card">
+        <div class="card-icon">⚖️</div>
+        <h3 data-zh="专业服务" data-en="Professional Services">专业服务</h3>
+        <p data-zh="律所、会计、咨询、地产代理" data-en="Law, accounting, consulting, real estate">律所、会计、咨询、地产代理</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏥</div>
+        <h3 data-zh="医疗健康" data-en="Healthcare">医疗健康</h3>
+        <p data-zh="诊所、专科中心、老年护理" data-en="Clinics, specialist centres, aged care">诊所、专科中心、老年护理</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛒</div>
+        <h3 data-zh="零售电商" data-en="Retail & E-Commerce">零售电商</h3>
+        <p data-zh="线上商店、线下零售、B2B 采购平台" data-en="Online stores, retail, B2B procurement">线上商店、线下零售、B2B 采购平台</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔨</div>
+        <h3 data-zh="建筑 Tradie" data-en="Construction & Trades">建筑 Tradie</h3>
+        <p data-zh="建筑公司、水工电工、装修团队" data-en="Builders, plumbers, electricians, renovators">建筑公司、水工电工、装修团队</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏨</div>
+        <h3 data-zh="酒店餐饮" data-en="Hospitality">酒店餐饮</h3>
+        <p data-zh="餐厅、咖啡馆、酒店、活动策划" data-en="Restaurants, cafes, hotels, event planning">餐厅、咖啡馆、酒店、活动策划</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏠</div>
+        <h3 data-zh="地产物业" data-en="Property & Real Estate">地产物业</h3>
+        <p data-zh="物业管理、开发、中介" data-en="Property management, development, agency">物业管理、开发、中介</p>
+      </div>
+    </div>
+    <p style="text-align:center; margin-top:40px; font-size:0.92rem; color:var(--ink-3)" data-zh="📍 我们目前只服务悉尼都会区（免费上门），暂不接受墨尔本等其他城市。" data-en="📍 We currently serve Sydney Metro in person (free on-site). Other cities coming later.">📍 我们目前只服务悉尼都会区（免费上门），暂不接受墨尔本等其他城市。</p>
+  </div>
+</section>
+
+<!-- ③ 四大核心服务 -->
+<section id="services">
+  <div class="section-inner">
+    <div class="section-tag" data-zh="Core Services" data-en="Core Services">Core Services</div>
+    <h2 class="section-title" data-zh="四大核心服务" data-en="Four Core Services">四大核心服务</h2>
+    <p class="section-desc" data-zh="从单点自动化到端到端交付，按需组合，分阶段推进。" data-en="From single-point automation to end-to-end delivery — mix and match, stage by stage.">从单点自动化到端到端交付，按需组合，分阶段推进。</p>
+    <div class="card-grid-4">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3 data-zh="业务 AI 流程化" data-en="AI Business Process Automation">业务 AI 流程化</h3>
+        <p data-zh="报价、开票、数据录入、客户跟进、报表生成 — 重复性工作全部自动化。接入 Xero、Google Workspace、Microsoft 365、CRM 等现有工具。" data-en="Quoting, invoicing, data entry, follow-ups, reporting — automate the repetitive. Connects to Xero, Google Workspace, Microsoft 365, CRM and more.">报价、开票、数据录入、客户跟进、报表生成 — 重复性工作全部自动化。接入 Xero、Google Workspace、Microsoft 365、CRM 等现有工具。</p>
+        <span class="card-link" data-zh="from $2,500 起 →" data-en="from $2,500 →">from $2,500 起 →</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎓</div>
+        <h3 data-zh="企业 AI 培训" data-en="AI Training for Your Team">企业 AI 培训</h3>
+        <p data-zh="交付系统后手把手教会每个使用者。帮团队搭建 AI 工作平台，让 AI 工具成为日常。" data-en="After we deliver, we train every user hands-on. Set up AI platforms so your team uses AI tools daily.">交付系统后手把手教会每个使用者。帮团队搭建 AI 工作平台，让 AI 工具成为日常。</p>
+        <a href="/corporate-training/" class="card-link" data-zh="查看企业内训 →" data-en="View Corporate Training →">查看企业内训 →</a>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧩</div>
+        <h3 data-zh="软件加 AI 模块" data-en="AI-Enable Your Software">软件加 AI 模块</h3>
+        <p data-zh="已有系统/网站叠加 AI 能力：智能客服、知识库问答、文档处理、数据看板 — 不用重建，加模块即可。" data-en="Add AI to your existing systems: smart chatbot, knowledge-base Q&A, document processing, dashboards — no rebuild needed.">已有系统/网站叠加 AI 能力：智能客服、知识库问答、文档处理、数据看板 — 不用重建，加模块即可。</p>
+        <span class="card-link" data-zh="from $2,500 起 →" data-en="from $2,500 →">from $2,500 起 →</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">🚀</div>
+        <h3 data-zh="端到端交付" data-en="End-to-End Design, Build & Delivery">端到端交付</h3>
+        <p data-zh="需求 → 方案 → 开发 → 部署 → 培训 → 维护，一个团队全程负责。每阶段明确交付物与验收标准。" data-en="Requirements → Proposal → Build → Deploy → Train → Support. One team, full journey. Each stage has clear deliverables and acceptance criteria.">需求 → 方案 → 开发 → 部署 → 培训 → 维护，一个团队全程负责。每阶段明确交付物与验收标准。</p>
+        <span class="card-link" data-zh="from $5,000 起 →" data-en="from $5,000 →">from $5,000 起 →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ④ Old Way vs AI Way -->
+<section style="background:var(--paper-2)">
+  <div class="section-inner">
+    <div class="section-tag" data-zh="Before & After" data-en="Before & After">Before & After</div>
+    <h2 class="section-title" data-zh="传统方式 vs AI 方式" data-en="The Old Way vs The AI Way">传统方式 vs AI 方式</h2>
+    <p class="section-desc" data-zh="同样的事，AI 做更快、更准、成本更低。" data-en="Same tasks — faster, more accurate, lower cost with AI.">同样的事，AI 做更快、更准、成本更低。</p>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th data-zh="场景" data-en="Scenario">场景</th>
+          <th data-zh="传统方式" data-en="The Old Way">传统方式</th>
+          <th data-zh="AI 方式" data-en="The AI Way">AI 方式</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-zh="客户报价" data-en="Quoting">客户报价</td>
+          <td data-zh="手动翻价格表，30 分钟/份" data-en="Manual lookup, 30 min per quote">手动翻价格表，30 分钟/份</td>
+          <td data-zh="AI 自动生成，2 分钟，一键发送" data-en="AI-generated in 2 min, one-click send">AI 自动生成，2 分钟，一键发送</td>
+        </tr>
+        <tr>
+          <td data-zh="发票录入" data-en="Invoice Entry">发票录入</td>
+          <td data-zh="人工敲 Xero，出错率高" data-en="Manual Xero entry, high error rate">人工敲 Xero，出错率高</td>
+          <td data-zh="AI 识别 + 自动同步，零差错" data-en="AI OCR + auto-sync, zero errors">AI 识别 + 自动同步，零差错</td>
+        </tr>
+        <tr>
+          <td data-zh="客户跟进" data-en="Client Follow-up">客户跟进</td>
+          <td data-zh="靠记忆，漏跟丢单" data-en="Rely on memory, miss follow-ups">靠记忆，漏跟丢单</td>
+          <td data-zh="AI 自动提醒 + 邮件草稿，零遗漏" data-en="AI reminders + draft emails, zero misses">AI 自动提醒 + 邮件草稿，零遗漏</td>
+        </tr>
+        <tr>
+          <td data-zh="客服问答" data-en="Customer Support">客服问答</td>
+          <td data-zh="人力值班，下班没人接" data-en="Staffed hours only, after-hours gap">人力值班，下班没人接</td>
+          <td data-zh="AI 客服 24/7，90% 问题即时解决" data-en="AI chatbot 24/7, 90% instant resolution">AI 客服 24/7，90% 问题即时解决</td>
+        </tr>
+        <tr>
+          <td data-zh="报表生成" data-en="Reporting">报表生成</td>
+          <td data-zh="Excel 手搓，每周花半天" data-en="Manual Excel, half a day per week">Excel 手搓，每周花半天</td>
+          <td data-zh="AI 自动汇总 + 可视化看板" data-en="AI auto-summary + live dashboards">AI 自动汇总 + 可视化看板</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ⑤ 服务流程 -->
+<section id="process">
+  <div class="section-inner">
+    <div class="section-tag" data-zh="How It Works" data-en="How It Works">How It Works</div>
+    <h2 class="section-title" data-zh="四步落地，每步透明" data-en="Four Steps, Full Transparency">四步落地，每步透明</h2>
+    <p class="section-desc" data-zh="从免费上门到团队独立运转，全程可追踪。" data-en="From free on-site visit to your team running independently — fully trackable.">从免费上门到团队独立运转，全程可追踪。</p>
+    <div class="process-steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3 data-zh="免费上门会面" data-en="Free On-Site Consultation">免费上门会面</h3>
+        <p data-zh="经验丰富的 CEO Robin 亲自到你的办公室，2 小时深入了解业务痛点、现有工具、团队情况。" data-en="Our experienced CEO Robin visits your office for 2 hours to deeply understand your pain points, tools, and team.">经验丰富的 CEO Robin 亲自到你的办公室，2 小时深入了解业务痛点、现有工具、团队情况。</p>
+        <span class="free-tag" data-zh="FREE · 悉尼都会区" data-en="FREE · Sydney Metro">FREE · 悉尼都会区</span>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3 data-zh="免费书面方案与报价" data-en="Free Proposal & Quote">免费书面方案与报价</h3>
+        <p data-zh="会面后数日内交付：详细 Proposal + 模块化 Quotation（from $2,500 起）。每个模块独立报价，可单选可组合。" data-en="Within days: a detailed Proposal + modular Quotation (from $2,500). Each module priced independently — pick what you need.">会面后数日内交付：详细 Proposal + 模块化 Quotation（from $2,500 起）。每个模块独立报价，可单选可组合。</p>
+        <span class="free-tag" data-zh="FREE · 无义务" data-en="FREE · No Obligation">FREE · 无义务</span>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3 data-zh="分阶段开发部署" data-en="Staged Build & Deploy">分阶段开发部署</h3>
+        <p data-zh="每阶段有明确交付物与验收标准，验收通过才进入下一阶段。不一次性押注，风险可控。" data-en="Each stage has clear deliverables and acceptance criteria. Only proceed after your sign-off. No big-bang risk.">每阶段有明确交付物与验收标准，验收通过才进入下一阶段。不一次性押注，风险可控。</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3 data-zh="培训交接 + 持续支持" data-en="Training, Handover & Support">培训交接 + 持续支持</h3>
+        <p data-zh="企业内训让团队独立使用系统。可选月度维护，持续优化。你不会被锁死在我们身上。" data-en="Corporate training ensures your team runs independently. Optional monthly maintenance. No vendor lock-in.">企业内训让团队独立使用系统。可选月度维护，持续优化。你不会被锁死在我们身上。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ Why Snail AI -->
+<section style="background:var(--paper-2)">
+  <div class="section-inner">
+    <div class="section-tag" data-zh="Why Us" data-en="Why Us">Why Us</div>
+    <h2 class="section-title" data-zh="为什么选择蜗牛 AI" data-en="Why Snail AI">为什么选择蜗牛 AI</h2>
+    <p class="section-desc" data-zh="悉尼本地、中英双语、教育基因 — 这三点组合在市场上独一无二。" data-en="Sydney-local, bilingual, education-first — this combination is unique in the market.">悉尼本地、中英双语、教育基因 — 这三点组合在市场上独一无二。</p>
+    <div class="why-grid">
+      <div class="why-item">
+        <div class="why-icon">🤝</div>
+        <h3 data-zh="CEO 亲自上门" data-en="CEO On-Site">CEO 亲自上门</h3>
+        <p data-zh="不是销售代表，是创始人亲自来" data-en="Not a sales rep — the founder visits you">不是销售代表，是创始人亲自来</p>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">📋</div>
+        <h3 data-zh="免费书面方案" data-en="Free Proposal">免费书面方案</h3>
+        <p data-zh="竞品光诊断就收 $5K+" data-en="Competitors charge $5K+ just for diagnosis">竞品光诊断就收 $5K+</p>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">🌐</div>
+        <h3 data-zh="中英双语" data-en="Bilingual">中英双语</h3>
+        <p data-zh="覆盖华人企业主空白细分" data-en="Serving the Chinese-Australian business niche">覆盖华人企业主空白细分</p>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">🎓</div>
+        <h3 data-zh="教育基因" data-en="Education DNA">教育基因</h3>
+        <p data-zh="交付后培训，不制造依赖" data-en="We train after delivery — no lock-in">交付后培训，不制造依赖</p>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">🔒</div>
+        <h3 data-zh="分阶段签约" data-en="Staged Contracts">分阶段签约</h3>
+        <p data-zh="低风险，每阶段可单选" data-en="Low risk, pick modules per stage">低风险，每阶段可单选</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑦ Selected Work -->
+<section id="work">
+  <div class="section-inner">
+    <div class="section-tag" data-zh="Selected Work" data-en="Selected Work">Selected Work</div>
+    <h2 class="section-title" data-zh="实战项目" data-en="Real Projects">实战项目</h2>
+    <p class="section-desc" data-zh="Snail AI 团队指导交付的学生实战项目 — 真实上线、真实迭代。" data-en="Projects delivered under Snail AI guidance — live, iterated, real.">Snail AI 团队指导交付的学生实战项目 — 真实上线、真实迭代。</p>
+    <div class="case-grid">
+      <div class="case-card">
+        <iframe src="https://robin12300-snailai.github.io/xianlu-workwear/" loading="lazy" title="Xianlu Workwear"></iframe>
+        <div class="case-body">
+          <h3 data-zh="仙路工作服电商" data-en="Xianlu Workwear E-Commerce">仙路工作服电商</h3>
+          <p data-zh="B2B 工作服在线采购平台：产品目录、购物车、Stripe 支付、后台管理、SEO。" data-en="B2B workwear procurement platform: product catalogue, cart, Stripe payments, admin panel, SEO.">B2B 工作服在线采购平台：产品目录、购物车、Stripe 支付、后台管理、SEO。</p>
+          <div class="case-tags">
+            <span>Next.js</span><span>Stripe</span><span>SEO</span>
+          </div>
+          <a href="https://robin12300-snailai.github.io/xianlu-workwear/" target="_blank" rel="noopener" class="case-link" data-zh="访问网站 →" data-en="Visit Site →">访问网站 →</a>
+        </div>
+      </div>
+      <div class="case-card">
+        <iframe src="https://bcaudiosolutions.com.au" loading="lazy" title="BC Audio Solutions"></iframe>
+        <div class="case-body">
+          <h3 data-zh="BC Audio Solutions" data-en="BC Audio Solutions">BC Audio Solutions</h3>
+          <p data-zh="悉尼高端 Bose 音响租赁网站：品牌视觉、租赁询价、SEO 优化、移动端体验，17+ 版本迭代。" data-en="Sydney premium Bose audio hire site: branding, hire enquiries, SEO, mobile UX, 17+ version iterations.">悉尼高端 Bose 音响租赁网站：品牌视觉、租赁询价、SEO 优化、移动端体验，17+ 版本迭代。</p>
+          <div class="case-tags">
+            <span>Branding</span><span>SEO</span><span>Mobile</span>
+          </div>
+          <a href="https://bcaudiosolutions.com.au" target="_blank" rel="noopener" class="case-link" data-zh="访问网站 →" data-en="Visit Site →">访问网站 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑧ FAQ -->
+<section id="faq" style="background:var(--paper-2)">
+  <div class="section-inner">
+    <div class="section-tag" data-zh="FAQ" data-en="FAQ">FAQ</div>
+    <h2 class="section-title" data-zh="常见问题" data-en="Frequently Asked Questions">常见问题</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" data-zh="AI 咨询在悉尼一般多少钱？" data-en="How much does AI consulting cost in Sydney?">AI 咨询在悉尼一般多少钱？</div>
+        <div class="faq-a" data-zh="我们的服务 from $2,500 起，取决于项目范围和复杂度。首次 2 小时上门会面和书面方案报价完全免费，无任何义务。" data-en="Our services start from $2,500, depending on scope and complexity. The first 2-hour on-site consultation and written proposal are completely free — no obligation.">我们的服务 from $2,500 起，取决于项目范围和复杂度。首次 2 小时上门会面和书面方案报价完全免费，无任何义务。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-zh="项目一般多长时间完成？" data-en="How long does an AI project take?">项目一般多长时间完成？</div>
+        <div class="faq-a" data-zh="单模块自动化通常 2–4 周；端到端项目 6–12 周。我们在方案中明确每个阶段的时间线。" data-en="Single-module automation: 2–4 weeks. End-to-end projects: 6–12 weeks. We specify timelines per stage in the proposal.">单模块自动化通常 2–4 周；端到端项目 6–12 周。我们在方案中明确每个阶段的时间线。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-zh="我没有技术团队，能用你们的方案吗？" data-en="I don't have a tech team. Can I still use your services?">我没有技术团队，能用你们的方案吗？</div>
+        <div class="faq-a" data-zh="可以。我们交付的系统都是开箱即用，培训后团队可以独立操作。后续如有问题，我们提供月度维护可选。" data-en="Yes. Our delivered systems are turnkey. After training, your team can operate independently. Optional monthly maintenance is available.">可以。我们交付的系统都是开箱即用，培训后团队可以独立操作。后续如有问题，我们提供月度维护可选。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-zh="我的数据安全吗？" data-en="Is my data safe?">我的数据安全吗？</div>
+        <div class="faq-a" data-zh="我们遵循澳洲隐私法（Privacy Act 1988），数据存储在澳洲境内的云服务。AI 处理不将你的业务数据用于训练。所有 API 调用加密传输。" data-en="We comply with the Australian Privacy Act 1988. Data stays on Australian cloud infrastructure. AI processing does not use your data for model training. All API calls are encrypted.">我们遵循澳洲隐私法（Privacy Act 1988），数据存储在澳洲境内的云服务。AI 处理不将你的业务数据用于训练。所有 API 调用加密传输。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-zh="可以只用其中一个服务吗？" data-en="Can I use just one service?">可以只用其中一个服务吗？</div>
+        <div class="faq-a" data-zh="可以。四大服务可独立采购。比如只做「业务 AI 流程化」或只做「软件加 AI 模块」，无需购买端到端套餐。" data-en="Yes. All four services can be purchased independently. For example, just AI process automation or just AI-enabling your software — no need to buy the full package.">可以。四大服务可独立采购。比如只做「业务 AI 流程化」或只做「软件加 AI 模块」，无需购买端到端套餐。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-zh="你们服务悉尼以外的城市吗？" data-en="Do you serve cities outside Sydney?">你们服务悉尼以外的城市吗？</div>
+        <div class="faq-a" data-zh="目前我们只服务悉尼都会区，提供免费上门会面。其他城市将来会逐步开放，届时会优先线上沟通。" data-en="Currently we only serve Sydney Metro with free on-site visits. Other cities will be added later, starting with online consultations.">目前我们只服务悉尼都会区，提供免费上门会面。其他城市将来会逐步开放，届时会优先线上沟通。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-zh="培训是中文还是英文？" data-en="Is training in Chinese or English?">培训是中文还是英文？</div>
+        <div class="faq-a" data-zh="中英文均可，根据你的团队偏好选择。文档和系统界面也支持双语。" data-en="Both available — choose based on your team's preference. Documentation and system interfaces also support both languages.">中英文均可，根据你的团队偏好选择。文档和系统界面也支持双语。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-zh="AI 系统上线后出问题怎么办？" data-en="What happens if something breaks after go-live?">AI 系统上线后出问题怎么办？</div>
+        <div class="faq-a" data-zh="我们提供 30 天免费保修期。之后可选月度维护计划（含优先响应、定期检查、小调整）。紧急问题电话直达 Robin。" data-en="30-day free warranty after go-live. Optional monthly maintenance plans (priority response, regular health checks, minor adjustments). For emergencies, call Robin directly.">我们提供 30 天免费保修期。之后可选月度维护计划（含优先响应、定期检查、小调整）。紧急问题电话直达 Robin。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑨ Contact -->
+<section id="contact" class="contact-cta">
+  <h2 data-zh="开始你的 AI 落地之旅" data-en="Start Your AI Journey">开始你的 AI 落地之旅</h2>
+  <p data-zh="悉尼都会区免费上门会面 · 免费书面方案与报价 · from $2,500" data-en="Free on-site consultation in Sydney Metro · Free proposal & quote · from $2,500">悉尼都会区免费上门会面 · 免费书面方案与报价 · from $2,500</p>
+  <div class="contact-info">
+    <div class="contact-item">📞 <a href="tel:+61417993551">0417 993 551</a></div>
+    <div class="contact-item">✉️ <a href="mailto:robin@snailai.ai">robin@snailai.ai</a></div>
+  </div>
+  <div class="hero-cta">
+    <a href="tel:+61417993551" class="btn btn-primary" data-zh="📞 免费预约上门会面" data-en="📞 Book a Free On-Site Consultation">📞 免费预约上门会面</a>
+    <a href="mailto:robin@snailai.ai" class="btn btn-secondary" data-zh="✉️ 发邮件咨询" data-en="✉️ Email Us">✉️ 发邮件咨询</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <img src="../assets/snailai_logo.png" alt="Snail AI Logo">
+  <p data-zh="© 2026 蜗牛 AI · 企业AI级服务 · 悉尼都会区" data-en="© 2026 Snail AI · Enterprise AI Services · Sydney Metro">© 2026 蜗牛 AI · 企业AI级服务 · 悉尼都会区</p>
+  <div class="version" id="version-tag">V2.0.0 · 2026-08-19 · SnailAI Enterprise</div>
+</footer>
+
+<script>
+  const LANG_KEY = 'snailai-lang';
+  function applyLang(lang) {
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    const _t = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
+    if (_t) document.title = _t;
+    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+  });
+  let savedLang = 'zh';
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {}
+  applyLang(savedLang);
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+  });
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How much does AI consulting cost in Sydney?", "acceptedAnswer": {"@type": "Answer", "text": "Our services start from $2,500. The first 2-hour on-site consultation and written proposal are completely free."}},
+    {"@type": "Question", "name": "How long does an AI project take?", "acceptedAnswer": {"@type": "Answer", "text": "Single-module automation: 2-4 weeks. End-to-end projects: 6-12 weeks."}},
+    {"@type": "Question", "name": "Is my data safe?", "acceptedAnswer": {"@type": "Answer", "text": "We comply with the Australian Privacy Act 1988. Data stays on Australian cloud infrastructure. AI processing does not use your data for model training."}},
+    {"@type": "Question", "name": "Can I use just one service?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. All four services can be purchased independently."}},
+    {"@type": "Question", "name": "Do you serve cities outside Sydney?", "acceptedAnswer": {"@type": "Answer", "text": "Currently we only serve Sydney Metro with free on-site visits. Other cities coming later."}}
+  ]
+}
+</script>
+
+</body>
+</html>

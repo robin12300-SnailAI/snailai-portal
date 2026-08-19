@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-title-zh="蜗牛AI · 企业内训 — 让团队真正用起AI" data-title-en="Snail AI · Corporate AI Training — Hands-On Training That Sticks">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蜗牛AI · 企业内训</title>
+<meta name="description" content="Snail AI corporate training: system adoption, AI platform setup, team AI workshops. Hands-on. Sydney on-site.">
+<link rel="icon" type="image/png" href="../assets/snailai_logo.png">
+<link rel="canonical" href="https://snailai.ai/corporate-training/mobile.html">
+<link rel="alternate" hreflang="zh-CN" href="https://snailai.ai/corporate-training/mobile.html">
+<link rel="alternate" hreflang="en" href="https://snailai.ai/corporate-training/mobile.html">
+<link rel="alternate" hreflang="x-default" href="https://snailai.ai/corporate-training/">
+<style>
+  :root {
+    --ink: #1A1A2E; --ink-2: #2A2A40; --ink-3: #6A6A85;
+    --paper: #FCFCFA; --paper-2: #F5F4EE; --paper-3: #E8E7E0;
+    --accent: #FF5B1F; --accent-2: #E84A0F; --accent-light: rgba(255,91,31,0.08); --accent-warm: #FFF5EE;
+    --gold: #D4A547; --line: rgba(26,26,46,0.08);
+    --shadow-sm: 0 1px 3px rgba(26,26,46,0.04), 0 2px 8px rgba(26,26,46,0.04);
+    --shadow-md: 0 4px 16px rgba(26,26,46,0.08);
+    --r-lg: 16px;
+    --sans: 'Inter','Helvetica Neue','Helvetica','Arial','PingFang SC','Microsoft YaHei UI','Noto Sans SC',sans-serif;
+    --mono: 'JetBrains Mono','SF Mono','Menlo','Consolas',monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--paper); color: var(--ink); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(252,252,250,.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); }
+  .nav-logo img { height: 28px; }
+  .nav-logo span { font-weight: 800; font-size: 14px; }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .lang-switch { display: inline-flex; gap: 3px; border: 1px solid var(--line); border-radius: 100px; padding: 2px; background: white; }
+  .lang-btn { background: none; border: none; cursor: pointer; padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; color: var(--ink-3); transition: all .2s; }
+  .lang-btn.active { background: var(--ink); color: white; }
+  .nav-menu-btn { background: none; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: 13px; font-weight: 700; color: var(--ink); cursor: pointer; text-decoration: none; }
+
+  .hero { padding: 100px 20px 60px; text-align: center; }
+  .hero-tag { display: inline-block; padding: 5px 14px; background: var(--accent-light); color: var(--accent); border-radius: 100px; font-size: 11px; font-weight: 700; margin-bottom: 20px; }
+  .hero h1 { font-size: 1.8rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; }
+  .hero h1 .accent { color: var(--accent); }
+  .hero .subtitle { font-size: 0.95rem; color: var(--ink-3); margin-bottom: 24px; line-height: 1.65; }
+  .hero-badge-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+  .hero-badge { display: inline-flex; padding: 6px 14px; border-radius: 100px; font-size: 11px; font-weight: 700; }
+  .hero-badge--orange { background: var(--accent); color: white; }
+  .hero-badge--ink { background: var(--ink); color: white; }
+  .hero-badge--warm { background: var(--accent-warm); color: var(--accent); border: 1px solid rgba(255,91,31,0.2); }
+  .btn { display: inline-flex; align-items: center; padding: 12px 24px; border-radius: 100px; font-size: 13px; font-weight: 700; text-decoration: none; transition: all .25s; border: 1px solid transparent; cursor: pointer; }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-secondary { background: white; color: var(--ink); border-color: var(--line); }
+  .hero-cta { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+
+  section { padding: 48px 20px; }
+  .section-tag { display: inline-block; padding: 4px 12px; background: var(--accent-light); color: var(--accent); border-radius: 100px; font-size: 11px; font-weight: 700; margin-bottom: 12px; }
+  .section-title { font-size: 1.4rem; font-weight: 900; line-height: 1.25; margin-bottom: 12px; }
+  .section-desc { font-size: 0.92rem; color: var(--ink-3); margin-bottom: 32px; }
+
+  .card { background: white; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 24px 20px; margin-bottom: 16px; }
+  .card-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 14px; }
+  .card h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 8px; }
+  .card p { font-size: 0.88rem; color: var(--ink-3); line-height: 1.6; }
+  .card .card-link { display: inline-block; margin-top: 12px; color: var(--accent); font-size: 0.84rem; font-weight: 700; text-decoration: none; }
+
+  .format-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: white; border: 1px solid var(--line); border-radius: var(--r-lg); margin-bottom: 10px; }
+  .format-icon { font-size: 24px; }
+  .format-item h3 { font-size: 0.92rem; font-weight: 800; }
+  .format-item p { font-size: 0.82rem; color: var(--ink-3); }
+
+  .flow-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .flow-step { padding: 10px 16px; background: white; border: 1px solid var(--line); border-radius: var(--r-lg); font-size: 0.86rem; font-weight: 700; }
+  .flow-step.highlight { background: var(--accent); color: white; border-color: var(--accent); }
+  .flow-arrow { color: var(--ink-3); }
+
+  .cred-card { background: linear-gradient(135deg, var(--accent-warm), white); border: 1px solid rgba(255,91,31,0.2); border-radius: var(--r-lg); padding: 20px 18px; margin-bottom: 14px; }
+  .cred-card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 6px; }
+  .cred-card p { font-size: 0.86rem; color: var(--ink-3); line-height: 1.55; }
+
+  .faq-item { border-bottom: 1px solid var(--line); padding: 18px 0; }
+  .faq-q { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .faq-q::after { content: '+'; font-size: 1.1rem; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+  .faq-item.open .faq-q::after { content: '\2212'; }
+  .faq-a { font-size: 0.86rem; color: var(--ink-3); line-height: 1.65; display: none; }
+  .faq-item.open .faq-a { display: block; }
+
+  .contact-cta { text-align: center; padding: 48px 20px; background: linear-gradient(135deg, var(--accent-warm), white); }
+  .contact-cta h2 { font-size: 1.4rem; font-weight: 900; margin-bottom: 12px; }
+  .contact-cta p { font-size: 0.92rem; color: var(--ink-3); margin-bottom: 20px; }
+  .contact-info { display: flex; flex-direction: column; gap: 12px; align-items: center; margin-bottom: 24px; }
+  .contact-item { font-size: 1rem; font-weight: 700; }
+  .contact-item a { color: var(--ink); text-decoration: none; }
+
+  .footer { text-align: center; padding: 28px 16px; border-top: 1px solid var(--line); }
+  .footer img { height: 24px; margin-bottom: 8px; }
+  .footer p { font-size: 0.78rem; color: var(--ink-3); }
+  .footer .version { font-family: var(--mono); font-size: 10px; color: var(--ink-3); margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="../assets/snailai_logo.png" alt="Snail AI">
+    <span data-zh="蜗牛 AI" data-en="Snail AI">蜗牛 AI</span>
+  </a>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="zh">中</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+    <a href="tel:+61417993551" class="nav-menu-btn" data-zh="📞 预约" data-en="📞 Book">📞 预约</a>
+  </div>
+</nav>
+
+<!-- ① Hero -->
+<section class="hero">
+  <div class="hero-tag" data-zh="🎓 企业内训 · 让团队真正用起 AI" data-en="🎓 Corporate Training · AI That Sticks">🎓 企业内训 · 让团队真正用起 AI</div>
+  <h1><span data-zh="系统交付只是开始" data-en="Delivery Is Only the Start">系统交付只是开始</span><span class="accent" data-zh="，团队会用才是终点" data-en=" — Using It Is the Finish">，团队会用才是终点</span></h1>
+  <p class="subtitle" data-zh="开发 AI 系统，然后教会每个人 · 帮团队搭建 AI 平台 · 输出式教学，当堂产出" data-en="Build AI systems, train every user · Set up AI platforms · Output-driven, produce in class">开发 AI 系统，然后教会每个人 · 帮团队搭建 AI 平台 · 输出式教学，当堂产出</p>
+  <div class="hero-badge-row">
+    <span class="hero-badge hero-badge--orange" data-zh="🎓 输出式教学" data-en="🎓 Output-Driven">🎓 输出式教学</span>
+    <span class="hero-badge hero-badge--ink" data-zh="🤝 悉尼上门" data-en="🤝 On-Site">🤝 悉尼上门</span>
+    <span class="hero-badge hero-badge--warm" data-zh="🌐 中英双语" data-en="🌐 Bilingual">🌐 中英双语</span>
+  </div>
+  <div class="hero-cta">
+    <a href="tel:+61417993551" class="btn btn-primary" data-zh="📞 免费预约上门会面" data-en="📞 Book Free Visit">📞 免费预约上门会面</a>
+    <a href="/enterprise/mobile.html" class="btn btn-secondary" data-zh="企业 AI 服务 →" data-en="Enterprise AI →">企业 AI 服务 →</a>
+  </div>
+</section>
+
+<!-- ② 三个内训产品 -->
+<section id="programs" style="background:var(--paper-2)">
+  <div class="section-tag" data-zh="Training Programs" data-en="Training Programs">Training Programs</div>
+  <h2 class="section-title" data-zh="三个内训产品" data-en="Three Programs">三个内训产品</h2>
+  <div class="card">
+    <div class="card-icon">🖥️</div>
+    <h3 data-zh="系统使用培训" data-en="System Adoption Training">系统使用培训</h3>
+    <p data-zh="交付的 AI 系统，手把手教会每位使用者的工作流。当堂实操，不是看演示。" data-en="Hands-on training for delivered AI systems. Real practice, not demos.">交付的 AI 系统，手把手教会每位使用者的工作流。当堂实操，不是看演示。</p>
+    <span class="card-link" data-zh="按人数与天数定制报价" data-en="Custom pricing">按人数与天数定制报价</span>
+  </div>
+  <div class="card">
+    <div class="card-icon">🔧</div>
+    <h3 data-zh="AI 平台搭建培训" data-en="AI Platform Setup & Enablement">AI 平台搭建培训</h3>
+    <p data-zh="帮企业人员搭建 AI 工作平台（如 WorkBuddy），让他们通过 AI 工具操作业务系统。搭建+培训一次搞定。" data-en="Set up AI platforms (e.g. WorkBuddy) so teams use AI tools daily. Setup + training in one.">帮企业人员搭建 AI 工作平台（如 WorkBuddy），让他们通过 AI 工具操作业务系统。搭建+培训一次搞定。</p>
+    <span class="card-link" data-zh="按人数与天数定制报价" data-en="Custom pricing">按人数与天数定制报价</span>
+  </div>
+  <div class="card">
+    <div class="card-icon">💡</div>
+    <h3 data-zh="团队 AI 能力工作坊" data-en="Team AI Skills Workshops">团队 AI 能力工作坊</h3>
+    <p data-zh="提示词、AI 工具、日常提效 — 零基础友好。当堂产出提示词模板和工作流。" data-en="Prompts, AI tools, productivity — beginner-friendly. Produce templates and workflows in class.">提示词、AI 工具、日常提效 — 零基础友好。当堂产出提示词模板和工作流。</p>
+    <span class="card-link" data-zh="按人数与天数定制报价" data-en="Custom pricing">按人数与天数定制报价</span>
+  </div>
+</section>
+
+<!-- ③ 培训形式 -->
+<section id="format">
+  <div class="section-tag" data-zh="Training Format" data-en="Format">Training Format</div>
+  <h2 class="section-title" data-zh="培训形式" data-en="How We Train">培训形式</h2>
+  <div class="format-item"><div class="format-icon">📍</div><div><h3 data-zh="悉尼上门" data-en="Sydney On-Site">悉尼上门</h3><p data-zh="到你办公室培训" data-en="We come to your office">到你办公室培训</p></div></div>
+  <div class="format-item"><div class="format-icon">👥</div><div><h3 data-zh="小班实战" data-en="Small Groups">小班实战</h3><p data-zh="最多 20 人，人人动手" data-en="Max 20, everyone practices">最多 20 人，人人动手</p></div></div>
+  <div class="format-item"><div class="format-icon">🌐</div><div><h3 data-zh="中文或英文" data-en="ZH or EN">中文或英文</h3><p data-zh="按团队偏好选择" data-en="Choose based on preference">按团队偏好选择</p></div></div>
+  <div class="format-item"><div class="format-icon">🎯</div><div><h3 data-zh="输出式教学" data-en="Output-Driven">输出式教学</h3><p data-zh="当堂产出，不是听讲座" data-en="Produce, not just listen">当堂产出，不是听讲座</p></div></div>
+</section>
+
+<!-- ④ 闭环 -->
+<section style="background:var(--paper-2)">
+  <div style="text-align:center">
+    <div class="section-tag" data-zh="The Full Loop" data-en="The Full Loop">The Full Loop</div>
+    <h2 class="section-title" data-zh="AI 服务 + 内训 = 闭环" data-en="AI Services + Training = Closed Loop">AI 服务 + 内训 = 闭环</h2>
+    <div class="flow-row">
+      <div class="flow-step" data-zh="会面" data-en="Consult">会面</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step" data-zh="交付" data-en="Deliver">交付</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step highlight" data-zh="内训" data-en="Training">内训</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step" data-zh="独立" data-en="Independent">独立</div>
+    </div>
+    <a href="/enterprise/mobile.html" class="btn btn-secondary" data-zh="企业 AI 服务 →" data-en="Enterprise AI →">企业 AI 服务 →</a>
+  </div>
+</section>
+
+<!-- ⑤ 教育实力 -->
+<section>
+  <div class="section-tag" data-zh="Education Pedigree" data-en="Pedigree">Education Pedigree</div>
+  <h2 class="section-title" data-zh="教育实力背书" data-en="Education Track Record">教育实力背书</h2>
+  <div class="cred-card"><h3 data-zh="输出式教学首创" data-en="Output-Driven Pioneer">输出式教学首创</h3><p data-zh="当堂产出可用成果，已验证于数百学员" data-en="Produce usable outputs in class, proven with hundreds">当堂产出可用成果，已验证于数百学员</p></div>
+  <div class="cred-card"><h3 data-zh="线上班 + 线下班" data-en="Online + Offline">线上班 + 线下班</h3><p data-zh="持续招生开课" data-en="Enrolling and running continuously">持续招生开课</p></div>
+  <div class="cred-card"><h3 data-zh="学员门户与课件体系" data-en="Student Portal & Courseware">学员门户与课件体系</h3><p data-zh="课件、作业、成长点数、AI 能力清单" data-en="Courseware, assignments, growth points, AI capability list">课件、作业、成长点数、AI 能力清单</p></div>
+</section>
+
+<!-- ⑥ FAQ -->
+<section id="faq" style="background:var(--paper-2)">
+  <div class="section-tag" data-zh="FAQ" data-en="FAQ">FAQ</div>
+  <h2 class="section-title" data-zh="常见问题" data-en="FAQ">常见问题</h2>
+  <div class="faq-item"><div class="faq-q" data-zh="多少人参加合适？" data-en="How many attendees?">多少人参加合适？</div><div class="faq-a" data-zh="建议 5–20 人，可分批培训" data-en="5–20 recommended, batch training available">建议 5–20 人，可分批培训</div></div>
+  <div class="faq-item"><div class="faq-q" data-zh="培训多长时间？" data-en="How long?">培训多长时间？</div><div class="faq-a" data-zh="系统使用 1–2 天，平台搭建 2–3 天，工作坊半天/一天" data-en="System: 1–2 days. Platform: 2–3 days. Workshop: half/full day">系统使用 1–2 天，平台搭建 2–3 天，工作坊半天/一天</div></div>
+  <div class="faq-item"><div class="faq-q" data-zh="可以上门吗？" data-en="On-site available?">可以上门吗？</div><div class="faq-a" data-zh="可以，悉尼都会区上门不加收交通费" data-en="Yes, Sydney Metro at no extra charge">可以，悉尼都会区上门不加收交通费</div></div>
+  <div class="faq-item"><div class="faq-q" data-zh="没买企业 AI 服务也能单独培训？" data-en="Training without AI services?">没买企业 AI 服务也能单独培训？</div><div class="faq-a" data-zh="可以，三个产品都可以独立采购" data-en="Yes, all three programs are independently available">可以，三个产品都可以独立采购</div></div>
+</section>
+
+<!-- ⑦ CTA -->
+<section class="contact-cta">
+  <h2 data-zh="让团队真正用起 AI" data-en="Make AI Work for Your Team">让团队真正用起 AI</h2>
+  <p data-zh="悉尼上门 · 按人数与天数定制报价" data-en="Sydney on-site · Custom pricing">悉尼上门 · 按人数与天数定制报价</p>
+  <div class="contact-info">
+    <div class="contact-item">📞 <a href="tel:+61417993551">0417 993 551</a></div>
+    <div class="contact-item">✉️ <a href="mailto:robin@snailai.ai">robin@snailai.ai</a></div>
+  </div>
+  <a href="tel:+61417993551" class="btn btn-primary" data-zh="📞 免费预约" data-en="📞 Book Free Visit">📞 免费预约</a>
+</section>
+
+<footer class="footer">
+  <img src="../assets/snailai_logo.png" alt="Snail AI">
+  <p data-zh="© 2026 蜗牛 AI · 企业内训" data-en="© 2026 Snail AI · Corporate Training">© 2026 蜗牛 AI · 企业内训</p>
+  <div class="version">V2.0.0 · 2026-08-19</div>
+</footer>
+
+<script>
+  const LANG_KEY = 'snailai-lang';
+  function applyLang(lang) {
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+    const _t = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
+    if (_t) document.title = _t;
+    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', () => applyLang(btn.dataset.lang)));
+  let savedLang = 'zh'; try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {} applyLang(savedLang);
+  document.querySelectorAll('.faq-q').forEach(q => q.addEventListener('click', () => q.parentElement.classList.toggle('open')));
+</script>
+</body>
+</html>
