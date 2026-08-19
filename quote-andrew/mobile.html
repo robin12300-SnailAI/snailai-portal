@@ -45,6 +45,24 @@
       background: linear-gradient(135deg, var(--accent) 0%, var(--gold) 100%);
       -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
     }
+    .app-version {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 7px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--ink-2);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      letter-spacing: 0.5px;
+      vertical-align: middle;
+    }
+    .top-bar .app-version {
+      color: var(--paper);
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.35);
+    }
 
     /* ===== LOGIN VIEW ===== */
     #login-view {
@@ -823,6 +841,7 @@
       <div class="brand-header">
         <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
         <span class="brand-name">snail<span class="brand-ai">.ai</span></span>
+        <span class="app-version">V1.3.1</span>
       </div>
       <h2 data-zh="Skin Cancer Laser Centre 模块化报价" data-en="Skin Cancer Laser Centre Modular Quotation">Skin Cancer Laser Centre Modular Quotation</h2>
       <span class="quote-id">SCLC-QUOTE-2026-001 &middot; v1.0</span>
@@ -885,7 +904,7 @@
 <!-- ===== DETAIL PANEL ===== -->
 <div id="detail-panel">
   <div class="detail-header">
-    <button class="detail-back" id="detail-back" data-zh="\u2190 返回报价" data-en="\u2190 Back to Quotation">\u2190 Back to Quotation</button>
+    <button class="detail-back" id="detail-back" data-zh="← 返回报价" data-en="← Back to Quotation">← Back to Quotation</button>
     <div class="lang-switch">
       <button class="lang-btn" data-lang="zh">中文</button>
       <button class="lang-btn active" data-lang="en">EN</button>
@@ -951,8 +970,8 @@
       </div>
 
       <div class="ci-actions">
-        <button type="button" class="ci-btn-continue" id="ci-continue-btn" data-zh="继续复核 \u2192" data-en="Continue to Review \u2192" disabled>Continue to Review \u2192</button>
-        <button type="button" class="ci-btn-back" id="ci-back-btn" data-zh="\u2190 返回" data-en="\u2190 Back">\u2190 Back</button>
+        <button type="button" class="ci-btn-continue" id="ci-continue-btn" data-zh="继续复核 →" data-en="Continue to Review →" disabled>Continue to Review →</button>
+        <button type="button" class="ci-btn-back" id="ci-back-btn" data-zh="← 返回" data-en="← Back">← Back</button>
       </div>
     </div>
   </div>
@@ -974,7 +993,7 @@
   </div>
   <div class="review-actions">
     <button class="review-btn-submit" id="review-submit-btn" type="button" data-zh="确认提交" data-en="Confirm &amp; Submit">Confirm &amp; Submit</button>
-    <button class="review-btn-back" id="review-back-btn" type="button" data-zh="\u2190 返回修改" data-en="\u2190 Back to Edit">\u2190 Back to Edit</button>
+    <button class="review-btn-back" id="review-back-btn" type="button" data-zh="← 返回修改" data-en="← Back to Edit">← Back to Edit</button>
   </div>
 </div>
 
@@ -1119,8 +1138,8 @@ const ITEMS = [
     preselected: false,
     detail: {
       objective: {
-        zh: '\u8BA9 Andrew \u53EF\u4EE5\u7528\u81EA\u7136\u8BED\u8A00\u63D0\u51FA\u7F51\u7AD9\u4FEE\u6539\uFF0C\u4F46\u4E0D\u80FD\u7ED5\u8FC7\u4EE3\u7801\u5BA1\u67E5\u3001\u533B\u5B66\u5BA1\u6279\u6216\u53D1\u5E03\u63A7\u5236\u3002\u4FEE\u6539 \u2192 staging \u9884\u89C8 \u2192 Andrew \u5BA1\u6279 \u2192 \u4E00\u952E production\u3002',
-        en: 'Allow Andrew to request website changes in natural language without bypassing code checks, medical review or release controls. Change \u2192 staging preview \u2192 Andrew approval \u2192 one-click production.'
+        zh: '\u8BA9 Andrew \u53EF\u4EE5\u7528\u81EA\u7136\u8BED\u8A00\u63D0\u51FA\u7F51\u7AD9\u4FEE\u6539\uFF0C\u4F46\u4E0D\u80FD\u7ED5\u8FC7\u4EE3\u7801\u5BA1\u67E5\u3001\u533B\u5B66\u5BA1\u6279\u6216\u53D1\u5E03\u63A7\u5236\u3002\u4FEE\u6539 → staging \u9884\u89C8 → Andrew \u5BA1\u6279 → \u4E00\u952E production\u3002',
+        en: 'Allow Andrew to request website changes in natural language without bypassing code checks, medical review or release controls. Change → staging preview → Andrew approval → one-click production.'
       },
       deliverables: {
         zh: ['Windows 11 WorkBuddy \u5B89\u88C5\u4E0E\u9A8C\u8BC1', '\u8D26\u53F7\u548C Token \u5B89\u5168\u7BA1\u7406', '\u4EC5\u9650\u7F51\u7AD9 repo \u7684\u5B9A\u5236\u7F16\u8F91\u6280\u80FD', 'Git + Render staging/production \u6D41\u7A0B', '\u9884\u7EA6/\u4ED8\u6B3E Provider \u914D\u7F6E', '\u57F9\u8BAD\u3001UAT \u4E0E SOP'],
@@ -1650,13 +1669,13 @@ function renderReviewCard() {
   paymentSchedule.forEach(function(s) {
     var exGstParts, inclGstParts;
     if (s.type === '304030') {
-      exGstParts = '30%: ' + fmtPrice(s.p30) + ' \u2192 40%: ' + fmtPrice(s.p40) + ' \u2192 30%: ' + fmtPrice(s.p30b);
+      exGstParts = '30%: ' + fmtPrice(s.p30) + ' → 40%: ' + fmtPrice(s.p40) + ' → 30%: ' + fmtPrice(s.p30b);
       var p30g = fmtGst(s.p30), p40g = fmtGst(s.p40), p30bg = fmtGst(s.p30b);
-      inclGstParts = '30%: ' + fmtPrice(s.p30+p30g) + ' \u2192 40%: ' + fmtPrice(s.p40+p40g) + ' \u2192 30%: ' + fmtPrice(s.p30b+p30bg);
+      inclGstParts = '30%: ' + fmtPrice(s.p30+p30g) + ' → 40%: ' + fmtPrice(s.p40+p40g) + ' → 30%: ' + fmtPrice(s.p30b+p30bg);
     } else {
-      exGstParts = '50%: ' + fmtPrice(s.p50a) + ' \u2192 50%: ' + fmtPrice(s.p50b);
+      exGstParts = '50%: ' + fmtPrice(s.p50a) + ' → 50%: ' + fmtPrice(s.p50b);
       var p50ag = fmtGst(s.p50a), p50bg = fmtGst(s.p50b);
-      inclGstParts = '50%: ' + fmtPrice(s.p50a+p50ag) + ' \u2192 50%: ' + fmtPrice(s.p50b+p50bg);
+      inclGstParts = '50%: ' + fmtPrice(s.p50a+p50ag) + ' → 50%: ' + fmtPrice(s.p50b+p50bg);
     }
     payHtml += '<div class="payment-dual-row">' +
       '<div class="pdr-name">' + escHtml(s.name) + '</div>' +
@@ -1808,13 +1827,13 @@ function renderSuccessCard() {
   (d.paymentSchedule || []).forEach(function(s) {
     var exGstParts, inclGstParts;
     if (s.type === '304030') {
-      exGstParts = '30%: ' + fmtPrice(s.p30) + ' \u2192 40%: ' + fmtPrice(s.p40) + ' \u2192 30%: ' + fmtPrice(s.p30b);
+      exGstParts = '30%: ' + fmtPrice(s.p30) + ' → 40%: ' + fmtPrice(s.p40) + ' → 30%: ' + fmtPrice(s.p30b);
       var p30g = fmtGst(s.p30), p40g = fmtGst(s.p40), p30bg = fmtGst(s.p30b);
-      inclGstParts = '30%: ' + fmtPrice(s.p30+p30g) + ' \u2192 40%: ' + fmtPrice(s.p40+p40g) + ' \u2192 30%: ' + fmtPrice(s.p30b+p30bg);
+      inclGstParts = '30%: ' + fmtPrice(s.p30+p30g) + ' → 40%: ' + fmtPrice(s.p40+p40g) + ' → 30%: ' + fmtPrice(s.p30b+p30bg);
     } else {
-      exGstParts = '50%: ' + fmtPrice(s.p50a) + ' \u2192 50%: ' + fmtPrice(s.p50b);
+      exGstParts = '50%: ' + fmtPrice(s.p50a) + ' → 50%: ' + fmtPrice(s.p50b);
       var p50ag = fmtGst(s.p50a), p50bg = fmtGst(s.p50b);
-      inclGstParts = '50%: ' + fmtPrice(s.p50a+p50ag) + ' \u2192 50%: ' + fmtPrice(s.p50b+p50bg);
+      inclGstParts = '50%: ' + fmtPrice(s.p50a+p50ag) + ' → 50%: ' + fmtPrice(s.p50b+p50bg);
     }
     payHtml += '<div class="payment-dual-row">' +
       '<div class="pdr-name">' + escHtml(s.name) + '</div>' +
