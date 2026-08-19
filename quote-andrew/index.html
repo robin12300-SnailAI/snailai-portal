@@ -905,12 +905,35 @@ document.getElementById('login-pass').addEventListener('keydown', e => { if(e.ke
 async function doLogin() {
   const user = document.getElementById('login-user').value.trim();
   const pass = document.getElementById('login-pass').value.trim();
-  if (user.toLowerCase() === 'andrew' && pass === 'success888') {
-    document.getElementById('login-view').style.display = 'none';
-    document.getElementById('app-view').style.display = 'block';
-    initQuote();
-  } else {
-    document.getElementById('login-error').style.display = 'block';
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+  err.style.display = 'none';
+  btn.disabled = true;
+  try {
+    const r = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: user, password: pass })
+    });
+    const d = await r.json();
+    if (r.ok && d.ok) {
+      if (d.user.role !== 'customer') {
+        err.textContent = 'This account is not authorised to view this quotation. / 此账号无权查看本报价';
+        err.style.display = 'block';
+        return;
+      }
+      localStorage.setItem('quote_token', d.token);
+      document.getElementById('login-view').style.display = 'none';
+      document.getElementById('app-view').style.display = 'block';
+      initQuote();
+    } else {
+      err.style.display = 'block';
+    }
+  } catch (e) {
+    err.textContent = 'Network error. Please retry. / 网络错误，请重试';
+    err.style.display = 'block';
+  } finally {
+    btn.disabled = false;
   }
 }
 
@@ -1154,7 +1177,7 @@ function renderConfirmCard() {
   try {
     fetch('/api/quote/confirm', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Auth-Token': localStorage.getItem('quote_token') || '' },
       body: JSON.stringify({
         client: 'Andrew',
         quoteId: 'SCLC-QUOTE-2026-001',

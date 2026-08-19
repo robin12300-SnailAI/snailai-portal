@@ -287,7 +287,8 @@ def init_db():
       deposit_total INTEGER DEFAULT 0,
       payment_schedule TEXT,
       confirmed_at TEXT DEFAULT (datetime('now')),
-      email_sent INTEGER DEFAULT 0
+      email_sent INTEGER DEFAULT 0,
+      confirmed_by TEXT
     );
     """)
     conn.commit()
@@ -298,6 +299,7 @@ def init_db():
         "ALTER TABLE users ADD COLUMN referrer TEXT",
         "ALTER TABLE capabilities ADD COLUMN points INTEGER DEFAULT 10",
         "ALTER TABLE capabilities ADD COLUMN sort_order INTEGER",
+        "ALTER TABLE quote_confirmations ADD COLUMN confirmed_by TEXT",
     ]:
         try:
             c.execute(sql)
@@ -397,13 +399,16 @@ def _seed_users(c):
         ("zhangruirui", "张蕊蕊", "student", "12345"),
         ("zhujiao", "蜗牛AI 助教", "ta", "12300"),
         ("robin", "Robin Luo", "instructor", "12300"),
+        ("andrew", "Andrew Li", "customer", "success888", 0),
     ]
-    for username, name, role, pw in users:
+    for u in users:
+        username, name, role, pw = u[0], u[1], u[2], u[3]
+        mcp = u[4] if len(u) > 4 else 1
         salt = secrets.token_hex(16)
         c.execute(
-            "INSERT OR IGNORE INTO users(username, name, role, password_hash, salt) "
-            "VALUES(?,?,?,?,?)",
-            (username, name, role, _hash_pw(pw, salt), salt),
+            "INSERT OR IGNORE INTO users(username, name, role, password_hash, salt, must_change_pw) "
+            "VALUES(?,?,?,?,?,?)",
+            (username, name, role, _hash_pw(pw, salt), salt, mcp),
         )
 
 
@@ -678,7 +683,15 @@ def _options():
 
 @app.route("/api/quote/confirm", methods=["POST"])
 def api_quote_confirm():
-    """Andrew 报价确认 — 存 SQLite 留底（邮件待配密码后补充）。"""
+    """Andrew 报价确认 — 存 SQLite 留底（邮件待配密码后补充）。
+    若请求带有效 session token，则记录确认人身份（confirmed_by）。"""
+    # 可选身份校验：登录 token → username
+    confirmed_by = None
+    token = _token_from_req()
+    if token:
+        sess = _get_session(token)
+        if sess:
+            confirmed_by = sess.get("username")
     data = request.get_json(silent=True) or {}
     quote_id = data.get("quoteId", "")
     client = data.get("client", "")
@@ -691,8 +704,8 @@ def api_quote_confirm():
 
     conn = db_conn()
     conn.execute(
-        "INSERT INTO quote_confirmations(quote_id, client, selections, oneoff_total, monthly_total, deposit_total, payment_schedule, confirmed_at) VALUES(?,?,?,?,?,?,?,?)",
-        (quote_id, client, selections, oneoff_total, monthly_total, deposit_total, payment_schedule, ts),
+        "INSERT INTO quote_confirmations(quote_id, client, selections, oneoff_total, monthly_total, deposit_total, payment_schedule, confirmed_at, confirmed_by) VALUES(?,?,?,?,?,?,?,?,?)",
+        (quote_id, client, selections, oneoff_total, monthly_total, deposit_total, payment_schedule, ts, confirmed_by),
     )
     conn.commit()
     conn.close()

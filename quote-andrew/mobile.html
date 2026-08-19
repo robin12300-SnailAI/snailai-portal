@@ -266,15 +266,34 @@ document.getElementById('login-btn').addEventListener('click',doLogin);
 document.getElementById('login-user').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
-function doLogin(){
+async function doLogin(){
   const u=document.getElementById('login-user').value.trim();
   const p=document.getElementById('login-pass').value.trim();
-  if(u.toLowerCase()==='andrew'&&p==='success888'){
-    document.getElementById('login-view').style.display='none';
-    document.getElementById('app-view').style.display='block';
-    initQuote();
-  }else{
-    document.getElementById('login-error').style.display='block';
+  const btn=document.getElementById('login-btn');
+  const err=document.getElementById('login-error');
+  err.style.display='none';
+  btn.disabled=true;
+  try{
+    const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+    const d=await r.json();
+    if(r.ok&&d.ok){
+      if(d.user.role!=='customer'){
+        err.textContent='This account is not authorised to view this quotation. / 此账号无权查看本报价';
+        err.style.display='block';
+        return;
+      }
+      localStorage.setItem('quote_token',d.token);
+      document.getElementById('login-view').style.display='none';
+      document.getElementById('app-view').style.display='block';
+      initQuote();
+    }else{
+      err.style.display='block';
+    }
+  }catch(e){
+    err.textContent='Network error. Please retry. / 网络错误，请重试';
+    err.style.display='block';
+  }finally{
+    btn.disabled=false;
   }
 }
 
@@ -373,7 +392,7 @@ function renderConfirmCard(){
   });
   if(mt>0)ph+=`<div class="payment-row"><span class="pr-label">${L==='zh'?'月度维护':'Monthly care'}</span><span class="pr-amount">${L==='zh'?'按月预付':'Monthly prepay'}</span></div>`;
   card.innerHTML=`<div class="success-icon">✓</div><h2>${L==='zh'?'报价已确认':'Quotation Confirmed'}</h2><p class="confirm-subtitle">${L==='zh'?'确认已发往':'Confirmation sent to'} <strong>robin@snailai.ai</strong></p><div style="margin-bottom:8px;font-size:11px;color:var(--ink-3);">${ts}</div>${ih}<div class="confirm-total"><div class="total-row"><span>${L==='zh'?'一次性合计':'One-off Total'}</span><span class="tv">${fmtPrice(ot)}</span></div>${mt>0?`<div class="total-row"><span>${L==='zh'?'月度合计':'Monthly Total'}</span><span class="tv">${fmtPrice(mt)}/${L==='zh'?'月':'mo'}</span></div>`:''}<div class="total-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line);"><span>${L==='zh'?'首期应付':'Deposit Due'}</span><span class="tv">${fmtPrice(dep)}</span></div></div><div class="payment-schedule"><h3>${L==='zh'?'付款进程':'Payment Schedule'}</h3>${ph}</div><div class="confirm-notice"><strong>${L==='zh'?'📋 下一步':'📋 Next Step'}</strong> ${L==='zh'?'随后您将收到详细技术服务合同和技术服务书，双方签署后正式开始工作。':'You will receive a detailed Technical Services Agreement and Proposal for both parties to sign before work commences.'}</div>`;
-  try{fetch('/api/quote/confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client:'Andrew',quoteId:'SCLC-QUOTE-2026-001',timestamp:now.toISOString(),selections:Object.keys(selectedItems).map(id=>{const item=ITEMS.find(i=>i.id===id);return{id,name:item.name,price:item.price,type:item.type};}),oneoffTotal:ot,monthlyTotal:mt,depositTotal:dep,paymentSchedule:ps})}).catch(()=>{});}catch(e){}
+  try{fetch('/api/quote/confirm',{method:'POST',headers:{'Content-Type':'application/json','X-Auth-Token':localStorage.getItem('quote_token')||''},body:JSON.stringify({client:'Andrew',quoteId:'SCLC-QUOTE-2026-001',timestamp:now.toISOString(),selections:Object.keys(selectedItems).map(id=>{const item=ITEMS.find(i=>i.id===id);return{id,name:item.name,price:item.price,type:item.type};}),oneoffTotal:ot,monthlyTotal:mt,depositTotal:dep,paymentSchedule:ps})}).catch(()=>{});}catch(e){}
 }
 
 function initQuote(){
