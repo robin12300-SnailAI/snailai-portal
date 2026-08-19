@@ -826,11 +826,11 @@
   .bottom-nav a .bnav-icon { font-size: 19px; margin-bottom: 3px; line-height: 1; }
   .bottom-nav a .bnav-label { letter-spacing: .02em; white-space: nowrap; }
 
-  /* Bottom nav is mobile-only — hidden on desktop (consistent with FAQ) */
-  .bottom-nav { display: none; }
+  /* Bottom nav disabled — removed 2026-08-19 */
+  .bottom-nav { display: none !important; }
   @media (max-width: 768px) {
-    .bottom-nav { display: grid; }
-    body { padding-bottom: 106px; }
+    .bottom-nav { display: none !important; }
+    body { padding-bottom: 0; }
   }
 
 </style>
@@ -1505,7 +1505,7 @@
     <a href="#contact" data-zh="联系我们" data-en="Contact">联系我们</a>
     <a href="https://www.youtube.com/playlist?list=PLrAXtmRdnEQy6nuLMfO9tV4rnQ5w8e6yA" target="_blank" data-zh="YouTube" data-en="YouTube">YouTube</a>
   </div>
-  <div class="version" id="version-tag">V2.0.4 · 2026-08-19 · SnailAI Website</div>
+  <div class="version" id="version-tag">V2.0.5 · 2026-08-19 · SnailAI Website</div>
   <div class="company-info" style="margin-top:20px;font-size:0.72rem;color:var(--ink-3);line-height:1.7;">
     <p data-zh="Ausrealt International Pty Ltd · ABN 72 142 901 013" data-en="Ausrealt International Pty Ltd · ABN 72 142 901 013">Ausrealt International Pty Ltd · ABN 72 142 901 013</p>
     <p data-zh="Suite 404, 53 Walker Street, North Sydney, NSW 2060" data-en="Suite 404, 53 Walker Street, North Sydney, NSW 2060">Suite 404, 53 Walker Street, North Sydney, NSW 2060</p>
@@ -1577,7 +1577,8 @@
   }
 </script>
 
-<!-- Mobile Bottom Nav (homepage) -->
+<!-- Mobile Bottom Nav (homepage) — disabled 2026-08-19 -->
+<!--
 <nav class="bottom-nav">
   <a href="#services">
     <span class="bnav-icon">🛎️</span>
@@ -1612,6 +1613,7 @@
     <span class="bnav-label">链接大全</span>
   </a>
 </nav>
+-->
 
 </body>
 </html>

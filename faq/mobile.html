@@ -419,11 +419,11 @@
     .compare-grid { grid-template-columns: 1fr; }
   }
   
-  /* Show bottom nav only on mobile */
-  .bottom-nav { display: none; }
+  /* Show bottom nav only on mobile — disabled 2026-08-19 */
+  .bottom-nav { display: none !important; }
   @media (max-width: 768px) {
-    .bottom-nav { display: flex; }
-    body { padding-bottom: 56px; }
+    .bottom-nav { display: none !important; }
+    body { padding-bottom: 0; }
   }
 
 </style>
@@ -814,7 +814,8 @@
   <p style="opacity:.6;font-size:11px;margin-top:4px;" data-zh="让每一位华人都能真正用上 AI" data-en="Empowering every Chinese Australian to truly use AI">让每一位华人都能真正用上 AI</p>
 </footer>
 
-<!-- Mobile Bottom Nav -->
+<!-- Mobile Bottom Nav — disabled 2026-08-19 -->
+<!--
 <nav class="bottom-nav">
   <a href="/online-course/">
     <span class="bnav-icon">💻</span>
@@ -829,6 +830,7 @@
     <span class="bnav-label" data-zh="FAQ" data-en="FAQ">FAQ</span>
   </a>
 </nav>
+-->
 
 <script>
   const savedLang = localStorage.getItem('snailai-lang') || 'zh';

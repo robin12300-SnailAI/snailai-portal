@@ -331,11 +331,11 @@
   .faq-item:nth-child(12) { animation-delay: .60s; }
   .faq-item:nth-child(13) { animation-delay: .65s; }
 
-  /* ── Floating Bottom Nav ── */
+  /* ── Floating Bottom Nav ── disabled 2026-08-19 ── */
   .bottom-nav {
     position: fixed; bottom: 0; left: 0; right: 0;
     z-index: 100;
-    display: flex; justify-content: center; gap: 0;
+    display: none; justify-content: center; gap: 0;
     background: rgba(255,255,255,.88);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     border-top: 1px solid var(--line);
@@ -793,7 +793,8 @@
   <p style="opacity:.6;font-size:12px;margin-top:6px;" data-zh="让每一位华人都能真正用上 AI" data-en="Empowering every Chinese Australian to truly use AI">让每一位华人都能真正用上 AI</p>
 </footer>
 
-<!-- ═══ Mobile Bottom Nav ═══ -->
+<!-- ═══ Mobile Bottom Nav ═══ disabled 2026-08-19 ═══ -->
+<!--
 <nav class="bottom-nav">
   <a href="/online-course/">
     <span class="bnav-icon">💻</span>
@@ -808,6 +809,7 @@
     <span class="bnav-label" data-zh="FAQ" data-en="FAQ">FAQ</span>
   </a>
 </nav>
+-->
 
 <script>
   const savedLang = localStorage.getItem('snailai-lang') || 'zh';
