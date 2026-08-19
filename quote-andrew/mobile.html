@@ -367,13 +367,13 @@
     }
     .quote-item.selected .sub-modules { display: block; }
 
-    /* ===== LOCKED MANDATORY ITEMS (V1.6.2) ===== */
+    /* ===== LOCKED MANDATORY ITEMS (V1.6.3) ===== */
     .badge-required { background: rgba(232,74,15,0.10); color: var(--accent-2); border: 1px solid rgba(232,74,15,0.45); }
     .quote-item.locked { cursor: default; }
     .quote-item.locked .checkbox { background: var(--accent-2); border-color: var(--accent-2); }
     .quote-item.locked .item-name { color: var(--ink-2); }
 
-    /* ===== CATEGORY SECTIONS (V1.6.2) ===== */
+    /* ===== CATEGORY SECTIONS (V1.6.3) ===== */
     .cat-header {
       display: flex; justify-content: space-between; align-items: baseline;
       margin: 26px 0 10px; padding-bottom: 7px;
@@ -883,7 +883,7 @@
       <div class="brand-header">
         <img src="../assets/snailai_logo.png" alt="Snail AI" class="brand-logo">
         <span class="brand-name">SnailAI<span class="brand-ai">.AI</span></span>
-        <span class="app-version">V1.6.2</span>
+        <span class="app-version">V1.6.3</span>
       </div>
       <h2 data-zh="Skin Cancer Laser Centre 模块化报价" data-en="Skin Cancer Laser Centre Modular Quotation">Skin Cancer Laser Centre Modular Quotation</h2>
       <span class="quote-id">SCLC-QUOTE-2026-001 &middot; v1.0</span>
@@ -1066,10 +1066,10 @@ const ITEMS = [
     sub: 'Requirements workshop, site map, Helix/booking/payment data flow, risks and launch plan',
     preselected: true,
     detail: {
-      objective: { zh: '明确网站目标、页面结构和 Helix/预约/付款的数据流，识别风险并制定上线计划。', en: 'Define website goals, page structure and the Helix/booking/payment data flow, identify risks and set the launch plan.' },
-      deliverables: { zh: ['需求会议与记录', '页面地图（site map）', 'Helix/预约/付款数据流图', '风险清单与上线计划'], en: ['Requirements workshop and notes', 'Site map', 'Helix/booking/payment data-flow diagram', 'Risk register and launch plan'] },
-      acceptance: { zh: ['Andrew 书面批准页面地图与数据流', '风险清单与上线计划获确认'], en: ['Andrew approves the site map and data flow in writing', 'Risk register and launch plan confirmed'] },
-      boundary: { zh: '不含视觉设计与开发。W1 为网站建设的基础依赖模块。', en: 'Excludes visual design and development. W1 is a core website dependency.' }
+      objective: { zh: '通过 Discovery 工作坊明确网站目标、页面结构和技术集成方案：绘制 Helix/预约/付款的完整数据流，识别项目风险并制定分阶段上线计划。本模块确立三条不可动摇的架构原则：① 公开网站不连接 Helix 底层数据库，仅使用厂商认可的 widget、托管页面或正式 API；② 临床资料与网站完全隔离，诊断、病历、用药、检查、照片等均不进入网站系统；③ 所有对外发送和正式发布均需人工批准。', en: 'Define website goals, page structure and technical integration through a discovery workshop: map the complete Helix/booking/payment data flow, identify project risks and set a phased launch plan. This module establishes three unshakeable architecture principles: (1) the public website never connects to the underlying Helix database and only uses vendor-approved widgets, hosted pages or official APIs; (2) clinical data stays fully isolated from the website - diagnoses, records, medications, tests and photos never enter the web system; (3) every outbound send and production release requires human approval.' },
+      deliverables: { zh: ['需求工作坊与会议记录（业务目标、患者旅程、内容来源）', '网站信息架构与页面地图（最多 38 页：首页、诊所介绍、医生介绍、服务总览及各服务页、预约/付款/取消与退款说明、常见问题、博客/知识中心、隐私政策等法律页面、地区服务页）', 'Helix/预约/付款 Provider 数据流图（含最小必要数据范围）', '风险清单（Risk Register）与分阶段上线计划（迁移 → 网站上线 → 后续工具）', '签约前确认清单（Provider 书面功能、接口、费用、数据托管与支持承诺）'], en: ['Requirements workshop and notes (business goals, patient journey, content sources)', 'Website information architecture and site map (up to 38 pages: home, clinic intro, doctor bio, service overview and individual service pages, booking/payment/cancellation/refund information, FAQ, blog/knowledge centre, legal pages including privacy policy, and regional service pages)', 'Helix/booking/payment provider data-flow diagram (with minimum-necessary data scope)', 'Risk register and phased launch plan (migration, website launch, follow-on tools)', 'Pre-contract confirmation checklist (written provider capabilities, interfaces, fees, data hosting and support commitments)'] },
+      acceptance: { zh: ['Andrew 书面批准页面地图与数据流图', '风险清单与上线计划获书面确认', '签约前确认清单完成核对'], en: ['Andrew approves the site map and data-flow diagram in writing', 'Risk register and launch plan confirmed in writing', 'Pre-contract checklist completed and verified'] },
+      boundary: { zh: '不含视觉设计与开发实现。第三方 Provider（Helix、AutoMed、HotDoc、支付机构等）的正式报价、迁移费用和订阅费不在本项内。W1 为全部网站建设的基础依赖模块。', en: 'Excludes visual design and development. Formal quotes, migration charges and subscription fees from third-party providers (Helix, AutoMed, HotDoc, payment providers) are not included. W1 is a core dependency for all website work.' }
     }
   },
   {
@@ -1079,23 +1079,23 @@ const ITEMS = [
     sub: 'Homepage direction, colour/type/components, mobile/desktop design, up to 6 page templates, 2 revision rounds',
     preselected: true,
     detail: {
-      objective: { zh: '建立诊所专属的响应式视觉系统：首页方向、色彩/字体/组件规范，覆盖手机与桌面。', en: 'Establish the clinic\'s own responsive design system: homepage direction, colour/type/component specifications, covering mobile and desktop.' },
-      deliverables: { zh: ['首页设计方向', '色彩、字体与组件规范', '手机/桌面端设计', '最多 6 种页面模板', '2 轮集中修改'], en: ['Homepage design direction', 'Colour, type and component specs', 'Mobile/desktop designs', 'Up to six page templates', 'Two consolidated revision rounds'] },
-      acceptance: { zh: ['设计方向获 Andrew 批准', '2 轮集中修改完成并确认'], en: ['Design direction approved by Andrew', 'Two revision rounds completed and confirmed'] },
-      boundary: { zh: '38 页采用既定设计系统与最多 6 种模板，每页不是独立定制设计。W2 为基础依赖模块。', en: 'The 38-page allowance uses the approved design system and up to six templates; not 38 bespoke layouts. W2 is a core dependency.' }
+      objective: { zh: '为诊所建立专属的响应式视觉系统：确定首页设计方向，定义色彩、字体与组件规范（design tokens），产出覆盖手机、平板与桌面的完整设计，并沉淀为最多 6 种可复用页面模板。设计兼顾医疗行业的专业可信感与移动端优先的浏览体验。', en: 'Establish the clinic\'s own responsive design system: set the homepage design direction, define colour, typography and component specifications (design tokens), deliver complete designs covering mobile, tablet and desktop, and consolidate them into up to six reusable page templates. The design balances the professional credibility expected of a medical practice with a mobile-first browsing experience.' },
+      deliverables: { zh: ['首页设计方向（可含 2 个方向供选择）', '设计规范：色彩体系、字体层级、按钮/表单/卡片等组件规范', '手机/平板/桌面三端设计稿', '最多 6 种可复用页面模板（如首页、服务页、内容页、联系页、FAQ、法律页）', '2 轮集中修改（每轮汇总一次反馈统一处理）'], en: ['Homepage design direction (up to two directions to choose from)', 'Design specification: colour system, typography hierarchy, and component specs for buttons, forms and cards', 'Mobile, tablet and desktop designs', 'Up to six reusable page templates (e.g. home, service, content, contact, FAQ and legal pages)', 'Two consolidated revision rounds (feedback consolidated once per round)'] },
+      acceptance: { zh: ['设计方向获 Andrew 批准', '组件规范与三端设计稿交付确认', '2 轮集中修改完成并确认'], en: ['Design direction approved by Andrew', 'Component specifications and three-device designs delivered and confirmed', 'Two revision rounds completed and confirmed'] },
+      boundary: { zh: '38 页采用既定设计系统与最多 6 种模板排版，并非 38 个完全不同的定制设计。不含摄影、视频、品牌重塑和专业医学文案撰写。W2 为基础依赖模块。', en: 'The 38-page allowance uses the approved design system and up to six templates; it is not 38 bespoke layouts. Photography, video, rebranding and professional medical copywriting are excluded. W2 is a core dependency.' }
     }
   },
   {
     id: 'w3', type: 'oneoff', price: 3000, cat: 'web', badge: 'required', locked: true,
     ref: { zh: 'W3', en: 'W3' },
     name: { zh: '基础网站建设（最多 38 页）', en: 'Core Website Build (up to 38 pages)' },
-    sub: 'Deployable website, up to 38 URLs, template-based content population, maintainable content/file structure',
     preselected: true,
+    sub: 'Deployable website, up to 38 URLs, template-based content population, maintainable content/file structure',
     detail: {
-      objective: { zh: '建设最多 38 页的诊所网站，按批准的模板排版 Andrew 提供并批准的内容，保持可维护的内容与文件结构。', en: 'Build the clinic website of up to 38 pages, populating Andrew-supplied and approved content on approved templates with a maintainable structure.' },
-      deliverables: { zh: ['部署型网站', '最多 38 个 URL', '按模板排版批准内容', '基础内容/文件结构'], en: ['Deployable website', 'Up to 38 URLs', 'Template-based population of approved content', 'Maintainable content/file structure'] },
-      acceptance: { zh: ['约定页面在手机、平板和桌面端正常显示', '内容按模板排版完成并获确认'], en: ['Agreed pages render correctly on mobile, tablet and desktop', 'Content populated on templates and confirmed'] },
-      boundary: { zh: '38 页为采用既定设计系统的公开页面。Andrew 必须提供或批准医疗内容、资质、价格、治疗主张、图片授权和法律页面内容。W3 为基础依赖模块。', en: 'The 38-page allowance covers public pages using the approved design system. Andrew must provide or approve medical content, qualifications, fees, claims, image rights and legal-page content. W3 is a core dependency.' }
+      objective: { zh: '建设最多 38 页的可部署诊所网站：在 staging 预览站上按批准的模板排版 Andrew 提供并批准的内容，验收后发布至生产环境，并保持清晰可维护的内容与文件结构，为后续自查自改（B1 技能）打好基础。', en: 'Build a deployable clinic website of up to 38 pages: populate Andrew-supplied and approved content on approved templates via a staging preview site, release to production after acceptance, and maintain a clean, maintainable content and file structure that later self-service editing (the B1 skill) builds upon.' },
+      deliverables: { zh: ['可部署网站（staging 预览站 + 生产站）', '最多 38 个 URL 页面，建议结构：首页、诊所介绍、Andrew 医生介绍、联系与交通、服务总览及各服务页、皮肤检查/激光治疗/术前术后通用说明、预约/付款/取消与退款说明、常见问题、博客/知识中心、隐私政策/网站条款/免责声明/投诉方式/无障碍声明、地区服务页', '按批准模板排版 Andrew 提供的内容（含基础文字整理与排版）', '可维护的内容/文件结构（页面模板化、内容与样式分离）', '发布与回滚操作说明'], en: ['Deployable website (staging preview + production site)', 'Up to 38 URL pages, suggested structure: home, clinic intro, Dr Andrew bio, contact and directions, service overview and individual service pages, skin check / laser treatment / pre- and post-procedure information, booking/payment/cancellation/refund information, FAQ, blog/knowledge centre, legal pages (privacy policy, website terms, disclaimers, complaints process, accessibility statement) and regional service pages', 'Template-based population of Andrew-supplied content (including basic copy tidy-up and layout)', 'Maintainable content/file structure (templated pages, content separated from styling)', 'Publishing and rollback instructions'] },
+      acceptance: { zh: ['约定页面在手机、平板和桌面端正常显示', '内容按模板排版完成并获确认', '关键页面可被搜索引擎抓取', 'Andrew 书面批准全部公开医疗内容和价格'], en: ['Agreed pages render correctly on mobile, tablet and desktop', 'Content populated on templates and confirmed', 'Key pages are crawlable by search engines', 'Andrew approves all public medical content and pricing in writing'] },
+      boundary: { zh: 'Andrew 必须提供或书面批准医疗事实、疗效主张、价格、医生资质、照片和临床内容；服务方不替代医生或律师作医学/合规审批。遵循医疗广告边界：不写"保证治愈""绝对预防""零风险""永久美白"等主张，不使用患者临床效果见证宣传，所有价格/条件/取消费清楚显示。不采用批量生成的重复地区页或未经医生审阅的 AI 医疗文章。W3 为基础依赖模块。', en: 'Andrew must provide or approve medical facts, efficacy claims, fees, practitioner qualifications, photographs and clinical content in writing; the service provider does not replace the doctor or a lawyer for medical/compliance approval. Medical advertising boundaries apply: no guaranteed-cure, absolute-prevention, zero-risk or permanent-whitening claims; no patient clinical testimonials for promotion; all fees, conditions and cancellation costs clearly displayed. No bulk-generated duplicate regional pages or AI medical articles the doctor has not reviewed. W3 is a core dependency.' }
     }
   },
   {
@@ -1106,10 +1106,10 @@ const ITEMS = [
     hint: { zh: 'Helix/预约 Provider 账号需由客户直接拥有并支付。', en: 'Requires a Helix/booking-provider account owned and paid directly by the client.' },
     preselected: true,
     detail: {
-      objective: { zh: '接入一套经 Helix 认可的预约 Provider，并完成预约流程测试。', en: 'Connect one Helix-compatible booking provider and test the booking journey.' },
-      deliverables: { zh: ['一套预约 Provider 接入（widget/托管页/正式 API）', '预约流程测试'], en: ['One booking-provider integration (widget/hosted page/official API)', 'Booking-journey testing'] },
-      acceptance: { zh: ['测试预约可从网站完成到 Provider 确认'], en: ['A test booking completes from the website to provider confirmation'] },
-      boundary: { zh: 'Andrew 必须直接拥有并支付 Helix/预约 Provider 账号。网站不连接 Helix 临床数据库。', en: 'Andrew must own and pay the Helix/booking-provider account directly. The website does not connect to the Helix clinical database.' }
+      objective: { zh: '接入一套经 Helix 认可的预约 Provider（如 AutoMed、HotDoc 等 MedicalDirector Marketplace 列出的兼容方案），让患者可从网站直接完成在线预约。优先使用 Provider 的品牌可配置 widget 或托管预约页面；如正式 API 可用，再评估 API 方案。', en: 'Connect one Helix-compatible booking provider (e.g. AutoMed or HotDoc, both listed on the MedicalDirector Marketplace as Helix-compatible) so patients can book online directly from the website. The provider\'s brand-configurable widget or hosted booking page is preferred; a formal API is evaluated only where available.' },
+      deliverables: { zh: ['一套预约 Provider 接入（widget/托管页/正式 API 三选一，视 Provider 能力定）', '品牌一致性配置（预约入口配色、按钮样式与网站视觉统一）', '最小必要数据读取（仅可预约时段、服务类型、医生/地点，不查询患者病历）', '预约流程端到端测试（从网站入口到 Provider 测试/生产确认）', '若嵌入受浏览器安全政策限制，提供品牌化预约按钮/跳转方案'], en: ['One booking-provider integration (widget, hosted page or official API, per provider capability)', 'Brand-consistent configuration (booking entry colours and button styling unified with the site design)', 'Minimum-necessary data access (only bookable slots, service types and doctor/location - never patient records)', 'End-to-end booking journey testing (from the website entry to provider test/production confirmation)', 'Branded booking button / redirect fallback if embedding is restricted by browser or provider security policy'] },
+      acceptance: { zh: ['测试预约可从网站完成到 Provider 确认', '预约入口在手机端正常使用'], en: ['A test booking completes from the website to provider confirmation', 'The booking entry works correctly on mobile'] },
+      boundary: { zh: 'Andrew 必须直接拥有并支付 Helix/预约 Provider 账号。网站不连接 Helix 临床数据库。预约确认、取消、改期、提醒及重复预约控制由 Helix/预约 Provider 负责。Provider 的选择以书面功能、接口、费用、数据托管和支持承诺为准。', en: 'Andrew must own and pay the Helix/booking-provider account directly. The website does not connect to the Helix clinical database. Booking confirmations, cancellations, rescheduling, reminders and duplicate-booking controls remain the responsibility of Helix/the booking provider. Provider selection is based on written capability, interface, fee, data-hosting and support commitments.' }
     }
   },
   {
@@ -1120,24 +1120,24 @@ const ITEMS = [
     hint: { zh: '需支付 Provider 与预约流程确认兼容后实施；商户开户/KYC/退款/拒付不在范围内。', en: 'Starts only after payment-provider and booking-flow compatibility is confirmed; merchant onboarding/KYC/refunds/chargebacks excluded.' },
     preselected: true,
     detail: {
-      objective: { zh: '接入一套托管付款流程，测试付款状态；网站不保存银行卡资料。', en: 'Connect one hosted payment flow, test payment status; no card data stored on the site.' },
-      deliverables: { zh: ['一套托管付款流程接入', '付款状态测试'], en: ['One hosted payment-flow integration', 'Payment-status testing'] },
-      acceptance: { zh: ['付款使用 Provider 测试模式验证', '网站不保存任何卡号'], en: ['Payment validated in provider test mode', 'The website stores no card number'] },
-      boundary: { zh: '仅在支付 Provider 和预约流程确认兼容后实施。商户开户、KYC、退款和拒付不在本服务内。', en: 'Starts only after payment-provider and booking-flow compatibility is confirmed. Merchant onboarding, KYC, refunds and chargebacks are excluded.' }
+      objective: { zh: '接入一套托管付款流程（预约 Provider 支持的托管付款、Tyro 等经认可支付流程，或确认兼容后的 Stripe Hosted Checkout），让患者可在线支付。网站不收集、不记录、不处理完整银行卡号码或 CVV——付款资料直接进入支付 Provider。', en: 'Connect one hosted payment flow (a provider-supported hosted payment, a Tyro-style approved flow, or Stripe Hosted Checkout once compatibility is confirmed) so patients can pay online. The website never collects, records or processes full card numbers or CVV - payment details go directly to the payment provider.' },
+      deliverables: { zh: ['一套托管付款流程接入（与预约 Provider 兼容方案优先）', '付款结果展示（仅显示支付成功/失败状态或订单参考号）', '付款流程测试（Provider 测试模式或小额生产交易验证）'], en: ['One hosted payment-flow integration (prioritising the booking-provider-compatible option)', 'Payment result display (showing only success/failure status or an order reference number)', 'Payment-flow testing (validated in provider test mode or via a small production transaction)'] },
+      acceptance: { zh: ['付款使用 Provider 测试模式验证通过', '网站不保存任何卡号或 CVV'], en: ['Payment validated in provider test mode', 'The website stores no card number or CVV'] },
+      boundary: { zh: '仅在支付 Provider 和预约流程确认兼容后实施。商户开户、KYC、手续费、退款、拒付和对账规则由 Andrew 与 Provider 直接签约。如需把付款状态回写 Helix，必须由 Helix/合作方正式支持。', en: 'Starts only after payment-provider and booking-flow compatibility is confirmed. Merchant onboarding, KYC, transaction fees, refunds, chargebacks and reconciliation rules are contracted directly between Andrew and the provider. Writing payment status back into Helix requires official support from Helix/the partner.' }
     }
   },
   {
     id: 'w6', type: 'oneoff', price: 1650, cat: 'web',
+    hint: { zh: '需客户提供 Google Business Profile 和 Google 账号权限。', en: 'Requires client access to Google Business Profile and a Google account.' },
     ref: { zh: 'W6', en: 'W6' },
     name: { zh: '技术 SEO 与本地 SEO 基础', en: 'Technical & Local SEO Foundation' },
     sub: 'Keyword/page map, metadata, sitemap, schema, GA4, Search Console, local page rules',
-    hint: { zh: '需客户提供 Google Business Profile 和 Google 账号权限。', en: 'Requires client access to Google Business Profile and a Google account.' },
     preselected: true,
     detail: {
-      objective: { zh: '完成技术与本地 SEO 基础配置，使关键页面可被搜索引擎正确抓取并具备本地搜索规则。', en: 'Complete technical and local SEO foundations so key pages are crawlable and local search rules are in place.' },
-      deliverables: { zh: ['关键词/页面映射', 'metadata、sitemap、schema', 'GA4 与 Search Console 配置', '本地页面规则'], en: ['Keyword/page map', 'Metadata, sitemap, schema', 'GA4 and Search Console setup', 'Local page rules'] },
-      acceptance: { zh: ['关键页面可被搜索引擎抓取', 'GA4/Search Console 配置完成并可访问'], en: ['Key pages are crawlable', 'GA4/Search Console configured and accessible'] },
-      boundary: { zh: 'Andrew 需提供 Google Business Profile 和 Google 账号权限。不含持续 SEO 运营与内容创作。', en: 'Requires access to the clinic\'s Google Business Profile and Google account. Ongoing SEO operation and content creation are excluded.' }
+      objective: { zh: '完成技术与本地 SEO 基础配置，使网站关键页面可被搜索引擎正确抓取和收录，并在本地搜索（皮肤科/皮肤检查 + 地区）中建立合规的优化基础，为后续自然流量增长打好地基。', en: 'Complete technical and local SEO foundations so key pages are correctly crawled and indexed by search engines, and establish a compliant optimisation base for local searches (skin cancer / skin check + suburb) that future organic growth builds upon.' },
+      deliverables: { zh: ['搜索关键词与服务/地区页面映射表', '每页标题、描述、canonical 配置', 'XML sitemap 与 robots.txt', 'LocalBusiness/Physician/MedicalClinic 等适用的结构化数据（schema）', 'Google Search Console、Google Analytics 4 与 Google Business Profile 基础衔接', '图片压缩与 Core Web Vitals 基础优化', '移动端与常见浏览器兼容测试', '医疗内容的作者、审核人和复核日期字段（医疗内容可信度信号）'], en: ['Search keyword and service/suburb page mapping', 'Per-page title, description and canonical configuration', 'XML sitemap and robots.txt', 'Applicable structured data (schema) such as LocalBusiness / Physician / MedicalClinic', 'Google Search Console, Google Analytics 4 and Google Business Profile basic integration', 'Image compression and Core Web Vitals foundation optimisation', 'Mobile and common-browser compatibility testing', 'Author, reviewer and review-date fields for medical content (a credibility signal for health pages)'] },
+      acceptance: { zh: ['关键页面可被搜索引擎抓取（Search Console 验证）', 'GA4/Search Console 配置完成并可访问', '结构化数据通过验证'], en: ['Key pages are crawlable (verified in Search Console)', 'GA4/Search Console configured and accessible', 'Structured data passes validation'] },
+      boundary: { zh: 'Andrew 需提供 Google Business Profile 和 Google 账号权限。不含持续 SEO 运营、内容营销和付费广告。不采用批量生成的重复地区页或未经医生审阅的 AI 医疗文章。', en: 'Requires access to the clinic\'s Google Business Profile and a Google account. Ongoing SEO operation, content marketing and paid advertising are excluded. No bulk-generated duplicate regional pages or AI medical articles the doctor has not reviewed.' }
     }
   },
   {
@@ -1147,10 +1147,10 @@ const ITEMS = [
     sub: 'Third-party embed review, SSL/headers, browser/mobile tests, performance, backup/rollback, production release',
     preselected: true,
     detail: {
-      objective: { zh: '完成隐私与安全检查、跨浏览器/移动端测试、性能优化、备份/回滚方案并正式上线。', en: 'Complete privacy and security checks, cross-browser/mobile testing, performance optimisation, backup/rollback planning and production launch.' },
-      deliverables: { zh: ['第三方嵌入检查', 'SSL/headers 配置', '浏览器/移动测试与性能检查', '备份/回滚说明', '正式上线'], en: ['Third-party embed review', 'SSL/headers configuration', 'Browser/mobile tests and performance checks', 'Backup/rollback instructions', 'Production release'] },
-      acceptance: { zh: ['无阻断级错误', '正式上线完成并可公开访问'], en: ['No release-blocking defects', 'Production launch complete and publicly accessible'] },
-      boundary: { zh: 'W7 为基础依赖模块。第三方 Provider 保存的数据之备份或恢复不在范围内。', en: 'W7 is a core dependency. Backup or recovery of data stored by third-party providers is excluded.' }
+      objective: { zh: '上线前的最后质量关卡：完成隐私与安全检查、跨浏览器/移动端测试、性能优化、备份/回滚方案，并在 staging 预览验证通过后正式发布生产站，确保网站以可信、安全、快速的状态面对公众。', en: 'The final quality gate before launch: complete privacy and security checks, cross-browser/mobile testing, performance optimisation and backup/rollback planning, then release the production site after staging verification - ensuring the site faces the public in a credible, secure and fast state.' },
+      deliverables: { zh: ['第三方嵌入审查（预约 widget、分析工具等的隐私影响与 Cookie/第三方嵌入说明）', 'SSL 与安全 headers 配置', '跨浏览器（Chrome/Safari/Edge/Firefox）与移动端测试', 'Core Web Vitals 性能检查与优化', '备份与回滚方案', 'staging 预览站全站验证', '医疗广告合规检查清单（不误导、不制造不合理疗效预期、价格/条件/取消费清楚显示）', '生产站正式发布'], en: ['Third-party embed review (privacy implications of the booking widget and analytics, with cookie/third-party embed notices)', 'SSL and security headers configuration', 'Cross-browser (Chrome/Safari/Edge/Firefox) and mobile testing', 'Core Web Vitals performance checks and optimisation', 'Backup and rollback plan', 'Full-site verification on the staging preview', 'Medical advertising compliance checklist (not misleading, no unreasonable efficacy expectations, fees/conditions/cancellation costs clearly displayed)', 'Production site release'] },
+      acceptance: { zh: ['无阻断级错误', '正式上线完成并可公开访问', '网站不保存卡号、不能读取 Helix 临床记录', '预约/付款入口在上线后仍可正常使用'], en: ['No release-blocking defects', 'Production launch complete and publicly accessible', 'The website stores no card numbers and cannot read Helix clinical records', 'Booking/payment entry points still work after launch'] },
+      boundary: { zh: 'W7 为基础依赖模块。第三方 Provider 保存的数据之备份或恢复不在范围内（由各 Provider 自行负责）。法律意见与合规审批不包含在内。', en: 'W7 is a core dependency. Backup or recovery of data stored by third-party providers is excluded (it remains with each provider). Legal advice and compliance sign-off are not included.' }
     }
   },
   {
@@ -1160,10 +1160,10 @@ const ITEMS = [
     sub: 'Batch population assistance, one 90-minute training session, publishing/maintenance SOP',
     preselected: true,
     detail: {
-      objective: { zh: '协助批量导入内容，提供一次 90 分钟管理培训，交付发布与日常维护 SOP。', en: 'Assist with batch content population, deliver one 90-minute administrator training session and a publishing/maintenance SOP.' },
-      deliverables: { zh: ['批量导入协助', '一次 90 分钟培训', '发布及日常维护 SOP'], en: ['Batch population assistance', 'One 90-minute training session', 'Publishing/maintenance SOP'] },
-      acceptance: { zh: ['培训完成', 'SOP 交付并确认'], en: ['Training completed', 'SOP delivered and confirmed'] },
-      boundary: { zh: '不含后续内容制作、医学 copywriting 与翻译。', en: 'Ongoing content production, medical copywriting and translation are excluded.' }
+      objective: { zh: '协助批量导入内容，通过一次 90 分钟的管理培训让 Andrew 团队掌握日常发布与维护操作，并交付完整的 SOP 文档，实现平稳交接。', en: 'Assist with batch content population, equip Andrew\'s team with daily publishing and maintenance skills through one 90-minute administrator training session, and deliver complete SOP documentation for a smooth handover.' },
+      deliverables: { zh: ['批量内容导入协助（按批次协助上线内容）', '一次 90 分钟 Andrew 管理培训（内容更新、发布流程、常见问题处理）', '发布、日常维护与回滚 SOP 文档', '交接文件（账号清单、配置说明、求助渠道）'], en: ['Batch content population assistance (helping bring content live in batches)', 'One 90-minute administrator training session for Andrew (content updates, publishing flow, common troubleshooting)', 'Publishing, routine maintenance and rollback SOP documentation', 'Handover pack (account inventory, configuration notes, support channels)'] },
+      acceptance: { zh: ['培训完成', 'SOP 交付并确认', 'Andrew 团队能独立完成一次内容更新演示'], en: ['Training completed', 'SOP delivered and confirmed', 'Andrew\'s team can independently demonstrate one content update'] },
+      boundary: { zh: '不含后续内容制作、专业医学文案撰写与翻译。额外培训可另行安排。', en: 'Ongoing content production, professional medical copywriting and translation are excluded. Additional training can be arranged separately.' }
     }
   },
   {
@@ -1172,10 +1172,10 @@ const ITEMS = [
     name: { zh: 'Helix 迁移协调与验收支持', en: 'Helix Migration Coordination & Acceptance Support' },
     sub: 'Included: one Helix/booking-system coordination meeting + launch testing of the website booking entry point. Extra coordination at $160/hr with written approval. SNAILAI is not responsible for clinical database migration.',
     detail: {
-      objective: { zh: 'Helix 迁移由 Andrew 直接委托并支付 Helix 完成。SNAILAI 不负责临床数据库迁移或临床数据准确性。网站套餐包含一次 Helix/预约系统协调会议及网站预约入口的上线测试。', en: 'Helix migration is commissioned and paid for directly by Andrew with Helix. SNAILAI is not responsible for clinical database migration or the accuracy of clinical data. The website package includes one Helix/booking-system coordination meeting and launch testing of the website booking entry point.' },
-      deliverables: { zh: ['一次 Helix/预约系统协调会议', '网站预约入口上线测试', '额外协调按 $160/小时另计（需书面批准）'], en: ['One Helix/booking-system coordination meeting', 'Website booking entry-point launch testing', 'Additional coordination at $160/hr (requires written approval)'] },
+      objective: { zh: 'Helix 迁移由 Andrew 直接委托并支付 Helix 完成。SNAILAI 不负责临床数据库迁移或临床数据准确性。网站套餐包含一次 Helix/预约系统协调会议（确认迁移范围、停机窗口、导出能力与网站预约联调安排）及网站预约入口的上线测试。', en: 'Helix migration is commissioned and paid for directly by Andrew with Helix. SNAILAI is not responsible for clinical database migration or the accuracy of clinical data. The website package includes one Helix/booking-system coordination meeting (confirming migration scope, downtime windows, export capability and website booking integration arrangements) and launch testing of the website booking entry point.' },
+      deliverables: { zh: ['一次 Helix/预约系统协调会议（迁移范围、停机窗口、回滚方案、网站预约联调）', '网站预约入口上线测试', '额外协调按 $160/小时另计（需书面批准）'], en: ['One Helix/booking-system coordination meeting (migration scope, downtime windows, rollback plan, website booking integration)', 'Website booking entry-point launch testing', 'Additional coordination at $160/hr (requires written approval)'] },
       acceptance: { zh: ['协调会议已完成', '网站预约入口可正常跳转至预约系统'], en: ['Coordination meeting completed', 'Website booking entry point links correctly to the booking system'] },
-      boundary: { zh: '此项不含 Helix 数据迁移费用或 Andrew 的 Helix 年费。临床数据库迁移由 MedicalDirector/Helix 执行。服务方不保证第三方迁移结果。', en: 'This does not include the Helix data-migration charge or Andrew\'s Helix licence fees. Clinical database migration is performed by MedicalDirector/Helix. The Service Provider does not warrant the third party\'s migration result.' }
+      boundary: { zh: '此项不含 Helix 数据迁移费用或 Andrew 的 Helix 年费。临床数据库迁移由 MedicalDirector/Helix 执行。服务方不保证第三方迁移结果；不自行破解或反向工程 MedicalDirector 数据库。', en: 'This does not include the Helix data-migration charge or Andrew\'s Helix licence fees. Clinical database migration is performed by MedicalDirector/Helix. The service provider does not warrant the third party\'s migration result and will not reverse-engineer the MedicalDirector database.' }
     }
   },
   // ===== 第二类 · 桌面AI Agent 生产力工具 =====
@@ -1186,10 +1186,10 @@ const ITEMS = [
     sub: 'A custom skill to edit website content directly and synchronise changes to production',
     preselected: false,
     detail: {
-      objective: { zh: '构建定制技能，使 Andrew 可通过桌面AI Agent 生产力工具直接修改网站内容，并将变更同步部署至生产环境。', en: 'Build a custom skill that lets Andrew edit his website content directly through the desktop AI agent productivity tool and synchronise the changes to production.' },
-      deliverables: { zh: ['网站同步修改与部署技能构建', '网站仓库访问配置', '同步部署流程与说明'], en: ['Website sync-edit and deployment skill build', 'Website repository access configuration', 'Sync-deployment process and instructions'] },
-      acceptance: { zh: ['Andrew 能通过工具修改一个页面并同步到生产环境'], en: ['Andrew can edit one page through the tool and sync it to production'] },
-      boundary: { zh: '技能仅访问网站代码仓库，不接触临床资料。', en: 'The skill accesses only the website code repository and does not touch clinical data.' }
+      objective: { zh: '构建定制技能，让 Andrew 可以用自然语言提出网站修改需求，由桌面AI Agent 生产力工具直接修改网站代码并同步部署——但不能绕过代码审查、医学审批或发布控制。所有修改先进入 staging 预览，Andrew 检查文字、价格和医学主张后明确批准，才发布生产环境，全程保留版本与一键回滚点。', en: 'Build a custom skill so Andrew can request website changes in natural language and the desktop AI agent productivity tool edits the website code and deploys it - without bypassing code review, medical approval or release control. Every change goes to a staging preview first; only after Andrew reviews the wording, pricing and medical claims and explicitly approves does it reach production, with version history and one-click rollback points throughout.' },
+      deliverables: { zh: ['定制技能构建（仅可访问网站代码仓库，与临床资料完全区隔）', '受控发布工作流：提出修改 → 自动检查/构建 → staging 预览链接 → Andrew 审核 → 明确批准 → 生产部署', 'Git 版本管理与一键回滚点', '页面模板、品牌样式、SEO 字段与医疗广告检查清单内置', '密钥安全配置：token 使用系统凭据库或环境变量，不写入 prompt、skill、代码或聊天记录', '日常修改、发布、回滚与求助 SOP'], en: ['Custom skill build (accesses only the website repository, fully segregated from clinical data)', 'Controlled release workflow: request change, automated checks/build, staging preview link, Andrew review, explicit approval, production deploy', 'Git version control with one-click rollback points', 'Built-in page templates, brand styles, SEO fields and a medical advertising checklist', 'Secure credential configuration: tokens kept in the system credential store or environment variables, never in prompts, skills, code or chat history', 'SOPs for routine edits, publishing, rollback and getting help'] },
+      acceptance: { zh: ['Andrew 能在培训场景中修改一个页面', '修改先进 staging，production 必须单独批准', '自动构建失败时能回到上一个稳定版本', 'token 未出现在代码库、skill 或日志中', '预约/付款入口在发布后仍可正常使用'], en: ['Andrew can edit one page in a training scenario', 'Changes go to staging first; production requires separate approval', 'A failed automated build falls back to the last stable version', 'No tokens appear in the repository, skill or logs', 'Booking/payment entry points still work after release'] },
+      boundary: { zh: '技能仅访问网站代码仓库，不连接 Helix 临床数据库、不读取患者名单、不存储银行卡资料。不允许直接从聊天自动发布至生产环境；不允许在未审核情况下生成或发布诊断、处方、疗效或预防主张。第三方 API、账号、付费计划和限额由 Provider 决定。', en: 'The skill accesses only the website repository; it never connects to the Helix clinical database, reads patient lists or stores card data. Direct auto-publishing from chat to production is not permitted, and no diagnosis, prescription, efficacy or prevention claims may be generated or published unreviewed. Third-party APIs, accounts, paid plans and limits are determined by the providers.' }
     }
   },
     {
@@ -1199,10 +1199,10 @@ const ITEMS = [
     sub: 'Customer-data screening/checking/summarising + SMS provider integration + bulk email system integration',
     preselected: false,
     detail: {
-      objective: { zh: '构建定制技能，基于 Andrew 导入的客户资料，按其指令进行 AI 筛选、核对与总结，并自动撰写用于客户沟通的相应文件；同时包含短信 SMS Provider 接入和 Email 群发系统接入，发送前须经人工审批。', en: 'Build a custom skill that screens, checks and summarises Andrew\'s imported customer data per his instructions and drafts the corresponding client-communication documents; also includes SMS provider integration and bulk email system integration, with human approval required before any sending.' },
-      deliverables: { zh: ['客户资料处理技能构建（筛选/核对/总结）', 'SMS Provider 接入（模板、退订、失败状态）', 'Email 群发系统接入（退订、SPF/DKIM/DMARC）', '客户沟通文件模板', '发送审批流程'], en: ['Customer-data processing skill build (screening/checking/summarising)', 'SMS provider integration (templates, opt-out, failure status)', 'Bulk email system integration (unsubscribe, SPF/DKIM/DMARC)', 'Client-communication document templates', 'Send-approval workflow'] },
-      acceptance: { zh: ['技能可正常筛选、核对与总结测试资料', '测试短信可成功发送到测试号码，退订状态正确更新', '测试邮件可成功发送且退订链接正常运作', '未经审批不能发送'], en: ['The skill correctly screens, checks and summarises test data', 'A test SMS reaches a test number and opt-out status updates correctly', 'A test email sends successfully and the unsubscribe link works', 'Sending is impossible without approval'] },
-      boundary: { zh: '仅处理 Andrew 自行导入的资料，不连接 Helix 病历、患者联系资料或付款卡资料。SMS、Email 订阅和用量费由 Andrew 直接支付。生产群发前须满足隐私/同意前置条件：书面确认每类通讯的合法依据、可靠同意/退订信息、每条商业通讯含退订机制、Andrew 批准最终模板和收件名单。', en: 'Processes only data Andrew imports himself and does not connect to Helix records, patient-contact data or payment-card data. SMS and email subscription and usage charges are paid directly by Andrew. Before production bulk sending: the legal basis for each communication category must be documented, reliable consent/opt-out data must be available, each commercial message must include unsubscribe, and Andrew must approve the final template and each recipient list.' }
+      objective: { zh: '构建定制技能：基于 Andrew 通过 Helix 正式导出功能自行导入的最小化客户资料，按其指令进行 AI 筛选、核对与总结，并自动起草客户沟通文件；同时完成短信 SMS Provider 接入和 Email 群发系统接入。全流程遵循"AI 只起草、人工必审批"原则——每一条短信/邮件发送前，Andrew 必须检查收件范围、同意依据、内容和最终文字后才批准发出。', en: 'Build a custom skill that screens, checks and summarises the minimised customer data Andrew imports himself via Helix\'s official export function, and drafts client-communication documents per his instructions; it also delivers SMS provider integration and bulk email system integration. The whole flow follows the "AI drafts, humans approve" principle - before any SMS or email is sent, Andrew must review the recipient scope, consent basis, content and final wording and only then approve the send.' },
+      deliverables: { zh: ['客户资料处理技能构建（按指令筛选/核对/总结 + AI 起草客户沟通文件）', '字段最小化与导入校验：仅处理批准字段（内部 ID、称呼、手机、Email、地区、联系偏好、同意来源/日期/范围、退订标记、最后联系日期）；导入时自动检查字段、格式、重复项、同意状态和退订状态', '本地加密联系资料库（Windows 11 Pro 安全基线：BitLocker 全盘加密、MFA、最小权限账号、自动安全更新、加密备份）', '规则式筛选引擎（按地区/渠道/同意状态规则筛选，不用 AI 猜测分类）', '无个人资料的 AI 文案起草（AI 只接收不含姓名、电话、Email、患者 ID 的通用活动 brief）', 'SMS Provider 接入（模板、退订机制、失败状态记录）', 'Email 群发系统接入（退订链接、SPF/DKIM/DMARC 邮件认证配置）', '人工审批流程 + 最小审计记录 + suppression list（抑制名单：无有效同意或已退订的号码/地址自动拦截）', '培训、SOP、测试与恢复说明'], en: ['Customer-data processing skill build (screening/checking/summarising per instruction + AI drafting of client communications)', 'Field minimisation and import validation: only approved fields are handled (internal ID, preferred name, mobile, email, region, contact preference, consent source/date/scope, opt-out flags, last-contact date); imports automatically check fields, formats, duplicates, consent status and opt-out status', 'Locally encrypted contact database on the Windows 11 Pro security baseline (BitLocker full-disk encryption, MFA, least-privilege accounts, automatic security updates, encrypted backups)', 'Rule-based filtering engine (region/channel/consent rules, with no AI-guessed classification)', 'Personal-data-free AI drafting (the AI only receives a generic campaign brief containing no names, phone numbers, emails or patient IDs)', 'SMS provider integration (templates, opt-out mechanism, failure-status logging)', 'Bulk email system integration (unsubscribe links, SPF/DKIM/DMARC email authentication setup)', 'Human approval workflow + minimal audit records + suppression list (numbers/addresses without valid consent or with opt-outs are blocked automatically)', 'Training, SOPs, testing and recovery documentation'] },
+      acceptance: { zh: ['测试资料可正确导入、去重和筛选', '临床字段（病历、诊断、用药等）被拒绝或忽略', 'AI 请求中不出现任何身份字段', '未经 Andrew 审批不能发送；无有效同意/已退订记录被 suppression 拦截', '测试短信可成功发送到测试号码，退订状态正确更新', '测试邮件可成功发送且退订链接正常运作', '设备加密、权限、备份与恢复通过测试', 'Andrew 完成 UAT 并签署用途、模板和同意规则'], en: ['Test data imports, deduplicates and filters correctly', 'Clinical fields (records, diagnoses, medications) are rejected or ignored', 'No identity fields appear in any AI request', 'Sending is impossible without Andrew\'s approval; records lacking valid consent or with opt-outs are blocked by the suppression list', 'A test SMS reaches a test number and opt-out status updates correctly', 'A test email sends successfully and the unsubscribe link works', 'Device encryption, permissions, backup and recovery pass testing', 'Andrew completes UAT and signs off the purposes, templates and consent rules'] },
+      boundary: { zh: '仅处理 Andrew 自行导入的资料，不连接 Helix 病历、患者联系资料或付款卡资料。明确排除字段：出生日期、完整住址、Medicare、诊断、病历、用药、处方、检查结果、治疗项目、临床照片、转诊、账务和医生笔记。AI 边界：不作诊断、分诊、治疗建议或适用性判断；不根据疾病/治疗历史筛选销售对象；不自动发送。SMS、Email 订阅和用量费由 Andrew 直接支付。生产群发前须满足前置条件：书面确认每类通讯的合法依据、具备可靠同意/退订记录、每条商业通讯含退订机制、Andrew 批准最终模板和收件名单。', en: 'Processes only data Andrew imports himself and never connects to Helix records, patient-contact data or payment-card data. Explicitly excluded fields: date of birth, full address, Medicare number, diagnoses, medical records, medications, prescriptions, test results, treatment items, clinical photos, referrals, billing and doctor notes. AI boundaries: no diagnosis, triage, treatment advice or suitability judgements; no selecting sales targets by condition or treatment history; no automatic sending. SMS and email subscriptions and usage charges are paid directly by Andrew. Prerequisites before any production bulk send: the legal basis for each communication category is documented in writing, reliable consent/opt-out records are in place, every commercial message includes an unsubscribe mechanism, and Andrew approves the final template and recipient list.' }
     }
   },
   // ===== 月度维护 =====
@@ -1213,10 +1213,10 @@ const ITEMS = [
     sub: 'Daily backup · SSL/uptime monitoring · Monthly booking/payment check · Broken link scan · Monthly report · 1hr support/mo',
     preselected: false,
     detail: {
-      objective: { zh: '网站日常维护套餐：每日备份、SSL/运行监测、月度预约/付款入口检查、断链/性能检查、月度报告、每月 1 小时支持。', en: 'Routine website care: daily backup, SSL/uptime monitoring, monthly booking/payment entry-point test, broken-link/performance check, monthly report, 1 hour of minor edits/support per month.' },
-      deliverables: { zh: ['每日代码/内容备份', 'SSL、运行和依赖监测', '月度预约/付款入口检查', '断链和基础性能检查', '月度维护报告', '每月 1 小时小修改/支持'], en: ['Daily repository/content snapshot', 'SSL, uptime and dependency monitoring', 'Monthly booking/payment entry-point test', 'Broken-link and basic performance check', 'Monthly maintenance report', '1 hour of minor edits/support per month'] },
-      acceptance: { zh: ['备份可恢复', '月度报告按时提交'], en: ['Backup is restorable', 'Monthly report delivered on time'] },
-      boundary: { zh: '仅覆盖网站代码、公开内容和配置。Helix/预约/付款 Provider 的数据由各自备份。建议至少 6 个月；按月预付，30 天书面通知可取消。', en: 'Covers only website code, public content and configuration. Helix/booking/payment provider data remains under their backup arrangements. Recommended minimum six months; cancellable on 30 days\' written notice.' }
+      objective: { zh: '网站日常维护套餐：保障网站持续安全在线运行，及时发现和修复问题，让 Andrew 无需操心技术运维。', en: 'Routine website care: keep the site securely online, detect and fix issues promptly, and remove technical operations from Andrew\'s plate.' },
+      deliverables: { zh: ['每日代码/内容备份（可恢复）', 'SSL 证书、运行状态和依赖监测（异常告警）', '月度预约/付款入口功能检查（确保关键转化路径可用）', '断链扫描和基础性能检查', '月度维护报告（运行状态、处理事项、建议）', '每月 1 小时小修改/支持（文字更新、图片替换等）'], en: ['Daily repository/content snapshots (restorable)', 'SSL certificate, uptime and dependency monitoring (with alerts)', 'Monthly booking/payment entry-point functional checks (keeping the key conversion paths working)', 'Broken-link scans and basic performance checks', 'Monthly maintenance report (status, actions taken, recommendations)', '1 hour of minor edits/support per month (text updates, image swaps)'] },
+      acceptance: { zh: ['备份可恢复（定期演练验证）', '月度报告按时提交', '监测告警能及时送达'], en: ['Backups are restorable (verified by periodic drills)', 'Monthly reports delivered on time', 'Monitoring alerts arrive promptly'] },
+      boundary: { zh: '仅覆盖网站代码、公开内容和配置。Helix/预约/付款 Provider 的数据由各自备份。建议至少订阅 6 个月；按月预付，30 天书面通知可取消。', en: 'Covers only website code, public content and configuration. Helix/booking/payment provider data remains under their own backup arrangements. A minimum six-month subscription is recommended; billed monthly in advance, cancellable on 30 days\' written notice.' }
     }
   },
   {
@@ -1226,13 +1226,14 @@ const ITEMS = [
     sub: 'All Standard services · 3hr support/mo · GA4/Search Console summary · Up to 2 content releases/mo · Higher priority',
     preselected: false,
     detail: {
-      objective: { zh: '增强网站维护套餐：Standard 全部 + 每月 3 小时支持 + GA4/搜索摘要 + 每月 2 次内容发布 + 优先级提高。', en: 'Enhanced website care: all Standard services + 3 hours of minor editing/design support per month + GA4/Search Console summary + up to two template-based content releases per month + higher priority.' },
-      deliverables: { zh: ['Standard 全部内容', '每月 3 小时小修改/设计支持', 'GA4/Search Console 摘要', '每月最多 2 次模板内内容发布', '优先级提高'], en: ['All Standard services', '3 hours of minor editing/design support per month', 'GA4/Search Console summary', 'Up to two template-based content releases per month', 'Higher priority'] },
-      acceptance: { zh: ['所有 Standard 验收条件通过', 'GA4 数据可访问'], en: ['All Standard acceptance criteria pass', 'GA4 data is accessible'] },
-      boundary: { zh: '同 Standard 边界。额外支持时间不结转。', en: 'Same boundaries as Standard. Unused support time does not roll over.' }
+      objective: { zh: '增强版维护套餐：在 Standard 全部服务之上，提供更多修改支持时间、数据洞察和定期内容发布，适合希望网站持续活跃成长的诊所。', en: 'Enhanced care tier: everything in Standard plus more editing support, data insights and regular content releases - suited to clinics that want their website to keep growing.' },
+      deliverables: { zh: ['Standard 套餐全部内容', '每月 3 小时小修改/设计支持', 'GA4/Search Console 月度摘要（流量、搜索表现、优化建议）', '每月最多 2 次模板内内容发布（新文章/新服务页/活动页）', '优先级提高（响应更快）'], en: ['Everything in the Standard plan', '3 hours of minor editing/design support per month', 'Monthly GA4/Search Console summary (traffic, search performance, optimisation suggestions)', 'Up to two template-based content releases per month (new articles/service pages/campaign pages)', 'Higher priority (faster response)'] },
+      acceptance: { zh: ['所有 Standard 验收条件通过', 'GA4 数据可访问', '内容发布按约定次数完成'], en: ['All Standard acceptance criteria pass', 'GA4 data is accessible', 'Agreed content releases are delivered'] },
+      boundary: { zh: '同 Standard 边界。额外支持时间不结转至下月。内容发布须使用既定模板且医疗内容须经 Andrew 批准。', en: 'Same boundaries as Standard. Unused support time does not roll over. Content releases must use the established templates, and medical content requires Andrew\'s approval.' }
     }
-  },
+  }
 ];
+
 
 // ===== CONSTANTS =====
 const GST_RATE = 0.10;
