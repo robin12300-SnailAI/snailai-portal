@@ -4,5 +4,7 @@ requests>=2.31
 apscheduler>=3.10
 pycryptodome>=3.20
 stripe>=8.0
-# PyMuPDF vendored wheel (Render build hung fetching from PyPI; install locally)
-./wheels/pymupdf-1.28.2-cp310-abi3-manylinux_2_28_x86_64.whl
+# PyMuPDF vendored wheel — Render build env glibc < 2.28, so manylinux_2_28 wheels
+# (PyMuPDF>=1.26) are incompatible and pip falls back to a 45min+ source build.
+# 1.25.5 manylinux2014 (glibc 2.17+) cp39-abi3 works on Python 3.13.
+./wheels/pymupdf-1.25.5-cp39-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
