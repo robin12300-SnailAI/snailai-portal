@@ -1466,6 +1466,15 @@ def api_sign_sign(signer_token):
         conn.close()
 
 
+@app.route("/sign/<signer_token>")
+def sign_page(signer_token):
+    """签合同页面路由：https://snailai.ai/sign/{signer_token}
+    前端单页（sign/index.html）自行从 URL 提取 token 并调用 /api/sign/info/{token}。
+    注意：必须注册在 catch-all serve() 之前，否则 /sign/{token} 会被静态文件
+    处理器当作不存在的文件路径而 404。"""
+    return send_from_directory(BASE, "sign/index.html")
+
+
 @app.route("/api/quote/admin/cleanup", methods=["POST"])
 def api_quote_admin_cleanup():
     """清空报价确认测试数据（交付前清场用）。需 X-Admin-Token 匹配 QUOTE_ADMIN_TOKEN。"""
