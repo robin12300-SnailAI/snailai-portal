@@ -447,7 +447,7 @@ def _seed_users(c):
         ("zhangruirui", "张蕊蕊", "student", "12345"),
         ("zhujiao", "蜗牛AI 助教", "ta", "12300"),
         ("robin", "Robin Luo", "instructor", "12300"),
-        ("andrew", "Andrew Li", "customer", "success888", 0),
+        ("andrew", "Andrew Li", "customer", "andrew123", 0),
     ]
     for u in users:
         username, name, role, pw = u[0], u[1], u[2], u[3]
@@ -496,7 +496,7 @@ def _ensure_customer_accounts(c):
     已存在的账号不改动（保留用户可能已改的密码）；缺失的按初始密码创建。"""
     CUSTOMER_ACCOUNTS = {
         # username: (name, initial_password)
-        "andrew": ("Andrew Li", "success888"),
+        "andrew": ("Andrew Li", "andrew123"),
     }
     for username, (name, pw) in CUSTOMER_ACCOUNTS.items():
         salt = secrets.token_hex(16)
