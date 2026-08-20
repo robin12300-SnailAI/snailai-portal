@@ -4,4 +4,5 @@ requests>=2.31
 apscheduler>=3.10
 pycryptodome>=3.20
 stripe>=8.0
-PyMuPDF>=1.24
+# PyMuPDF vendored wheel (Render build hung fetching from PyPI; install locally)
+./wheels/pymupdf-1.28.2-cp310-abi3-manylinux_2_28_x86_64.whl
