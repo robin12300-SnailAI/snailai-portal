@@ -4,7 +4,10 @@ requests>=2.31
 apscheduler>=3.10
 pycryptodome>=3.20
 stripe>=8.0
-# PyMuPDF vendored wheel — Render Singapore build env is aarch64 (Graviton).
-# x86_64 wheels are rejected ("not a supported wheel"), and PyPI install falls
-# back to a 45min+ source build. Vendored aarch64 wheel installs instantly.
-./wheels/pymupdf-1.28.2-cp310-abi3-manylinux_2_28_aarch64.whl
+# PyMuPDF vendored wheel. IMPORTANT: Render's buildCommand runs from the REPO
+# ROOT (pip install -r server/requirements.txt), and pip resolves wheel paths
+# relative to CWD — so the path below MUST start with server/.
+# Runtime: x86_64, Python 3.14. cp310-abi3 wheel is forward-compatible.
+# (PyMuPDF has no regular cp314 wheel; PyPI install falls back to a 45min+
+# source build. Vendored wheel installs instantly.)
+server/wheels/pymupdf-1.28.2-cp310-abi3-manylinux_2_28_x86_64.whl
