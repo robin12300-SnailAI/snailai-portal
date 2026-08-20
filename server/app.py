@@ -290,6 +290,40 @@ def init_db():
       email_sent INTEGER DEFAULT 0,
       confirmed_by TEXT
     );
+    -- 签合同模块（Agreement Sign V1.0.0）
+    CREATE TABLE IF NOT EXISTS agreements(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      token TEXT UNIQUE NOT NULL,
+      title TEXT NOT NULL,
+      agreement_no TEXT NOT NULL,
+      rev TEXT NOT NULL,
+      pdf_path TEXT NOT NULL,
+      final_pdf_path TEXT,
+      status TEXT NOT NULL DEFAULT 'active',
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE TABLE IF NOT EXISTS agreement_signers(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      agreement_id INTEGER NOT NULL,
+      role TEXT NOT NULL,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      signer_token TEXT UNIQUE NOT NULL,
+      sign_rects TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      signed_name TEXT,
+      signature_png_path TEXT,
+      signed_at TEXT
+    );
+    CREATE TABLE IF NOT EXISTS agreement_events(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      agreement_id INTEGER NOT NULL,
+      signer_id INTEGER,
+      event_type TEXT NOT NULL,
+      detail TEXT,
+      ip TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
     """)
     conn.commit()
 
@@ -927,6 +961,509 @@ def api_quote_confirm():
         app.logger.warning("[quote-email] unexpected error: %s", e)
 
     return jsonify({"ok": True, "quoteId": quote_id})
+
+
+# ===== 签合同模块 API（Agreement Sign V1.0.0） =====
+AGREEMENTS_DIR = Path("/data/agreements") if os.path.exists("/data") else Path(SERVER_DIR / "agreements")
+AGREEMENTS_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _send_sign_email(to_addr, subject, html_body, attachments=None):
+    """通用签署邮件发送。attachments = [(filename, bytes), ...]"""
+    if not GMAIL_APP_PASSWORD:
+        app.logger.info("[sign-email] GMAIL_APP_PASSWORD not set; skip")
+        return False
+    import smtplib
+    from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
+    from email.mime.base import MIMEBase
+    from email import encoders
+
+    msg = MIMEMultipart()
+    msg["Subject"] = subject
+    msg["From"] = "SnailAI.AI e-Sign <{}>".format(GMAIL_USER)
+    msg["To"] = to_addr
+    msg.attach(MIMEText(html_body, "html", "utf-8"))
+
+    if attachments:
+        for fname, fbytes in attachments:
+            part = MIMEBase("application", "octet-stream")
+            part.set_payload(fbytes)
+            encoders.encode_base64(part)
+            part.add_header("Content-Disposition", "attachment", filename=fname)
+            msg.attach(part)
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20) as srv:
+            srv.login(GMAIL_USER, GMAIL_APP_PASSWORD)
+            srv.sendmail(GMAIL_USER, [to_addr], msg.as_string())
+        app.logger.info("[sign-email] sent to %s", to_addr)
+        return True
+    except Exception as e:
+        app.logger.warning("[sign-email] send failed: %s", e)
+        return False
+
+
+def _embed_signature(pdf_path, sig_png_path, sign_rects, signed_name, signed_at_str):
+    """用 PyMuPDF 把签名图 + 打印名 + 日期嵌入 PDF 指定页的指定坐标。
+    sign_rects 格式: {"page":N, "signature":[x0,y0,x1,y1], "name":[x0,y0,x1,y1], "date":[x0,y0,x1,y1]}
+    坐标为 PDF pt 坐标系（原点左下角）。
+    返回修改后的 PDF bytes。"""
+    import fitz
+    doc = fitz.open(pdf_path)
+    page = doc[sign_rects["page"] - 1]  # 0-indexed
+
+    # 嵌入签名图（等比缩放居中，3% 内边距）
+    sig_rect = sign_rects.get("signature")
+    if sig_rect and sig_png_path and os.path.exists(sig_png_path):
+        r = fitz.Rect(sig_rect)
+        # 计算内边距后的安全区
+        margin_x = (r.x1 - r.x0) * 0.03
+        margin_y = (r.y1 - r.y0) * 0.03
+        safe = fitz.Rect(r.x0 + margin_x, r.y0 + margin_y, r.x1 - margin_x, r.y1 - margin_y)
+        page.insert_image(safe, filename=sig_png_path, keep_proportion=True)
+
+    # 嵌入打印名
+    name_rect = sign_rects.get("name")
+    if name_rect and signed_name:
+        r = fitz.Rect(name_rect)
+        fontsize = min(11, (r.y1 - r.y0) * 0.8)
+        page.insert_text(
+            fitz.Point(r.x0, r.y1 - (r.y1 - r.y0) * 0.15),
+            signed_name, fontsize=fontsize, fontname="helv", color=(0.1, 0.1, 0.18)
+        )
+
+    # 嵌入日期
+    date_rect = sign_rects.get("date")
+    if date_rect and signed_at_str:
+        r = fitz.Rect(date_rect)
+        fontsize = min(10, (r.y1 - r.y0) * 0.8)
+        page.insert_text(
+            fitz.Point(r.x0, r.y1 - (r.y1 - r.y0) * 0.15),
+            signed_at_str, fontsize=fontsize, fontname="helv", color=(0.1, 0.1, 0.18)
+        )
+
+    # 写出到 bytes
+    import io
+    buf = io.BytesIO()
+    doc.save(buf)
+    doc.close()
+    return buf.getvalue()
+
+
+@app.route("/api/sign/admin/create", methods=["POST"])
+def api_sign_admin_create():
+    """创建合同并发会签邀请邮件。需 X-Admin-Token。
+    body: {title, agreement_no, rev, pdf_base64, notify:bool, parties: [{role,name,email,sign_rects:{page,signature,name,date}}]}"""
+    if not QUOTE_ADMIN_TOKEN or request.headers.get("X-Admin-Token") != QUOTE_ADMIN_TOKEN:
+        return jsonify(ok=False, error="unauthorised"), 401
+    data = request.get_json(silent=True) or {}
+    import base64
+
+    # 校验必填
+    title = data.get("title", "").strip()
+    agreement_no = data.get("agreement_no", "").strip()
+    rev = data.get("rev", "").strip()
+    pdf_b64 = data.get("pdf_base64", "").strip()
+    parties = data.get("parties", [])
+    notify = data.get("notify", False)
+    if not title or not agreement_no or not pdf_b64 or len(parties) < 1:
+        return jsonify(ok=False, error="missing required fields"), 400
+
+    # 解码 PDF
+    try:
+        pdf_bytes = base64.b64decode(pdf_b64)
+    except Exception:
+        return jsonify(ok=False, error="invalid pdf_base64"), 400
+    if not pdf_bytes[:5] == b"%PDF-":
+        return jsonify(ok=False, error="not a PDF file"), 400
+
+    agreement_token = secrets.token_urlsafe(24)
+    now = datetime.datetime.utcnow().isoformat()
+
+    conn = db_conn()
+    try:
+        c = conn.cursor()
+        c.execute(
+            "INSERT INTO agreements(token, title, agreement_no, rev, pdf_path, status, created_at) VALUES(?,?,?,?,?,?,?)",
+            (agreement_token, title, agreement_no, rev, "", "active", now),
+        )
+        aid = c.lastrowid
+
+        # 存 PDF 文件
+        agr_dir = AGREEMENTS_DIR / str(aid)
+        agr_dir.mkdir(parents=True, exist_ok=True)
+        pdf_path = agr_dir / "original.pdf"
+        pdf_path.write_bytes(pdf_bytes)
+        conn.execute("UPDATE agreements SET pdf_path=? WHERE id=?", (str(pdf_path), aid))
+
+        signers_result = []
+        for p in parties:
+            signer_token = secrets.token_urlsafe(24)
+            rects = p.get("sign_rects", {})
+            c.execute(
+                "INSERT INTO agreement_signers(agreement_id, role, name, email, signer_token, sign_rects, status) VALUES(?,?,?,?,?,?,?)",
+                (aid, p.get("role", "client"), p.get("name", ""), p.get("email", ""),
+                 signer_token, json.dumps(rects), "pending"),
+            )
+            sid = c.lastrowid
+            base_url = os.environ.get("RENDER_BASE_URL", "https://snailai.ai")
+            sign_url = "{}/sign/{}".format(base_url.rstrip("/"), signer_token)
+            signers_result.append({
+                "role": p.get("role", "client"),
+                "name": p.get("name", ""),
+                "email": p.get("email", ""),
+                "url": sign_url,
+            })
+
+        conn.commit()
+
+        # 发会签邀请邮件
+        if notify and GMAIL_APP_PASSWORD:
+            for sr in signers_result:
+                html = (
+                    '<div style="font-family:Inter,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px">'
+                    '<div style="background:#1A1A2E;padding:16px;border-radius:8px 8px 0 0">'
+                    '<span style="color:#D4A547;font-size:20px;font-weight:500">Snail</span>'
+                    '<span style="color:#FF5B1F;font-size:20px;font-weight:500">AI</span>'
+                    '<span style="color:#fff;font-size:20px;font-weight:500">.AI e-Sign</span></div>'
+                    '<div style="padding:20px;border:1px solid #eee;border-top:none;border-radius:0 0 8px 8px">'
+                    '<p style="font-size:15px;color:#1A1A2E">Hello {name},</p>'
+                    '<p style="font-size:14px;color:#444">Agreement <strong>{no}</strong> ({rev}) is ready for your signature.</p>'
+                    '<p style="font-size:14px;color:#444">Click below to review the agreement and sign online:</p>'
+                    '<a href="{url}" style="display:inline-block;background:#FF5B1F;color:#fff;padding:12px 24px;'
+                    'border-radius:8px;text-decoration:none;font-size:14px;font-weight:500;margin:12px 0">'
+                    'Review &amp; Sign</a>'
+                    '<p style="font-size:12px;color:#888;margin-top:16px">'
+                    'You can also share the draft with relevant parties for review before signing.</p>'
+                    '<p style="font-size:12px;color:#888">SnailAI.AI e-Sign — powered by our own e-signature engine</p>'
+                    '</div></div>'
+                ).format(name=_esc(sr["name"]), no=_esc(agreement_no), rev=_esc(rev), url=sr["url"])
+                subject = "[e-Sign] Agreement {} ({}) — ready for signature".format(agreement_no, rev)
+                try:
+                    _send_sign_email(sr["email"], subject, html)
+                except Exception as e:
+                    app.logger.warning("[sign-email] invite failed for %s: %s", sr["email"], e)
+
+        return jsonify(ok=True, agreement_token=agreement_token, signers=signers_result)
+    except Exception as e:
+        conn.rollback()
+        app.logger.error("[sign-create] error: %s", e)
+        return jsonify(ok=False, error=str(e)), 500
+    finally:
+        conn.close()
+
+
+@app.route("/api/sign/admin/cleanup", methods=["POST"])
+def api_sign_admin_cleanup():
+    """删除测试合同数据（交付前清场用）。需 X-Admin-Token。"""
+    if not QUOTE_ADMIN_TOKEN or request.headers.get("X-Admin-Token") != QUOTE_ADMIN_TOKEN:
+        return jsonify(ok=False, error="unauthorised"), 401
+    import shutil
+    conn = db_conn()
+    try:
+        # 列出要清理的文件目录
+        rows = conn.execute("SELECT id FROM agreements").fetchall()
+        for r in rows:
+            d = AGREEMENTS_DIR / str(r["id"])
+            if d.is_dir():
+                shutil.rmtree(d, ignore_errors=True)
+        before = conn.execute("SELECT COUNT(*) FROM agreements").fetchone()[0]
+        conn.execute("DELETE FROM agreement_events")
+        conn.execute("DELETE FROM agreement_signers")
+        conn.execute("DELETE FROM agreements")
+        conn.commit()
+        return jsonify(ok=True, deleted=before)
+    finally:
+        conn.close()
+
+
+@app.route("/api/sign/info/<signer_token>", methods=["GET"])
+def api_sign_info(signer_token):
+    """签署方查看合同信息。"""
+    conn = db_conn()
+    try:
+        signer = conn.execute(
+            "SELECT s.*, a.title, a.agreement_no, a.rev, a.status AS agr_status, a.final_pdf_path "
+            "FROM agreement_signers s JOIN agreements a ON s.agreement_id=a.id "
+            "WHERE s.signer_token=?", (signer_token,)
+        ).fetchone()
+        if not signer:
+            return jsonify(ok=False, error="not found"), 404
+
+        # 所有签署方状态
+        all_signers = conn.execute(
+            "SELECT role, name, status, signed_at FROM agreement_signers WHERE agreement_id=?",
+            (signer["agreement_id"],)
+        ).fetchall()
+        parties = []
+        for s in all_signers:
+            parties.append({
+                "role": s["role"], "name": s["name"],
+                "status": s["status"],
+                "signed_at": s["signed_at"],
+            })
+
+        # 记录查看事件
+        conn.execute(
+            "INSERT INTO agreement_events(agreement_id, signer_id, event_type, ip, created_at) VALUES(?,?,?,?,?)",
+            (signer["agreement_id"], signer["id"], "viewed", _client_ip(), datetime.datetime.utcnow().isoformat()),
+        )
+        conn.commit()
+
+        return jsonify(ok=True, data={
+            "title": signer["title"],
+            "agreement_no": signer["agreement_no"],
+            "rev": signer["rev"],
+            "agr_status": signer["agr_status"],
+            "my_role": signer["role"],
+            "my_name": signer["name"],
+            "my_email": signer["email"],
+            "my_status": signer["status"],
+            "signed_name": signer["signed_name"],
+            "signed_at": signer["signed_at"],
+            "parties": parties,
+            "finalized": signer["agr_status"] == "finalized",
+        })
+    finally:
+        conn.close()
+
+
+@app.route("/api/sign/pdf/<signer_token>", methods=["GET"])
+def api_sign_pdf(signer_token):
+    """返回合同 PDF 文件流：finalized 后返回最终版，否则原始版。"""
+    conn = db_conn()
+    try:
+        signer = conn.execute(
+            "SELECT s.agreement_id, a.pdf_path, a.final_pdf_path, a.status AS agr_status "
+            "FROM agreement_signers s JOIN agreements a ON s.agreement_id=a.id "
+            "WHERE s.signer_token=?", (signer_token,)
+        ).fetchone()
+        if not signer:
+            return jsonify(ok=False, error="not found"), 404
+
+        pdf_path = signer["final_pdf_path"] if signer["agr_status"] == "finalized" and signer["final_pdf_path"] else signer["pdf_path"]
+        if not pdf_path or not os.path.exists(pdf_path):
+            return jsonify(ok=False, error="PDF not found"), 404
+
+        from flask import send_file
+        return send_file(pdf_path, mimetype="application/pdf", as_attachment=False)
+    finally:
+        conn.close()
+
+
+@app.route("/api/sign/share/<signer_token>", methods=["POST"])
+@_rate_limit_deco(10, 3600, by_user=False)
+def api_sign_share(signer_token):
+    """把未签署的合同 PDF 草稿作为附件发给指定邮箱。"""
+    conn = db_conn()
+    try:
+        signer = conn.execute(
+            "SELECT s.*, a.title, a.agreement_no, a.rev, a.pdf_path "
+            "FROM agreement_signers s JOIN agreements a ON s.agreement_id=a.id "
+            "WHERE s.signer_token=?", (signer_token,)
+        ).fetchone()
+        if not signer:
+            return jsonify(ok=False, error="not found"), 404
+
+        data = request.get_json(silent=True) or {}
+        emails = data.get("emails", [])
+        # 校验 + 去重
+        valid = []
+        seen = set()
+        for e in emails:
+            e = e.strip().lower()
+            if e and re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", e) and e not in seen:
+                valid.append(e)
+                seen.add(e)
+        if not valid:
+            return jsonify(ok=False, error="no valid emails"), 400
+        if len(valid) > 10:
+            return jsonify(ok=False, error="max 10 recipients at once"), 400
+
+        pdf_path = signer["pdf_path"]
+        if not pdf_path or not os.path.exists(pdf_path):
+            return jsonify(ok=False, error="PDF not found"), 404
+
+        pdf_bytes = Path(pdf_path).read_bytes()
+        fname = "{}-{}-Draft.pdf".format(signer["agreement_no"], signer["rev"].replace(" ", ""))
+
+        subject = "[e-Sign] Draft of Agreement {} ({}) shared for review".format(
+            signer["agreement_no"], signer["rev"])
+        for to_addr in valid:
+            html = (
+                '<div style="font-family:Inter,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px">'
+                '<div style="background:#1A1A2E;padding:16px;border-radius:8px 8px 0 0">'
+                '<span style="color:#D4A547;font-size:20px;font-weight:500">Snail</span>'
+                '<span style="color:#FF5B1F;font-size:20px;font-weight:500">AI</span>'
+                '<span style="color:#fff;font-size:20px;font-weight:500">.AI e-Sign</span></div>'
+                '<div style="padding:20px;border:1px solid #eee;border-top:none;border-radius:0 0 8px 8px">'
+                '<p style="font-size:14px;color:#444">{sharer} has shared the draft of Agreement '
+                '<strong>{no}</strong> ({rev}) with you for review.</p>'
+                '<p style="font-size:12px;color:#888;margin-top:16px">The unsigned draft PDF is attached. '
+                'Please review and contact the sender with any questions.</p>'
+                '<p style="font-size:12px;color:#888">SnailAI.AI e-Sign</p>'
+                '</div></div>'
+            ).format(sharer=_esc(signer["name"]), no=_esc(signer["agreement_no"]), rev=_esc(signer["rev"]))
+            try:
+                _send_sign_email(to_addr, subject, html, attachments=[(fname, pdf_bytes)])
+            except Exception as e:
+                app.logger.warning("[sign-email] share failed for %s: %s", to_addr, e)
+
+        # 记录事件
+        conn.execute(
+            "INSERT INTO agreement_events(agreement_id, signer_id, event_type, detail, ip, created_at) VALUES(?,?,?,?,?,?)",
+            (signer["agreement_id"], signer["id"], "draft_shared",
+             "sent to {} recipients".format(len(valid)), _client_ip(), datetime.datetime.utcnow().isoformat()),
+        )
+        conn.commit()
+        return jsonify(ok=True, sent_to=valid)
+    finally:
+        conn.close()
+
+
+@app.route("/api/sign/sign/<signer_token>", methods=["POST"])
+@_rate_limit_deco(5, 60, by_user=False)
+def api_sign_sign(signer_token):
+    """提交手写签名：嵌入 PDF + 标记 signed + 若双方签完生成最终版并邮件通知。"""
+    import base64
+    conn = db_conn()
+    try:
+        signer = conn.execute(
+            "SELECT s.*, a.pdf_path, a.title, a.agreement_no, a.rev "
+            "FROM agreement_signers s JOIN agreements a ON s.agreement_id=a.id "
+            "WHERE s.signer_token=?", (signer_token,)
+        ).fetchone()
+        if not signer:
+            return jsonify(ok=False, error="not found"), 404
+        if signer["status"] != "pending":
+            return jsonify(ok=False, error="already signed or agreement finalized"), 409
+
+        data = request.get_json(silent=True) or {}
+        sig_b64 = data.get("signature_base64", "").strip()
+        full_name = data.get("full_name", "").strip()
+        if not sig_b64 or not full_name:
+            return jsonify(ok=False, error="signature_base64 and full_name required"), 400
+
+        # 解码签名 PNG
+        # 支持 data:image/png;base64,XXXX 前缀
+        if "," in sig_b64:
+            sig_b64 = sig_b64.split(",", 1)[1]
+        try:
+            sig_bytes = base64.b64decode(sig_b64)
+        except Exception:
+            return jsonify(ok=False, error="invalid signature_base64"), 400
+
+        now = datetime.datetime.utcnow()
+        now_str = now.isoformat()
+        date_str = now.strftime("%d %B %Y")  # e.g. "21 August 2026"
+
+        # 存签名 PNG
+        agr_dir = AGREEMENTS_DIR / str(signer["agreement_id"])
+        agr_dir.mkdir(parents=True, exist_ok=True)
+        sig_dir = agr_dir / "signatures"
+        sig_dir.mkdir(parents=True, exist_ok=True)
+        sig_path = sig_dir / "{}.png".format(signer["id"])
+        sig_path.write_bytes(sig_bytes)
+
+        # 嵌入签名到 PDF（基于当前 progress.pdf 或 original.pdf）
+        sign_rects = json.loads(signer["sign_rects"]) if signer["sign_rects"] else {}
+        # 找到当前版本的 PDF（优先 progress，其次 original）
+        progress_path = agr_dir / "progress.pdf"
+        source_pdf = str(progress_path) if progress_path.exists() else signer["pdf_path"]
+
+        try:
+            pdf_bytes = _embed_signature(source_pdf, str(sig_path), sign_rects, full_name, date_str)
+        except Exception as e:
+            app.logger.error("[sign] embed failed: %s", e)
+            return jsonify(ok=False, error="signature embedding failed: {}".format(e)), 500
+
+        # 保存中间版
+        progress_path.write_bytes(pdf_bytes)
+
+        # 更新签署方状态
+        conn.execute(
+            "UPDATE agreement_signers SET status='signed', signed_name=?, signature_png_path=?, signed_at=? WHERE id=?",
+            (full_name, str(sig_path), now_str, signer["id"]),
+        )
+
+        # 记录事件
+        conn.execute(
+            "INSERT INTO agreement_events(agreement_id, signer_id, event_type, ip, created_at) VALUES(?,?,?,?,?)",
+            (signer["agreement_id"], signer["id"], "signed", _client_ip(), now_str),
+        )
+
+        # 检查是否全部签完
+        all_signers = conn.execute(
+            "SELECT id, role, name, email, signer_token, status FROM agreement_signers WHERE agreement_id=?",
+            (signer["agreement_id"],)
+        ).fetchall()
+        all_signed = all(s["status"] == "signed" for s in all_signers)
+
+        finalized = False
+        if all_signed:
+            # 生成最终版
+            final_path = agr_dir / "final.pdf"
+            final_path.write_bytes(pdf_bytes)
+            conn.execute(
+                "UPDATE agreements SET final_pdf_path=?, status='finalized' WHERE id=?",
+                (str(final_path), signer["agreement_id"]),
+            )
+            finalized = True
+
+        conn.commit()
+
+        # 邮件通知（异步，不影响签署结果）
+        try:
+            if finalized:
+                # 双方签完：各发最终版 PDF
+                final_bytes = pdf_bytes
+                final_fname = "{}-{}-Signed.pdf".format(signer["agreement_no"], signer["rev"].replace(" ", ""))
+                subject_done = "[e-Sign] Agreement {} ({}) — fully signed".format(
+                    signer["agreement_no"], signer["rev"])
+                for s in all_signers:
+                    html = (
+                        '<div style="font-family:Inter,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px">'
+                        '<div style="background:#1A1A2E;padding:16px;border-radius:8px 8px 0 0">'
+                        '<span style="color:#D4A547;font-size:20px;font-weight:500">Snail</span>'
+                        '<span style="color:#FF5B1F;font-size:20px;font-weight:500">AI</span>'
+                        '<span style="color:#fff;font-size:20px;font-weight:500">.AI e-Sign</span></div>'
+                        '<div style="padding:20px;border:1px solid #eee;border-top:none;border-radius:0 0 8px 8px">'
+                        '<p style="font-size:15px;color:#1A1A2E">Hello {name},</p>'
+                        '<p style="font-size:14px;color:#444">Agreement <strong>{no}</strong> ({rev}) is now fully signed.</p>'
+                        '<p style="font-size:14px;color:#444">The signed copy is attached. Please keep it safe.</p>'
+                        '<p style="font-size:12px;color:#888;margin-top:16px">SnailAI.AI e-Sign</p>'
+                        '</div></div>'
+                    ).format(name=_esc(s["name"]), no=_esc(signer["agreement_no"]), rev=_esc(signer["rev"]))
+                    _send_sign_email(s["email"], subject_done, html, attachments=[(final_fname, final_bytes)])
+                # 通知 Robin
+                html_r = (
+                    '<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">'
+                    '<p style="font-size:14px;color:#1A1A2E">Agreement <strong>{no}</strong> ({rev}) has been fully signed by both parties.</p>'
+                    '<p style="font-size:13px;color:#888">SnailAI.AI e-Sign</p></div>'
+                ).format(no=_esc(signer["agreement_no"]), rev=_esc(signer["rev"]))
+                _send_sign_email(QUOTE_NOTIFY_TO, subject_done, html_r)
+            else:
+                # 仅一方签完：通知 Robin 进度
+                subject_prog = "[e-Sign] Agreement {} ({}) — {} signed".format(
+                    signer["agreement_no"], signer["rev"], full_name)
+                html_prog = (
+                    '<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">'
+                    '<p style="font-size:14px;color:#1A1A2E">{name} has signed Agreement <strong>{no}</strong> ({rev}). '
+                    'Awaiting other party.</p>'
+                    '<p style="font-size:13px;color:#888">SnailAI.AI e-Sign</p></div>'
+                ).format(name=_esc(full_name), no=_esc(signer["agreement_no"]), rev=_esc(signer["rev"]))
+                _send_sign_email(QUOTE_NOTIFY_TO, subject_prog, html_prog)
+        except Exception as e:
+            app.logger.warning("[sign-email] notification failed: %s", e)
+
+        return jsonify(ok=True, finalized=finalized)
+    except Exception as e:
+        conn.rollback()
+        app.logger.error("[sign] error: %s", e)
+        return jsonify(ok=False, error=str(e)), 500
+    finally:
+        conn.close()
 
 
 @app.route("/api/quote/admin/cleanup", methods=["POST"])

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=3,user-scalable=yes">
+<title>SnailAI.AI e-Sign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+<style>
+:root{--coral:#FF5B1F;--gold:#D4A547;--ink:#1A1A2E;--coral-light:#FFF5EE;--success:#22C55E;--bg:#faf9f6;--border:0.5px solid #e0ddd6;--radius:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-tap-highlight-color:transparent}
+.top-bar{background:var(--ink);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.top-bar .brand{font-size:15px;font-weight:500;display:flex;align-items:center;gap:4px}
+.top-bar .brand .ai{color:var(--coral)}
+.top-bar .ver{font-size:10px;background:var(--coral);border-radius:8px;padding:1px 7px;margin-left:8px}
+.top-bar .lang-btn{background:transparent;border:0.5px solid rgba(255,255,255,0.3);color:#fff;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;font-family:inherit}
+.content{padding:12px 16px 80px;min-height:calc(100vh - 44px - 56px)}
+.tab-bar{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:0.5px solid #e0ddd6;z-index:10;padding-bottom:env(safe-area-inset-bottom,0)}
+.tab-bar .tab{flex:1;text-align:center;padding:8px 0 10px;cursor:pointer;transition:background .15s}
+.tab-bar .tab.active{background:var(--coral-light)}
+.tab-bar .tab .icon{font-size:18px;color:#888;line-height:1}
+.tab-bar .tab.active .icon{color:var(--coral)}
+.tab-bar .tab .label{font-size:10px;color:#888;margin-top:2px}
+.tab-bar .tab.active .label{color:#993C1D;font-weight:500}
+.tab-page{display:none}.tab-page.active{display:block}
+/* Read */
+.doc-header{margin-bottom:8px}
+.doc-header h1{font-size:14px;font-weight:500;margin-bottom:2px}
+.doc-header .sub{font-size:11px;color:#888}
+.status-pill{display:inline-block;font-size:10px;padding:3px 8px;border-radius:6px;margin-top:6px;background:#E1F5EE;color:#0F6E56}
+.pdf-container{border:var(--border);border-radius:var(--radius);overflow:auto;background:#fff;max-height:calc(100vh - 180px);-webkit-overflow-scrolling:touch}
+.pdf-container canvas{display:block;margin:0 auto}
+/* Email */
+.email-section h2{font-size:14px;font-weight:500;margin-bottom:6px}
+.email-section p{font-size:12px;color:#888;margin-bottom:10px;line-height:1.6}
+.email-input-area textarea{width:100%;border:var(--border);border-radius:var(--radius);padding:10px;font-size:13px;font-family:inherit;resize:vertical;min-height:80px;background:#fff}
+.email-input-area .hint{font-size:10px;color:#888;margin-top:4px}
+.btn{display:block;width:100%;padding:10px;border:none;border-radius:var(--radius);font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;text-align:center;margin-top:10px}
+.btn-coral{background:var(--coral);color:#fff}
+.btn-coral:disabled{opacity:.5;cursor:not-allowed}
+.email-result{margin-top:10px;font-size:12px;color:var(--success);display:none}
+/* Sign */
+.sign-section h2{font-size:14px;font-weight:500;margin-bottom:6px}
+.sign-canvas-wrap{border:1.5px dashed var(--coral);border-radius:var(--radius);background:var(--coral-light);position:relative;touch-action:none;margin-bottom:10px}
+.sign-canvas-wrap canvas{display:block;width:100%;cursor:crosshair}
+.sign-hint{font-size:10px;color:#888;text-align:center;margin-bottom:8px}
+.name-input{width:100%;border:var(--border);border-radius:var(--radius);padding:10px;font-size:13px;font-family:inherit;background:#fff;margin-bottom:8px}
+.name-label{font-size:11px;color:#888;margin-bottom:4px;display:block}
+.already-signed{background:#E1F5EE;border-radius:var(--radius);padding:12px;text-align:center}
+.already-signed .sig-img{max-width:200px;max-height:60px;margin:8px auto;display:block}
+.already-signed .sig-time{font-size:11px;color:#888;margin-top:4px}
+/* Overlay */
+.overlay{display:none;position:fixed;inset:0;z-index:100;background:var(--ink);flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.overlay.show{display:flex}
+.overlay .anim-circle{margin-bottom:16px}
+.overlay .msg{color:#fff;font-size:15px;font-weight:500;margin-bottom:6px}
+.overlay .sub-msg{color:#B4B2A9;font-size:12px;line-height:1.6;max-width:320px}
+.overlay .brand-line{margin-top:16px;font-size:14px;font-weight:500;color:var(--gold)}
+.overlay .brand-line .ai{color:var(--coral)}
+.overlay .engine-note{color:#5F5E5A;font-size:10px;margin-top:4px}
+.overlay .done-btn{margin-top:20px;background:var(--coral);color:#fff;border:none;border-radius:var(--radius);padding:10px 32px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
+.overlay .parties{margin-top:12px;font-size:11px;color:#888;line-height:1.8;text-align:left;max-width:300px}
+.overlay .parties .done{color:var(--success)}
+.overlay .parties .wait{color:var(--gold)}
+/* Error */
+.error-msg{text-align:center;padding:40px 16px;color:#888;font-size:13px}
+.loading{text-align:center;padding:40px;color:#888;font-size:12px}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <div class="brand">Snail<span class="ai">AI</span>.AI e-Sign<span class="ver">V1.0.0</span></div>
+  <button class="lang-btn" onclick="toggleLang()">中文</button>
+</div>
+
+<div class="loading" id="loadingEl">Loading agreement...</div>
+<div class="error-msg" id="errorEl" style="display:none"></div>
+
+<div class="content" id="mainContent" style="display:none">
+  <!-- Read tab -->
+  <div class="tab-page active" id="pageRead">
+    <div class="doc-header">
+      <h1 id="docTitle"></h1>
+      <div class="sub" id="docSub"></div>
+      <div class="status-pill" id="statusPill"></div>
+    </div>
+    <div class="pdf-container" id="pdfContainer"></div>
+  </div>
+
+  <!-- Email tab -->
+  <div class="tab-page" id="pageEmail">
+    <div class="email-section">
+      <h2 id="emailTitle"></h2>
+      <p id="emailDesc"></p>
+      <div class="email-input-area">
+        <textarea id="emailInput" placeholder="email1@example.com, email2@example.com"></textarea>
+        <div class="hint" id="emailHint"></div>
+      </div>
+      <button class="btn btn-coral" id="sendDraftBtn" onclick="sendDraft()"></button>
+      <div class="email-result" id="emailResult"></div>
+    </div>
+  </div>
+
+  <!-- Sign tab -->
+  <div class="tab-page" id="pageSign">
+    <div class="sign-section" id="signSection">
+      <h2 id="signTitle"></h2>
+      <div class="sign-canvas-wrap" id="canvasWrap">
+        <canvas id="sigCanvas" width="600" height="200"></canvas>
+      </div>
+      <div class="sign-hint" id="signHint"></div>
+      <label class="name-label" id="nameLabel"></label>
+      <input class="name-input" id="nameInput" type="text" autocomplete="name">
+      <button class="btn btn-coral" id="signBtn" onclick="submitSign()"></button>
+    </div>
+    <div class="already-signed" id="alreadySigned" style="display:none">
+      <div id="signedMsg"></div>
+      <img class="sig-img" id="signedImg" style="display:none">
+      <div class="sig-time" id="signedTime"></div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-bar" id="tabBar">
+  <div class="tab active" data-tab="read" onclick="switchTab('read')"><div class="icon">&#9776;</div><div class="label" id="tabLabelRead">Read</div></div>
+  <div class="tab" data-tab="email" onclick="switchTab('email')"><div class="icon">&#9993;</div><div class="label" id="tabLabelEmail">Email</div></div>
+  <div class="tab" data-tab="sign" onclick="switchTab('sign')"><div class="icon">&#9998;</div><div class="label" id="tabLabelSign">Sign</div></div>
+</div>
+
+<div class="overlay" id="overlay">
+  <svg class="anim-circle" width="64" height="64" viewBox="0 0 64 64" id="animSvg">
+    <circle cx="32" cy="32" r="29" fill="none" stroke="#FF5B1F" stroke-width="2.5" stroke-dasharray="182" stroke-dashoffset="182" id="animCircle"/>
+    <path d="M20 34 L28 42 L46 22" fill="none" stroke="#22C55E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="40" stroke-dashoffset="40" id="animCheck"/>
+  </svg>
+  <div class="msg" id="overlayMsg"></div>
+  <div class="sub-msg" id="overlaySubMsg"></div>
+  <div class="brand-line">Snail<span class="ai">AI</span>.AI e-Sign</div>
+  <div class="engine-note" id="overlayEngine"></div>
+  <div class="parties" id="overlayParties"></div>
+  <button class="done-btn" id="overlayDone" onclick="closeOverlay()">Done</button>
+</div>
+
+<script>
+const I18N={
+  en:{
+    tabRead:'Read',tabEmail:'Email',tabSign:'Sign',
+    emailTitle:'Share draft agreement',emailDesc:'Send the unsigned PDF draft to relevant parties for review.',emailHint:'Separate multiple emails with commas',sendDraft:'Send draft PDF',sentOk:'Draft sent! Recipients will receive the PDF attachment.',
+    signTitle:'Sign the agreement',signHint:'Draw your signature in the box below',nameLabel:'Full name (as printed)',signBtn:'Confirm & Sign',clearBtn:'Clear',alreadySigned:'You have already signed this agreement',signedAt:'Signed at',
+    overlayDoneFinal:'Agreement signed',overlaySubFinal:'Your signed copy has been sent to your email. Please keep it safe.',overlayDonePartial:'Signed successfully',overlaySubPartial:'Waiting for the other party to sign.',engineNote:'Powered by our own e-signature engine — no third-party tools',
+    awaiting:'awaiting signature',signed:'signed',parties:'parties',loading:'Loading agreement...',notFound:'Agreement not found or link invalid.',
+  },
+  zh:{
+    tabRead:'阅读',tabEmail:'转发',tabSign:'签署',
+    emailTitle:'转发合同草稿',emailDesc:'把未签署的合同 PDF 草稿发给相关人员查看。',emailHint:'多个邮箱用逗号分隔',sendDraft:'发送草稿 PDF',sentOk:'草稿已发送！收件人将收到 PDF 附件。',
+    signTitle:'签署合同',signHint:'在下方框内手写签名',nameLabel:'打印姓名',signBtn:'确认并签署',clearBtn:'清除',alreadySigned:'您已签署此合同',signedAt:'签署时间',
+    overlayDoneFinal:'合同已签署',overlaySubFinal:'合同版本已发到您的邮箱，请妥善保管。',overlayDonePartial:'已签署成功',overlaySubPartial:'等待对方签署。',engineNote:'蜗牛 AI 自有签署引擎 — 不使用第三方工具',
+    awaiting:'等待签署',signed:'已签署',parties:'方',loading:'加载中...',notFound:'合同未找到或链接无效。',
+  }
+};
+let lang=(localStorage.getItem('snailai-lang')||'en');
+if(lang!=='en'&&lang!=='zh')lang='en';
+function t(k){return I18N[lang][k]||I18N.en[k]||k}
+function toggleLang(){lang=lang==='en'?'zh':'en';localStorage.setItem('snailai-lang',lang);document.querySelector('.lang-btn').textContent=lang==='en'?'中文':'EN';applyLang()}
+function applyLang(){
+  document.querySelector('.lang-btn').textContent=lang==='en'?'中文':'EN';
+  document.getElementById('tabLabelRead').textContent=t('tabRead');
+  document.getElementById('tabLabelEmail').textContent=t('tabEmail');
+  document.getElementById('tabLabelSign').textContent=t('tabSign');
+  document.getElementById('emailTitle').textContent=t('emailTitle');
+  document.getElementById('emailDesc').textContent=t('emailDesc');
+  document.getElementById('emailHint').textContent=t('emailHint');
+  document.getElementById('sendDraftBtn').textContent=t('sendDraft');
+  document.getElementById('signTitle').textContent=t('signTitle');
+  document.getElementById('signHint').textContent=t('signHint');
+  document.getElementById('nameLabel').textContent=t('nameLabel');
+  document.getElementById('signBtn').textContent=t('signBtn');
+  document.getElementById('overlayEngine').textContent=t('engineNote');
+}
+
+// Extract signer_token from URL
+const TOKEN=location.pathname.replace('/sign/','');
+let agrData=null;
+
+// Tab switching
+function switchTab(name){
+  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-bar .tab').forEach(t=>t.classList.remove('active'));
+  const pageId='page'+name.charAt(0).toUpperCase()+name.slice(1);
+  document.getElementById(pageId).classList.add('active');
+  document.querySelector(`.tab[data-tab="${name}"]`).classList.add('active');
+}
+
+// Load agreement info
+async function loadInfo(){
+  try{
+    const r=await fetch('/api/sign/info/'+TOKEN);
+    const j=await r.json();
+    if(!j.ok){showError(j.error||t('notFound'));return}
+    agrData=j.data;
+    document.getElementById('loadingEl').style.display='none';
+    document.getElementById('mainContent').style.display='';
+    renderInfo();
+    loadPDF();
+    setupSign();
+  }catch(e){showError(t('notFound'))}
+}
+
+function showError(msg){
+  document.getElementById('loadingEl').style.display='none';
+  const el=document.getElementById('errorEl');
+  el.textContent=msg;el.style.display='';
+}
+
+function renderInfo(){
+  const d=agrData;
+  document.getElementById('docTitle').textContent=d.title;
+  document.getElementById('docSub').textContent=d.agreement_no+' · '+d.rev;
+  const total=d.parties.length;
+  const signedCount=d.parties.filter(p=>p.status==='signed').length;
+  const pill=document.getElementById('statusPill');
+  if(d.finalized){
+    pill.textContent=total+' '+t('parties')+' · '+t('signed');
+    pill.style.background='#E1F5EE';pill.style.color='#0F6E56';
+  }else{
+    pill.textContent=total+' '+t('parties')+' · '+(total-signedCount)+' '+t('awaiting');
+    pill.style.background='#FFF3E0';pill.style.color='#854F0B';
+  }
+  document.getElementById('nameInput').value=d.my_name||'';
+}
+
+// PDF.js rendering
+async function loadPDF(){
+  try{
+    const pdfjsLib=await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+    const r=await fetch('/api/sign/pdf/'+TOKEN);
+    const buf=await r.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+    const container=document.getElementById('pdfContainer');
+    container.innerHTML='';
+    for(let i=1;i<=pdf.numPages;i++){
+      const page=await pdf.getPage(i);
+      const vp=page.getViewport({scale:1.5});
+      const canvas=document.createElement('canvas');
+      canvas.width=vp.width;canvas.height=vp.height;
+      canvas.style.width=Math.min(vp.width,window.innerWidth-32)+'px';
+      canvas.style.height='auto';
+      container.appendChild(canvas);
+      await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+    }
+  }catch(e){
+    document.getElementById('pdfContainer').innerHTML='<div style="padding:20px;color:#888;font-size:12px">PDF rendering error: '+e.message+'</div>';
+  }
+}
+
+// Email tab - send draft PDF
+async function sendDraft(){
+  const raw=document.getElementById('emailInput').value;
+  const emails=raw.split(/[,\n]/).map(s=>s.trim()).filter(Boolean);
+  if(!emails.length)return;
+  const btn=document.getElementById('sendDraftBtn');
+  btn.disabled=true;btn.textContent='...';
+  try{
+    const r=await fetch('/api/sign/share/'+TOKEN,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({emails})});
+    const j=await r.json();
+    if(j.ok){
+      const el=document.getElementById('emailResult');
+      el.textContent=t('sentOk');el.style.display='';
+      document.getElementById('emailInput').value='';
+    }else{
+      alert(j.error||'Failed');
+    }
+  }catch(e){alert('Network error')}
+  btn.disabled=false;btn.textContent=t('sendDraft');
+}
+
+// Signature canvas
+let sigCtx=null,drawing=false,hasSig=false;
+function setupSign(){
+  if(agrData.my_status==='signed'){
+    document.getElementById('signSection').style.display='none';
+    document.getElementById('alreadySigned').style.display='';
+    document.getElementById('signedMsg').textContent=t('alreadySigned');
+    document.getElementById('signedTime').textContent=t('signedAt')+': '+(agrData.signed_at||'');
+    return;
+  }
+  if(agrData.finalized){
+    document.getElementById('signSection').style.display='none';
+    document.getElementById('alreadySigned').style.display='';
+    document.getElementById('signedMsg').textContent=t('alreadySigned');
+    return;
+  }
+  const canvas=document.getElementById('sigCanvas');
+  const wrap=document.getElementById('canvasWrap');
+  canvas.width=wrap.clientWidth*2||600;
+  canvas.height=200*2;
+  canvas.style.height='200px';
+  sigCtx=canvas.getContext('2d');
+  sigCtx.strokeStyle='#1A1A2E';
+  sigCtx.lineWidth=3;
+  sigCtx.lineCap='round';sigCtx.lineJoin='round';
+
+  // Touch
+  canvas.addEventListener('pointerdown',e=>{e.preventDefault();drawing=true;const r=canvas.getBoundingClientRect();sigCtx.beginPath();sigCtx.moveTo((e.clientX-r.left)*2,(e.clientY-r.top)*2)});
+  canvas.addEventListener('pointermove',e=>{if(!drawing)return;e.preventDefault();const r=canvas.getBoundingClientRect();sigCtx.lineTo((e.clientX-r.left)*2,(e.clientY-r.top)*2);sigCtx.stroke()});
+  canvas.addEventListener('pointerup',()=>{drawing=false;hasSig=true});
+  canvas.addEventListener('pointerleave',()=>{drawing=false});
+
+  // Clear button
+  const hint=document.getElementById('signHint');
+  const clr=document.createElement('button');
+  clr.className='btn';clr.style.cssText='background:transparent;border:0.5px solid #e0ddd6;color:#888;margin-top:6px;font-size:11px;padding:6px';
+  clr.textContent=t('clearBtn');
+  clr.onclick=()=>{sigCtx.clearRect(0,0,canvas.width,canvas.height);hasSig=false};
+  hint.after(clr);
+}
+
+// Submit signature
+async function submitSign(){
+  if(!hasSig){alert(lang==='zh'?'请先手写签名':'Please draw your signature first');return}
+  const name=document.getElementById('nameInput').value.trim();
+  if(!name){alert(lang==='zh'?'请输入姓名':'Please enter your full name');return}
+  const btn=document.getElementById('signBtn');
+  btn.disabled=true;btn.textContent='...';
+  try{
+    // Export canvas as transparent PNG (2x)
+    const canvas=document.getElementById('sigCanvas');
+    const sigBase64=canvas.toDataURL('image/png');
+    const r=await fetch('/api/sign/sign/'+TOKEN,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({signature_base64:sigBase64,full_name:name})});
+    const j=await r.json();
+    if(j.ok){
+      showOverlay(j.finalized);
+    }else{
+      alert(j.error||'Failed');btn.disabled=false;btn.textContent=t('signBtn');
+    }
+  }catch(e){alert('Network error');btn.disabled=false;btn.textContent=t('signBtn')}
+}
+
+// Overlay animation
+function showOverlay(finalized){
+  const ov=document.getElementById('overlay');
+  ov.classList.add('show');
+  document.getElementById('overlayMsg').textContent=finalized?t('overlayDoneFinal'):t('overlayDonePartial');
+  document.getElementById('overlaySubMsg').textContent=finalized?t('overlaySubFinal'):t('overlaySubPartial');
+
+  // Parties status
+  const pp=document.getElementById('overlayParties');
+  pp.innerHTML='';
+  if(agrData&&agrData.parties){
+    agrData.parties.forEach(p=>{
+      const isSigned=p.status==='signed';
+      const cls=isSigned?'done':'wait';
+      const icon=isSigned?'&#10003;':'&#9679;';
+      const label=isSigned?t('signed'):t('awaiting');
+      pp.innerHTML+=`<span class="${cls}">${icon} ${p.name} — ${label}</span><br>`;
+    });
+  }
+
+  // SVG animation
+  const circle=document.getElementById('animCircle');
+  const check=document.getElementById('animCheck');
+  circle.style.transition='stroke-dashoffset 0.6s ease';
+  circle.style.strokeDashoffset='0';
+  setTimeout(()=>{check.style.transition='stroke-dashoffset 0.4s ease';check.style.strokeDashoffset='0'},600);
+}
+
+function closeOverlay(){
+  document.getElementById('overlay').classList.remove('show');
+  // Reload info to reflect updated status
+  loadInfo();
+}
+
+// Init
+applyLang();
+if(!TOKEN||TOKEN.length<10){showError(t('notFound'))}else{loadInfo()}
+</script>
+</body>
+</html>

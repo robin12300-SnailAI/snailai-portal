@@ -4,3 +4,4 @@ requests>=2.31
 apscheduler>=3.10
 pycryptodome>=3.20
 stripe>=8.0
+PyMuPDF>=1.24
