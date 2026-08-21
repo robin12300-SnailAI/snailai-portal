@@ -570,15 +570,17 @@ def init_portal_db():
         """, (org_row["id"], proj_row["id"], "system", "project_created",
               "Project created — Andrew Clinic Website", 1))
 
-        # ── Andrew 合同框架（preparing 态） ──────────────────
+        conn.commit()
+
+    # ── Andrew 合同框架（preparing 态）— 独立检查 ──────────
+    if proj_row:
         agr_count = c.execute("SELECT COUNT(*) FROM portal_agreements WHERE project_id=?", (proj_row["id"],)).fetchone()[0]
         if agr_count == 0:
             c.execute("""
                 INSERT INTO portal_agreements(project_id, title, version, portal_status)
                 VALUES(?,?,?,?)
             """, (proj_row["id"], "Digital Services Agreement", "Rev 10", "preparing"))
-
-        conn.commit()
+            conn.commit()
 
     # ── andrew 密码重置（幂等：仅当 hash 仍为 andrew123 时重置为 success888）────
     andrew_row = c.execute("SELECT password_hash, salt FROM users WHERE username='andrew'").fetchone()
