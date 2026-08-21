@@ -455,15 +455,15 @@ def init_portal_db():
     q_count = c.execute("SELECT COUNT(*) AS n FROM portal_quotations WHERE project_id=?", (proj_row["id"],)).fetchone()["n"] if proj_row else 1
     if q_count == 0 and proj_row:
         items = [
-            {"code": "W1", "name": "Website Strategy & Planning", "price": 850, "payment_schedule": "50/50"},
-            {"code": "W2", "name": "UI/UX Design", "price": 1500, "payment_schedule": "50/50"},
-            {"code": "W3", "name": "Website Build & Development", "price": 3000, "payment_schedule": "30/40/30"},
-            {"code": "W4", "name": "Booking System Integration", "price": 1350, "payment_schedule": "50/50"},
-            {"code": "W5", "name": "Payment Gateway Integration", "price": 950, "payment_schedule": "50/50"},
-            {"code": "W6", "name": "SEO & Google Business Setup", "price": 1650, "payment_schedule": "50/50"},
-            {"code": "W7", "name": "Staff Training & Documentation", "price": 650, "payment_schedule": "50/50"},
-            {"code": "W8", "name": "Controlled Deployment & Go-Live", "price": 1000, "payment_schedule": "50/50"},
-            {"code": "M1", "name": "Website Care Standard", "price": 290, "payment_schedule": "monthly"},
+            {"code": "W1", "name": "Website Strategy & Planning", "amount": 850, "payment_schedule": "50/50"},
+            {"code": "W2", "name": "UI/UX Design", "amount": 1500, "payment_schedule": "50/50"},
+            {"code": "W3", "name": "Website Build & Development", "amount": 3000, "payment_schedule": "30/40/30"},
+            {"code": "W4", "name": "Booking System Integration", "amount": 1350, "payment_schedule": "50/50"},
+            {"code": "W5", "name": "Payment Gateway Integration", "amount": 950, "payment_schedule": "50/50"},
+            {"code": "W6", "name": "SEO & Google Business Setup", "amount": 1650, "payment_schedule": "50/50"},
+            {"code": "W7", "name": "Staff Training & Documentation", "amount": 650, "payment_schedule": "50/50"},
+            {"code": "W8", "name": "Controlled Deployment & Go-Live", "amount": 1000, "payment_schedule": "50/50"},
+            {"code": "M1", "name": "Website Care Standard", "amount": 290, "payment_schedule": "monthly"},
         ]
         c.execute("""
             INSERT INTO portal_quotations(project_id, quote_id, title, version, status,

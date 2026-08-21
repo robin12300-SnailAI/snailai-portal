@@ -226,7 +226,7 @@ function renderQuotation(quotations) {
         <th data-en="Amount (ex GST)" data-zh="金额（不含GST）">Amount (ex GST)</th>
       </tr></thead><tbody>`;
     q.items.forEach(item => {
-      html += `<tr><td>${item.code||''}</td><td>${item.name||item.title||''}</td><td>$${(item.amount||0).toLocaleString()}</td></tr>`;
+      html += `<tr><td>${item.code||''}</td><td>${item.name||item.title||''}</td><td>$${((item.amount||item.price||0)).toLocaleString()}</td></tr>`;
     });
     html += `<tr class="total-row"><td></td><td data-en="Total One-off" data-zh="一次性合计">Total One-off</td><td>$${(q.total_ex_gst||0).toLocaleString()}</td></tr>`;
     if (q.monthly_ex_gst) {
