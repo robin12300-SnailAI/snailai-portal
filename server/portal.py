@@ -792,9 +792,14 @@ def portal_overview():
     q = conn.execute("SELECT id,quote_id,status,title,version,total_ex_gst,total_gst,total_incl_gst,monthly_ex_gst,monthly_incl_gst,show_amount_to_client,accepted_at FROM portal_quotations WHERE project_id=? AND status!='superseded' ORDER BY id DESC LIMIT 1", (pid,)).fetchone()
     q_data = dict(q) if q else None
 
-    # Agreement status (derive from portal_agreements or agreements)
-    agr = conn.execute("SELECT id,portal_status FROM portal_agreements WHERE project_id=? ORDER BY id DESC LIMIT 1", (pid,)).fetchone()
-    agr_status = dict(agr)["portal_status"] if agr else "none"
+    # Agreement full record (include sign_url, document_url, title, version for Agreement page)
+    agr = conn.execute("SELECT id,agreement_id,portal_status,title,version,sign_url,document_url FROM portal_agreements WHERE project_id=? ORDER BY id DESC LIMIT 1", (pid,)).fetchone()
+    agr_data = dict(agr) if agr else None
+    agr_status = agr_data["portal_status"] if agr_data else "none"
+    # demo 用户不暴露 sign_url
+    if agr_data and _is_demo(user["username"]) and agr_data.get("sign_url"):
+        agr_data["sign_url"] = None
+        agr_data["preview_only"] = True
 
     # Tasks counts
     t_counts = conn.execute("SELECT COUNT(*) as total, SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END) as done FROM portal_tasks WHERE project_id=? AND visible_to_client=1", (pid,)).fetchone()
@@ -816,6 +821,7 @@ def portal_overview():
         project=dict(proj),
         quotation=q_data,
         agreement_status=agr_status,
+        agreement=agr_data,
         tasks={"total": tasks_total, "completed": tasks_done},
         progress_percent=progress,
         current_phase=current_phase,
@@ -1292,19 +1298,20 @@ def admin_link_agreement():
     title = data.get("title", "Digital Services Agreement")
     version = data.get("version")
     sign_url = data.get("sign_url")
+    document_url = data.get("document_url")  # 公开 PDF 下载链接
 
-    if not project_id or not agreement_id:
-        return jsonify(ok=False, error="project_id and agreement_id required"), 400
+    if not project_id:
+        return jsonify(ok=False, error="project_id required"), 400
 
     conn = _db_conn()
     # Update or create portal_agreement
     existing = conn.execute("SELECT id FROM portal_agreements WHERE project_id=? ORDER BY id DESC LIMIT 1", (project_id,)).fetchone()
     if existing:
-        conn.execute("UPDATE portal_agreements SET agreement_id=?, title=?, version=?, sign_url=?, portal_status='ready_to_sign', updated_at=datetime('now') WHERE id=?",
-                     (agreement_id, title, version, sign_url, existing["id"]))
+        conn.execute("UPDATE portal_agreements SET agreement_id=?, title=?, version=?, sign_url=?, document_url=?, portal_status='ready_to_sign', updated_at=datetime('now') WHERE id=?",
+                     (agreement_id, title, version, sign_url, document_url, existing["id"]))
     else:
-        conn.execute("INSERT INTO portal_agreements(project_id,agreement_id,title,version,sign_url,portal_status) VALUES(?,?,?,?,?,?)",
-                     (project_id, agreement_id, title, version, sign_url, "ready_to_sign"))
+        conn.execute("INSERT INTO portal_agreements(project_id,agreement_id,title,version,sign_url,document_url,portal_status) VALUES(?,?,?,?,?,?,?)",
+                     (project_id, agreement_id, title, version, sign_url, document_url, "ready_to_sign"))
     conn.commit()
     conn.close()
     return jsonify(ok=True)

@@ -141,6 +141,10 @@ async function loadAgreement() {
 function renderAgreement(overview) {
   const status = overview.agreement_status || 'none';
   const isDemo = currentUser.is_demo;
+  const signUrl = overview.agreement?.sign_url || '';
+  const docUrl = overview.agreement?.document_url || '';
+  const agrTitle = overview.agreement?.title || 'Digital Services Agreement';
+  const agrRev = overview.agreement?.version || '';
   const states = ['preparing', 'ready_to_sign', 'signed_by_client', 'countersigned', 'fully_executed'];
   const stateLabels = {
     preparing: 'Preparing',
@@ -159,7 +163,7 @@ function renderAgreement(overview) {
   else html += `<div class="agr-icon">📝</div>`;
 
   // Title
-  html += `<div class="agr-title" data-en="Digital Services Agreement" data-zh="数字服务协议">Digital Services Agreement</div>`;
+  html += `<div class="agr-title">${agrTitle}${agrRev ? ` <span style="font-size:14px;color:#888;font-weight:500">(${agrRev})</span>` : ''}</div>`;
 
   // Status badge
   const badgeClass = status === 'fully_executed' ? 'badge-signed' :
@@ -177,13 +181,11 @@ function renderAgreement(overview) {
     if (isDemo) {
       html += `<div class="agr-status" style="margin-top:16px;color:var(--amber)">
         <span data-en="Preview Only — This is a demo account. Real signing is disabled." data-zh="仅预览 — 这是测试账户，真实签署已禁用。">Preview Only — This is a demo account. Real signing is disabled.</span>
-      </div>
-      <button class="btn btn-preview" disabled data-en="Preview Only" data-zh="仅预览">Preview Only</button>`;
+      </div>`;
     } else {
       html += `<div class="agr-status" style="margin-top:16px">
         <span data-en="The agreement is ready for your review and signature. Click below to review and sign." data-zh="合同已准备好供您审阅和签署。点击下方按钮查看并签署。">The agreement is ready for your review and signature. Click below to review and sign.</span>
-      </div>
-      <button class="btn btn-coral" onclick="goSign()" data-en="Review &amp; Sign" data-zh="查看并签署">Review & Sign</button>`;
+      </div>`;
     }
   } else if (status === 'signed_by_client') {
     html += `<div class="agr-status" style="margin-top:16px">
@@ -197,6 +199,24 @@ function renderAgreement(overview) {
     html += `<div class="agr-status" style="margin-top:16px">
       <span data-en="The agreement is fully executed. Both parties have signed." data-zh="合同已完全生效，双方均已签署。">The agreement is fully executed. Both parties have signed.</span>
     </div>`;
+  }
+
+  // Action buttons
+  if (status !== 'preparing' && status !== 'none') {
+    html += `<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
+    if (signUrl) {
+      if (status === 'ready_to_sign' && !isDemo) {
+        html += `<a href="${signUrl}" target="_blank" class="btn btn-coral" data-en="Review &amp; Sign" data-zh="查看并签署">Review & Sign</a>`;
+      } else if (status === 'ready_to_sign' && isDemo) {
+        html += `<button class="btn btn-preview" disabled data-en="Preview Only" data-zh="仅预览">Preview Only</button>`;
+      } else if (status === 'signed_by_client' || status === 'countersigned' || status === 'fully_executed') {
+        html += `<a href="${signUrl}" target="_blank" class="btn btn-coral" data-en="View Signed Agreement" data-zh="查看已签合同">View Signed Agreement</a>`;
+      }
+    }
+    if (docUrl) {
+      html += `<a href="${docUrl}" target="_blank" class="btn" style="background:#fff;border:1px solid #ccc;color:#555" data-en="Download PDF" data-zh="下载 PDF">📥 Download PDF</a>`;
+    }
+    html += `</div>`;
   }
 
   // Bilingual note
@@ -219,7 +239,7 @@ function renderAgreement(overview) {
 }
 
 function goSign() {
-  // Will be implemented in Phase 3 when sign_url is available
+  // 已通过 sign_url 直接打开
   alert('Sign URL will be available after Phase 3 implementation.');
 }
 

@@ -1205,6 +1205,30 @@ def api_sign_admin_cleanup():
         conn.close()
 
 
+@app.route("/api/sign/admin/lookup", methods=["POST"])
+def api_sign_admin_lookup():
+    """用 signer_token 查 agreement_id + 关键元数据（供 Portal/Admin 关联用）。需 X-Admin-Token。"""
+    if not QUOTE_ADMIN_TOKEN or request.headers.get("X-Admin-Token") != QUOTE_ADMIN_TOKEN:
+        return jsonify(ok=False, error="unauthorised"), 401
+    data = request.get_json(silent=True) or {}
+    signer_token = (data.get("signer_token") or "").strip()
+    if not signer_token:
+        return jsonify(ok=False, error="signer_token required"), 400
+    conn = db_conn()
+    try:
+        signer = conn.execute(
+            "SELECT s.agreement_id, s.role, s.name, s.email, s.status AS signer_status, "
+            "a.agreement_no, a.rev, a.title, a.status AS agr_status "
+            "FROM agreement_signers s JOIN agreements a ON s.agreement_id=a.id "
+            "WHERE s.signer_token=?", (signer_token,)
+        ).fetchone()
+        if not signer:
+            return jsonify(ok=False, error="not found"), 404
+        return jsonify(ok=True, **dict(signer))
+    finally:
+        conn.close()
+
+
 @app.route("/api/sign/info/<signer_token>", methods=["GET"])
 def api_sign_info(signer_token):
     """签署方查看合同信息。"""
