@@ -92,7 +92,7 @@ function toggleLang(){
 }
 
 function applyLang(){
-  document.body.classList.toggle('zh', lang === 'zh');
+  document.documentElement.lang = lang === 'zh' ? 'zh' : 'en';
   document.querySelector('.lang-toggle').textContent = lang === 'en' ? '中文' : 'EN';
   // Update placeholders
   document.getElementById('username').placeholder = lang === 'en' ? '' : '';

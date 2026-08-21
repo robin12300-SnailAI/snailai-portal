@@ -118,7 +118,7 @@ function toggleLang(){
   applyLang();
 }
 function applyLang(){
-  document.body.classList.toggle('zh', lang === 'zh');
+  document.documentElement.lang = lang === 'zh' ? 'zh' : 'en';
   document.getElementById('langBtn').textContent = lang === 'en' ? '中文' : 'EN';
 }
 
