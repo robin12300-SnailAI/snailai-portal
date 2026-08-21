@@ -1097,7 +1097,7 @@ def admin_client_detail(org_id):
     if not org:
         conn.close()
         return jsonify(ok=False, error="Not found"), 404
-    user = conn.execute("SELECT id,username,name,email,role,status,last_login_at,organisation_id FROM users WHERE organisation_id=? AND role='customer'", (org_id,)).fetchone()
+    user = conn.execute("SELECT id,username,name,role,status,last_login_at,organisation_id FROM users WHERE organisation_id=? AND role='customer'", (org_id,)).fetchone()
     projects = conn.execute("SELECT * FROM portal_projects WHERE organisation_id=? ORDER BY id", (org_id,)).fetchall()
     conn.close()
     return jsonify(ok=True, organisation=dict(org), user=dict(user) if user else None,
