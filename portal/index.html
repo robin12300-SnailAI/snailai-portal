@@ -64,11 +64,12 @@ body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:v
   .top-bar{padding:8px 12px}
   .content{padding:20px 14px 40px}
 }
+.lang-zh [data-en]{display:none}
+.lang-zh [data-zh]{display:inline}
+.lang-en [data-en]{display:inline}
+.lang-en [data-zh]{display:none}
+[data-en]{display:inline}
 [data-zh]{display:none}
-:lang(zh) [data-en]{display:none}
-:lang(zh) [data-zh]{display:inline}
-:lang(en) [data-en]{display:inline}
-:lang(en) [data-zh]{display:none}
 </style>
 </head>
 <body>
@@ -120,7 +121,7 @@ function toggleLang(){
   applyLang();
 }
 function applyLang(){
-  document.documentElement.lang = lang === 'zh' ? 'zh' : 'en';
+  document.body.classList.toggle('lang-zh', lang === 'zh'); document.body.classList.toggle('lang-en', lang === 'en');
   document.getElementById('langBtn').textContent = lang === 'en' ? '中文' : 'EN';
 }
 
