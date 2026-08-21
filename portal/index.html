@@ -12,6 +12,7 @@ body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:v
 /* Top bar */
 .top-bar{background:var(--ink);color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .top-bar .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px}
+.top-bar .portal-label{font-size:11px;color:#aaa;font-weight:500;border-left:1px solid #444;padding-left:8px;margin-left:2px}
 .top-bar .brand .ai{color:var(--coral)}
 .top-bar .ver{font-size:10px;background:var(--coral);border-radius:8px;padding:1px 7px;margin-left:4px}
 .top-bar .user-area{display:flex;align-items:center;gap:12px;font-size:13px}
@@ -75,6 +76,7 @@ body.zh [data-zh]{display:inline}
   <div class="brand">
     <span>Snail<span class="ai">AI</span>.AI</span>
     <span class="ver">V1.0.0</span>
+    <span class="portal-label"><span data-en="Client Portal" data-zh="客户门户">Client Portal</span></span>
   </div>
   <div class="user-area">
     <span id="userName"></span>
