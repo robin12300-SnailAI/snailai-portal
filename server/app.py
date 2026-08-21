@@ -447,7 +447,7 @@ def _seed_users(c):
         ("zhangruirui", "张蕊蕊", "student", "12345"),
         ("zhujiao", "蜗牛AI 助教", "ta", "12300"),
         ("robin", "Robin Luo", "instructor", "12300"),
-        ("andrew", "Andrew Li", "customer", "andrew123", 0),
+        ("andrew", "Andrew Li", "customer", "success888", 0),
     ]
     for u in users:
         username, name, role, pw = u[0], u[1], u[2], u[3]
@@ -496,7 +496,7 @@ def _ensure_customer_accounts(c):
     已存在的账号不改动（保留用户可能已改的密码）；缺失的按初始密码创建。"""
     CUSTOMER_ACCOUNTS = {
         # username: (name, initial_password)
-        "andrew": ("Andrew Li", "andrew123"),
+        "andrew": ("Andrew Li", "success888"),
     }
     for username, (name, pw) in CUSTOMER_ACCOUNTS.items():
         salt = secrets.token_hex(16)
@@ -3374,6 +3374,12 @@ def serve(path):
 # 确保 Render 等生产环境在首次请求前已建好表并灌入种子数据。
 init_db()
 _start_scheduler()
+
+# ── 注册 Client Portal Blueprint ─────────────────────────
+from server.portal import bp as portal_bp, init_portal_db
+app.register_blueprint(portal_bp)
+init_portal_db()
+
 print(f"[蜗牛AI Portal] 数据库: {DB_PATH}")
 if not os.environ.get("WECHAT_WEBHOOK_URL"):
     print("[蜗牛AI Portal] ⚠️  警告：WECHAT_WEBHOOK_URL 未配置，日报/周报不会推送。"

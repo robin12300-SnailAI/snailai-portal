@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Client Portal — SnailAI.AI</title>
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{--coral:#FF5B1F;--gold:#D4A547;--ink:#1A1A2E;--coral-light:#FFF5EE;--success:#22C55E;--bg:#faf9f6;--border:0.5px solid #e0ddd6;--radius:8px;--error:#DC2626}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.login-card{background:#fff;border:var(--border);border-radius:12px;padding:40px 32px;width:100%;max-width:400px;box-shadow:0 4px 20px rgba(26,26,46,0.06)}
+.brand{text-align:center;margin-bottom:28px}
+.brand .logo{font-size:24px;font-weight:800;color:var(--ink)}
+.brand .logo .ai{color:var(--coral)}
+.brand .sub{font-size:13px;color:#888;margin-top:6px}
+.brand .ver{font-size:10px;background:var(--coral);color:#fff;border-radius:8px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#555}
+.field input{width:100%;padding:10px 14px;border:var(--border);border-radius:var(--radius);font-size:15px;font-family:inherit;background:#fff;transition:border .15s}
+.field input:focus{outline:none;border-color:var(--coral)}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;text-align:center;transition:all .15s}
+.btn-coral{background:var(--coral);color:#fff}
+.btn-coral:hover{filter:brightness(0.93)}
+.btn-coral:disabled{opacity:.5;cursor:not-allowed}
+.error-msg{color:var(--error);font-size:13px;margin-top:8px;display:none;text-align:center}
+.forgot{text-align:center;margin-top:16px}
+.forgot a{font-size:13px;color:var(--coral);cursor:pointer;text-decoration:none}
+.forgot a:hover{text-decoration:underline}
+/* Forgot password modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,26,46,0.5);z-index:100;align-items:center;justify-content:center;padding:24px}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:12px;padding:32px;max-width:380px;width:100%;text-align:center}
+.modal h3{font-size:17px;font-weight:700;margin-bottom:14px}
+.modal p{font-size:14px;color:#555;line-height:1.6;margin-bottom:8px}
+.modal .contact{font-size:14px;font-weight:600;color:var(--coral)}
+.modal .btn{margin-top:18px;background:var(--ink);color:#fff}
+.lang-toggle{position:fixed;top:16px;right:16px;font-size:12px;color:#888;cursor:pointer;z-index:10;user-select:none}
+.lang-toggle:hover{color:var(--coral)}
+[data-zh]{display:none}
+body.zh [data-en]{display:none}
+body.zh [data-zh]{display:inline}
+</style>
+</head>
+<body>
+
+<span class="lang-toggle" onclick="toggleLang()" data-en="中文" data-zh="EN"></span>
+
+<div class="login-card">
+  <div class="brand">
+    <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.0.0</span></div>
+    <div class="sub" data-en="Client Portal" data-zh="客户中心"></div>
+  </div>
+
+  <form id="loginForm" onsubmit="return doLogin(event)">
+    <div class="field">
+      <label data-en="Username" data-zh="账号">Username</label>
+      <input type="text" id="username" autocomplete="username" required placeholder="">
+    </div>
+    <div class="field">
+      <label data-en="Password" data-zh="密码">Password</label>
+      <input type="password" id="password" autocomplete="current-password" required placeholder="">
+    </div>
+    <div id="errorMsg" class="error-msg"></div>
+    <button type="submit" class="btn btn-coral" id="loginBtn" data-en="Sign In" data-zh="登录">Sign In</button>
+  </form>
+
+  <div class="forgot">
+    <a onclick="showForgot()" data-en="Forgot password?" data-zh="忘记密码？">Forgot password?</a>
+  </div>
+</div>
+
+<!-- Forgot password modal -->
+<div class="modal-overlay" id="forgotModal">
+  <div class="modal">
+    <h3 data-en="Forgot Password?" data-zh="忘记密码？">Forgot Password?</h3>
+    <p data-en="Please contact the SnailAI team to reset your password:" data-zh="请联系蜗牛 AI 官方人员重置密码："></p>
+    <p class="contact">robin@snailai.ai</p>
+    <p data-en="or reach out via WeChat" data-zh="或通过微信联系"></p>
+    <button class="btn" onclick="closeForgot()" data-en="Close" data-zh="关闭">Close</button>
+  </div>
+</div>
+
+<script>
+const API = '/api/portal';
+let lang = localStorage.getItem('snailai-lang') || 'en';
+
+function toggleLang(){
+  lang = lang === 'en' ? 'zh' : 'en';
+  localStorage.setItem('snailai-lang', lang);
+  applyLang();
+}
+
+function applyLang(){
+  document.body.classList.toggle('zh', lang === 'zh');
+  document.querySelector('.lang-toggle').textContent = lang === 'en' ? '中文' : 'EN';
+  // Update placeholders
+  document.getElementById('username').placeholder = lang === 'en' ? '' : '';
+  document.getElementById('password').placeholder = lang === 'en' ? '' : '';
+}
+applyLang();
+
+function showForgot(){ document.getElementById('forgotModal').classList.add('show'); }
+function closeForgot(){ document.getElementById('forgotModal').classList.remove('show'); }
+
+async function doLogin(e){
+  e.preventDefault();
+  const btn = document.getElementById('loginBtn');
+  const errEl = document.getElementById('errorMsg');
+  btn.disabled = true;
+  errEl.style.display = 'none';
+
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+
+  try{
+    const res = await fetch(API + '/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({username, password})
+    });
+    const data = await res.json();
+    if(data.ok){
+      localStorage.setItem('portal_token', data.token);
+      localStorage.setItem('portal_username', data.username);
+      localStorage.setItem('portal_name', data.name);
+      localStorage.setItem('portal_role', data.role);
+      window.location.href = '/portal/index.html';
+    } else {
+      errEl.textContent = data.error || 'Login failed';
+      errEl.style.display = 'block';
+    }
+  } catch(err){
+    errEl.textContent = lang === 'en' ? 'Network error. Please try again.' : '网络错误，请重试';
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// If already logged in, redirect
+(async()=>{
+  const token = localStorage.getItem('portal_token');
+  if(token){
+    try{
+      const res = await fetch(API + '/me', {headers:{'Authorization':'Bearer '+token}});
+      if(res.ok) window.location.href = '/portal/index.html';
+      else localStorage.removeItem('portal_token');
+    }catch(e){ localStorage.removeItem('portal_token'); }
+  }
+})();
+</script>
+</body>
+</html>

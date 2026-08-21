@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard — SnailAI Client Portal</title>
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{--coral:#FF5B1F;--gold:#D4A547;--ink:#1A1A2E;--coral-light:#FFF5EE;--success:#22C55E;--amber:#F59E0B;--blue:#3B82F6;--bg:#faf9f6;--border:0.5px solid #e0ddd6;--radius:8px;--error:#DC2626;--grey:#9CA3AF;--grey-light:#f3f4f6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+/* Top bar */
+.top-bar{background:var(--ink);color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.top-bar .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px}
+.top-bar .brand .ai{color:var(--coral)}
+.top-bar .ver{font-size:10px;background:var(--coral);border-radius:8px;padding:1px 7px;margin-left:4px}
+.top-bar .user-area{display:flex;align-items:center;gap:12px;font-size:13px}
+.top-bar .user-area a{color:var(--coral);cursor:pointer;font-weight:600;text-decoration:none}
+.top-bar .user-area a:hover{text-decoration:underline}
+.lang-btn{font-size:11px;color:#aaa;cursor:pointer;border:1px solid #555;border-radius:4px;padding:2px 8px;background:none}
+.lang-btn:hover{color:var(--coral);border-color:var(--coral)}
+/* Project switcher (demo only) */
+.project-switcher{background:var(--coral-light);border-bottom:1px solid #fdd;padding:10px 20px;display:none;align-items:center;gap:10px;font-size:13px}
+.project-switcher.show{display:flex}
+.project-switcher label{font-weight:700;color:var(--coral)}
+.project-switcher select{padding:6px 10px;border-radius:var(--radius);border:var(--border);font-size:13px;font-family:inherit;background:#fff}
+/* Nav */
+.nav-bar{background:#fff;border-bottom:var(--border);padding:0 20px;display:flex;gap:4px;overflow-x:auto}
+.nav-bar a{padding:12px 16px;font-size:14px;font-weight:600;color:#888;text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap;transition:all .15s}
+.nav-bar a:hover{color:var(--ink)}
+.nav-bar a.active{color:var(--coral);border-bottom-color:var(--coral)}
+/* Content */
+.content{max-width:960px;margin:0 auto;padding:28px 20px 60px}
+.welcome{margin-bottom:24px}
+.welcome h1{font-size:22px;font-weight:800;margin-bottom:4px}
+.welcome .sub{color:#888;font-size:14px}
+.welcome .phase{display:inline-block;margin-top:8px;background:var(--amber);color:#fff;font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px}
+.welcome .next-action{margin-top:10px;font-size:14px;color:var(--ink)}
+.welcome .next-action span{font-weight:700}
+/* 4-card grid */
+.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:28px}
+.card{background:#fff;border:var(--border);border-radius:10px;padding:20px;cursor:pointer;transition:all .15s;position:relative}
+.card:hover{box-shadow:0 4px 16px rgba(26,26,46,0.06);transform:translateY(-1px)}
+.card .card-icon{font-size:22px;margin-bottom:10px}
+.card .card-title{font-size:15px;font-weight:700;margin-bottom:6px}
+.card .card-status{font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;display:inline-block}
+.status-accepted{background:#dcfce7;color:#166534}
+.status-preparing{background:#fef3c7;color:#92400e}
+.status-action{background:#fef3c7;color:#92400e}
+.status-progress{background:#dbeafe;color:#1e40af}
+.card .card-desc{font-size:13px;color:#888;margin-top:8px}
+.card .card-arrow{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:#ccc;font-size:18px}
+/* Activity */
+.activity-section h2{font-size:16px;font-weight:700;margin-bottom:12px}
+.activity-list{list-style:none}
+.activity-list li{padding:10px 0;border-bottom:var(--border);font-size:13px;display:flex;gap:10px;align-items:flex-start}
+.activity-list li .time{color:#aaa;white-space:nowrap;min-width:80px;font-size:12px}
+.activity-list li .text{flex:1}
+.empty-state{text-align:center;padding:40px 20px;color:#aaa;font-size:14px}
+/* Responsive */
+@media(max-width:640px){
+  .card-grid{grid-template-columns:1fr}
+  .top-bar{padding:8px 12px}
+  .content{padding:20px 14px 40px}
+}
+[data-zh]{display:none}
+body.zh [data-en]{display:none}
+body.zh [data-zh]{display:inline}
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="top-bar">
+  <div class="brand">
+    <span>Snail<span class="ai">AI</span>.AI</span>
+    <span class="ver">V1.0.0</span>
+  </div>
+  <div class="user-area">
+    <span id="userName"></span>
+    <span class="lang-btn" onclick="toggleLang()" id="langBtn">中文</span>
+    <a onclick="doLogout()" data-en="Sign Out" data-zh="退出">Sign Out</a>
+  </div>
+</div>
+
+<!-- Project switcher (demo only) -->
+<div class="project-switcher" id="projectSwitcher">
+  <label data-en="Viewing project:" data-zh="查看项目：">Viewing project:</label>
+  <select id="projectSelect" onchange="switchProject()"></select>
+</div>
+
+<!-- Nav bar -->
+<div class="nav-bar">
+  <a href="index.html" class="active" data-en="Dashboard" data-zh="总览">Dashboard</a>
+  <a href="quotation.html" data-en="Quotation" data-zh="报价">Quotation</a>
+  <a href="agreement.html" data-en="Agreement" data-zh="合同">Agreement</a>
+  <a href="tasks.html" data-en="My Tasks" data-zh="我的任务">My Tasks</a>
+  <a href="progress.html" data-en="Progress" data-zh="项目进度">Progress</a>
+  <a href="account.html" data-en="Account" data-zh="账号">Account</a>
+</div>
+
+<!-- Content -->
+<div class="content" id="mainContent">
+  <div class="empty-state" data-en="Loading..." data-zh="加载中...">Loading...</div>
+</div>
+
+<script>
+const API = '/api/portal';
+let lang = localStorage.getItem('snailai-lang') || 'en';
+let currentUser = null;
+let currentProjectId = null;
+
+function toggleLang(){
+  lang = lang === 'en' ? 'zh' : 'en';
+  localStorage.setItem('snailai-lang', lang);
+  applyLang();
+}
+function applyLang(){
+  document.body.classList.toggle('zh', lang === 'zh');
+  document.getElementById('langBtn').textContent = lang === 'en' ? '中文' : 'EN';
+}
+
+function authHeaders(){
+  const token = localStorage.getItem('portal_token');
+  return {'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'};
+}
+
+async function apiFetch(path, opts={}){
+  const res = await fetch(API + path, {headers: authHeaders(), ...opts});
+  if(res.status === 401){
+    localStorage.removeItem('portal_token');
+    window.location.href = '/portal/login.html';
+    return null;
+  }
+  return res.json();
+}
+
+async function doLogout(){
+  await fetch(API + '/logout', {method:'POST', headers: authHeaders()});
+  localStorage.removeItem('portal_token');
+  localStorage.removeItem('portal_username');
+  localStorage.removeItem('portal_name');
+  localStorage.removeItem('portal_role');
+  window.location.href = '/portal/login.html';
+}
+
+async function init(){
+  applyLang();
+  // Check auth
+  const me = await apiFetch('/me');
+  if(!me || !me.ok){
+    window.location.href = '/portal/login.html';
+    return;
+  }
+  currentUser = me.user;
+  document.getElementById('userName').textContent = currentUser.name;
+
+  // Demo project switcher
+  if(currentUser.is_demo && currentUser.projects.length > 0){
+    const sw = document.getElementById('projectSwitcher');
+    sw.classList.add('show');
+    const sel = document.getElementById('projectSelect');
+    sel.innerHTML = currentUser.projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+    currentProjectId = currentUser.projects[0].id;
+  } else if(currentUser.projects.length > 0){
+    currentProjectId = currentUser.projects[0].id;
+  }
+
+  // Load dashboard
+  await loadDashboard();
+}
+
+async function switchProject(){
+  currentProjectId = document.getElementById('projectSelect').value;
+  await loadDashboard();
+}
+
+async function loadDashboard(){
+  if(!currentProjectId){
+    document.getElementById('mainContent').innerHTML =
+      `<div class="empty-state" data-en="No projects available." data-zh="暂无项目。">No projects available.</div>`;
+    applyLang();
+    return;
+  }
+
+  const data = await apiFetch('/overview?project_id=' + currentProjectId);
+  if(!data || !data.ok){
+    document.getElementById('mainContent').innerHTML =
+      `<div class="empty-state" data-en="Unable to load data." data-zh="数据加载失败。">Unable to load data.</div>`;
+    applyLang();
+    return;
+  }
+
+  const d = data;
+  const projectName = d.project?.name || '';
+  const phase = d.project?.current_phase || '';
+  const progress = d.project?.progress_percent || 0;
+  const nextAction = d.project?.next_action_text || '';
+
+  let html = `
+    <div class="welcome">
+      <h1 data-en="Welcome back, ${currentUser.name}" data-zh="欢迎回来，${currentUser.name}">Welcome back, ${currentUser.name}</h1>
+      <div class="sub">${projectName}</div>
+      ${phase ? `<span class="phase">${phase}</span>` : ''}
+      ${nextAction ? `<div class="next-action" data-en="Next action:" data-zh="下一步：">Next action: <span>${nextAction}</span></div>` : ''}
+    </div>
+
+    <div class="card-grid">
+      <div class="card" onclick="location.href='quotation.html'">
+        <div class="card-icon">📋</div>
+        <div class="card-title" data-en="Quotation & Offer" data-zh="报价与 Offer">Quotation & Offer</div>
+        <span class="card-status ${d.quotation?.status === 'accepted' ? 'status-accepted' : 'status-preparing'}">${d.quotation?.status === 'accepted' ? (lang==='en'?'Accepted':'已接受') : (lang==='en'?'Pending':'待定')}</span>
+        <div class="card-desc">${d.quotation?.total_ex_gst ? 'A$' + d.quotation.total_ex_gst.toLocaleString() + ' ex GST' : (lang==='en'?'No quotation':'无报价')}</div>
+        <span class="card-arrow">›</span>
+      </div>
+      <div class="card" onclick="location.href='agreement.html'">
+        <div class="card-icon">📝</div>
+        <div class="card-title" data-en="Agreement" data-zh="合同">Agreement</div>
+        <span class="card-status status-preparing">${d.agreement?.portal_status ? formatAgreementStatus(d.agreement.portal_status) : (lang==='en'?'Preparing':'准备中')}</span>
+        <div class="card-desc">${d.agreement?.title || (lang==='en'?'Awaiting final version':'等待最终版')}</div>
+        <span class="card-arrow">›</span>
+      </div>
+      <div class="card" onclick="location.href='tasks.html'">
+        <div class="card-icon">✅</div>
+        <div class="card-title" data-en="My Tasks" data-zh="我的任务">My Tasks</div>
+        <span class="card-status status-action">${d.tasks?.action_required || 0} ${lang==='en'?'action required':'待处理'}</span>
+        <div class="card-desc">${d.tasks?.total ? d.tasks.total + ' ' + (lang==='en'?'total tasks':'项任务') : (lang==='en'?'No tasks':'无任务')}</div>
+        <span class="card-arrow">›</span>
+      </div>
+      <div class="card" onclick="location.href='progress.html'">
+        <div class="card-icon">📊</div>
+        <div class="card-title" data-en="Project Progress" data-zh="项目进度">Project Progress</div>
+        <span class="card-status status-progress">${progress}%</span>
+        <div class="card-desc">${phase || (lang==='en'?'Not started':'未开始')}</div>
+        <span class="card-arrow">›</span>
+      </div>
+    </div>
+
+    <div class="activity-section">
+      <h2 data-en="Recent Activity" data-zh="最近动态">Recent Activity</h2>
+      <ul class="activity-list">
+        ${(d.activities || []).map(a => `
+          <li>
+            <span class="time">${formatDate(a.created_at)}</span>
+            <span class="text">${a.summary}</span>
+          </li>
+        `).join('') || `<li class="empty-state" data-en="No recent activity" data-zh="暂无动态">No recent activity</li>`}
+      </ul>
+    </div>
+  `;
+
+  document.getElementById('mainContent').innerHTML = html;
+  applyLang();
+}
+
+function formatAgreementStatus(s){
+  const map = {
+    'preparing': lang==='en'?'Preparing':'准备中',
+    'ready_to_sign': lang==='en'?'Ready to Sign':'待签署',
+    'signed_by_client': lang==='en'?'Signed by You':'您已签署',
+    'countersigned': lang==='en'?'Countersigned':'已会签',
+    'fully_executed': lang==='en'?'Fully Executed':'已生效',
+  };
+  return map[s] || s;
+}
+
+function formatDate(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString(lang==='en'?'en-AU':'zh-CN', {month:'short', day:'numeric'});
+}
+
+// Boot
+init();
+</script>
+</body>
+</html>

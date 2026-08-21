@@ -8,6 +8,8 @@ __pycache__/
 
 # SQLite 数据库（运行时由 server/app.py 自动建库并播种，不入库）
 *.db
+*.db-shm
+*.db-wal
 
 # OS
 .DS_Store
