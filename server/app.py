@@ -1137,12 +1137,14 @@ def api_sign_admin_create():
                 "name": p.get("name", ""),
                 "email": p.get("email", ""),
                 "url": sign_url,
+                "signer_token": signer_token,
             })
 
         conn.commit()
 
         # 发会签邀请邮件
         if notify and GMAIL_APP_PASSWORD:
+            invite_ts = datetime.datetime.utcnow().strftime("%d %b %Y %H:%M UTC")
             for sr in signers_result:
                 html = (
                     '<div style="font-family:Inter,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px">'
@@ -1159,9 +1161,11 @@ def api_sign_admin_create():
                     'Review &amp; Sign</a>'
                     '<p style="font-size:12px;color:#888;margin-top:16px">'
                     'You can also share the draft with relevant parties for review before signing.</p>'
+                    '<p style="font-size:11px;color:#aaa;margin-top:12px">Sent: {ts} &middot; Ref: {ref}</p>'
                     '<p style="font-size:12px;color:#888">SnailAI.AI e-Sign — powered by our own e-signature engine</p>'
                     '</div></div>'
-                ).format(name=_esc(sr["name"]), no=_esc(agreement_no), rev=_esc(rev), url=sr["url"])
+                ).format(name=_esc(sr["name"]), no=_esc(agreement_no), rev=_esc(rev),
+                         url=sr["url"], ts=invite_ts, ref=sr["signer_token"][:8])
                 subject = "[e-Sign] Agreement {} ({}) — ready for signature".format(agreement_no, rev)
                 try:
                     _send_sign_email(sr["email"], subject, html)
@@ -1459,12 +1463,14 @@ def api_sign_sign(signer_token):
                         '</div></div>'
                     ).format(name=_esc(s["name"]), no=_esc(signer["agreement_no"]), rev=_esc(signer["rev"]))
                     _send_sign_email(s["email"], subject_done, html, attachments=[(final_fname, final_bytes)])
-                # 通知 Robin
+                # 通知 Robin（只发 robin@snailai.ai，不发 gmail 避免 550 拒收）
                 html_r = (
                     '<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">'
                     '<p style="font-size:14px;color:#1A1A2E">Agreement <strong>{no}</strong> ({rev}) has been fully signed by both parties.</p>'
+                    '<p style="font-size:12px;color:#888">Finalized at: {ts} UTC &middot; Ref: {ref}</p>'
                     '<p style="font-size:13px;color:#888">SnailAI.AI e-Sign</p></div>'
-                ).format(no=_esc(signer["agreement_no"]), rev=_esc(signer["rev"]))
+                ).format(no=_esc(signer["agreement_no"]), rev=_esc(signer["rev"]),
+                         ts=now_str, ref=signer["signer_token"][:8])
                 _send_sign_email(QUOTE_NOTIFY_TO, subject_done, html_r)
             else:
                 # 仅一方签完：通知 Robin 进度
@@ -1474,8 +1480,10 @@ def api_sign_sign(signer_token):
                     '<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">'
                     '<p style="font-size:14px;color:#1A1A2E">{name} has signed Agreement <strong>{no}</strong> ({rev}). '
                     'Awaiting other party.</p>'
+                    '<p style="font-size:12px;color:#888">Signed at: {ts} UTC &middot; Ref: {ref}</p>'
                     '<p style="font-size:13px;color:#888">SnailAI.AI e-Sign</p></div>'
-                ).format(name=_esc(full_name), no=_esc(signer["agreement_no"]), rev=_esc(signer["rev"]))
+                ).format(name=_esc(full_name), no=_esc(signer["agreement_no"]), rev=_esc(signer["rev"]),
+                         ts=now_str, ref=signer["signer_token"][:8])
                 _send_sign_email(QUOTE_NOTIFY_TO, subject_prog, html_prog)
         except Exception as e:
             app.logger.warning("[sign-email] notification failed: %s", e)
