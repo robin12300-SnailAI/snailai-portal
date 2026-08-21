@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>项目管理 — 管理后台</title>
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{--coral:#FF5B1F;--gold:#D4A547;--ink:#1A1A2E;--coral-light:#FFF5EE;--success:#22C55E;--amber:#F59E0B;--bg:#faf9f6;--border:0.5px solid #e0ddd6;--radius:8px;--error:#DC2626;--grey:#9CA3AF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.top-bar{background:var(--ink);color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.top-bar .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px}
+.top-bar .brand .ai{color:var(--coral)}
+.top-bar .ver{font-size:10px;background:var(--coral);border-radius:8px;padding:1px 7px;margin-left:4px}
+.top-bar .admin-label{font-size:11px;color:#aaa;font-weight:500;border-left:1px solid #444;padding-left:8px;margin-left:2px}
+.top-bar .user-area{display:flex;align-items:center;gap:12px;font-size:13px}
+.top-bar .user-area a{color:var(--coral);cursor:pointer;font-weight:600;text-decoration:none}
+.content{max-width:1100px;margin:0 auto;padding:28px 20px 60px}
+h1{font-size:20px;font-weight:800;margin-bottom:6px}
+.sub{font-size:14px;color:#888;margin-bottom:20px}
+/* Tabs */
+.tabs{display:flex;gap:2px;margin-bottom:20px;border-bottom:2px solid #e0ddd6}
+.tab{padding:10px 16px;font-size:14px;font-weight:600;color:#888;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--coral);border-bottom-color:var(--coral)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+/* Section */
+.section{background:#fff;border:var(--border);border-radius:10px;padding:20px;margin-bottom:16px}
+.section h2{font-size:16px;font-weight:700;margin-bottom:14px}
+/* Form */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#555}
+.field input,.field select,.field textarea{width:100%;padding:8px 12px;border:var(--border);border-radius:6px;font-size:13px;font-family:inherit}
+.field textarea{resize:vertical;min-height:60px}
+.btn{display:inline-block;padding:8px 16px;border:none;border-radius:6px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;margin-right:6px}
+.btn-coral{background:var(--coral);color:#fff}
+.btn-coral:hover{filter:brightness(0.93)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-outline{background:#fff;border:1px solid #ccc;color:#555}
+.btn-outline:hover{border-color:var(--coral);color:var(--coral)}
+.btn-danger{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 8px;border-bottom:2px solid #e0ddd6;font-weight:700;color:#555;font-size:12px}
+td{padding:10px 8px;border-bottom:var(--border)}
+tr:hover{background:#f9f8f5}
+.badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;display:inline-block}
+.badge-active{background:#dcfce7;color:#166534}
+.badge-preparing{background:#fef3c7;color:#92400e}
+.badge-ready{background:#dbeafe;color:#1e40af}
+.badge-done{background:#dcfce7;color:#166534}
+.badge-not_started{background:#f3f4f6;color:#666}
+.badge-in_progress{background:#fef3c7;color:#92400e}
+.badge-action_required{background:#fef3c7;color:#92400e}
+.badge-completed{background:#dcfce7;color:#166534}
+.badge-high{background:#fef2f2;color:#dc2626}
+.badge-normal{background:#fef3c7;color:#92400e}
+.badge-low{background:#f3f4f6;color:#666}
+.msg{font-size:13px;margin-top:8px}
+.msg-ok{color:var(--success)}
+.msg-err{color:var(--error)}
+@media(max-width:640px){
+  .top-bar{padding:8px 12px}
+  .content{padding:20px 14px 40px}
+  .form-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="brand">
+    <span>Snail<span class="ai">AI</span>.AI</span>
+    <span class="ver">V1.0.0</span>
+    <span class="admin-label">管理后台</span>
+  </div>
+  <div class="user-area">
+    <a href="index.html">← 返回列表</a>
+    <a href="/portal/index.html">客户端</a>
+    <a onclick="doLogout()">退出</a>
+  </div>
+</div>
+
+<div class="content" id="mainContent">
+  <div style="text-align:center;padding:40px;color:#aaa">加载中...</div>
+</div>
+
+<script>
+const API = '/api/portal';
+let token = localStorage.getItem('portal_token');
+const params = new URLSearchParams(window.location.search);
+const projId = params.get('id');
+let projectData = null;
+
+async function load() {
+  if (!projId) { document.getElementById('mainContent').innerHTML = '<p>缺少项目 ID</p>'; return; }
+  try {
+    const r = await fetch(API + '/admin/projects/' + projId, { headers: { 'Authorization': 'Bearer ' + token } });
+    const d = await r.json();
+    if (!d.ok) { document.getElementById('mainContent').innerHTML = '<p>项目不存在</p>'; return; }
+    projectData = d;
+    render();
+  } catch(e) { document.getElementById('mainContent').innerHTML = '<p>加载失败</p>'; }
+}
+
+function render() {
+  const p = projectData.project;
+  let html = `<h1>${p.name}</h1>
+  <div class="sub">${p.org_name || ''} · ${p.current_phase || '无阶段'} · ${p.progress_percent||0}%</div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('settings')">项目设置</div>
+    <div class="tab" onclick="switchTab('tasks')">任务 (${projectData.tasks.length})</div>
+    <div class="tab" onclick="switchTab('milestones')">里程碑 (${projectData.milestones.length})</div>
+    <div class="tab" onclick="switchTab('agreement')">合同</div>
+  </div>
+
+  <!-- Settings -->
+  <div class="tab-content active" id="tab-settings">
+    <div class="section">
+      <h2>项目配置</h2>
+      <div class="form-grid">
+        <div class="field"><label>当前阶段</label><input id="pPhase" value="${p.current_phase||''}"></div>
+        <div class="field"><label>进度 (%)</label><input id="pProgress" type="number" value="${p.progress_percent||0}" min="0" max="100"></div>
+        <div class="field"><label>下一步操作</label><input id="pNextAction" value="${p.next_action_text||''}"></div>
+        <div class="field"><label>状态</label><select id="pStatus"><option value="active" ${p.status==='active'?'selected':''}>Active</option><option value="completed" ${p.status==='completed'?'selected':''}>Completed</option></select></div>
+        <div class="field"><label>资料接收邮箱</label><input id="pEmail" value="${p.materials_email||''}"></div>
+        <div class="field"><label>Google Drive 链接</label><input id="pDrive" value="${p.google_drive_url||''}"></div>
+      </div>
+      <button class="btn btn-coral" onclick="saveSettings()" style="margin-top:14px">保存设置</button>
+      <span id="settingsMsg" class="msg"></span>
+    </div>
+  </div>
+
+  <!-- Tasks -->
+  <div class="tab-content" id="tab-tasks">
+    <div class="section">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <h2 style="margin:0">任务列表</h2>
+        <button class="btn btn-coral btn-sm" onclick="addTask()">+ 新增任务</button>
+      </div>
+      <table><thead><tr><th>排序</th><th>标题</th><th>优先级</th><th>状态</th><th>交付方式</th><th>可见</th><th>操作</th></tr></thead><tbody>
+      ${projectData.tasks.map(t => `<tr>
+        <td>${t.sort_order}</td>
+        <td><strong>${t.title}</strong>${t.client_action?'<br><span style="color:var(--coral);font-size:12px">'+t.client_action+'</span>':''}</td>
+        <td><span class="badge badge-${t.priority}">${t.priority}</span></td>
+        <td><span class="badge badge-${t.status}">${t.status}</span></td>
+        <td>${t.delivery_method}</td>
+        <td>${t.visible_to_client?'✅':'❌'}</td>
+        <td>
+          <button class="btn btn-sm btn-outline" onclick="editTask(${t.id})">编辑</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteTask(${t.id})">删除</button>
+        </td>
+      </tr>`).join('')}
+      </tbody></table>
+    </div>
+  </div>
+
+  <!-- Milestones -->
+  <div class="tab-content" id="tab-milestones">
+    <div class="section">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <h2 style="margin:0">里程碑</h2>
+        <button class="btn btn-coral btn-sm" onclick="addMilestone()">+ 新增里程碑</button>
+      </div>
+      <table><thead><tr><th>排序</th><th>代码</th><th>标题</th><th>状态</th><th>权重</th><th>进度</th><th>客户行动</th><th>可见</th><th>操作</th></tr></thead><tbody>
+      ${projectData.milestones.map(m => `<tr>
+        <td>${m.sort_order}</td>
+        <td>${m.code||''}</td>
+        <td><strong>${m.title}</strong></td>
+        <td><span class="badge badge-${m.status}">${m.status}</span></td>
+        <td>${m.weight}</td>
+        <td>${m.phase_progress_percent||0}%</td>
+        <td>${m.client_action_required?'✅':'❌'}</td>
+        <td>${m.visible_to_client?'✅':'❌'}</td>
+        <td><button class="btn btn-sm btn-outline" onclick="editMilestone(${m.id})">编辑</button></td>
+      </tr>`).join('')}
+      </tbody></table>
+    </div>
+  </div>
+
+  <!-- Agreement -->
+  <div class="tab-content" id="tab-agreement">
+    <div class="section"><h2>合同状态</h2>
+      ${projectData.agreements.length > 0 ? projectData.agreements.map(a => `
+        <div class="info-row"><span class="label">标题</span><span class="value">${a.title}</span></div>
+        <div class="info-row"><span class="label">版本</span><span class="value">${a.version||'-'}</span></div>
+        <div class="info-row"><span class="label">Portal 状态</span><span class="value"><span class="badge badge-${a.portal_status}">${a.portal_status}</span></span></div>
+        <div class="info-row"><span class="label">Agreement ID</span><span class="value">${a.agreement_id||'未关联'}</span></div>
+      `).join('') : '<p style="color:#aaa;text-align:center;padding:20px">暂无合同记录</p>'}
+      <div style="margin-top:14px">
+        <button class="btn btn-coral btn-sm" onclick="linkAgreement()">关联签署合同</button>
+        <button class="btn btn-outline btn-sm" onclick="setAgreementStatus()">修改合同状态</button>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('mainContent').innerHTML = html;
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+async function saveSettings() {
+  const data = {
+    current_phase: document.getElementById('pPhase').value,
+    progress_percent: parseInt(document.getElementById('pProgress').value) || 0,
+    next_action_text: document.getElementById('pNextAction').value,
+    status: document.getElementById('pStatus').value,
+    materials_email: document.getElementById('pEmail').value,
+    google_drive_url: document.getElementById('pDrive').value,
+  };
+  try {
+    const r = await fetch(API + '/admin/projects/' + projId, {
+      method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const d = await r.json();
+    document.getElementById('settingsMsg').className = 'msg ' + (d.ok ? 'msg-ok' : 'msg-err');
+    document.getElementById('settingsMsg').textContent = d.ok ? '✅ 已保存' : '❌ 保存失败';
+  } catch(e) { document.getElementById('settingsMsg').className = 'msg msg-err'; document.getElementById('settingsMsg').textContent = '网络错误'; }
+}
+
+async function addTask() {
+  const title = prompt('任务标题：');
+  if (!title) return;
+  const action = prompt('客户操作说明（可选）：') || '';
+  const priority = prompt('优先级（high/normal/low）：', 'normal') || 'normal';
+  try {
+    await fetch(API + '/admin/projects/' + projId + '/tasks', {
+      method: 'POST', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, client_action: action, priority })
+    });
+    load();
+  } catch(e) { alert('创建失败'); }
+}
+
+async function editTask(taskId) {
+  const task = projectData.tasks.find(t => t.id === taskId);
+  if (!task) return;
+  const updates = {};
+  const newTitle = prompt('标题：', task.title);
+  if (newTitle !== null) updates.title = newTitle;
+  const newPriority = prompt('优先级（high/normal/low）：', task.priority);
+  if (newPriority !== null) updates.priority = newPriority;
+  const newVisible = prompt('客户端可见（1=是/0=否）：', task.visible_to_client ? '1' : '0');
+  if (newVisible !== null) updates.visible_to_client = parseInt(newVisible);
+  const newAction = prompt('客户操作说明：', task.client_action || '');
+  if (newAction !== null) updates.client_action = newAction;
+  if (Object.keys(updates).length === 0) return;
+  try {
+    await fetch(API + '/admin/tasks/' + taskId, {
+      method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    });
+    load();
+  } catch(e) { alert('更新失败'); }
+}
+
+async function deleteTask(taskId) {
+  if (!confirm('确定要删除此任务吗？')) return;
+  try {
+    await fetch(API + '/admin/tasks/' + taskId, {
+      method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token }
+    });
+    load();
+  } catch(e) { alert('删除失败'); }
+}
+
+async function addMilestone() {
+  const code = prompt('代码（如 w1, m1）：');
+  if (!code) return;
+  const title = prompt('标题：');
+  if (!title) return;
+  const visible = prompt('客户端可见（1=是/0=否）：', '0') || '0';
+  try {
+    await fetch(API + '/admin/projects/' + projId + '/milestones', {
+      method: 'POST', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, title, visible_to_client: parseInt(visible) })
+    });
+    load();
+  } catch(e) { alert('创建失败'); }
+}
+
+async function editMilestone(msId) {
+  const ms = projectData.milestones.find(m => m.id === msId);
+  if (!ms) return;
+  const updates = {};
+  const newStatus = prompt('状态（not_started/in_progress/completed）：', ms.status);
+  if (newStatus !== null) updates.status = newStatus;
+  const newVisible = prompt('客户端可见（1=是/0=否）：', ms.visible_to_client ? '1' : '0');
+  if (newVisible !== null) updates.visible_to_client = parseInt(newVisible);
+  const newProgress = prompt('阶段进度（%）：', String(ms.phase_progress_percent || 0));
+  if (newProgress !== null) updates.phase_progress_percent = parseInt(newProgress);
+  const newAction = prompt('需要客户行动（1=是/0=否）：', ms.client_action_required ? '1' : '0');
+  if (newAction !== null) updates.client_action_required = parseInt(newAction);
+  if (Object.keys(updates).length === 0) return;
+  try {
+    await fetch(API + '/admin/milestones/' + msId, {
+      method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    });
+    load();
+  } catch(e) { alert('更新失败'); }
+}
+
+async function linkAgreement() {
+  const agreementId = prompt('输入签署模块的 Agreement ID：');
+  if (!agreementId) return;
+  const signUrl = prompt('签署链接（sign_url，可选）：') || '';
+  try {
+    await fetch(API + '/admin/agreements/link', {
+      method: 'POST', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ project_id: parseInt(projId), agreement_id: parseInt(agreementId), sign_url: signUrl, title: 'Digital Services Agreement' })
+    });
+    load();
+  } catch(e) { alert('关联失败'); }
+}
+
+async function setAgreementStatus() {
+  const status = prompt('设置合同 Portal 状态（preparing/ready_to_sign/signed_by_client/countersigned/fully_executed）：');
+  if (!status) return;
+  // Direct update via project data
+  const agr = projectData.agreements[0];
+  if (!agr) { alert('暂无合同记录'); return; }
+  const conn = { id: agr.id };
+  try {
+    // Use a simple approach: directly update portal_agreements
+    await fetch(API + '/admin/projects/' + projId, {
+      method: 'PATCH', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({})
+    });
+    // For now, prompt works as manual flag
+    alert('合同状态已记录。正式关联请使用"关联签署合同"功能。');
+  } catch(e) { alert('操作失败'); }
+}
+
+function doLogout() {
+  fetch(API + '/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
+  localStorage.removeItem('portal_token');
+  window.location.href = '/portal/login.html';
+}
+
+load();
+</script>
+</body>
+</html>

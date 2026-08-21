@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>管理后台 — SnailAI Client Portal</title>
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{--coral:#FF5B1F;--gold:#D4A547;--ink:#1A1A2E;--coral-light:#FFF5EE;--success:#22C55E;--amber:#F59E0B;--bg:#faf9f6;--border:0.5px solid #e0ddd6;--radius:8px;--error:#DC2626;--grey:#9CA3AF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.top-bar{background:var(--ink);color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.top-bar .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px}
+.top-bar .brand .ai{color:var(--coral)}
+.top-bar .ver{font-size:10px;background:var(--coral);border-radius:8px;padding:1px 7px;margin-left:4px}
+.top-bar .admin-label{font-size:11px;color:#aaa;font-weight:500;border-left:1px solid #444;padding-left:8px;margin-left:2px}
+.top-bar .user-area{display:flex;align-items:center;gap:12px;font-size:13px}
+.top-bar .user-area a{color:var(--coral);cursor:pointer;font-weight:600;text-decoration:none}
+.content{max-width:1100px;margin:0 auto;padding:28px 20px 60px}
+h1{font-size:22px;font-weight:800;margin-bottom:20px}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:28px}
+.stat-card{background:#fff;border:var(--border);border-radius:10px;padding:18px;text-align:center}
+.stat-card .num{font-size:28px;font-weight:800;color:var(--coral)}
+.stat-card .lbl{font-size:12px;color:#888;margin-top:4px;font-weight:600}
+/* Section */
+.section{background:#fff;border:var(--border);border-radius:10px;padding:20px;margin-bottom:20px}
+.section h2{font-size:17px;font-weight:700;margin-bottom:14px}
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 8px;border-bottom:2px solid #e0ddd6;font-weight:700;color:#555;font-size:12px}
+td{padding:10px 8px;border-bottom:var(--border)}
+tr:hover{background:#f9f8f5}
+.badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;display:inline-block}
+.badge-active{background:#dcfce7;color:#166534}
+.badge-suspended{background:#fef2f2;color:#dc2626}
+.btn{display:inline-block;padding:8px 16px;border:none;border-radius:6px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s}
+.btn-coral{background:var(--coral);color:#fff}
+.btn-coral:hover{filter:brightness(0.93)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-outline{background:#fff;border:1px solid #ccc;color:#555}
+.btn-outline:hover{border-color:var(--coral);color:var(--coral)}
+.btn-danger{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.btn-danger:hover{background:#fee2e2}
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,26,46,0.5);z-index:100;align-items:center;justify-content:center;padding:24px}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:12px;padding:28px;max-width:500px;width:100%}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:16px}
+.modal .field{margin-bottom:14px}
+.modal .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#555}
+.modal .field input,.modal .field select{width:100%;padding:8px 12px;border:var(--border);border-radius:6px;font-size:13px;font-family:inherit}
+.cred-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px;margin-top:14px}
+.cred-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px}
+.cred-row .val{font-weight:700;font-family:monospace;color:var(--ink)}
+.cred-row button{padding:4px 10px;font-size:11px;background:var(--ink);color:#fff;border:none;border-radius:4px;cursor:pointer}
+/* Activity */
+.activity-list{list-style:none;font-size:13px}
+.activity-list li{padding:8px 0;border-bottom:var(--border);display:flex;gap:10px}
+.activity-list li .time{color:#aaa;white-space:nowrap;min-width:80px;font-size:12px}
+.activity-list li .text{flex:1}
+@media(max-width:640px){
+  .top-bar{padding:8px 12px}
+  .content{padding:20px 14px 40px}
+  .stats{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="brand">
+    <span>Snail<span class="ai">AI</span>.AI</span>
+    <span class="ver">V1.0.0</span>
+    <span class="admin-label">管理后台</span>
+  </div>
+  <div class="user-area">
+    <span id="adminName"></span>
+    <a href="/portal/index.html">← 客户端</a>
+    <a onclick="doLogout()">退出</a>
+  </div>
+</div>
+
+<div class="content">
+  <div id="mainContent" style="text-align:center;padding:40px;color:#aaa">加载中...</div>
+</div>
+
+<!-- 新建客户 Modal -->
+<div class="modal-overlay" id="createModal">
+  <div class="modal">
+    <h3>新建客户</h3>
+    <div class="field"><label>公司名称 *</label><input id="cLegalName" placeholder="e.g. ABC Clinic Pty Ltd"></div>
+    <div class="field"><label>显示名称</label><input id="cDisplayName" placeholder="e.g. ABC Clinic"></div>
+    <div class="field"><label>联系人</label><input id="cContactName"></div>
+    <div class="field"><label>联系邮箱</label><input id="cContactEmail"></div>
+    <div class="field"><label>联系电话</label><input id="cContactPhone"></div>
+    <div class="field"><label>ABN</label><input id="cAbn"></div>
+    <div class="field"><label>地址</label><input id="cAddress"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-coral" onclick="doCreateClient()" style="flex:1">创建</button>
+      <button class="btn btn-outline" onclick="closeCreateModal()" style="flex:1">取消</button>
+    </div>
+    <div id="credResult"></div>
+  </div>
+</div>
+
+<script>
+const API = '/api/portal';
+let token = localStorage.getItem('portal_token');
+
+async function checkAuth() {
+  if (!token) { window.location.href = '/portal/login.html'; return; }
+  try {
+    const r = await fetch(API + '/me', { headers: { 'Authorization': 'Bearer ' + token } });
+    const d = await r.json();
+    if (!d.ok || d.user.role !== 'admin') {
+      alert('无权访问管理后台');
+      window.location.href = '/portal/login.html';
+      return;
+    }
+    document.getElementById('adminName').textContent = d.user.name;
+    loadOverview();
+    loadClients();
+  } catch(e) { window.location.href = '/portal/login.html'; }
+}
+
+async function loadOverview() {
+  try {
+    const r = await fetch(API + '/admin/overview', { headers: { 'Authorization': 'Bearer ' + token } });
+    const d = await r.json();
+    renderOverview(d);
+  } catch(e) {}
+}
+
+function renderOverview(data) {
+  const s = data.stats || {};
+  let html = `
+    <h1>Portal 管理后台</h1>
+    <div class="stats">
+      <div class="stat-card"><div class="num">${s.active_clients||0}</div><div class="lbl">活跃客户</div></div>
+      <div class="stat-card"><div class="num">${s.active_projects||0}</div><div class="lbl">活跃项目</div></div>
+      <div class="stat-card"><div class="num">${s.pending_agreements||0}</div><div class="lbl">待签合同</div></div>
+      <div class="stat-card"><div class="num">${s.pending_tasks||0}</div><div class="lbl">待处理任务</div></div>
+    </div>
+    <div class="section"><h2>最近活动</h2><ul class="activity-list">
+      ${(data.activity||[]).map(a => `<li><span class="time">${formatDate(a.created_at)}</span><span class="text">${a.summary}${a.org_name?' ('+a.org_name+')':''}</span></li>`).join('')||'<li style="color:#aaa;padding:20px;text-align:center">暂无活动</li>'}
+    </ul></div>`;
+  document.getElementById('mainContent').innerHTML = html;
+}
+
+async function loadClients() {
+  try {
+    const r = await fetch(API + '/admin/clients', { headers: { 'Authorization': 'Bearer ' + token } });
+    const d = await r.json();
+    renderClients(d.clients || []);
+  } catch(e) {}
+}
+
+function renderClients(clients) {
+  let html = `<div class="section">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h2 style="margin:0">客户列表</h2>
+      <button class="btn btn-coral btn-sm" onclick="showCreateModal()">+ 新建客户</button>
+    </div>
+    <table><thead><tr>
+      <th>公司</th><th>联系人</th><th>账号</th><th>状态</th><th>最后登录</th><th>项目数</th><th>操作</th>
+    </tr></thead><tbody>
+    ${clients.map(c => `<tr>
+      <td><strong>${c.display_name||c.legal_name}</strong></td>
+      <td>${c.primary_contact_name||'-'}</td>
+      <td style="font-family:monospace;font-size:12px">${c.username||'-'}</td>
+      <td><span class="badge ${c.user_status==='suspended'?'badge-suspended':'badge-active'}">${c.user_status==='suspended'?'暂停':'活跃'}</span></td>
+      <td style="font-size:12px;color:#888">${c.last_login_at?formatDate(c.last_login_at):'-'}</td>
+      <td>${c.project_count||0}</td>
+      <td>
+        <a href="client-detail.html?id=${c.id}" class="btn btn-sm btn-outline">详情</a>
+      </td>
+    </tr>`).join('')}
+    </tbody></table></div>`;
+  document.getElementById('mainContent').innerHTML += html;
+}
+
+function showCreateModal() { document.getElementById('createModal').classList.add('show'); document.getElementById('credResult').innerHTML = ''; }
+function closeCreateModal() { document.getElementById('createModal').classList.remove('show'); }
+
+async function doCreateClient() {
+  const data = {
+    legal_name: document.getElementById('cLegalName').value,
+    display_name: document.getElementById('cDisplayName').value,
+    contact_name: document.getElementById('cContactName').value,
+    contact_email: document.getElementById('cContactEmail').value,
+    contact_phone: document.getElementById('cContactPhone').value,
+    abn: document.getElementById('cAbn').value,
+    address: document.getElementById('cAddress').value,
+  };
+  if (!data.legal_name) { alert('公司名称必填'); return; }
+  try {
+    const r = await fetch(API + '/admin/clients', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const d = await r.json();
+    if (d.ok) {
+      const c = d.credentials;
+      document.getElementById('credResult').innerHTML = `
+        <div class="cred-box">
+          <div style="font-weight:700;color:#166534;margin-bottom:8px">✅ 客户创建成功！请将以下凭据发送给客户：</div>
+          <div class="cred-row"><span>登录链接</span><span class="val">${c.portal_url}</span><button onclick="copyText('${c.portal_url}')">复制</button></div>
+          <div class="cred-row"><span>账号</span><span class="val">${c.username}</span><button onclick="copyText('${c.username}')">复制</button></div>
+          <div class="cred-row"><span>初始密码</span><span class="val">${c.initial_password}</span><button onclick="copyText('${c.initial_password}')">复制</button></div>
+        </div>`;
+      loadClients();
+    } else {
+      alert('创建失败：' + (d.error || '未知错误'));
+    }
+  } catch(e) { alert('网络错误'); }
+}
+
+function copyText(text) { navigator.clipboard.writeText(text).then(() => {}); }
+
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso + (iso.includes('Z') || iso.includes('+') ? '' : 'Z'));
+  return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function doLogout() {
+  fetch(API + '/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
+  localStorage.removeItem('portal_token');
+  window.location.href = '/portal/login.html';
+}
+
+checkAuth();
+</script>
+</body>
+</html>

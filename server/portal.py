@@ -12,6 +12,7 @@ SnailAI Client Portal — Blueprint
 """
 
 import os
+import re
 import json
 import sqlite3
 import hashlib
@@ -948,3 +949,384 @@ def portal_progress():
                    current_phase=proj["current_phase"] or "",
                    next_action=proj["next_action_text"] or "",
                    milestones=milestones)
+
+
+# ══════════════════════════════════════════════════════════════
+# Phase 3 — Agreement / E-sign integration
+# ══════════════════════════════════════════════════════════════
+
+@bp.route("/agreement", methods=["GET"])
+@_require_customer
+def portal_agreement():
+    """Agreement status for the client."""
+    user = _current_user()
+    pid = request.args.get("project_id", type=int)
+    if not pid:
+        pids = _visible_project_ids(user)
+        pid = pids[0] if pids else None
+    if not pid or not _project_belong_check(pid, user):
+        return jsonify(ok=False, error="Project not found"), 404
+
+    conn = _db_conn()
+    agr = conn.execute("SELECT * FROM portal_agreements WHERE project_id=? ORDER BY id DESC LIMIT 1", (pid,)).fetchone()
+    conn.close()
+
+    if not agr:
+        return jsonify(ok=True, agreement=None, status="none", preview_only=False)
+
+    agr_data = dict(agr)
+    is_demo = _is_demo(user["username"])
+
+    # Demo: no sign URL, preview only
+    if is_demo and agr_data.get("sign_url"):
+        agr_data["sign_url"] = None
+        agr_data["preview_only"] = True
+    else:
+        agr_data["preview_only"] = False
+
+    return jsonify(ok=True, agreement=agr_data, status=agr_data["portal_status"],
+                   preview_only=agr_data.get("preview_only", False))
+
+
+# ══════════════════════════════════════════════════════════════
+# Phase 4 — Admin APIs (role=admin only)
+# ══════════════════════════════════════════════════════════════
+
+@bp.route("/admin/overview", methods=["GET"])
+@_require_admin
+def admin_overview():
+    """Admin dashboard overview."""
+    conn = _db_conn()
+    orgs = conn.execute("SELECT COUNT(*) as c FROM portal_organisations WHERE status='active'").fetchone()["c"]
+    projs = conn.execute("SELECT COUNT(*) as c FROM portal_projects WHERE status='active'").fetchone()["c"]
+    agrs = conn.execute("SELECT COUNT(*) as c FROM portal_agreements WHERE portal_status IN ('ready_to_sign','signed_by_client')").fetchone()["c"]
+    tasks_pending = conn.execute("SELECT COUNT(*) as c FROM portal_tasks WHERE status='action_required' AND visible_to_client=1").fetchone()["c"]
+    # Recent activity
+    acts = conn.execute("SELECT a.*,o.display_name FROM portal_activity_logs a LEFT JOIN portal_organisations o ON a.organisation_id=o.id ORDER BY a.created_at DESC LIMIT 15").fetchall()
+    activity = []
+    for a in acts:
+        d = dict(a)
+        d["org_name"] = d.pop("display_name", None)
+        activity.append(d)
+    conn.close()
+    return jsonify(ok=True, stats={"active_clients": orgs, "active_projects": projs,
+                                    "pending_agreements": agrs, "pending_tasks": tasks_pending},
+                   activity=activity)
+
+
+@bp.route("/admin/clients", methods=["GET"])
+@_require_admin
+def admin_clients():
+    """List all client organisations."""
+    conn = _db_conn()
+    rows = conn.execute("""
+        SELECT o.*, u.username, u.name as user_name, u.status as user_status, u.last_login_at,
+          (SELECT COUNT(*) FROM portal_projects WHERE organisation_id=o.id) as project_count
+        FROM portal_organisations o
+        LEFT JOIN users u ON u.organisation_id=o.id AND u.role='customer'
+        ORDER BY o.created_at DESC
+    """).fetchall()
+    clients = [dict(r) for r in rows]
+    conn.close()
+    return jsonify(ok=True, clients=clients)
+
+
+@bp.route("/admin/clients", methods=["POST"])
+@_require_admin
+def admin_create_client():
+    """Create a new client: organisation + user account. Returns credentials triple."""
+    data = request.get_json() or {}
+    legal_name = data.get("legal_name", "").strip()
+    display_name = data.get("display_name", "").strip()
+    contact_name = data.get("contact_name", "").strip()
+    contact_email = data.get("contact_email", "").strip()
+    contact_phone = data.get("contact_phone", "").strip()
+    abn = data.get("abn", "").strip()
+    address = data.get("address", "").strip()
+
+    if not legal_name:
+        return jsonify(ok=False, error="Company name is required"), 400
+
+    conn = _db_conn()
+
+    # Create organisation
+    cur = conn.execute("INSERT INTO portal_organisations(legal_name,display_name,abn,address,primary_contact_name,primary_contact_email,primary_contact_phone) VALUES(?,?,?,?,?,?,?)",
+                       (legal_name, display_name or legal_name, abn or None, address or None,
+                        contact_name or None, contact_email or None, contact_phone or None))
+    org_id = cur.lastrowid
+
+    # Generate username from legal_name
+    base_username = re.sub(r'[^a-z0-9]', '', legal_name.lower())[:12]
+    if not base_username:
+        base_username = "client"
+    username = base_username
+    n = 1
+    while conn.execute("SELECT 1 FROM users WHERE username=?", (username,)).fetchone():
+        username = base_username + str(n)
+        n += 1
+
+    # Generate initial password
+    init_pw = secrets.token_urlsafe(8)
+    salt = secrets.token_hex(16)
+    pw_hash = _hash_pw(init_pw, salt)
+
+    conn.execute("INSERT INTO users(username,name,role,password_hash,salt,organisation_id,status,must_change_pw) VALUES(?,?,?,?,?,?,?,?)",
+                 (username, contact_name or legal_name, "customer", pw_hash, salt, org_id, "active", 0))
+
+    conn.commit()
+    conn.close()
+
+    portal_url = _portal_url()
+    return jsonify(ok=True, credentials={
+        "portal_url": portal_url,
+        "username": username,
+        "initial_password": init_pw
+    })
+
+
+@bp.route("/admin/clients/<int:org_id>", methods=["GET"])
+@_require_admin
+def admin_client_detail(org_id):
+    """Get client org detail + user info + projects."""
+    conn = _db_conn()
+    org = conn.execute("SELECT * FROM portal_organisations WHERE id=?", (org_id,)).fetchone()
+    if not org:
+        conn.close()
+        return jsonify(ok=False, error="Not found"), 404
+    user = conn.execute("SELECT id,username,name,email,role,status,last_login_at,organisation_id FROM users WHERE organisation_id=? AND role='customer'", (org_id,)).fetchone()
+    projects = conn.execute("SELECT * FROM portal_projects WHERE organisation_id=? ORDER BY id", (org_id,)).fetchall()
+    conn.close()
+    return jsonify(ok=True, organisation=dict(org), user=dict(user) if user else None,
+                   projects=[dict(p) for p in projects])
+
+
+@bp.route("/admin/clients/<int:org_id>/reset-password", methods=["POST"])
+@_require_admin
+def admin_reset_password(org_id):
+    """Reset client password. Returns new credentials triple."""
+    conn = _db_conn()
+    user = conn.execute("SELECT id,username,name FROM users WHERE organisation_id=? AND role='customer'", (org_id,)).fetchone()
+    if not user:
+        conn.close()
+        return jsonify(ok=False, error="User not found"), 404
+
+    new_pw = secrets.token_urlsafe(8)
+    new_salt = secrets.token_hex(16)
+    new_hash = _hash_pw(new_pw, new_salt)
+    conn.execute("UPDATE users SET password_hash=?, salt=? WHERE id=?", (new_hash, new_salt, user["id"]))
+    conn.commit()
+    conn.close()
+
+    return jsonify(ok=True, credentials={
+        "portal_url": _portal_url(),
+        "username": user["username"],
+        "initial_password": new_pw
+    })
+
+
+@bp.route("/admin/clients/<int:org_id>/toggle-status", methods=["POST"])
+@_require_admin
+def admin_toggle_client_status(org_id):
+    """Toggle client user between active and suspended."""
+    data = request.get_json() or {}
+    new_status = data.get("status")  # 'active' or 'suspended'
+    if new_status not in ("active", "suspended"):
+        return jsonify(ok=False, error="Invalid status"), 400
+    conn = _db_conn()
+    conn.execute("UPDATE users SET status=? WHERE organisation_id=? AND role='customer'", (new_status, org_id))
+    conn.execute("UPDATE portal_organisations SET status=? WHERE id=?", (new_status, org_id))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@bp.route("/admin/projects/<int:project_id>", methods=["GET"])
+@_require_admin
+def admin_project_detail(project_id):
+    """Get project detail with all related data."""
+    conn = _db_conn()
+    proj = conn.execute("SELECT p.*,o.legal_name as org_name FROM portal_projects p LEFT JOIN portal_organisations o ON p.organisation_id=o.id WHERE p.id=?", (project_id,)).fetchone()
+    if not proj:
+        conn.close()
+        return jsonify(ok=False, error="Not found"), 404
+
+    quotations = conn.execute("SELECT * FROM portal_quotations WHERE project_id=? ORDER BY id", (project_id,)).fetchall()
+    agreements = conn.execute("SELECT * FROM portal_agreements WHERE project_id=? ORDER BY id", (project_id,)).fetchall()
+    tasks = conn.execute("SELECT * FROM portal_tasks WHERE project_id=? ORDER BY sort_order, id", (project_id,)).fetchall()
+    milestones = conn.execute("SELECT * FROM portal_milestones WHERE project_id=? ORDER BY sort_order", (project_id,)).fetchall()
+    conn.close()
+
+    return jsonify(ok=True, project=dict(proj),
+                   quotations=[dict(q) for q in quotations],
+                   agreements=[dict(a) for a in agreements],
+                   tasks=[dict(t) for t in tasks],
+                   milestones=[dict(m) for m in milestones])
+
+
+@bp.route("/admin/projects/<int:project_id>", methods=["PATCH"])
+@_require_admin
+def admin_update_project(project_id):
+    """Update project settings (phase, progress, next_action, materials_email, google_drive_url)."""
+    data = request.get_json() or {}
+    allowed = ["current_phase", "progress_percent", "next_action_text", "materials_email", "google_drive_url", "status", "target_launch_date"]
+    sets = []
+    vals = []
+    for k in allowed:
+        if k in data:
+            sets.append(f"{k}=?")
+            vals.append(data[k])
+    if not sets:
+        return jsonify(ok=False, error="No fields to update"), 400
+    vals.append(project_id)
+    conn = _db_conn()
+    conn.execute(f"UPDATE portal_projects SET {', '.join(sets)}, updated_at=datetime('now') WHERE id=?", vals)
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@bp.route("/admin/projects/<int:project_id>/tasks", methods=["POST"])
+@_require_admin
+def admin_create_task(project_id):
+    """Create a task in a project."""
+    data = request.get_json() or {}
+    conn = _db_conn()
+    max_sort = conn.execute("SELECT MAX(sort_order) FROM portal_tasks WHERE project_id=?", (project_id,)).fetchone()[0] or 0
+    conn.execute("""INSERT INTO portal_tasks(project_id,title,description,client_action,status,priority,delivery_method,delivery_destination,sort_order,visible_to_client)
+                    VALUES(?,?,?,?,?,?,?,?,?,?)""",
+                 (project_id, data.get("title",""), data.get("description"), data.get("client_action"),
+                  data.get("status","action_required"), data.get("priority","normal"),
+                  data.get("delivery_method","none"), data.get("delivery_destination"),
+                  max_sort + 1, data.get("visible_to_client", 1)))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@bp.route("/admin/tasks/<int:task_id>", methods=["PATCH"])
+@_require_admin
+def admin_update_task(task_id):
+    """Update a task."""
+    data = request.get_json() or {}
+    allowed = ["title", "description", "client_action", "status", "priority", "delivery_method",
+               "delivery_destination", "due_date", "visible_to_client", "sort_order"]
+    sets = []
+    vals = []
+    for k in allowed:
+        if k in data:
+            sets.append(f"{k}=?")
+            vals.append(data[k])
+    if not sets:
+        return jsonify(ok=False, error="No fields to update"), 400
+    vals.append(task_id)
+    conn = _db_conn()
+    conn.execute(f"UPDATE portal_tasks SET {', '.join(sets)}, updated_at=datetime('now') WHERE id=?", vals)
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@bp.route("/admin/tasks/<int:task_id>", methods=["DELETE"])
+@_require_admin
+def admin_delete_task(task_id):
+    """Delete a task."""
+    conn = _db_conn()
+    conn.execute("DELETE FROM portal_tasks WHERE id=?", (task_id,))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@bp.route("/admin/projects/<int:project_id>/milestones", methods=["POST"])
+@_require_admin
+def admin_create_milestone(project_id):
+    """Create a milestone."""
+    data = request.get_json() or {}
+    conn = _db_conn()
+    max_sort = conn.execute("SELECT MAX(sort_order) FROM portal_milestones WHERE project_id=?", (project_id,)).fetchone()[0] or 0
+    conn.execute("""INSERT INTO portal_milestones(project_id,code,title,client_summary,status,weight,phase_progress_percent,client_action_required,target_date,visible_to_client,sort_order)
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?)""",
+                 (project_id, data.get("code"), data.get("title",""), data.get("client_summary"),
+                  data.get("status","not_started"), data.get("weight",1), data.get("phase_progress_percent",0),
+                  data.get("client_action_required",0), data.get("target_date"),
+                  data.get("visible_to_client",0), max_sort + 1))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@bp.route("/admin/milestones/<int:ms_id>", methods=["PATCH"])
+@_require_admin
+def admin_update_milestone(ms_id):
+    """Update a milestone."""
+    data = request.get_json() or {}
+    allowed = ["code", "title", "client_summary", "status", "weight", "phase_progress_percent",
+               "client_action_required", "target_date", "visible_to_client", "sort_order"]
+    sets = []
+    vals = []
+    for k in allowed:
+        if k in data:
+            sets.append(f"{k}=?")
+            vals.append(data[k])
+    if not sets:
+        return jsonify(ok=False, error="No fields to update"), 400
+    vals.append(ms_id)
+    conn = _db_conn()
+    conn.execute(f"UPDATE portal_milestones SET {', '.join(sets)}, updated_at=datetime('now') WHERE id=?", vals)
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@bp.route("/admin/agreements/link", methods=["POST"])
+@_require_admin
+def admin_link_agreement():
+    """Link an existing agreement (from sign module) to a portal project."""
+    data = request.get_json() or {}
+    project_id = data.get("project_id")
+    agreement_id = data.get("agreement_id")
+    title = data.get("title", "Digital Services Agreement")
+    version = data.get("version")
+    sign_url = data.get("sign_url")
+
+    if not project_id or not agreement_id:
+        return jsonify(ok=False, error="project_id and agreement_id required"), 400
+
+    conn = _db_conn()
+    # Update or create portal_agreement
+    existing = conn.execute("SELECT id FROM portal_agreements WHERE project_id=? ORDER BY id DESC LIMIT 1", (project_id,)).fetchone()
+    if existing:
+        conn.execute("UPDATE portal_agreements SET agreement_id=?, title=?, version=?, sign_url=?, portal_status='ready_to_sign', updated_at=datetime('now') WHERE id=?",
+                     (agreement_id, title, version, sign_url, existing["id"]))
+    else:
+        conn.execute("INSERT INTO portal_agreements(project_id,agreement_id,title,version,sign_url,portal_status) VALUES(?,?,?,?,?,?)",
+                     (project_id, agreement_id, title, version, sign_url, "ready_to_sign"))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@bp.route("/admin/demo-cleanup", methods=["POST"])
+@_require_admin
+def admin_demo_cleanup():
+    """Clean up demo test traces: reset task statuses, clear demo notes, delete demo activity."""
+    conn = _db_conn()
+    demo_users = os.environ.get("PORTAL_DEMO_USERS", "demo").lower().split(",")
+
+    # Reset tasks touched by demo
+    for u in demo_users:
+        u = u.strip()
+        # Get demo's org projects
+        demo_user = conn.execute("SELECT organisation_id FROM users WHERE username=?", (u,)).fetchone()
+        if not demo_user or not demo_user["organisation_id"]:
+            continue
+        # Reset tasks status back to action_required where demo completed them
+        conn.execute("""UPDATE portal_tasks SET status='action_required', completed_at=NULL, delivery_method='none', client_note=NULL
+                        WHERE project_id IN (SELECT id FROM portal_projects WHERE organisation_id=?)
+                        AND status='completed'""", (demo_user["organisation_id"],))
+        # Delete demo activity logs
+        conn.execute("DELETE FROM portal_activity_logs WHERE actor_username=?", (u,))
+
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
