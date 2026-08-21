@@ -399,11 +399,11 @@ def init_portal_db():
 
     conn.commit()
 
-    # ── 种子数据（仅当表空时灌入）───────────────────────
+    # ── 种子数据（幂等：按需补灌）───────────────────────
 
-    # 组织：Andrew Li & Co
-    row = c.execute("SELECT COUNT(*) AS n FROM portal_organisations").fetchone()
-    if row["n"] == 0:
+    # 组织：Andrew Li & Co — 若不存在则创建
+    org_row = c.execute("SELECT id FROM portal_organisations WHERE legal_name LIKE '%Andrew Li%'").fetchone()
+    if not org_row:
         c.execute("""
             INSERT INTO portal_organisations(legal_name, display_name, abn, address, status,
                 primary_contact_name, primary_contact_email, primary_contact_phone)
@@ -419,6 +419,7 @@ def init_portal_db():
             "0412823924",
         ))
         conn.commit()
+        org_row = c.execute("SELECT id FROM portal_organisations WHERE legal_name LIKE '%Andrew Li%'").fetchone()
 
     # andrew 的 organisation_id 关联
     org_row = c.execute("SELECT id FROM portal_organisations WHERE legal_name LIKE '%Andrew Li%'").fetchone()
@@ -429,9 +430,9 @@ def init_portal_db():
         # demo 用户不关联组织
         conn.commit()
 
-    # 项目：Andrew Clinic Website
-    row = c.execute("SELECT COUNT(*) AS n FROM portal_projects").fetchone()
-    if row["n"] == 0 and org_row:
+    # 项目：Andrew Clinic Website — 若不存在则创建
+    proj_row = c.execute("SELECT id FROM portal_projects WHERE name LIKE '%Andrew Clinic%'").fetchone()
+    if not proj_row and org_row:
         c.execute("""
             INSERT INTO portal_projects(organisation_id, name, description, status, current_phase,
                 progress_percent, next_action_text, materials_email, google_drive_url)
@@ -449,10 +450,10 @@ def init_portal_db():
         ))
         conn.commit()
 
-    # 报价：Andrew 确认的真实数据
+    # 报价：Andrew 确认的真实数据 — 若不存在则灌入
     proj_row = c.execute("SELECT id FROM portal_projects WHERE name LIKE '%Andrew Clinic%'").fetchone()
-    row = c.execute("SELECT COUNT(*) AS n FROM portal_quotations").fetchone()
-    if row["n"] == 0 and proj_row:
+    q_count = c.execute("SELECT COUNT(*) AS n FROM portal_quotations WHERE project_id=?", (proj_row["id"],)).fetchone()["n"] if proj_row else 1
+    if q_count == 0 and proj_row:
         items = [
             {"code": "W1", "name": "Website Strategy & Planning", "price": 850, "payment_schedule": "50/50"},
             {"code": "W2", "name": "UI/UX Design", "price": 1500, "payment_schedule": "50/50"},
@@ -489,9 +490,9 @@ def init_portal_db():
         ))
         conn.commit()
 
-    # 任务：17 项真实任务
-    row = c.execute("SELECT COUNT(*) AS n FROM portal_tasks").fetchone()
-    if row["n"] == 0 and proj_row:
+    # 任务：17 项真实任务 — 若不存在则灌入
+    t_count = c.execute("SELECT COUNT(*) AS n FROM portal_tasks WHERE project_id=?", (proj_row["id"],)).fetchone()["n"] if proj_row else 1
+    if t_count == 0 and proj_row:
         tasks = [
             ("Create your Render account (website hosting)", "Register a free account at render.com for website hosting. We will guide you through the setup.", "Sign up at render.com and share the account email with us", "high", "none", None, 1),
             ("Create your GitHub account (website code repository)", "Register a free account at github.com for the website source code repository.", "Sign up at github.com and share your username with us", "high", "none", None, 2),
@@ -519,9 +520,9 @@ def init_portal_db():
             """, (proj_row["id"], t[0], t[1], t[2], t[3], t[4], t[5], t[6]))
         conn.commit()
 
-    # 里程碑
-    row = c.execute("SELECT COUNT(*) AS n FROM portal_milestones").fetchone()
-    if row["n"] == 0 and proj_row:
+    # 里程碑 — 若不存在则灌入
+    ms_count = c.execute("SELECT COUNT(*) AS n FROM portal_milestones WHERE project_id=?", (proj_row["id"],)).fetchone()["n"] if proj_row else 1
+    if ms_count == 0 and proj_row:
         milestones = [
             ("contracting", "Contracting", "Quotation confirmed, agreement awaiting signature",
              "in_progress", 1, 0, 0, None, 1),
@@ -553,9 +554,9 @@ def init_portal_db():
             """, (proj_row["id"], m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8]))
         conn.commit()
 
-    # 活动日志：2 条初始
-    row = c.execute("SELECT COUNT(*) AS n FROM portal_activity_logs").fetchone()
-    if row["n"] == 0 and org_row and proj_row:
+    # 活动日志：2 条初始 — 若不存在则灌入
+    act_count = c.execute("SELECT COUNT(*) AS n FROM portal_activity_logs WHERE project_id=?", (proj_row["id"],)).fetchone()["n"] if proj_row else 1
+    if act_count == 0 and org_row and proj_row:
         c.execute("""
             INSERT INTO portal_activity_logs(organisation_id, project_id, actor_username,
                 event_type, summary, client_visible)
