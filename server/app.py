@@ -753,6 +753,11 @@ QUOTE_NOTIFY_TO = os.environ.get("QUOTE_NOTIFY_TO", "robin@snailai.ai")
 QUOTE_NOTIFY_CC = os.environ.get("QUOTE_NOTIFY_CC", "robin12300@gmail.com")
 QUOTE_ADMIN_TOKEN = os.environ.get("QUOTE_ADMIN_TOKEN", "")  # 非空才启用管理清理接口
 
+# 一次性确认豁免名单：这些用户即使已确认报价，仍可登录查看（如 demo 测试账号、内部复核账号）
+# 环境变量 QUOTE_LOGIN_EXEMPT 逗号分隔，默认 {"demo"}
+_QUOTE_EXEMPT_RAW = os.environ.get("QUOTE_LOGIN_EXEMPT", "demo")
+QUOTE_LOGIN_EXEMPT = {u.strip().lower() for u in _QUOTE_EXEMPT_RAW.split(",") if u.strip()}
+
 
 def _fmt_aud(n):
     try:
@@ -935,6 +940,17 @@ def api_quote_confirm():
     data = request.get_json(silent=True) or {}
     quote_id = data.get("quoteId", "")
     client = data.get("client", "")
+
+    # --- 幂等锁：非豁免账号已有确认记录则拒绝（防止 API 绕过重复提交）---
+    if confirmed_by and confirmed_by.lower() not in QUOTE_LOGIN_EXEMPT:
+        conn_chk = db_conn()
+        dup = conn_chk.execute(
+            "SELECT 1 FROM quote_confirmations WHERE confirmed_by = ? LIMIT 1",
+            (confirmed_by,)).fetchone()
+        conn_chk.close()
+        if dup:
+            return jsonify({"ok": False, "error": "already_confirmed"}), 409
+
     selections = json.dumps(data.get("selections", []), ensure_ascii=False)
     oneoff_total = data.get("oneoffTotal", 0)
     monthly_total = data.get("monthlyTotal", 0)
@@ -952,6 +968,13 @@ def api_quote_confirm():
          data.get("monthlyGst",0), data.get("monthlyInclGst",0), data.get("depositInclGst",0)),
     )
     conn.commit()
+    # --- 确认后踢下线：删除该用户所有活跃 session，防止刷新页面继续操作 ---
+    if confirmed_by:
+        try:
+            conn.execute("DELETE FROM sessions WHERE username = ?", (confirmed_by,))
+            conn.commit()
+        except Exception:
+            pass
     conn.close()
 
     # 邮件通知（失败不影响确认结果）
@@ -1477,16 +1500,27 @@ def sign_page(signer_token):
 
 @app.route("/api/quote/admin/cleanup", methods=["POST"])
 def api_quote_admin_cleanup():
-    """清空报价确认测试数据（交付前清场用）。需 X-Admin-Token 匹配 QUOTE_ADMIN_TOKEN。"""
+    """清空报价确认测试数据（交付前清场用）。需 X-Admin-Token 匹配 QUOTE_ADMIN_TOKEN。
+    V1.7.0+: 只删除豁免名单内账号（如 demo）的确认记录，真实客户记录永久保留。"""
     if not QUOTE_ADMIN_TOKEN or request.headers.get("X-Admin-Token") != QUOTE_ADMIN_TOKEN:
         return jsonify({"ok": False, "error": "unauthorised"}), 401
     conn = db_conn()
     try:
         before = conn.execute("SELECT COUNT(*) FROM quote_confirmations").fetchone()[0]
-        rows = conn.execute(
-            "SELECT quote_id, client, confirmed_at FROM quote_confirmations ORDER BY confirmed_at DESC LIMIT 50"
-        ).fetchall()
-        conn.execute("DELETE FROM quote_confirmations")
+        # 只删豁免名单内的记录（demo 等测试账号），保留真实客户记录
+        exempt_list = list(QUOTE_LOGIN_EXEMPT)
+        if exempt_list:
+            placeholders = ",".join(["?"] * len(exempt_list))
+            rows = conn.execute(
+                f"SELECT quote_id, client, confirmed_at FROM quote_confirmations WHERE LOWER(confirmed_by) IN ({placeholders}) ORDER BY confirmed_at DESC LIMIT 50",
+                exempt_list
+            ).fetchall()
+            conn.execute(
+                f"DELETE FROM quote_confirmations WHERE LOWER(confirmed_by) IN ({placeholders})",
+                exempt_list
+            )
+        else:
+            rows = []
         conn.commit()
         after = conn.execute("SELECT COUNT(*) FROM quote_confirmations").fetchone()[0]
     finally:
@@ -1542,6 +1576,18 @@ def api_login():
     user = _auth_user(username, password)
     if not user:
         return jsonify(ok=False, error="用户名或密码错误"), 401
+    # --- 一次性确认锁：已确认报价的客户无法再登录（豁免账号除外）---
+    uname_lower = user["username"].lower()
+    if uname_lower not in QUOTE_LOGIN_EXEMPT:
+        conn_check = db_conn()
+        finished = conn_check.execute(
+            "SELECT 1 FROM quote_confirmations WHERE confirmed_by = ? LIMIT 1",
+            (user["username"],)).fetchone()
+        conn_check.close()
+        if finished:
+            return jsonify(ok=True, quote_finished=True,
+                           user={"username": user["username"], "name": user["name"],
+                                 "role": user["role"]}), 200
     token = _create_session(user["username"])
     ip = _client_ip()
     ua = request.headers.get("User-Agent", "")
@@ -1630,7 +1676,20 @@ def api_me():
     user = _current_user()
     if not user:
         return jsonify(ok=False, error="未登录"), 401
-    return jsonify(ok=True, user=_public_user(user))
+    # 检查一次性确认锁
+    uname_lower = user["username"].lower()
+    quote_finished = False
+    if uname_lower not in QUOTE_LOGIN_EXEMPT:
+        conn_qf = db_conn()
+        qf_row = conn_qf.execute(
+            "SELECT 1 FROM quote_confirmations WHERE confirmed_by = ? LIMIT 1",
+            (user["username"],)).fetchone()
+        conn_qf.close()
+        quote_finished = bool(qf_row)
+    resp = {"ok": True, "user": _public_user(user)}
+    if quote_finished:
+        resp["quote_finished"] = True
+    return jsonify(resp)
 
 
 @app.route("/api/me/token", methods=["GET"])
