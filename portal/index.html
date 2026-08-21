@@ -64,9 +64,9 @@ body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:v
   .top-bar{padding:8px 12px}
   .content{padding:20px 14px 40px}
 }
-[data-zh]{display:none}
-body.zh [data-en]{display:none}
-body.zh [data-zh]{display:inline}
+:not([lang=zh]) [data-zh]{display:none}
+:lang(zh) [data-en]{display:none}
+:lang(zh) [data-zh]{display:inline}
 </style>
 </head>
 <body>

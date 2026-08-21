@@ -75,9 +75,9 @@ body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:v
   .q-header{flex-direction:column}
   .amounts{grid-template-columns:1fr}
 }
-[data-zh]{display:none}
-body.zh [data-en]{display:none}
-body.zh [data-zh]{display:inline}
+:not([lang=zh]) [data-zh]{display:none}
+:lang(zh) [data-en]{display:none}
+:lang(zh) [data-zh]{display:inline}
 </style>
 </head>
 <body>
@@ -283,8 +283,8 @@ function doLogout() {
 // Language
 let lang = localStorage.getItem('portal_lang') || 'en';
 function applyLang() {
-  if (lang === 'zh') { document.body.classList.add('zh'); document.getElementById('langBtn').textContent = 'EN'; }
-  else { document.body.classList.remove('zh'); document.getElementById('langBtn').textContent = '中文'; }
+  if (lang === 'zh') { document.documentElement.lang='zh'; document.getElementById('langBtn').textContent = 'EN'; }
+  else { document.documentElement.lang='en'; document.getElementById('langBtn').textContent = '中文'; }
 }
 function toggleLang() {
   lang = lang === 'en' ? 'zh' : 'en';
