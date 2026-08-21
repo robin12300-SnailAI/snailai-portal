@@ -75,10 +75,11 @@ body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:v
   .q-header{flex-direction:column}
   .amounts{grid-template-columns:1fr}
 }
-[data-en]{display:inline}
 [data-zh]{display:none}
 :lang(zh) [data-en]{display:none}
 :lang(zh) [data-zh]{display:inline}
+:lang(en) [data-en]{display:inline}
+:lang(en) [data-zh]{display:none}
 </style>
 </head>
 <body>
