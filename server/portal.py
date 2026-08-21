@@ -167,6 +167,20 @@ def _rate_limit_deco(limit, window=60, by_user=True):
 
 # ── 鉴权装饰器 ────────────────────────────────────────────
 
+def _require_any_auth(f):
+    """任意已登录用户（customer 或 admin 均可），用于 /me 等公共端点。"""
+    @wraps(f)
+    def wrapper(*a, **k):
+        user = _current_user()
+        if not user:
+            return jsonify(ok=False, error="Not authenticated"), 401
+        if user["role"] not in ("customer", "admin"):
+            return jsonify(ok=False, error="Access denied"), 403
+        g.user = user
+        return f(*a, **k)
+    return wrapper
+
+
 def _require_customer(f):
     """客户端接口：需登录 + role=customer（含 demo）。"""
     @wraps(f)
@@ -671,7 +685,7 @@ def portal_logout():
 
 @bp.route("/me", methods=["GET"])
 @_rate_limit_deco(_RL_QUERY_LIMIT, _RL_QUERY_WINDOW)
-@_require_customer
+@_require_any_auth
 def portal_me():
     """当前用户信息 + 组织 + 可见项目列表。"""
     user = g.user
