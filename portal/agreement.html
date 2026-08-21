@@ -132,7 +132,7 @@ async function loadAgreement() {
   try {
     const r = await fetch(API + '/overview?project_id=' + currentProjectId, { headers: { 'Authorization': 'Bearer ' + token } });
     const d = await r.json();
-    renderAgreement(d.overview);
+    renderAgreement(d);
   } catch(e) {
     document.getElementById('mainContent').innerHTML = '<div class="empty-state">Failed to load agreement.</div>';
   }

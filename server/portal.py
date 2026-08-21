@@ -812,17 +812,17 @@ def portal_overview():
 
     conn.close()
 
-    return jsonify(ok=True, overview={
-        "project": dict(proj),
-        "quotation": q_data,
-        "agreement_status": agr_status,
-        "tasks": {"total": tasks_total, "completed": tasks_done},
-        "progress_percent": progress,
-        "current_phase": current_phase,
-        "next_action": next_action,
-        "milestone_client_action": False,
-        "activity": activity,
-    })
+    return jsonify(ok=True,
+        project=dict(proj),
+        quotation=q_data,
+        agreement_status=agr_status,
+        tasks={"total": tasks_total, "completed": tasks_done},
+        progress_percent=progress,
+        current_phase=current_phase,
+        next_action=next_action,
+        milestone_client_action=False,
+        activity=activity,
+    )
 
 
 @bp.route("/quotation", methods=["GET"])
@@ -948,7 +948,8 @@ def portal_progress():
     milestones = [dict(m) for m in ms]
     conn.close()
 
-    return jsonify(ok=True, progress_percent=proj["progress_percent"] or 0,
+    return jsonify(ok=True,
+                   progress_percent=proj["progress_percent"] or 0,
                    current_phase=proj["current_phase"] or "",
                    next_action=proj["next_action_text"] or "",
                    milestones=milestones)
