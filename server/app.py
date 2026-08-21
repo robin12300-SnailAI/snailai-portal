@@ -3376,7 +3376,8 @@ init_db()
 _start_scheduler()
 
 # ── 注册 Client Portal Blueprint ─────────────────────────
-from server.portal import bp as portal_bp, init_portal_db
+# 注意：Render 以 rootDir=server 启动 gunicorn（app:app），此处模块名为 portal 而非 server.portal
+from portal import bp as portal_bp, init_portal_db
 app.register_blueprint(portal_bp)
 init_portal_db()
 
