@@ -352,6 +352,22 @@ def init_portal_db():
       used INTEGER DEFAULT 0,
       created_at TEXT DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS portal_agreements(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      project_id INTEGER NOT NULL,
+      agreement_id INTEGER,
+      title TEXT NOT NULL,
+      version TEXT,
+      portal_status TEXT NOT NULL DEFAULT 'preparing',
+      document_url TEXT,
+      sign_url TEXT,
+      signed_by_client_at TEXT,
+      countersigned_at TEXT,
+      fully_executed_at TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT
+    );
     """)
 
     # ── users 表加列（幂等 ALTER）──────────────────────
@@ -551,6 +567,15 @@ def init_portal_db():
             VALUES(?,?,?,?,?,?)
         """, (org_row["id"], proj_row["id"], "system", "project_created",
               "Project created — Andrew Clinic Website", 1))
+
+        # ── Andrew 合同框架（preparing 态） ──────────────────
+        agr_count = c.execute("SELECT COUNT(*) FROM portal_agreements WHERE project_id=?", (proj_row["id"],)).fetchone()[0]
+        if agr_count == 0:
+            c.execute("""
+                INSERT INTO portal_agreements(project_id, title, version, portal_status)
+                VALUES(?,?,?,?)
+            """, (proj_row["id"], "Digital Services Agreement", "Rev 10", "preparing"))
+
         conn.commit()
 
     # ── andrew 密码重置（幂等：仅当 hash 仍为 andrew123 时重置为 success888）────
@@ -734,3 +759,192 @@ def _log_activity(actor_username, event_type, summary, project_id=None,
           client_visible, json.dumps(metadata) if metadata else None))
     conn.commit()
     conn.close()
+
+
+# ══════════════════════════════════════════════════════════════
+# Phase 2 — Client-facing APIs
+# ══════════════════════════════════════════════════════════════
+
+@bp.route("/overview", methods=["GET"])
+@_require_customer
+def portal_overview():
+    """Dashboard overview: project summary + 4-card status + recent activity."""
+    user = _current_user()
+    pid = request.args.get("project_id", type=int)
+    if not pid:
+        pids = _visible_project_ids(user)
+        if not pids:
+            return jsonify(ok=True, overview=None)
+        pid = pids[0]
+    if not _project_belong_check(pid, user):
+        return jsonify(ok=False, error="Project not found"), 404
+
+    conn = _db_conn()
+
+    # Project
+    proj = conn.execute("SELECT * FROM portal_projects WHERE id=?", (pid,)).fetchone()
+
+    # Quotation status
+    q = conn.execute("SELECT id,quote_id,status,title,version,total_ex_gst,total_gst,total_incl_gst,monthly_ex_gst,monthly_incl_gst,show_amount_to_client,accepted_at FROM portal_quotations WHERE project_id=? AND status!='superseded' ORDER BY id DESC LIMIT 1", (pid,)).fetchone()
+    q_data = dict(q) if q else None
+
+    # Agreement status (derive from portal_agreements or agreements)
+    agr = conn.execute("SELECT id,portal_status FROM portal_agreements WHERE project_id=? ORDER BY id DESC LIMIT 1", (pid,)).fetchone()
+    agr_status = dict(agr)["portal_status"] if agr else "none"
+
+    # Tasks counts
+    t_counts = conn.execute("SELECT COUNT(*) as total, SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END) as done FROM portal_tasks WHERE project_id=? AND visible_to_client=1", (pid,)).fetchone()
+    tasks_total = t_counts["total"] or 0
+    tasks_done = t_counts["done"] or 0
+
+    # Current phase / progress
+    current_phase = proj["current_phase"] or ""
+    progress = proj["progress_percent"] or 0
+    next_action = proj["next_action_text"] or ""
+
+    # Recent activity (client_visible)
+    acts = conn.execute("SELECT event_type,summary,created_at FROM portal_activity_logs WHERE project_id=? AND client_visible=1 ORDER BY created_at DESC LIMIT 10", (pid,)).fetchall()
+    activity = [dict(a) for a in acts]
+
+    conn.close()
+
+    return jsonify(ok=True, overview={
+        "project": dict(proj),
+        "quotation": q_data,
+        "agreement_status": agr_status,
+        "tasks": {"total": tasks_total, "completed": tasks_done},
+        "progress_percent": progress,
+        "current_phase": current_phase,
+        "next_action": next_action,
+        "milestone_client_action": False,
+        "activity": activity,
+    })
+
+
+@bp.route("/quotation", methods=["GET"])
+@_require_customer
+def portal_quotation():
+    """Full quotation detail for the project."""
+    user = _current_user()
+    pid = request.args.get("project_id", type=int)
+    if not pid:
+        return jsonify(ok=False, error="project_id required"), 400
+    if not _project_belong_check(pid, user):
+        return jsonify(ok=False, error="Project not found"), 404
+
+    conn = _db_conn()
+    rows = conn.execute("SELECT * FROM portal_quotations WHERE project_id=? ORDER BY id", (pid,)).fetchall()
+    quotations = []
+    for r in rows:
+        q = dict(r)
+        if q.get("items_json"):
+            try:
+                q["items"] = json.loads(q["items_json"])
+            except Exception:
+                q["items"] = []
+        else:
+            q["items"] = []
+        del q["items_json"]
+        quotations.append(q)
+    conn.close()
+    return jsonify(ok=True, quotations=quotations)
+
+
+@bp.route("/tasks", methods=["GET"])
+@_require_customer
+def portal_tasks():
+    """List tasks for a project."""
+    user = _current_user()
+    pid = request.args.get("project_id", type=int)
+    if not pid:
+        return jsonify(ok=False, error="project_id required"), 400
+    if not _project_belong_check(pid, user):
+        return jsonify(ok=False, error="Project not found"), 404
+
+    conn = _db_conn()
+    proj = conn.execute("SELECT materials_email,google_drive_url FROM portal_projects WHERE id=?", (pid,)).fetchone()
+    rows = conn.execute("SELECT * FROM portal_tasks WHERE project_id=? AND visible_to_client=1 ORDER BY sort_order, id", (pid,)).fetchall()
+    tasks = [dict(r) for r in rows]
+    conn.close()
+
+    return jsonify(ok=True, tasks=tasks,
+                   materials_email=proj["materials_email"] if proj else None,
+                   google_drive_url=proj["google_drive_url"] if proj else None)
+
+
+@bp.route("/tasks/<int:task_id>/action", methods=["POST"])
+@_require_customer
+def portal_task_action(task_id):
+    """Client marks a task action: email_sent, drive_placed, note_saved, complete, reopen."""
+    user = _current_user()
+    conn = _db_conn()
+
+    task = conn.execute("SELECT t.*,p.organisation_id FROM portal_tasks t JOIN portal_projects p ON t.project_id=p.id WHERE t.id=?", (task_id,)).fetchone()
+    if not task:
+        conn.close()
+        return jsonify(ok=False, error="Task not found"), 404
+
+    org_id = _org_id_for(user)
+    if not _is_demo(user["username"]) and task["organisation_id"] != org_id:
+        conn.close()
+        return jsonify(ok=False, error="Access denied"), 404
+
+    data = request.get_json() or {}
+    action = data.get("action")
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+    # Helper: inline activity log on same connection
+    def _inline_log(etype, summary):
+        conn.execute("""
+            INSERT INTO portal_activity_logs(organisation_id, project_id, actor_username,
+                event_type, summary, client_visible, metadata)
+            VALUES(?,?,?,?,?,?,?)
+        """, (task["organisation_id"], task["project_id"], user["username"],
+              etype, summary, 1, None))
+
+    if action == "email_sent":
+        conn.execute("UPDATE portal_tasks SET delivery_method='email',updated_at=? WHERE id=?", (now, task_id))
+        _inline_log("task_email_sent", f"Marked task '{task['title']}' as sent by email")
+    elif action == "drive_placed":
+        conn.execute("UPDATE portal_tasks SET delivery_method='google_drive',updated_at=? WHERE id=?", (now, task_id))
+        _inline_log("task_drive_placed", f"Marked task '{task['title']}' as placed in Google Drive")
+    elif action == "note_saved":
+        note = data.get("note", "").strip()[:2000]
+        conn.execute("UPDATE portal_tasks SET client_note=?,updated_at=? WHERE id=?", (note, now, task_id))
+        _inline_log("task_note", f"Added note to task '{task['title']}'")
+    elif action == "complete":
+        conn.execute("UPDATE portal_tasks SET status='completed',completed_at=?,updated_at=? WHERE id=?", (now, now, task_id))
+        _inline_log("task_completed", f"Completed task '{task['title']}'")
+    elif action == "reopen":
+        conn.execute("UPDATE portal_tasks SET status='action_required',completed_at=NULL,updated_at=? WHERE id=?", (now, task_id))
+        _inline_log("task_reopened", f"Reopened task '{task['title']}'")
+    else:
+        conn.close()
+        return jsonify(ok=False, error="Unknown action"), 400
+
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+@bp.route("/progress", methods=["GET"])
+@_require_customer
+def portal_progress():
+    """Milestones + progress for a project."""
+    user = _current_user()
+    pid = request.args.get("project_id", type=int)
+    if not pid:
+        return jsonify(ok=False, error="project_id required"), 400
+    if not _project_belong_check(pid, user):
+        return jsonify(ok=False, error="Project not found"), 404
+
+    conn = _db_conn()
+    proj = conn.execute("SELECT * FROM portal_projects WHERE id=?", (pid,)).fetchone()
+    ms = conn.execute("SELECT id,code,title,client_summary,status,phase_progress_percent,client_action_required,target_date,completed_at,visible_to_client,sort_order FROM portal_milestones WHERE project_id=? ORDER BY sort_order", (pid,)).fetchall()
+    milestones = [dict(m) for m in ms]
+    conn.close()
+
+    return jsonify(ok=True, progress_percent=proj["progress_percent"] or 0,
+                   current_phase=proj["current_phase"] or "",
+                   next_action=proj["next_action_text"] or "",
+                   milestones=milestones)

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Progress — SnailAI Client Portal</title>
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{--coral:#FF5B1F;--gold:#D4A547;--ink:#1A1A2E;--coral-light:#FFF5EE;--success:#22C55E;--amber:#F59E0B;--bg:#faf9f6;--border:0.5px solid #e0ddd6;--radius:8px;--grey:#9CA3AF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.top-bar{background:var(--ink);color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.top-bar .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px}
+.top-bar .brand .ai{color:var(--coral)}
+.top-bar .ver{font-size:10px;background:var(--coral);border-radius:8px;padding:1px 7px;margin-left:4px}
+.top-bar .portal-label{font-size:11px;color:#aaa;font-weight:500;border-left:1px solid #444;padding-left:8px;margin-left:2px}
+.top-bar .user-area{display:flex;align-items:center;gap:12px;font-size:13px}
+.top-bar .user-area a{color:var(--coral);cursor:pointer;font-weight:600;text-decoration:none}
+.top-bar .user-area a:hover{text-decoration:underline}
+.lang-btn{font-size:11px;color:#aaa;cursor:pointer;border:1px solid #555;border-radius:4px;padding:2px 8px;background:none}
+.lang-btn:hover{color:var(--coral);border-color:var(--coral)}
+.project-switcher{background:var(--coral-light);border-bottom:1px solid #fdd;padding:10px 20px;display:none;align-items:center;gap:10px;font-size:13px}
+.project-switcher.show{display:flex}
+.project-switcher label{font-weight:700;color:var(--coral)}
+.project-switcher select{padding:6px 10px;border-radius:var(--radius);border:var(--border);font-size:13px;font-family:inherit;background:#fff}
+.nav-bar{background:#fff;border-bottom:var(--border);padding:0 20px;display:flex;gap:4px;overflow-x:auto}
+.nav-bar a{padding:12px 16px;font-size:14px;font-weight:600;color:#888;text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap;transition:all .15s}
+.nav-bar a:hover{color:var(--ink)}
+.nav-bar a.active{color:var(--coral);border-bottom-color:var(--coral)}
+.content{max-width:960px;margin:0 auto;padding:28px 20px 60px}
+/* Progress bar */
+.progress-bar-container{background:#fff;border:var(--border);border-radius:10px;padding:20px;margin-bottom:20px}
+.progress-bar-container h2{font-size:16px;font-weight:700;margin-bottom:12px}
+.progress-bar{height:24px;background:#e5e7eb;border-radius:12px;overflow:hidden;position:relative}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--coral),var(--gold));border-radius:12px;transition:width .5s ease;min-width:0}
+.progress-text{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--ink)}
+.current-phase{margin-top:10px;font-size:14px;color:var(--coral);font-weight:700}
+.next-action{margin-top:6px;font-size:13px;color:#555}
+/* Coming soon banner */
+.coming-soon-banner{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #fbbf24;border-radius:10px;padding:24px;text-align:center;margin-bottom:20px}
+.coming-soon-banner h3{font-size:18px;font-weight:700;color:#92400e;margin-bottom:8px}
+.coming-soon-banner p{font-size:14px;color:#78350f;line-height:1.5}
+/* Timeline */
+.timeline{position:relative;padding-left:32px}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:#e0ddd6}
+.timeline-item{position:relative;padding-bottom:24px}
+.timeline-item:last-child{padding-bottom:0}
+.timeline-dot{position:absolute;left:-26px;top:4px;width:16px;height:16px;border-radius:50%;border:3px solid #e0ddd6;background:#fff;z-index:1}
+.timeline-dot.active{border-color:var(--coral);background:var(--coral)}
+.timeline-dot.done{border-color:var(--success);background:var(--success)}
+.timeline-item h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.timeline-item .summary{font-size:13px;color:#666;line-height:1.5}
+.timeline-item .dates{font-size:12px;color:#aaa;margin-top:4px}
+.timeline-item .action-required{display:inline-block;background:#fef3c7;color:#92400e;font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;margin-top:6px}
+.empty-state{text-align:center;padding:40px 20px;color:#aaa;font-size:14px}
+@media(max-width:640px){
+  .top-bar{padding:8px 12px}
+  .content{padding:20px 14px 40px}
+}
+[data-zh]{display:none}
+body.zh [data-en]{display:none}
+body.zh [data-zh]{display:inline}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="brand">
+    <span>Snail<span class="ai">AI</span>.AI</span>
+    <span class="ver">V1.0.0</span>
+    <span class="portal-label"><span data-en="Client Portal" data-zh="客户门户">Client Portal</span></span>
+  </div>
+  <div class="user-area">
+    <span id="userName"></span>
+    <span class="lang-btn" onclick="toggleLang()" id="langBtn">中文</span>
+    <a onclick="doLogout()" data-en="Sign Out" data-zh="退出">Sign Out</a>
+  </div>
+</div>
+
+<div class="project-switcher" id="projectSwitcher">
+  <label data-en="Viewing project:" data-zh="查看项目：">Viewing project:</label>
+  <select id="projectSelect" onchange="switchProject()"></select>
+</div>
+
+<div class="nav-bar">
+  <a href="index.html" data-en="Dashboard" data-zh="总览">Dashboard</a>
+  <a href="quotation.html" data-en="Quotation" data-zh="报价">Quotation</a>
+  <a href="agreement.html" data-en="Agreement" data-zh="合同">Agreement</a>
+  <a href="tasks.html" data-en="My Tasks" data-zh="我的任务">My Tasks</a>
+  <a href="progress.html" class="active" data-en="Progress" data-zh="项目进度">Progress</a>
+  <a href="account.html" data-en="Account" data-zh="账号">Account</a>
+</div>
+
+<div class="content" id="mainContent">
+  <div class="empty-state">Loading...</div>
+</div>
+
+<script>
+const API = '/api/portal';
+let token = localStorage.getItem('portal_token');
+let currentUser = null;
+let currentProjectId = null;
+
+async function checkAuth() {
+  if (!token) { window.location.href = 'login.html'; return; }
+  try {
+    const r = await fetch(API + '/me', { headers: { 'Authorization': 'Bearer ' + token } });
+    if (!r.ok) { localStorage.removeItem('portal_token'); window.location.href = 'login.html'; return; }
+    const d = await r.json();
+    currentUser = d.user;
+    document.getElementById('userName').textContent = currentUser.name;
+    if (currentUser.is_demo) {
+      const sw = document.getElementById('projectSwitcher');
+      sw.classList.add('show');
+      const sel = document.getElementById('projectSelect');
+      sel.innerHTML = currentUser.projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+      currentProjectId = parseInt(sel.value);
+    } else {
+      currentProjectId = currentUser.projects.length ? currentUser.projects[0].id : null;
+    }
+    loadProgress();
+  } catch(e) { window.location.href = 'login.html'; }
+}
+
+async function loadProgress() {
+  if (!currentProjectId) { document.getElementById('mainContent').innerHTML = '<div class="empty-state">No project found.</div>'; return; }
+  try {
+    const r = await fetch(API + '/progress?project_id=' + currentProjectId, { headers: { 'Authorization': 'Bearer ' + token } });
+    const d = await r.json();
+    renderProgress(d);
+  } catch(e) {
+    document.getElementById('mainContent').innerHTML = '<div class="empty-state">Failed to load progress.</div>';
+  }
+}
+
+function renderProgress(data) {
+  const pct = data.progress_percent || 0;
+  const phase = data.current_phase || '';
+  const nextAction = data.next_action || '';
+  const ms = data.milestones || [];
+  const visible = ms.filter(m => m.visible_to_client);
+  const hidden = ms.filter(m => !m.visible_to_client);
+
+  let html = '';
+
+  // Progress bar
+  html += `<div class="progress-bar-container">
+    <h2 data-en="Overall Progress" data-zh="总体进度">Overall Progress</h2>
+    <div class="progress-bar">
+      <div class="progress-fill" style="width:${pct}%"></div>
+      <span class="progress-text">${pct}%</span>
+    </div>
+    ${phase ? `<div class="current-phase">📌 ${phase}</div>` : ''}
+    ${nextAction ? `<div class="next-action">${nextAction}</div>` : ''}
+  </div>`;
+
+  // Coming Soon banner
+  html += `<div class="coming-soon-banner">
+    <h3 data-en="Project Timeline Coming Soon" data-zh="项目时间线即将推出">Project Timeline Coming Soon</h3>
+    <p data-en="The detailed project timeline will be available after the agreement is signed. The agreement needs to be signed first." data-zh="详细的项目时间线将在合同签署后可用。需要先签订合同。">The detailed project timeline will be available after the agreement is signed. The agreement needs to be signed first.</p>
+  </div>`;
+
+  // Visible milestones timeline
+  if (visible.length > 0) {
+    html += `<div class="timeline">`;
+    visible.forEach(m => {
+      const dotClass = m.status === 'completed' ? 'done' : m.status === 'in_progress' ? 'active' : '';
+      html += `<div class="timeline-item">
+        <div class="timeline-dot ${dotClass}"></div>
+        <h4>${m.title}</h4>
+        ${m.client_summary ? `<div class="summary">${m.client_summary}</div>` : ''}
+        <div class="dates">
+          ${m.target_date ? `Target: ${m.target_date}` : ''}
+          ${m.completed_at ? ` | Completed: ${m.completed_at}` : ''}
+        </div>
+        ${m.client_action_required ? `<span class="action-required" data-en="Action Required" data-zh="需要您的操作">Action Required</span>` : ''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  document.getElementById('mainContent').innerHTML = html;
+}
+
+function switchProject() {
+  currentProjectId = parseInt(document.getElementById('projectSelect').value);
+  loadProgress();
+}
+
+function doLogout() {
+  fetch(API + '/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
+  localStorage.removeItem('portal_token');
+  window.location.href = 'login.html';
+}
+
+let lang = localStorage.getItem('portal_lang') || 'en';
+function applyLang() {
+  if (lang === 'zh') { document.body.classList.add('zh'); document.getElementById('langBtn').textContent = 'EN'; }
+  else { document.body.classList.remove('zh'); document.getElementById('langBtn').textContent = '中文'; }
+}
+function toggleLang() {
+  lang = lang === 'en' ? 'zh' : 'en';
+  localStorage.setItem('portal_lang', lang);
+  applyLang();
+  loadProgress();
+}
+applyLang();
+checkAuth();
+</script>
+</body>
+</html>

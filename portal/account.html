@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Account — SnailAI Client Portal</title>
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{--coral:#FF5B1F;--gold:#D4A547;--ink:#1A1A2E;--coral-light:#FFF5EE;--success:#22C55E;--amber:#F59E0B;--bg:#faf9f6;--border:0.5px solid #e0ddd6;--radius:8px;--error:#DC2626;--grey:#9CA3AF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.top-bar{background:var(--ink);color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.top-bar .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px}
+.top-bar .brand .ai{color:var(--coral)}
+.top-bar .ver{font-size:10px;background:var(--coral);border-radius:8px;padding:1px 7px;margin-left:4px}
+.top-bar .portal-label{font-size:11px;color:#aaa;font-weight:500;border-left:1px solid #444;padding-left:8px;margin-left:2px}
+.top-bar .user-area{display:flex;align-items:center;gap:12px;font-size:13px}
+.top-bar .user-area a{color:var(--coral);cursor:pointer;font-weight:600;text-decoration:none}
+.top-bar .user-area a:hover{text-decoration:underline}
+.lang-btn{font-size:11px;color:#aaa;cursor:pointer;border:1px solid #555;border-radius:4px;padding:2px 8px;background:none}
+.lang-btn:hover{color:var(--coral);border-color:var(--coral)}
+.project-switcher{background:var(--coral-light);border-bottom:1px solid #fdd;padding:10px 20px;display:none;align-items:center;gap:10px;font-size:13px}
+.project-switcher.show{display:flex}
+.project-switcher label{font-weight:700;color:var(--coral)}
+.project-switcher select{padding:6px 10px;border-radius:var(--radius);border:var(--border);font-size:13px;font-family:inherit;background:#fff}
+.nav-bar{background:#fff;border-bottom:var(--border);padding:0 20px;display:flex;gap:4px;overflow-x:auto}
+.nav-bar a{padding:12px 16px;font-size:14px;font-weight:600;color:#888;text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap;transition:all .15s}
+.nav-bar a:hover{color:var(--ink)}
+.nav-bar a.active{color:var(--coral);border-bottom-color:var(--coral)}
+.content{max-width:640px;margin:0 auto;padding:28px 20px 60px}
+.section{background:#fff;border:var(--border);border-radius:10px;padding:24px;margin-bottom:20px}
+.section h2{font-size:17px;font-weight:700;margin-bottom:16px}
+.info-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:var(--border);font-size:14px}
+.info-row:last-child{border-bottom:none}
+.info-row .label{color:#888;font-weight:500}
+.info-row .value{font-weight:600;text-align:right}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#555}
+.field input{width:100%;padding:10px 14px;border:var(--border);border-radius:var(--radius);font-size:14px;font-family:inherit;background:#fff}
+.field input:focus{outline:none;border-color:var(--coral)}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;text-align:center;transition:all .15s}
+.btn-coral{background:var(--coral);color:#fff}
+.btn-coral:hover{filter:brightness(0.93)}
+.btn-coral:disabled{opacity:.5;cursor:not-allowed}
+.btn-outline{background:#fff;border:1px solid var(--coral);color:var(--coral);margin-top:12px}
+.btn-outline:hover{background:var(--coral-light)}
+.msg{font-size:13px;margin-top:8px;text-align:center}
+.msg-ok{color:var(--success)}
+.msg-err{color:var(--error)}
+@media(max-width:640px){
+  .top-bar{padding:8px 12px}
+  .content{padding:20px 14px 40px}
+  .info-row{flex-direction:column;gap:4px}
+}
+[data-zh]{display:none}
+body.zh [data-en]{display:none}
+body.zh [data-zh]{display:inline}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="brand">
+    <span>Snail<span class="ai">AI</span>.AI</span>
+    <span class="ver">V1.0.0</span>
+    <span class="portal-label"><span data-en="Client Portal" data-zh="客户门户">Client Portal</span></span>
+  </div>
+  <div class="user-area">
+    <span id="userName"></span>
+    <span class="lang-btn" onclick="toggleLang()" id="langBtn">中文</span>
+    <a onclick="doLogout()" data-en="Sign Out" data-zh="退出">Sign Out</a>
+  </div>
+</div>
+
+<div class="project-switcher" id="projectSwitcher">
+  <label data-en="Viewing project:" data-zh="查看项目：">Viewing project:</label>
+  <select id="projectSelect" onchange="switchProject()"></select>
+</div>
+
+<div class="nav-bar">
+  <a href="index.html" data-en="Dashboard" data-zh="总览">Dashboard</a>
+  <a href="quotation.html" data-en="Quotation" data-zh="报价">Quotation</a>
+  <a href="agreement.html" data-en="Agreement" data-zh="合同">Agreement</a>
+  <a href="tasks.html" data-en="My Tasks" data-zh="我的任务">My Tasks</a>
+  <a href="progress.html" data-en="Progress" data-zh="项目进度">Progress</a>
+  <a href="account.html" class="active" data-en="Account" data-zh="账号">Account</a>
+</div>
+
+<div class="content" id="mainContent">
+  <div style="text-align:center;padding:40px;color:#aaa">Loading...</div>
+</div>
+
+<script>
+const API = '/api/portal';
+let token = localStorage.getItem('portal_token');
+let currentUser = null;
+
+async function checkAuth() {
+  if (!token) { window.location.href = 'login.html'; return; }
+  try {
+    const r = await fetch(API + '/me', { headers: { 'Authorization': 'Bearer ' + token } });
+    if (!r.ok) { localStorage.removeItem('portal_token'); window.location.href = 'login.html'; return; }
+    const d = await r.json();
+    currentUser = d.user;
+    document.getElementById('userName').textContent = currentUser.name;
+    if (currentUser.is_demo) {
+      const sw = document.getElementById('projectSwitcher');
+      sw.classList.add('show');
+      const sel = document.getElementById('projectSelect');
+      sel.innerHTML = currentUser.projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+    }
+    renderAccount();
+  } catch(e) { window.location.href = 'login.html'; }
+}
+
+function renderAccount() {
+  const org = currentUser.organisation || {};
+  const html = `
+    <div class="section">
+      <h2 data-en="Account Information" data-zh="账号信息">Account Information</h2>
+      <div class="info-row"><span class="label" data-en="Username" data-zh="账号">Username</span><span class="value">${currentUser.username}</span></div>
+      <div class="info-row"><span class="label" data-en="Name" data-zh="姓名">Name</span><span class="value">${currentUser.name}</span></div>
+      <div class="info-row"><span class="label" data-en="Company" data-zh="公司">Company</span><span class="value">${org.legal_name || '-'}</span></div>
+      ${org.abn ? `<div class="info-row"><span class="label">ABN</span><span class="value">${org.abn}</span></div>` : ''}
+      ${org.address ? `<div class="info-row"><span class="label" data-en="Address" data-zh="地址">Address</span><span class="value">${org.address}</span></div>` : ''}
+      ${org.primary_contact_name ? `<div class="info-row"><span class="label" data-en="Contact" data-zh="联系人">Contact</span><span class="value">${org.primary_contact_name}</span></div>` : ''}
+      ${org.primary_contact_email ? `<div class="info-row"><span class="label" data-en="Email" data-zh="邮箱">Email</span><span class="value">${org.primary_contact_email}</span></div>` : ''}
+      ${org.primary_contact_phone ? `<div class="info-row"><span class="label" data-en="Phone" data-zh="电话">Phone</span><span class="value">${org.primary_contact_phone}</span></div>` : ''}
+    </div>
+
+    <div class="section">
+      <h2 data-en="Change Password" data-zh="修改密码">Change Password</h2>
+      <form onsubmit="return changePassword(event)">
+        <div class="field">
+          <label data-en="Current Password" data-zh="当前密码">Current Password</label>
+          <input type="password" id="currentPw" required>
+        </div>
+        <div class="field">
+          <label data-en="New Password" data-zh="新密码">New Password</label>
+          <input type="password" id="newPw" required>
+          <div style="font-size:11px;color:#888;margin-top:4px" data-en="Minimum 8 characters with letters and numbers" data-zh="至少8位，包含字母和数字">Minimum 8 characters with letters and numbers</div>
+        </div>
+        <div class="field">
+          <label data-en="Confirm New Password" data-zh="确认新密码">Confirm New Password</label>
+          <input type="password" id="confirmPw" required>
+        </div>
+        <button type="submit" class="btn btn-coral" id="changeBtn" data-en="Change Password" data-zh="修改密码">Change Password</button>
+        <div id="pwMsg" class="msg"></div>
+      </form>
+    </div>
+
+    <button class="btn btn-outline" onclick="doLogout()" data-en="Sign Out" data-zh="退出登录">Sign Out</button>
+  `;
+  document.getElementById('mainContent').innerHTML = html;
+}
+
+async function changePassword(e) {
+  e.preventDefault();
+  const cur = document.getElementById('currentPw').value;
+  const nw = document.getElementById('newPw').value;
+  const cf = document.getElementById('confirmPw').value;
+  const msgEl = document.getElementById('pwMsg');
+
+  if (nw !== cf) {
+    msgEl.className = 'msg msg-err';
+    msgEl.textContent = 'New passwords do not match.';
+    return false;
+  }
+  if (nw.length < 8 || !/[a-zA-Z]/.test(nw) || !/[0-9]/.test(nw)) {
+    msgEl.className = 'msg msg-err';
+    msgEl.textContent = 'Password must be at least 8 characters with letters and numbers.';
+    return false;
+  }
+
+  try {
+    const r = await fetch(API + '/change-password', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ current_password: cur, new_password: nw, confirm_password: cf })
+    });
+    const d = await r.json();
+    if (d.ok) {
+      msgEl.className = 'msg msg-ok';
+      msgEl.textContent = 'Password changed successfully.';
+      document.getElementById('currentPw').value = '';
+      document.getElementById('newPw').value = '';
+      document.getElementById('confirmPw').value = '';
+    } else {
+      msgEl.className = 'msg msg-err';
+      msgEl.textContent = d.error || 'Failed to change password.';
+    }
+  } catch(e) {
+    msgEl.className = 'msg msg-err';
+    msgEl.textContent = 'Network error.';
+  }
+  return false;
+}
+
+function switchProject() { /* no-op on account page */ }
+
+function doLogout() {
+  fetch(API + '/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
+  localStorage.removeItem('portal_token');
+  window.location.href = 'login.html';
+}
+
+let lang = localStorage.getItem('portal_lang') || 'en';
+function applyLang() {
+  if (lang === 'zh') { document.body.classList.add('zh'); document.getElementById('langBtn').textContent = 'EN'; }
+  else { document.body.classList.remove('zh'); document.getElementById('langBtn').textContent = '中文'; }
+}
+function toggleLang() {
+  lang = lang === 'en' ? 'zh' : 'en';
+  localStorage.setItem('portal_lang', lang);
+  applyLang();
+  renderAccount();
+}
+applyLang();
+checkAuth();
+</script>
+</body>
+</html>

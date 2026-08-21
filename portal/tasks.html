@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Tasks — SnailAI Client Portal</title>
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{--coral:#FF5B1F;--gold:#D4A547;--ink:#1A1A2E;--coral-light:#FFF5EE;--success:#22C55E;--amber:#F59E0B;--bg:#faf9f6;--border:0.5px solid #e0ddd6;--radius:8px;--error:#DC2626;--grey:#9CA3AF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.top-bar{background:var(--ink);color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.top-bar .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px}
+.top-bar .brand .ai{color:var(--coral)}
+.top-bar .ver{font-size:10px;background:var(--coral);border-radius:8px;padding:1px 7px;margin-left:4px}
+.top-bar .portal-label{font-size:11px;color:#aaa;font-weight:500;border-left:1px solid #444;padding-left:8px;margin-left:2px}
+.top-bar .user-area{display:flex;align-items:center;gap:12px;font-size:13px}
+.top-bar .user-area a{color:var(--coral);cursor:pointer;font-weight:600;text-decoration:none}
+.top-bar .user-area a:hover{text-decoration:underline}
+.lang-btn{font-size:11px;color:#aaa;cursor:pointer;border:1px solid #555;border-radius:4px;padding:2px 8px;background:none}
+.lang-btn:hover{color:var(--coral);border-color:var(--coral)}
+.project-switcher{background:var(--coral-light);border-bottom:1px solid #fdd;padding:10px 20px;display:none;align-items:center;gap:10px;font-size:13px}
+.project-switcher.show{display:flex}
+.project-switcher label{font-weight:700;color:var(--coral)}
+.project-switcher select{padding:6px 10px;border-radius:var(--radius);border:var(--border);font-size:13px;font-family:inherit;background:#fff}
+.nav-bar{background:#fff;border-bottom:var(--border);padding:0 20px;display:flex;gap:4px;overflow-x:auto}
+.nav-bar a{padding:12px 16px;font-size:14px;font-weight:600;color:#888;text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap;transition:all .15s}
+.nav-bar a:hover{color:var(--ink)}
+.nav-bar a.active{color:var(--coral);border-bottom-color:var(--coral)}
+.content{max-width:960px;margin:0 auto;padding:28px 20px 60px}
+/* Info banner */
+.info-banner{background:#dbeafe;border:1px solid #93c5fd;border-radius:var(--radius);padding:14px 18px;font-size:13px;color:#1e40af;margin-bottom:20px;line-height:1.5}
+/* Task card */
+.task-card{background:#fff;border:var(--border);border-radius:10px;padding:18px 20px;margin-bottom:12px;transition:all .15s}
+.task-card.completed{opacity:0.65}
+.task-card:hover{box-shadow:0 2px 10px rgba(26,26,46,0.05)}
+.task-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
+.task-title{font-size:15px;font-weight:700;flex:1}
+.task-desc{font-size:13px;color:#666;margin-bottom:10px;line-height:1.5}
+.task-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px}
+.badge-high{background:#fef2f2;color:#dc2626}
+.badge-normal{background:#fef3c7;color:#92400e}
+.badge-low{background:#f3f4f6;color:#666}
+.badge-action{background:#fef3c7;color:#92400e}
+.badge-completed{background:#dcfce7;color:#166534}
+.badge-email{background:#dbeafe;color:#1e40af}
+.badge-drive{background:#dcfce7;color:#166534}
+.task-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.btn-sm{padding:6px 12px;border:none;border-radius:6px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s}
+.btn-coral{background:var(--coral);color:#fff}
+.btn-coral:hover{filter:brightness(0.93)}
+.btn-outline-sm{background:#fff;border:1px solid #ccc;color:#555}
+.btn-outline-sm:hover{border-color:var(--coral);color:var(--coral)}
+.btn-success{background:var(--success);color:#fff}
+.btn-success:hover{filter:brightness(0.93)}
+.btn-reopen{background:#f3f4f6;color:#666;border:none}
+.btn-reopen:hover{background:#e5e7eb}
+.note-input{display:flex;gap:6px;margin-top:8px}
+.note-input input{flex:1;padding:6px 10px;border:var(--border);border-radius:6px;font-size:12px;font-family:inherit}
+.note-input button{padding:6px 12px;background:var(--ink);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600}
+.client-note{font-size:12px;color:var(--coral);margin-top:6px;font-style:italic}
+.empty-state{text-align:center;padding:40px 20px;color:#aaa;font-size:14px}
+@media(max-width:640px){
+  .top-bar{padding:8px 12px}
+  .content{padding:20px 14px 40px}
+  .task-top{flex-direction:column}
+}
+[data-zh]{display:none}
+body.zh [data-en]{display:none}
+body.zh [data-zh]{display:inline}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="brand">
+    <span>Snail<span class="ai">AI</span>.AI</span>
+    <span class="ver">V1.0.0</span>
+    <span class="portal-label"><span data-en="Client Portal" data-zh="客户门户">Client Portal</span></span>
+  </div>
+  <div class="user-area">
+    <span id="userName"></span>
+    <span class="lang-btn" onclick="toggleLang()" id="langBtn">中文</span>
+    <a onclick="doLogout()" data-en="Sign Out" data-zh="退出">Sign Out</a>
+  </div>
+</div>
+
+<div class="project-switcher" id="projectSwitcher">
+  <label data-en="Viewing project:" data-zh="查看项目：">Viewing project:</label>
+  <select id="projectSelect" onchange="switchProject()"></select>
+</div>
+
+<div class="nav-bar">
+  <a href="index.html" data-en="Dashboard" data-zh="总览">Dashboard</a>
+  <a href="quotation.html" data-en="Quotation" data-zh="报价">Quotation</a>
+  <a href="agreement.html" data-en="Agreement" data-zh="合同">Agreement</a>
+  <a href="tasks.html" class="active" data-en="My Tasks" data-zh="我的任务">My Tasks</a>
+  <a href="progress.html" data-en="Progress" data-zh="项目进度">Progress</a>
+  <a href="account.html" data-en="Account" data-zh="账号">Account</a>
+</div>
+
+<div class="content">
+  <div class="info-banner" id="infoBanner">
+    <span data-en="Project files are not uploaded to this portal. Please send materials by email or place them in the shared Google Drive folder." data-zh="项目文件不在本门户上传。请通过电子邮件发送材料，或将文件放入共享的 Google Drive 文件夹中。">Project files are not uploaded to this portal. Please send materials by email or place them in the shared Google Drive folder.</span>
+  </div>
+  <div id="tasksList"><div class="empty-state">Loading...</div></div>
+</div>
+
+<script>
+const API = '/api/portal';
+let token = localStorage.getItem('portal_token');
+let currentUser = null;
+let currentProjectId = null;
+let materialsEmail = null;
+let googleDriveUrl = null;
+
+async function checkAuth() {
+  if (!token) { window.location.href = 'login.html'; return; }
+  try {
+    const r = await fetch(API + '/me', { headers: { 'Authorization': 'Bearer ' + token } });
+    if (!r.ok) { localStorage.removeItem('portal_token'); window.location.href = 'login.html'; return; }
+    const d = await r.json();
+    currentUser = d.user;
+    document.getElementById('userName').textContent = currentUser.name;
+    if (currentUser.is_demo) {
+      const sw = document.getElementById('projectSwitcher');
+      sw.classList.add('show');
+      const sel = document.getElementById('projectSelect');
+      sel.innerHTML = currentUser.projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+      currentProjectId = parseInt(sel.value);
+    } else {
+      currentProjectId = currentUser.projects.length ? currentUser.projects[0].id : null;
+    }
+    loadTasks();
+  } catch(e) { window.location.href = 'login.html'; }
+}
+
+async function loadTasks() {
+  if (!currentProjectId) { document.getElementById('tasksList').innerHTML = '<div class="empty-state">No project found.</div>'; return; }
+  try {
+    const r = await fetch(API + '/tasks?project_id=' + currentProjectId, { headers: { 'Authorization': 'Bearer ' + token } });
+    const d = await r.json();
+    materialsEmail = d.materials_email;
+    googleDriveUrl = d.google_drive_url;
+    renderTasks(d.tasks);
+  } catch(e) {
+    document.getElementById('tasksList').innerHTML = '<div class="empty-state">Failed to load tasks.</div>';
+  }
+}
+
+function renderTasks(tasks) {
+  if (!tasks || tasks.length === 0) {
+    document.getElementById('tasksList').innerHTML = '<div class="empty-state" data-en="No tasks yet." data-zh="暂无任务。">No tasks yet.</div>';
+    return;
+  }
+  let html = '';
+  tasks.forEach(t => {
+    const isCompleted = t.status === 'completed';
+    const priBadge = t.priority === 'high' ? 'badge-high' : t.priority === 'low' ? 'badge-low' : 'badge-normal';
+    const priLabel = t.priority.charAt(0).toUpperCase() + t.priority.slice(1);
+    const statusBadge = isCompleted ? 'badge-completed' : 'badge-action';
+    const statusLabel = isCompleted ? 'Completed' : 'Action Required';
+    const deliveryBadge = t.delivery_method === 'email' ? '<span class="badge badge-email">Email</span>' :
+                          t.delivery_method === 'google_drive' ? '<span class="badge badge-drive">Drive</span>' : '';
+
+    html += `<div class="task-card ${isCompleted ? 'completed' : ''}" id="task-${t.id}">
+      <div class="task-top">
+        <div class="task-title">${isCompleted ? '✅ ' : ''}${t.title}</div>
+        <span class="badge ${statusBadge}">${statusLabel}</span>
+      </div>
+      ${t.description ? `<div class="task-desc">${t.description}</div>` : ''}
+      ${t.client_action ? `<div class="task-desc" style="color:var(--coral);font-weight:500">${t.client_action}</div>` : ''}
+      <div class="task-meta">
+        <span class="badge ${priBadge}">${priLabel}</span>
+        ${deliveryBadge}
+        ${t.due_date ? `<span style="font-size:12px;color:#888">Due: ${t.due_date}</span>` : ''}
+      </div>
+      <div class="task-actions">`;
+
+    if (!isCompleted) {
+      if (materialsEmail) {
+        html += `<button class="btn-sm btn-coral" onclick="taskAction(${t.id},'email_sent')" data-en="I have sent this by email" data-zh="我已通过邮件发送">I have sent this by email</button>`;
+      }
+      if (googleDriveUrl) {
+        html += `<a href="${googleDriveUrl}" target="_blank" class="btn-sm btn-outline-sm" data-en="Open Google Drive" data-zh="打开 Google Drive">Open Google Drive</a>`;
+        html += `<button class="btn-sm btn-coral" onclick="taskAction(${t.id},'drive_placed')" data-en="I have placed this in Drive" data-zh="我已放入 Drive">I have placed this in Drive</button>`;
+      }
+      html += `<button class="btn-sm btn-success" onclick="taskAction(${t.id},'complete')" data-en="Mark Complete" data-zh="标记完成">Mark Complete</button>`;
+    } else {
+      html += `<button class="btn-sm btn-reopen" onclick="taskAction(${t.id},'reopen')" data-en="Reopen" data-zh="重新打开">Reopen</button>`;
+    }
+
+    html += `</div>`;
+    // Note
+    html += `<div class="note-input">
+      <input type="text" id="note-${t.id}" placeholder="${isCompleted ? 'Add a note...' : 'Add a note (e.g. my account username)...'}" value="${t.client_note || ''}" />
+      <button onclick="saveNote(${t.id})" data-en="Save" data-zh="保存">Save</button>
+    </div>`;
+    if (t.client_note) {
+      html += `<div class="client-note">📝 ${t.client_note}</div>`;
+    }
+    html += `</div>`;
+  });
+  document.getElementById('tasksList').innerHTML = html;
+}
+
+async function taskAction(taskId, action) {
+  try {
+    const r = await fetch(API + '/tasks/' + taskId + '/action', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action })
+    });
+    if (r.ok) loadTasks();
+    else alert('Action failed.');
+  } catch(e) { alert('Network error.'); }
+}
+
+async function saveNote(taskId) {
+  const note = document.getElementById('note-' + taskId).value;
+  try {
+    const r = await fetch(API + '/tasks/' + taskId + '/action', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'note_saved', note })
+    });
+    if (r.ok) loadTasks();
+    else alert('Save failed.');
+  } catch(e) { alert('Network error.'); }
+}
+
+function switchProject() {
+  currentProjectId = parseInt(document.getElementById('projectSelect').value);
+  loadTasks();
+}
+
+function doLogout() {
+  fetch(API + '/logout', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
+  localStorage.removeItem('portal_token');
+  window.location.href = 'login.html';
+}
+
+let lang = localStorage.getItem('portal_lang') || 'en';
+function applyLang() {
+  if (lang === 'zh') { document.body.classList.add('zh'); document.getElementById('langBtn').textContent = 'EN'; }
+  else { document.body.classList.remove('zh'); document.getElementById('langBtn').textContent = '中文'; }
+}
+function toggleLang() {
+  lang = lang === 'en' ? 'zh' : 'en';
+  localStorage.setItem('portal_lang', lang);
+  applyLang();
+  loadTasks();
+}
+applyLang();
+checkAuth();
+</script>
+</body>
+</html>

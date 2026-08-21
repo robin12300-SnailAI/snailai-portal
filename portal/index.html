@@ -108,13 +108,13 @@ body.zh [data-zh]{display:inline}
 
 <script>
 const API = '/api/portal';
-let lang = localStorage.getItem('snailai-lang') || 'en';
+let lang = localStorage.getItem('portal_lang') || 'en';
 let currentUser = null;
 let currentProjectId = null;
 
 function toggleLang(){
   lang = lang === 'en' ? 'zh' : 'en';
-  localStorage.setItem('snailai-lang', lang);
+  localStorage.setItem('portal_lang', lang);
   applyLang();
 }
 function applyLang(){
@@ -218,15 +218,15 @@ async function loadDashboard(){
       <div class="card" onclick="location.href='agreement.html'">
         <div class="card-icon">📝</div>
         <div class="card-title" data-en="Agreement" data-zh="合同">Agreement</div>
-        <span class="card-status status-preparing">${d.agreement?.portal_status ? formatAgreementStatus(d.agreement.portal_status) : (lang==='en'?'Preparing':'准备中')}</span>
-        <div class="card-desc">${d.agreement?.title || (lang==='en'?'Awaiting final version':'等待最终版')}</div>
+        <span class="card-status status-preparing">${formatAgreementStatus(d.agreement_status)}</span>
+        <div class="card-desc">${d.agreement_status !== 'none' ? (lang==='en'?'Digital Services Agreement':'数字服务协议') : (lang==='en'?'Awaiting agreement':'等待合同')}</div>
         <span class="card-arrow">›</span>
       </div>
       <div class="card" onclick="location.href='tasks.html'">
         <div class="card-icon">✅</div>
         <div class="card-title" data-en="My Tasks" data-zh="我的任务">My Tasks</div>
-        <span class="card-status status-action">${d.tasks?.action_required || 0} ${lang==='en'?'action required':'待处理'}</span>
-        <div class="card-desc">${d.tasks?.total ? d.tasks.total + ' ' + (lang==='en'?'total tasks':'项任务') : (lang==='en'?'No tasks':'无任务')}</div>
+        <span class="card-status status-action">${(d.tasks?.total||0) - (d.tasks?.completed||0)} ${lang==='en'?'action required':'待处理'}</span>
+        <div class="card-desc">${d.tasks?.total ? d.tasks.completed + '/' + d.tasks.total + ' ' + (lang==='en'?'completed':'已完成') : (lang==='en'?'No tasks':'无任务')}</div>
         <span class="card-arrow">›</span>
       </div>
       <div class="card" onclick="location.href='progress.html'">
@@ -241,7 +241,7 @@ async function loadDashboard(){
     <div class="activity-section">
       <h2 data-en="Recent Activity" data-zh="最近动态">Recent Activity</h2>
       <ul class="activity-list">
-        ${(d.activities || []).map(a => `
+        ${(d.activity || []).map(a => `
           <li>
             <span class="time">${formatDate(a.created_at)}</span>
             <span class="text">${a.summary}</span>
