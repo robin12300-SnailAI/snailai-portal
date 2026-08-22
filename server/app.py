@@ -746,11 +746,17 @@ def _options():
 
 # ---------------------------------------------------------------- API
 
-# ===== Gmail SMTP 报价通知（V1.7.0） =====
-GMAIL_USER = os.environ.get("GMAIL_USER", "robin12300@gmail.com")
+# ===== 品牌邮件体系（V1.8.0） =====
+# SMTP 登录账号：robin@snailai.ai（Google Workspace，已挂 esign@/quote@/admin@ 别名）
+GMAIL_USER = os.environ.get("GMAIL_USER", "robin@snailai.ai")
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "")
-QUOTE_NOTIFY_TO = os.environ.get("QUOTE_NOTIFY_TO", "robin@snailai.ai")
-QUOTE_NOTIFY_CC = os.environ.get("QUOTE_NOTIFY_CC", "robin12300@gmail.com")
+# 三个品牌发件身份（同域别名，send-as 已在 Gmail 注册，From 不再走个人 gmail.com）
+FROM_ESIGN = os.environ.get("FROM_ESIGN", "SnailAI.AI e-Sign <esign@snailai.ai>")
+FROM_QUOTE = os.environ.get("FROM_QUOTE", "SnailAI.AI Quote <quote@snailai.ai>")
+FROM_ADMIN = os.environ.get("FROM_ADMIN", "SnailAI.AI Admin <admin@snailai.ai>")
+# 系统通知收件人：Robin 个人 Gmail 兜底（不依赖 snailai.ai 域名投递状态）
+QUOTE_NOTIFY_TO = os.environ.get("QUOTE_NOTIFY_TO", "robin12300@gmail.com")
+QUOTE_NOTIFY_CC = os.environ.get("QUOTE_NOTIFY_CC", "")
 QUOTE_ADMIN_TOKEN = os.environ.get("QUOTE_ADMIN_TOKEN", "")  # 非空才启用管理清理接口
 
 # 一次性确认豁免名单：这些用户即使已确认报价，仍可登录查看（如 demo 测试账号、内部复核账号）
@@ -892,7 +898,7 @@ def _send_quote_email(data, confirmed_by):
     from email.mime.multipart import MIMEMultipart
     from email.mime.text import MIMEText
 
-    subject = "[Quotation] {} confirmed — {} (one-off {})".format(
+    subject = "Quotation {} confirmed — {} (one-off {})".format(
         data.get("quoteId", "quote"), data.get("companyName", "client"),
         _fmt_aud(data.get("oneoffTotal", 0)))
 
@@ -906,13 +912,17 @@ def _send_quote_email(data, confirmed_by):
         if client_email.lower() not in known:
             cc_list.append(client_email)
 
-    msg = MIMEMultipart("alternative")
+    html_body = _build_quote_email_html(data, confirmed_by)
+    msg = MIMEMultipart("mixed")
     msg["Subject"] = subject
-    msg["From"] = "SnailAI.AI Quote <{}>".format(GMAIL_USER)
+    msg["From"] = FROM_QUOTE
     msg["To"] = QUOTE_NOTIFY_TO
     if cc_list:
         msg["Cc"] = ", ".join(cc_list)
-    msg.attach(MIMEText(_build_quote_email_html(data, confirmed_by), "html", "utf-8"))
+    alt = MIMEMultipart("alternative")
+    alt.attach(MIMEText(_html_to_text(html_body), "plain", "utf-8"))
+    alt.attach(MIMEText(html_body, "html", "utf-8"))
+    msg.attach(alt)
 
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20) as srv:
@@ -991,8 +1001,19 @@ AGREEMENTS_DIR = Path("/data/agreements") if os.path.exists("/data") else Path(S
 AGREEMENTS_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def _send_sign_email(to_addr, subject, html_body, attachments=None):
-    """通用签署邮件发送。attachments = [(filename, bytes), ...]"""
+def _html_to_text(html):
+    """HTML 邮件降级为纯文本（反垃圾：提供 text/plain 备用部分）。"""
+    import re as _re
+    txt = _re.sub(r"<br\s*/?>", "\n", html, flags=_re.I)
+    txt = _re.sub(r"</p>", "\n\n", txt, flags=_re.I)
+    txt = _re.sub(r"<[^>]+>", "", txt)
+    txt = txt.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&nbsp;", " ")
+    return _re.sub(r"\n{3,}", "\n\n", txt).strip()
+
+
+def _send_sign_email(to_addr, subject, html_body, attachments=None, from_addr=None, text_body=None):
+    """通用邮件发送。attachments = [(filename, bytes), ...]
+    V1.8.0: 品牌发件身份（默认 e-Sign）+ 纯文本备用部分 + PDF 附件正确 Content-Type。"""
     if not GMAIL_APP_PASSWORD:
         app.logger.info("[sign-email] GMAIL_APP_PASSWORD not set; skip")
         return False
@@ -1002,15 +1023,23 @@ def _send_sign_email(to_addr, subject, html_body, attachments=None):
     from email.mime.base import MIMEBase
     from email import encoders
 
-    msg = MIMEMultipart()
+    msg = MIMEMultipart("mixed")
     msg["Subject"] = subject
-    msg["From"] = "SnailAI.AI e-Sign <{}>".format(GMAIL_USER)
+    msg["From"] = from_addr or FROM_ESIGN
     msg["To"] = to_addr
-    msg.attach(MIMEText(html_body, "html", "utf-8"))
+
+    # text/plain + text/html 双部分（单一 HTML 是垃圾过滤器扣分项）
+    alt = MIMEMultipart("alternative")
+    alt.attach(MIMEText(text_body or _html_to_text(html_body), "plain", "utf-8"))
+    alt.attach(MIMEText(html_body, "html", "utf-8"))
+    msg.attach(alt)
 
     if attachments:
         for fname, fbytes in attachments:
-            part = MIMEBase("application", "octet-stream")
+            if str(fname).lower().endswith(".pdf"):
+                part = MIMEBase("application", "pdf")
+            else:
+                part = MIMEBase("application", "octet-stream")
             part.set_payload(fbytes)
             encoders.encode_base64(part)
             part.add_header("Content-Disposition", "attachment", filename=fname)
@@ -1020,7 +1049,7 @@ def _send_sign_email(to_addr, subject, html_body, attachments=None):
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20) as srv:
             srv.login(GMAIL_USER, GMAIL_APP_PASSWORD)
             srv.sendmail(GMAIL_USER, [to_addr], msg.as_string())
-        app.logger.info("[sign-email] sent to %s", to_addr)
+        app.logger.info("[sign-email] sent to %s from %s", to_addr, from_addr or FROM_ESIGN)
         return True
     except Exception as e:
         app.logger.warning("[sign-email] send failed: %s", e)
@@ -1159,6 +1188,9 @@ def api_sign_admin_create():
                     '<a href="{url}" style="display:inline-block;background:#FF5B1F;color:#fff;padding:12px 24px;'
                     'border-radius:8px;text-decoration:none;font-size:14px;font-weight:500;margin:12px 0">'
                     'Review &amp; Sign</a>'
+                    '<p style="font-size:13px;color:#555;word-break:break-all;margin-top:14px">'
+                    'If the button does not work, copy and open this link in your browser:<br>'
+                    '<span style="color:#1A1A2E">{url}</span></p>'
                     '<p style="font-size:12px;color:#888;margin-top:16px">'
                     'You can also share the draft with relevant parties for review before signing.</p>'
                     '<p style="font-size:11px;color:#aaa;margin-top:12px">Sent: {ts} &middot; Ref: {ref}</p>'
@@ -1166,9 +1198,17 @@ def api_sign_admin_create():
                     '</div></div>'
                 ).format(name=_esc(sr["name"]), no=_esc(agreement_no), rev=_esc(rev),
                          url=sr["url"], ts=invite_ts, ref=sr["signer_token"][:8])
-                subject = "[e-Sign] Agreement {} ({}) — ready for signature".format(agreement_no, rev)
+                text_body = (
+                    "Hello {name},\n\n"
+                    "Agreement {no} ({rev}) is ready for your signature.\n\n"
+                    "Open the link below to review and sign online:\n{url}\n\n"
+                    "Sent: {ts} UTC / Ref: {ref}\n\n"
+                    "SnailAI.AI e-Sign"
+                ).format(name=sr["name"], no=agreement_no, rev=rev, url=sr["url"],
+                         ts=invite_ts, ref=sr["signer_token"][:8])
+                subject = "Agreement {} ({}) is ready for your signature".format(agreement_no, rev)
                 try:
-                    _send_sign_email(sr["email"], subject, html)
+                    _send_sign_email(sr["email"], subject, html, text_body=text_body)
                 except Exception as e:
                     app.logger.warning("[sign-email] invite failed for %s: %s", sr["email"], e)
 
@@ -1179,6 +1219,70 @@ def api_sign_admin_create():
         return jsonify(ok=False, error=str(e)), 500
     finally:
         conn.close()
+
+
+@app.route("/api/portal/admin/send-portal-email", methods=["POST"])
+def api_portal_send_email():
+    """V1.8.0: Portal 启用邮件 — 合同签订后向客户发送 Portal 登录网址/账号/密码。
+    发件身份 admin@snailai.ai。管理员登录态保护；含明文密码，由管理员核对邮箱后手动发送。"""
+    user = _current_user()
+    if not user or user.get("role") != "admin":
+        return jsonify(ok=False, error="无权限"), 403
+    import re as _re
+    data = request.get_json(silent=True) or {}
+    to_email = (data.get("email") or "").strip()
+    username = (data.get("username") or "").strip()
+    password = (data.get("password") or "").strip()
+    portal_url = (data.get("portalUrl") or "").strip() or "https://snailai.ai/login.html"
+    if not to_email or not _re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", to_email):
+        return jsonify(ok=False, error="客户邮箱格式不正确"), 400
+    if not username or not password:
+        return jsonify(ok=False, error="账号与密码不能为空"), 400
+
+    subject = "Your SnailAI.AI Portal account is ready"
+    html = (
+        '<div style="font-family:Inter,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px">'
+        '<div style="background:#1A1A2E;padding:16px;border-radius:8px 8px 0 0">'
+        '<span style="color:#D4A547;font-size:20px;font-weight:500">Snail</span>'
+        '<span style="color:#FF5B1F;font-size:20px;font-weight:500">AI</span>'
+        '<span style="color:#fff;font-size:20px;font-weight:500">.AI Portal</span></div>'
+        '<div style="padding:20px;border:1px solid #eee;border-top:none;border-radius:0 0 8px 8px">'
+        '<p style="font-size:15px;color:#1A1A2E">Hello,</p>'
+        '<p style="font-size:14px;color:#444">Your agreement with SnailAI.AI is fully signed. '
+        'Your client Portal account is now active:</p>'
+        '<table style="font-size:14px;color:#1A1A2E;border-collapse:collapse;margin:14px 0">'
+        '<tr><td style="padding:6px 12px 6px 0;color:#888">Portal 登录网址 / URL</td>'
+        '<td style="padding:6px 0;word-break:break-all"><a href="{url}" style="color:#FF5B1F">{url}</a></td></tr>'
+        '<tr><td style="padding:6px 12px 6px 0;color:#888">账号 / Username</td>'
+        '<td style="padding:6px 0"><strong>{user}</strong></td></tr>'
+        '<tr><td style="padding:6px 12px 6px 0;color:#888">密码 / Password</td>'
+        '<td style="padding:6px 0"><strong>{pw}</strong></td></tr></table>'
+        '<p style="font-size:14px;color:#444">三步开始使用 / How to start:</p>'
+        '<ol style="font-size:13.5px;color:#444;padding-left:20px;line-height:1.9">'
+        '<li>打开上方链接，用账号和密码登录 / Open the link above and sign in</li>'
+        '<li>首次登录请及时修改密码 / Change your password on first login</li>'
+        '<li>在 Portal 内查看您的报价与项目进度 / View your quotation and project progress</li>'
+        '</ol>'
+        '<p style="font-size:12px;color:#888;margin-top:16px">SnailAI.AI Admin — this message was sent '
+        'via your account activation request</p>'
+        '</div></div>'
+    ).format(url=_esc(portal_url), user=_esc(username), pw=_esc(password))
+    text_body = (
+        "Hello,\n\n"
+        "Your agreement with SnailAI.AI is fully signed. Your client Portal account is now active:\n\n"
+        "Portal URL: {url}\nUsername: {user}\nPassword: {pw}\n\n"
+        "How to start:\n"
+        "1. Open the link above and sign in\n"
+        "2. Change your password on first login\n"
+        "3. View your quotation and project progress\n\n"
+        "SnailAI.AI Admin"
+    ).format(url=portal_url, user=username, pw=password)
+
+    sent = _send_sign_email(to_email, subject, html, from_addr=FROM_ADMIN, text_body=text_body)
+    if not sent:
+        return jsonify(ok=False, error="邮件发送失败，请稍后重试或检查 SMTP 配置"), 500
+    app.logger.info("[portal-email] onboarding email sent to %s (user=%s)", to_email, username)
+    return jsonify(ok=True, to=to_email, username=username)
 
 
 @app.route("/api/sign/admin/cleanup", methods=["POST"])
@@ -1339,7 +1443,7 @@ def api_sign_share(signer_token):
         pdf_bytes = Path(pdf_path).read_bytes()
         fname = "{}-{}-Draft.pdf".format(signer["agreement_no"], signer["rev"].replace(" ", ""))
 
-        subject = "[e-Sign] Draft of Agreement {} ({}) shared for review".format(
+        subject = "Draft of Agreement {} ({}) shared for review".format(
             signer["agreement_no"], signer["rev"])
         for to_addr in valid:
             html = (
@@ -1470,7 +1574,7 @@ def api_sign_sign(signer_token):
                 # 双方签完：各发最终版 PDF
                 final_bytes = pdf_bytes
                 final_fname = "{}-{}-Signed.pdf".format(signer["agreement_no"], signer["rev"].replace(" ", ""))
-                subject_done = "[e-Sign] Agreement {} ({}) — fully signed".format(
+                subject_done = "Agreement {} ({}) is fully signed".format(
                     signer["agreement_no"], signer["rev"])
                 for s in all_signers:
                     html = (
@@ -1487,18 +1591,21 @@ def api_sign_sign(signer_token):
                         '</div></div>'
                     ).format(name=_esc(s["name"]), no=_esc(signer["agreement_no"]), rev=_esc(signer["rev"]))
                     _send_sign_email(s["email"], subject_done, html, attachments=[(final_fname, final_bytes)])
-                # 通知 Robin（只发 robin@snailai.ai，不发 gmail 避免 550 拒收）
+                # 通知 Robin（个人 Gmail 兜底 + 提示下一步发 Portal 启用邮件）
                 html_r = (
                     '<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">'
                     '<p style="font-size:14px;color:#1A1A2E">Agreement <strong>{no}</strong> ({rev}) has been fully signed by both parties.</p>'
                     '<p style="font-size:12px;color:#888">Finalized at: {ts} UTC &middot; Ref: {ref}</p>'
+                    '<p style="font-size:14px;color:#1A1A2E;margin-top:12px">Next step: send the Portal onboarding email '
+                    '(login URL, account &amp; password) to the client from the Admin Console — '
+                    '<a href="https://snailai.ai/admin/" style="color:#FF5B1F">open Admin Console</a>.</p>'
                     '<p style="font-size:13px;color:#888">SnailAI.AI e-Sign</p></div>'
                 ).format(no=_esc(signer["agreement_no"]), rev=_esc(signer["rev"]),
                          ts=now_str, ref=signer["signer_token"][:8])
-                _send_sign_email(QUOTE_NOTIFY_TO, subject_done, html_r)
+                _send_sign_email(QUOTE_NOTIFY_TO, subject_done, html_r, from_addr=FROM_ADMIN)
             else:
                 # 仅一方签完：通知 Robin 进度
-                subject_prog = "[e-Sign] Agreement {} ({}) — {} signed".format(
+                subject_prog = "Agreement {} ({}) — {} signed".format(
                     signer["agreement_no"], signer["rev"], full_name)
                 html_prog = (
                     '<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">'
@@ -1508,7 +1615,7 @@ def api_sign_sign(signer_token):
                     '<p style="font-size:13px;color:#888">SnailAI.AI e-Sign</p></div>'
                 ).format(name=_esc(full_name), no=_esc(signer["agreement_no"]), rev=_esc(signer["rev"]),
                          ts=now_str, ref=signer["signer_token"][:8])
-                _send_sign_email(QUOTE_NOTIFY_TO, subject_prog, html_prog)
+                _send_sign_email(QUOTE_NOTIFY_TO, subject_prog, html_prog, from_addr=FROM_ADMIN)
         except Exception as e:
             app.logger.warning("[sign-email] notification failed: %s", e)
 

@@ -182,6 +182,34 @@
     <div class="err" id="resetErr"></div>
   </section>
 
+  <!-- ===== Card: 发送 Portal 启用邮件 ===== -->
+  <section class="card">
+    <div class="card-head">
+      <h2>📧 <span data-zh="发送 Portal 启用邮件" data-en="Send Portal Onboarding Email">发送 Portal 启用邮件</span></h2>
+    </div>
+    <p class="muted" data-zh="合同签订完成后，向客户发送 Portal 登录网址、账号与密码（由 admin@snailai.ai 发出）。邮件含明文密码，发送前请核对客户邮箱。" data-en="After the agreement is fully signed, send the client their Portal URL, username and password (sent from admin@snailai.ai). The email contains a plaintext password — verify the address before sending.">合同签订完成后，向客户发送 Portal 登录网址、账号与密码（由 admin@snailai.ai 发出）。邮件含明文密码，发送前请核对客户邮箱。</p>
+    <div class="form-inline" style="margin-top:14px; flex-wrap:wrap">
+      <div class="field">
+        <label data-zh="客户邮箱" data-en="Client email">客户邮箱</label>
+        <input type="text" id="peEmail" placeholder="client@example.com">
+      </div>
+      <div class="field">
+        <label data-zh="Portal 账号" data-en="Portal username">Portal 账号</label>
+        <input type="text" id="peUser" placeholder="username">
+      </div>
+      <div class="field">
+        <label data-zh="密码" data-en="Password">密码</label>
+        <input type="text" id="pePw" placeholder="初始密码">
+      </div>
+      <div class="field">
+        <label data-zh="Portal 网址" data-en="Portal URL">Portal 网址</label>
+        <input type="text" id="peUrl" value="https://snailai.ai/login.html">
+      </div>
+      <button class="btn primary" onclick="sendPortalEmail()" data-zh="预览并发送" data-en="Preview & Send">预览并发送</button>
+    </div>
+    <div class="err" id="peErr"></div>
+  </section>
+
   <!-- ===== Card: 新建账号 ===== -->
   <section class="card">
     <div class="card-head">
@@ -433,6 +461,36 @@
     if (!d.ok){ err.textContent = d.error || "重置失败"; return; }
     err.className = "err ok"; err.textContent = t({zh:"已重置为 12345，学员下次登录需改密",en:"Reset to 12345; student must change on next login"});
     setTimeout(() => { err.className = "err"; err.textContent = ""; }, 4000);
+  }
+
+  // ===== Card: 发送 Portal 启用邮件 =====
+  async function sendPortalEmail(){
+    const err = document.getElementById("peErr");
+    const email = document.getElementById("peEmail").value.trim();
+    const username = document.getElementById("peUser").value.trim();
+    const password = document.getElementById("pePw").value.trim();
+    const portalUrl = document.getElementById("peUrl").value.trim() || "https://snailai.ai/login.html";
+    err.className = "err"; err.textContent = "";
+    if (!email || !username || !password){
+      err.textContent = t({zh:"客户邮箱、账号、密码都不能为空",en:"Email, username and password are all required"});
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      err.textContent = t({zh:"客户邮箱格式不正确",en:"Invalid email address"});
+      return;
+    }
+    const preview = t({
+      zh:"将发送到：" + email + "\n\nPortal 网址：" + portalUrl + "\n账号：" + username + "\n密码：" + password + "\n\n邮件含明文密码，确认发给这个邮箱？",
+      en:"Send to: " + email + "\n\nPortal URL: " + portalUrl + "\nUsername: " + username + "\nPassword: " + password + "\n\nThe email contains a plaintext password. Confirm?"
+    });
+    if (!confirm(preview)) return;
+    const d = await api("/api/portal/admin/send-portal-email","POST", {
+      email, username, password, portalUrl
+    });
+    if (!d.ok){ err.textContent = d.error || t({zh:"发送失败",en:"Send failed"}); return; }
+    err.className = "err ok";
+    err.textContent = t({zh:"已发送至 " + email, en:"Sent to " + email});
+    setTimeout(() => { err.className = "err"; err.textContent = ""; }, 5000);
   }
 
   async function createUser(){
