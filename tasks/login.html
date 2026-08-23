@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Internal Tasks — SnailAI.AI</title>
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{--coral:#FF5B1F;--gold:#D4A547;--ink:#1A1A2E;--coral-light:#FFF5EE;--success:#22C55E;--bg:#faf9f6;--border:0.5px solid #e0ddd6;--radius:8px;--error:#DC2626}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.login-card{background:#fff;border:var(--border);border-radius:12px;padding:40px 32px;width:100%;max-width:400px;box-shadow:0 4px 20px rgba(26,26,46,0.06)}
+.brand{text-align:center;margin-bottom:28px}
+.brand .logo{font-size:24px;font-weight:800;color:var(--ink)}
+.brand .logo .ai{color:var(--coral)}
+.brand .sub{font-size:13px;color:#888;margin-top:6px}
+.brand .ver{font-size:10px;background:var(--coral);color:#fff;border-radius:8px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#555}
+.field input{width:100%;padding:10px 14px;border:var(--border);border-radius:var(--radius);font-size:15px;font-family:inherit;background:#fff;transition:border .15s}
+.field input:focus{outline:none;border-color:var(--coral)}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;text-align:center;transition:all .15s}
+.btn-coral{background:var(--coral);color:#fff}
+.btn-coral:hover{filter:brightness(0.93)}
+.btn-coral:disabled{opacity:.5;cursor:not-allowed}
+.error-msg{color:var(--error);font-size:13px;margin-top:8px;display:none;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <div class="brand">
+    <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.0.0</span></div>
+    <div class="sub">Internal Tasks</div>
+  </div>
+  <form id="loginForm" onsubmit="return doLogin(event)">
+    <div class="field">
+      <label>Username</label>
+      <input type="text" id="username" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="password" autocomplete="current-password" required>
+    </div>
+    <div id="errorMsg" class="error-msg"></div>
+    <button type="submit" class="btn btn-coral" id="loginBtn">Sign In</button>
+  </form>
+</div>
+
+<script>
+const API = '/api/internal-tasks';
+async function doLogin(e){
+  e.preventDefault();
+  const u=document.getElementById('username').value.trim();
+  const p=document.getElementById('password').value;
+  const errEl=document.getElementById('errorMsg');
+  errEl.style.display='none';
+  try{
+    const r=await fetch(API+'/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+    const d=await r.json();
+    if(d.ok){
+      localStorage.setItem('itask_token',d.token);
+      localStorage.setItem('itask_user',JSON.stringify(d.user));
+      location.href='index.html';
+    }else{
+      errEl.textContent=d.error||'Login failed';
+      errEl.style.display='block';
+    }
+  }catch(err){
+    errEl.textContent='Network error';
+    errEl.style.display='block';
+  }
+  return false;
+}
+// auto-redirect if already logged in
+(async()=>{
+  const t=localStorage.getItem('itask_token');
+  if(t){try{const r=await fetch(API+'/me',{headers:{'Authorization':'Bearer '+t}});if(r.ok)location.href='index.html';}catch(e){}}
+})();
+</script>
+</body>
+</html>

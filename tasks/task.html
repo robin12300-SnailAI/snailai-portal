@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Task Detail — SnailAI.AI</title>
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{--coral:#FF5B1F;--gold:#D4A547;--ink:#1A1A2E;--coral-light:#FFF5EE;--gold-bg:#FDF6E3;--success:#22C55E;--bg:#faf9f6;--border:0.5px solid #e0ddd6;--radius:8px;--error:#DC2626}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.header{background:#fff;border-bottom:var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.header .logo{font-size:18px;font-weight:800;color:var(--ink)}
+.header .logo .ai{color:var(--coral)}
+.header .ver{font-size:9px;background:var(--coral);color:#fff;border-radius:8px;padding:1px 6px;margin-left:4px;vertical-align:middle}
+.header-right{display:flex;align-items:center;gap:14px}
+.btn{padding:8px 16px;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s}
+.btn-coral{background:var(--coral);color:#fff}
+.btn-coral:hover{filter:brightness(.93)}
+.btn-outline{background:#fff;border:1px solid #ddd;color:var(--ink)}
+.btn-outline:hover{border-color:var(--coral);color:var(--coral)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-gold{background:var(--gold);color:#fff}
+.btn-gold:hover{filter:brightness(.93)}
+.btn-green{background:var(--success);color:#fff}
+/* Layout */
+.container{max-width:800px;margin:0 auto;padding:24px}
+.task-header{background:#fff;border:var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
+.task-title{font-size:22px;font-weight:700;margin-bottom:12px}
+.task-badges{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.status-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:10px}
+.status-badge.todo{background:#F3F4F6;color:#6B7280}
+.status-badge.in_progress{background:var(--gold-bg);color:var(--gold)}
+.status-badge.in_review{background:var(--coral-light);color:var(--coral)}
+.status-badge.done{background:#DCFCE7;color:var(--success)}
+.status-badge.closed{background:#F3F4F6;color:#9CA3AF}
+.priority{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase}
+.priority.urgent{background:#FEE2E2;color:#DC2626}
+.priority.high{background:var(--coral-light);color:var(--coral)}
+.priority.normal{background:#F3F4F6;color:#6B7280}
+.priority.low{background:#EFF6FF;color:#3B82F6}
+.task-desc{font-size:14px;color:#555;line-height:1.7;white-space:pre-wrap;margin-bottom:12px}
+.task-meta{display:flex;gap:20px;font-size:13px;color:#888;flex-wrap:wrap}
+.task-meta span{display:flex;align-items:center;gap:4px}
+.progress-wrap{margin-top:14px}
+.progress-label{font-size:12px;color:#888;margin-bottom:4px;display:flex;justify-content:space-between}
+.progress-bar{height:6px;background:#eee;border-radius:3px;overflow:hidden}
+.progress-bar .fill{height:100%;border-radius:3px;transition:width .3s}
+/* Timeline */
+.section-title{font-size:15px;font-weight:700;margin:24px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--coral);display:inline-block}
+.timeline{margin-bottom:24px}
+.tl-item{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid #f0f0f0}
+.tl-dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.tl-dot.submit{background:var(--gold)}
+.tl-dot.guide{background:var(--coral)}
+.tl-dot.status_change{background:var(--success)}
+.tl-dot.created{background:#6B7280}
+.tl-dot.upload{background:#3B82F6}
+.tl-dot.updated{background:#9CA3AF}
+.tl-body{flex:1;min-width:0}
+.tl-author{font-size:12px;font-weight:600;color:var(--ink)}
+.tl-time{font-size:11px;color:#aaa;margin-left:8px}
+.tl-type{font-size:10px;font-weight:600;padding:1px 6px;border-radius:6px;margin-left:6px;text-transform:uppercase}
+.tl-type.submit{background:var(--gold-bg);color:var(--gold)}
+.tl-type.guide{background:var(--coral-light);color:var(--coral)}
+.tl-type.status_change{background:#DCFCE7;color:var(--success)}
+.tl-type.upload{background:#EFF6FF;color:#3B82F6}
+.tl-type.created{background:#F3F4F6;color:#6B7280}
+.tl-type.updated{background:#F3F4F6;color:#9CA3AF}
+.tl-content{font-size:14px;line-height:1.6;white-space:pre-wrap;margin-top:6px;color:#444}
+.tl-attachments{margin-top:6px}
+.tl-attachment{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--coral);cursor:pointer;padding:2px 8px;background:var(--coral-light);border-radius:4px;margin-right:6px}
+.tl-attachment:hover{text-decoration:underline}
+/* Submit form */
+.submit-card{background:#fff;border:var(--border);border-radius:var(--radius);padding:20px;margin-bottom:24px}
+.submit-card h3{font-size:15px;font-weight:700;margin-bottom:14px}
+.submit-card textarea{width:100%;min-height:100px;padding:10px 14px;border:var(--border);border-radius:var(--radius);font-size:14px;font-family:inherit;resize:vertical}
+.submit-card textarea:focus{outline:none;border-color:var(--coral)}
+.progress-input{display:flex;align-items:center;gap:10px;margin:12px 0}
+.progress-input label{font-size:13px;font-weight:600;color:#555}
+.progress-input input{width:70px;padding:6px 10px;border:var(--border);border-radius:var(--radius);font-size:14px;text-align:center}
+.submit-actions{display:flex;gap:10px;margin-top:14px;align-items:center}
+.file-upload{display:flex;align-items:center;gap:8px}
+.file-upload input[type=file]{font-size:12px}
+.file-upload .filename{font-size:12px;color:#888}
+/* Files section */
+.files-list{margin-bottom:24px}
+.file-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#fff;border:var(--border);border-radius:var(--radius);margin-bottom:6px}
+.file-item .name{font-size:13px;color:var(--coral);cursor:pointer}
+.file-item .name:hover{text-decoration:underline}
+.file-item .meta{font-size:11px;color:#aaa}
+.empty{color:#aaa;font-size:14px;text-align:center;padding:20px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.0.0</span></div>
+  <div class="header-right">
+    <button class="btn btn-outline btn-sm" onclick="location.href='index.html'">← Back</button>
+  </div>
+</div>
+
+<div class="container" id="app">
+  <div class="loading" style="text-align:center;padding:40px;color:#888">Loading...</div>
+</div>
+
+<script>
+const API='/api/internal-tasks';
+let TOKEN=localStorage.getItem('itask_token');
+let USER=JSON.parse(localStorage.getItem('itask_user')||'{}');
+if(!TOKEN)location.href='login.html';
+
+const params=new URLSearchParams(location.search);
+const TASK_ID=params.get('id');
+if(!TASK_ID)location.href='index.html';
+
+const STATUS_LABELS={todo:'To Do',in_progress:'In Progress',in_review:'In Review',done:'Done',closed:'Closed'};
+const TYPE_LABELS={submit:'Progress',guide:'Guidance',status_change:'Status',upload:'Upload',created:'Created',updated:'Updated'};
+
+async function api(path,opts={}){
+  const r=await fetch(API+path,{...opts,headers:{'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json',...opts.headers}});
+  if(r.status===401){localStorage.removeItem('itask_token');location.href='login.html';return null;}
+  return r.json();
+}
+
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtTime(iso){if(!iso)return '';try{return new Date(iso+'Z').toLocaleString();}catch(e){return iso;}}
+
+async function loadTask(){
+  const d=await api('/task/'+TASK_ID);
+  if(!d||!d.ok){document.getElementById('app').innerHTML='<div class="empty">Task not found</div>';return;}
+  const t=d.task;
+  const activities=d.activities||[];
+  const files=d.files||[];
+
+  const pColor=t.progress_percent>=100?'var(--success)':'var(--coral)';
+
+  document.getElementById('app').innerHTML=`
+    <div class="task-header">
+      <div class="task-title">${esc(t.title)}</div>
+      <div class="task-badges">
+        <span class="status-badge ${t.status}">${STATUS_LABELS[t.status]||t.status}</span>
+        <span class="priority ${t.priority}">${(t.priority||'normal').toUpperCase()}</span>
+        <span style="font-size:11px;color:#aaa">#${t.id}</span>
+      </div>
+      <div class="task-desc">${esc(t.description||'No description')}</div>
+      <div class="task-meta">
+        <span>👤 ${esc(t.assigned_to_name||t.assigned_to)}</span>
+        ${t.deadline?`<span>📅 ${t.deadline}</span>`:''}
+        <span>📊 ${t.progress_percent||0}%</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Progress</span><span>${t.progress_percent||0}%</span></div>
+        <div class="progress-bar"><div class="fill" style="width:${t.progress_percent||0}%;background:${pColor}"></div></div>
+      </div>
+    </div>
+
+    ${t.status!=='done'&&t.status!=='closed'?`
+    <div class="submit-card">
+      <h3>Submit Progress Report</h3>
+      <textarea id="progressContent" placeholder="Write your progress report here..."></textarea>
+      <div class="progress-input">
+        <label>Progress %:</label>
+        <input type="number" id="progressPercent" min="0" max="100" value="${t.progress_percent||0}">
+      </div>
+      <div class="file-upload">
+        <label style="font-size:13px;font-weight:600;color:#555">Attach file:</label>
+        <input type="file" id="fileInput" onchange="onFileSelected()">
+        <span class="filename" id="fileName"></span>
+      </div>
+      <div class="submit-actions">
+        <button class="btn btn-coral" onclick="submitProgress()">Submit</button>
+        <span id="submitMsg" style="font-size:13px;color:var(--success);display:none">✓ Submitted</span>
+      </div>
+    </div>`:''}
+
+    <div class="section-title">Timeline</div>
+    <div class="timeline">
+      ${activities.map(a=>`
+        <div class="tl-item">
+          <div class="tl-dot ${a.type}"></div>
+          <div class="tl-body">
+            <div>
+              <span class="tl-author">${esc(a.author)}</span>
+              <span class="tl-time">${fmtTime(a.created_at)}</span>
+              <span class="tl-type ${a.type}">${TYPE_LABELS[a.type]||a.type}</span>
+            </div>
+            <div class="tl-content">${esc(a.content||'')}</div>
+            ${(a.attachments&&a.attachments.length)?`<div class="tl-attachments">${a.attachments.map(att=>`<span class="tl-attachment">📎 ${esc(att.split('/').pop())}</span>`).join('')}</div>`:''}
+          </div>
+        </div>
+      `).join('')}
+      ${!activities.length?'<div class="empty">No activity yet</div>':''}
+    </div>
+
+    ${files.length?`
+    <div class="section-title">Files</div>
+    <div class="files-list">
+      ${files.map(f=>`
+        <div class="file-item">
+          <span class="name" onclick="downloadFile(${f.id})">${esc(f.filename)}</span>
+          <span class="meta">${(f.filesize/1024).toFixed(0)}KB · ${f.uploaded_by} · ${fmtTime(f.uploaded_at)}</span>
+        </div>
+      `).join('')}
+    </div>`:''}
+  `;
+}
+
+function onFileSelected(){
+  const fi=document.getElementById('fileInput');
+  document.getElementById('fileName').textContent=fi.files.length?fi.files[0].name:'';
+}
+
+async function submitProgress(){
+  const content=document.getElementById('progressContent').value.trim();
+  const percent=parseInt(document.getElementById('progressPercent').value)||0;
+  const fileInput=document.getElementById('fileInput');
+  const file=fileInput.files[0];
+
+  if(!content&&!file){
+    alert('Please write a progress report or attach a file.');
+    return;
+  }
+
+  // Upload file first if any
+  if(file){
+    const fd=new FormData();
+    fd.append('file',file);
+    try{
+      const r=await fetch(API+'/task/'+TASK_ID+'/upload',{method:'POST',headers:{'Authorization':'Bearer '+TOKEN},body:fd});
+      const d=await r.json();
+      if(!d.ok){alert('File upload failed: '+d.error);return;}
+    }catch(e){alert('File upload error');return;}
+  }
+
+  // Submit text progress
+  if(content){
+    const d=await api('/task/'+TASK_ID+'/submit',{method:'POST',body:JSON.stringify({content,progress_percent:percent})});
+    if(!d||!d.ok){alert('Submit failed');return;}
+  }
+
+  document.getElementById('submitMsg').style.display='inline';
+  setTimeout(()=>loadTask(),500);
+}
+
+function downloadFile(fileId){
+  const a=document.createElement('a');
+  a.href=API+'/file/'+fileId+'/download?token='+TOKEN;
+  a.download='';
+  a.click();
+}
+
+loadTask();
+</script>
+</body>
+</html>

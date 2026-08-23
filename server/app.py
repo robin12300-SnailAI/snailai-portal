@@ -3512,6 +3512,11 @@ from portal import bp as portal_bp, init_portal_db
 app.register_blueprint(portal_bp)
 init_portal_db()
 
+# ── 注册 Internal Tasks Blueprint ────────────────────────
+from internal_tasks import bp as itask_bp, init_internal_tasks_db
+app.register_blueprint(itask_bp)
+init_internal_tasks_db()
+
 print(f"[蜗牛AI Portal] 数据库: {DB_PATH}")
 if not os.environ.get("WECHAT_WEBHOOK_URL"):
     print("[蜗牛AI Portal] ⚠️  警告：WECHAT_WEBHOOK_URL 未配置，日报/周报不会推送。"

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Tasks — SnailAI.AI</title>
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{--coral:#FF5B1F;--gold:#D4A547;--ink:#1A1A2E;--coral-light:#FFF5EE;--gold-bg:#FDF6E3;--success:#22C55E;--bg:#faf9f6;--border:0.5px solid #e0ddd6;--radius:8px;--error:#DC2626;--warn:#F59E0B}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+/* Header */
+.header{background:#fff;border-bottom:var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.header .logo{font-size:18px;font-weight:800;color:var(--ink)}
+.header .logo .ai{color:var(--coral)}
+.header .ver{font-size:9px;background:var(--coral);color:#fff;border-radius:8px;padding:1px 6px;margin-left:4px;vertical-align:middle}
+.header-right{display:flex;align-items:center;gap:14px}
+.header .user-name{font-size:13px;color:#888}
+.btn{padding:8px 16px;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s}
+.btn-coral{background:var(--coral);color:#fff}
+.btn-coral:hover{filter:brightness(.93)}
+.btn-outline{background:#fff;border:1px solid #ddd;color:var(--ink)}
+.btn-outline:hover{border-color:var(--coral);color:var(--coral)}
+.btn-sm{padding:6px 12px;font-size:12px}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:20px 24px}
+.stat-card{background:#fff;border:var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+.stat-card .num{font-size:28px;font-weight:800}
+.stat-card .label{font-size:11px;color:#888;margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+.stat-card.coral .num{color:var(--coral)}
+.stat-card.gold .num{color:var(--gold)}
+.stat-card.green .num{color:var(--success)}
+/* Task list */
+.task-list{padding:0 24px 24px}
+.task-card{background:#fff;border:var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:10px;cursor:pointer;transition:box-shadow .15s}
+.task-card:hover{box-shadow:0 2px 12px rgba(26,26,46,.08)}
+.task-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.task-title{font-size:15px;font-weight:600}
+.priority{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase}
+.priority.urgent{background:#FEE2E2;color:#DC2626}
+.priority.high{background:var(--coral-light);color:var(--coral)}
+.priority.normal{background:#F3F4F6;color:#6B7280}
+.priority.low{background:#EFF6FF;color:#3B82F6}
+.status-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:10px}
+.status-badge.todo{background:#F3F4F6;color:#6B7280}
+.status-badge.in_progress{background:var(--gold-bg);color:var(--gold)}
+.status-badge.in_review{background:var(--coral-light);color:var(--coral)}
+.status-badge.done{background:#DCFCE7;color:var(--success)}
+.status-badge.closed{background:#F3F4F6;color:#9CA3AF}
+.task-meta{display:flex;gap:16px;font-size:12px;color:#888}
+.task-meta span{display:flex;align-items:center;gap:4px}
+.progress-bar{height:4px;background:#eee;border-radius:2px;margin-top:10px;overflow:hidden}
+.progress-bar .fill{height:100%;border-radius:2px;transition:width .3s}
+.empty{text-align:center;padding:60px 24px;color:#888}
+.empty .icon{font-size:48px;margin-bottom:12px}
+/* Loading */
+.loading{text-align:center;padding:40px;color:#888}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.0.0</span> <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px">Internal Tasks</span></div>
+  <div class="header-right">
+    <span class="user-name" id="userName"></span>
+    <button class="btn btn-outline btn-sm" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<div class="stats" id="statsBar"></div>
+<div class="task-list" id="taskList">
+  <div class="loading">Loading tasks...</div>
+</div>
+
+<script>
+const API='/api/internal-tasks';
+let TOKEN=localStorage.getItem('itask_token');
+let USER=JSON.parse(localStorage.getItem('itask_user')||'{}');
+
+if(!TOKEN)location.href='login.html';
+
+document.getElementById('userName').textContent=USER.name||USER.username||'';
+
+async function api(path,opts={}){
+  const r=await fetch(API+path,{...opts,headers:{'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json',...opts.headers}});
+  if(r.status===401){localStorage.removeItem('itask_token');location.href='login.html';return null;}
+  return r.json();
+}
+
+const STATUS_LABELS={todo:'To Do',in_progress:'In Progress',in_review:'In Review',done:'Done',closed:'Closed'};
+const PRIORITY_LABELS={urgent:'Urgent',high:'High',normal:'Normal',low:'Low'};
+
+async function loadTasks(){
+  const d=await api('/my-tasks');
+  if(!d||!d.ok)return;
+  const tasks=d.tasks||[];
+  // Stats
+  const byStatus={};
+  tasks.forEach(t=>{byStatus[t.status]=(byStatus[t.status]||0)+1;});
+  document.getElementById('statsBar').innerHTML=`
+    <div class="stat-card coral"><div class="num">${tasks.length}</div><div class="label">Total</div></div>
+    <div class="stat-card gold"><div class="num">${byStatus.in_progress||0}</div><div class="label">In Progress</div></div>
+    <div class="stat-card"><div class="num">${byStatus.in_review||0}</div><div class="label">In Review</div></div>
+    <div class="stat-card green"><div class="num">${byStatus.done||0}</div><div class="label">Done</div></div>
+  `;
+  // List
+  if(!tasks.length){
+    document.getElementById('taskList').innerHTML='<div class="empty"><div class="icon">📋</div>No tasks assigned yet</div>';
+    return;
+  }
+  document.getElementById('taskList').innerHTML=tasks.map(t=>`
+    <div class="task-card" onclick="location.href='task.html?id=${t.id}'">
+      <div class="task-top">
+        <div class="task-title">${esc(t.title)}</div>
+        <span class="priority ${t.priority}">${PRIORITY_LABELS[t.priority]||t.priority}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin:6px 0">
+        <span class="status-badge ${t.status}">${STATUS_LABELS[t.status]||t.status}</span>
+        <span style="font-size:11px;color:#aaa">#${t.id}</span>
+      </div>
+      <div class="task-meta">
+        ${t.deadline?`<span>📅 ${t.deadline}</span>`:''}
+        <span>📊 ${t.progress_percent||0}%</span>
+      </div>
+      <div class="progress-bar"><div class="fill" style="width:${t.progress_percent||0}%;background:${t.progress_percent>=100?'var(--success)':'var(--coral)'}"></div></div>
+    </div>
+  `).join('');
+}
+
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function doLogout(){
+  localStorage.removeItem('itask_token');
+  localStorage.removeItem('itask_user');
+  location.href='login.html';
+}
+
+loadTasks();
+</script>
+</body>
+</html>

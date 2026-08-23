@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>任务管理后台 — SnailAI.AI</title>
+<link rel="icon" href="/assets/favicon.png" type="image/png">
+<style>
+:root{--coral:#FF5B1F;--gold:#D4A547;--ink:#1A1A2E;--coral-light:#FFF5EE;--gold-bg:#FDF6E3;--success:#22C55E;--bg:#faf9f6;--border:0.5px solid #e0ddd6;--radius:8px;--error:#DC2626}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.header{background:#fff;border-bottom:var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.header .logo{font-size:18px;font-weight:800;color:var(--ink)}
+.header .logo .ai{color:var(--coral)}
+.header .ver{font-size:9px;background:var(--coral);color:#fff;border-radius:8px;padding:1px 6px;margin-left:4px;vertical-align:middle}
+.btn{padding:8px 16px;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s}
+.btn-coral{background:var(--coral);color:#fff}
+.btn-coral:hover{filter:brightness(.93)}
+.btn-outline{background:#fff;border:1px solid #ddd;color:var(--ink)}
+.btn-outline:hover{border-color:var(--coral);color:var(--coral)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-gold{background:var(--gold);color:#fff}
+.btn-green{background:var(--success);color:#fff}
+.btn-danger{background:#EF4444;color:#fff}
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:2px solid #eee;padding:0 24px;background:#fff}
+.tab{padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab:hover{color:var(--coral)}
+.tab.active{color:var(--coral);border-bottom-color:var(--coral)}
+/* Content */
+.content{max-width:1100px;margin:0 auto;padding:24px}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:#fff;border:var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+.stat-card .num{font-size:28px;font-weight:800}
+.stat-card .label{font-size:11px;color:#888;margin-top:4px}
+.stat-card.coral .num{color:var(--coral)}
+.stat-card.gold .num{color:var(--gold)}
+.stat-card.green .num{color:var(--success)}
+/* Task table */
+.table-wrap{background:#fff;border:var(--border);border-radius:var(--radius);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{background:var(--ink);color:#fff;font-size:12px;text-align:left;padding:10px 14px;text-transform:uppercase;letter-spacing:.5px}
+td{padding:10px 14px;border-bottom:1px solid #f0f0f0;font-size:13px;vertical-align:middle}
+tr:hover td{background:#faf9f6}
+.status-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:10px;display:inline-block}
+.status-badge.todo{background:#F3F4F6;color:#6B7280}
+.status-badge.in_progress{background:var(--gold-bg);color:var(--gold)}
+.status-badge.in_review{background:var(--coral-light);color:var(--coral)}
+.status-badge.done{background:#DCFCE7;color:var(--success)}
+.status-badge.closed{background:#F3F4F6;color:#9CA3AF}
+.priority{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+.priority.urgent{background:#FEE2E2;color:#DC2626}
+.priority.high{background:var(--coral-light);color:var(--coral)}
+.priority.normal{background:#F3F4F6;color:#6B7280}
+.priority.low{background:#EFF6FF;color:#3B82F6}
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,26,46,.4);z-index:100;align-items:center;justify-content:center;padding:24px}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:12px;padding:28px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto}
+.modal h3{font-size:17px;font-weight:700;margin-bottom:18px}
+.modal .field{margin-bottom:14px}
+.modal .field label{display:block;font-size:13px;font-weight:600;margin-bottom:4px;color:#555}
+.modal .field input,.modal .field textarea,.modal .field select{width:100%;padding:8px 12px;border:var(--border);border-radius:var(--radius);font-size:14px;font-family:inherit}
+.modal .field textarea{min-height:80px;resize:vertical}
+.modal .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+/* Filters */
+.filters{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.filters select,.filters input{padding:6px 12px;border:var(--border);border-radius:var(--radius);font-size:13px;font-family:inherit}
+/* Assistant list */
+.assistant-card{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;border:var(--border);border-radius:var(--radius);margin-bottom:8px}
+.assistant-card .name{font-weight:600}
+.assistant-card .username{font-size:12px;color:#888}
+.empty{text-align:center;padding:40px;color:#aaa}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.0.0</span> <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px">Internal Tasks Admin</span></div>
+  <div class="header-right">
+    <button class="btn btn-outline btn-sm" onclick="location.href='../index.html'">← 助教端</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('tasks')">📋 任务管理</div>
+  <div class="tab" onclick="switchTab('assistants')">👥 助教管理</div>
+</div>
+
+<div class="content" id="app"></div>
+
+<!-- Create Task Modal -->
+<div class="modal-overlay" id="createModal">
+  <div class="modal">
+    <h3>创建新任务</h3>
+    <div class="field"><label>任务标题 *</label><input id="ctTitle"></div>
+    <div class="field"><label>描述</label><textarea id="ctDesc"></textarea></div>
+    <div class="field"><label>优先级</label>
+      <select id="ctPriority"><option value="normal">Normal</option><option value="high">High</option><option value="urgent">Urgent</option><option value="low">Low</option></select>
+    </div>
+    <div class="field"><label>截止日期</label><input type="date" id="ctDeadline"></div>
+    <div class="field"><label>分配给 *</label><select id="ctAssignee"></select></div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="closeModal('createModal')">取消</button>
+      <button class="btn btn-coral" onclick="createTask()">创建</button>
+    </div>
+  </div>
+</div>
+
+<!-- Guide Modal -->
+<div class="modal-overlay" id="guideModal">
+  <div class="modal">
+    <h3>给出指导/意见</h3>
+    <input type="hidden" id="guideTaskId">
+    <div class="field"><label>内容 *</label><textarea id="guideContent" placeholder="写出你的指导、意见或建议..."></textarea></div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="closeModal('guideModal')">取消</button>
+      <button class="btn btn-coral" onclick="submitGuide()">发送</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Assistant Modal -->
+<div class="modal-overlay" id="assistantModal">
+  <div class="modal">
+    <h3>创建助教账号</h3>
+    <div class="field"><label>用户名 *</label><input id="asstUsername" placeholder="e.g. zhangsan"></div>
+    <div class="field"><label>姓名 *</label><input id="asstName" placeholder="e.g. 张三"></div>
+    <div class="field"><label>初始密码（留空自动生成）</label><input id="asstPassword" type="password"></div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="closeModal('assistantModal')">取消</button>
+      <button class="btn btn-coral" onclick="createAssistant()">创建</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API='/api/internal-tasks';
+let TOKEN=localStorage.getItem('itask_token');
+let USER=JSON.parse(localStorage.getItem('itask_user')||'{}');
+if(!TOKEN||USER.role!=='admin')location.href='../login.html';
+
+let currentTab='tasks';
+let assistants=[];
+
+async function api(path,opts={}){
+  const r=await fetch(API+path,{...opts,headers:{'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json',...opts.headers}});
+  if(r.status===401){localStorage.removeItem('itask_token');location.href='../login.html';return null;}
+  return r.json();
+}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtDate(iso){if(!iso)return '-';try{return new Date(iso+'Z').toLocaleDateString();}catch(e){return iso;}}
+function openModal(id){document.getElementById(id).classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+
+const STATUS_LABELS={todo:'To Do',in_progress:'In Progress',in_review:'In Review',done:'Done',closed:'Closed'};
+const STATUS_ZH={todo:'待开始',in_progress:'进行中',in_review:'待审批',done:'已完成',closed:'已关闭'};
+
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',i===(tab==='tasks'?0:1));});
+  if(tab==='tasks')loadTasks();
+  else loadAssistants();
+}
+
+async function loadAssistants(){
+  const d=await api('/admin/assistants');
+  if(!d||!d.ok)return;
+  assistants=d.assistants||[];
+}
+
+// ── Tasks Tab ──
+async function loadTasks(){
+  await loadAssistants();
+  const d=await api('/admin/tasks');
+  if(!d||!d.ok)return;
+  const tasks=d.tasks||[];
+
+  const byStatus={};
+  tasks.forEach(t=>{byStatus[t.status]=(byStatus[t.status]||0)+1;});
+
+  document.getElementById('app').innerHTML=`
+    <div class="stats">
+      <div class="stat-card coral"><div class="num">${tasks.length}</div><div class="label">Total</div></div>
+      <div class="stat-card"><div class="num">${byStatus.todo||0}</div><div class="label">To Do</div></div>
+      <div class="stat-card gold"><div class="num">${byStatus.in_progress||0}</div><div class="label">In Progress</div></div>
+      <div class="stat-card"><div class="num">${byStatus.in_review||0}</div><div class="label">In Review</div></div>
+      <div class="stat-card green"><div class="num">${byStatus.done||0}</div><div class="label">Done</div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div class="filters">
+        <select id="filterStatus" onchange="loadTasks()"><option value="">All Status</option>
+          <option value="todo">To Do</option><option value="in_progress">In Progress</option>
+          <option value="in_review">In Review</option><option value="done">Done</option><option value="closed">Closed</option>
+        </select>
+      </div>
+      <button class="btn btn-coral" onclick="openCreateTask()">+ 创建任务</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Title</th><th>Assigned</th><th>Priority</th><th>Status</th><th>Progress</th><th>Deadline</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${tasks.map(t=>`<tr>
+            <td>${t.id}</td>
+            <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" onclick="location.href='task.html?id=${t.id}'">${esc(t.title)}</td>
+            <td>${esc(t.assigned_to_name||t.assigned_to)}</td>
+            <td><span class="priority ${t.priority}">${(t.priority||'normal').toUpperCase()}</span></td>
+            <td><span class="status-badge ${t.status}">${STATUS_ZH[t.status]||t.status}</span></td>
+            <td>${t.progress_percent||0}%</td>
+            <td>${t.deadline||'-'}</td>
+            <td style="white-space:nowrap">
+              <button class="btn btn-sm btn-outline" onclick="openGuide(${t.id})">指导</button>
+              ${t.status!=='done'&&t.status!=='closed'?`
+                <button class="btn btn-sm btn-green" onclick="changeStatus(${t.id},'done')">✓ 完成</button>
+              `:''}
+              ${t.status==='done'?`<button class="btn btn-sm btn-outline" onclick="changeStatus(${t.id},'closed')">关闭</button>`:''}
+              ${t.status==='todo'?`<button class="btn btn-sm btn-gold" onclick="changeStatus(${t.id},'in_progress')">开始</button>`:''}
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      ${!tasks.length?'<div class="empty">No tasks yet. Click "+ 创建任务" to create one.</div>':''}
+    </div>
+  `;
+}
+
+async function openCreateTask(){
+  // Populate assignee dropdown
+  const sel=document.getElementById('ctAssignee');
+  sel.innerHTML=assistants.map(a=>`<option value="${a.username}">${a.name} (${a.username})</option>`).join('');
+  document.getElementById('ctTitle').value='';
+  document.getElementById('ctDesc').value='';
+  document.getElementById('ctPriority').value='normal';
+  document.getElementById('ctDeadline').value='';
+  openModal('createModal');
+}
+
+async function createTask(){
+  const title=document.getElementById('ctTitle').value.trim();
+  const desc=document.getElementById('ctDesc').value.trim();
+  const priority=document.getElementById('ctPriority').value;
+  const deadline=document.getElementById('ctDeadline').value;
+  const assigned_to=document.getElementById('ctAssignee').value;
+  if(!title||!assigned_to){alert('标题和分配人是必填项');return;}
+  const d=await api('/admin/create-task',{method:'POST',body:JSON.stringify({title,description:desc,priority,deadline,assigned_to})});
+  if(d&&d.ok){closeModal('createModal');loadTasks();}
+  else alert('创建失败: '+(d&&d.error));
+}
+
+function openGuide(taskId){
+  document.getElementById('guideTaskId').value=taskId;
+  document.getElementById('guideContent').value='';
+  openModal('guideModal');
+}
+
+async function submitGuide(){
+  const taskId=document.getElementById('guideTaskId').value;
+  const content=document.getElementById('guideContent').value.trim();
+  if(!content){alert('请填写内容');return;}
+  const d=await api('/admin/task/'+taskId+'/guide',{method:'POST',body:JSON.stringify({content})});
+  if(d&&d.ok){closeModal('guideModal');loadTasks();}
+  else alert('发送失败');
+}
+
+async function changeStatus(taskId,status){
+  const note=prompt(`确认将任务状态改为「${STATUS_ZH[status]||status}」？\n可输入备注（可选）：`);
+  if(note===null)return;
+  const d=await api('/admin/task/'+taskId+'/status',{method:'POST',body:JSON.stringify({status,note})});
+  if(d&&d.ok)loadTasks();
+  else alert('操作失败');
+}
+
+// ── Assistants Tab ──
+async function loadAssistantsTab(){
+  await loadAssistants();
+  document.getElementById('app').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font-size:16px">助教列表 (${assistants.length})</h3>
+      <button class="btn btn-coral" onclick="openModal('assistantModal')">+ 创建助教</button>
+    </div>
+    ${assistants.map(a=>`
+      <div class="assistant-card">
+        <div><span class="name">${esc(a.name)}</span> <span class="username">@${esc(a.username)}</span></div>
+        <span class="status-badge ${a.role==='admin'?'done':'in_progress'}">${a.role}</span>
+      </div>
+    `).join('')}
+    ${!assistants.length?'<div class="empty">No assistants yet</div>':''}
+  `;
+}
+
+async function createAssistant(){
+  const username=document.getElementById('asstUsername').value.trim().toLowerCase();
+  const name=document.getElementById('asstName').value.trim();
+  const password=document.getElementById('asstPassword').value;
+  if(!username||!name){alert('用户名和姓名是必填项');return;}
+  const d=await api('/admin/create-assistant',{method:'POST',body:JSON.stringify({username,name,password:password||undefined})});
+  if(d&&d.ok){
+    alert(`助教创建成功！\n用户名: ${d.username}\n密码: ${d.password}\n\n请妥善保管密码并发给助教。`);
+    closeModal('assistantModal');
+    loadAssistants();
+    if(currentTab==='assistants')loadAssistantsTab();
+  }else{
+    alert('创建失败: '+(d&&d.error));
+  }
+}
+
+// Override switchTab
+const _switchTab=switchTab;
+switchTab=function(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',i===(tab==='tasks'?0:1));});
+  if(tab==='tasks')loadTasks();
+  else loadAssistantsTab();
+};
+
+// Initial load
+loadTasks();
+</script>
+</body>
+</html>
