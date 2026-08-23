@@ -900,18 +900,31 @@ def api_admin_create_assistant():
         return jsonify({"ok": False, "error": "Username and name are required"}), 400
 
     conn = _db_conn()
-    existing = conn.execute("SELECT id FROM users WHERE username=?", (username,)).fetchone()
+    existing = conn.execute("SELECT id, role FROM users WHERE username=?", (username,)).fetchone()
     if existing:
-        conn.close()
-        return jsonify({"ok": False, "error": f"Username '{username}' already exists"}), 400
-
+        # 用户已存在：如果角色不是 assistant，升级为 assistant 并重置密码
+        if existing["role"] != "assistant":
+            salt = secrets.token_hex(8)
+            conn.execute("UPDATE users SET role='assistant', name=?, password_hash=?, salt=?, must_change_pw=0 WHERE username=?",
+                         (name, _hash_pw(password, salt), salt, username))
+            conn.commit()
+            conn.close()
+            return jsonify({"ok": True, "username": username, "password": password, "name": name, "action": "upgraded", "previous_role": existing["role"]})
+        else:
+            # 已是 assistant，仅重置密码
+            salt = secrets.token_hex(8)
+            conn.execute("UPDATE users SET name=?, password_hash=?, salt=?, must_change_pw=0 WHERE username=?",
+                         (name, _hash_pw(password, salt), salt, username))
+            conn.commit()
+            conn.close()
+            return jsonify({"ok": True, "username": username, "password": password, "name": name, "action": "password_reset"})
     salt = secrets.token_hex(8)
     conn.execute("INSERT INTO users(username,name,role,password_hash,salt,must_change_pw) VALUES(?,?,?,?,?,0)",
                  (username, name, "assistant", _hash_pw(password, salt), salt))
     conn.commit()
     conn.close()
 
-    return jsonify({"ok": True, "username": username, "password": password, "name": name})
+    return jsonify({"ok": True, "username": username, "password": password, "name": name, "action": "created"})
 
 
 @bp.route("/admin/delete-file/<int:file_id>", methods=["DELETE"])
