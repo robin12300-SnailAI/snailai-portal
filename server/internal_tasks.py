@@ -58,10 +58,8 @@ GMAIL_USER = os.environ.get("GMAIL_USER", "robin12300@gmail.com")
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "")
 NOTIFY_TO = os.environ.get("ITASK_NOTIFY_TO", "robin@snailai.ai")
 
-# ── HY3 (TokenHub) 翻译配置 ──────────────────────────────
-HY3_API_KEY = os.environ.get("TENCENT_TOKENHUB_HY3_KEY", "")
-HY3_BASE_URL = "https://tokenhub.tencentmaas.com/v1"
-HY3_MODEL = os.environ.get("ITASK_TRANSLATE_MODEL", "hy3")
+# ── 翻译配置：MyMemory 免费主力 + 原文兜底 ─────────────────
+# MyMemory: 免费 ~5000字/天，无需 API key
 
 # ── Admin Token ───────────────────────────────────────────
 ADMIN_TOKEN = os.environ.get("QUOTE_ADMIN_TOKEN", "admin-dev-token")
@@ -83,47 +81,6 @@ def _is_chinese(text: str) -> bool:
         return False
     zh_count = len(_ZH_RE.findall(text))
     return zh_count / max(len(text), 1) > 0.2
-
-
-def _translate_hy3(text: str, target_lang: str) -> str:
-    """用 HY3 (TokenHub) API 翻译（OpenAI 兼容接口），失败返回 None"""
-    if not HY3_API_KEY:
-        return None
-
-    lang_name = "English" if target_lang == "en" else "简体中文"
-    system_prompt = f"You are a professional translator. Translate the following text to {lang_name}. Output ONLY the translation, no explanations, no quotes, no extra formatting. Preserve the original tone and formatting (line breaks, etc.)."
-
-    try:
-        payload = json.dumps({
-            "model": HY3_MODEL,
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": text}
-            ],
-            "temperature": 0.1,
-            "max_tokens": 2000
-        }).encode("utf-8")
-
-        req = urllib.request.Request(
-            f"{HY3_BASE_URL}/chat/completions",
-            data=payload,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {HY3_API_KEY}"
-            },
-            method="POST"
-        )
-
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            result = json.loads(resp.read().decode("utf-8"))
-            translated = result["choices"][0]["message"]["content"].strip()
-            if translated.startswith('"') and translated.endswith('"'):
-                translated = translated[1:-1]
-            return translated
-
-    except Exception as e:
-        print(f"[internal-tasks] HY3 translate error ({target_lang}): {e}")
-        return None
 
 
 def _translate_mymemory(text: str, source_lang: str, target_lang: str) -> str:
@@ -150,25 +107,20 @@ def _translate_mymemory(text: str, source_lang: str, target_lang: str) -> str:
 
 def _translate(text: str, target_lang: str) -> str:
     """
-    三层翻译降级：HY3 → MyMemory → 原文
+    两层翻译：MyMemory → 原文兜底
     target_lang: 'en' 或 'zh'
     """
     if not text or not text.strip():
         return text
 
-    # 第一层：HY3 (TokenHub) — 质量最好，需 key + 余额
-    result = _translate_hy3(text, target_lang)
-    if result:
-        return result
-
-    # 第二层：MyMemory — 免费，无需 key，每天 ~5000 字
+    # MyMemory — 免费，无需 key，每天 ~5000 字
     source_lang = "zh" if target_lang == "en" else "en"
     result = _translate_mymemory(text, source_lang, target_lang)
     if result:
         return result
 
-    # 第三层：降级返回原文
-    print(f"[internal-tasks] all translate failed, using original text")
+    # 兜底：返回原文
+    print(f"[internal-tasks] MyMemory translate failed, using original text")
     return text
 
 
