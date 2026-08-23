@@ -699,49 +699,54 @@ def api_admin_task_detail(task_id):
 @_require_admin
 def api_admin_create_task():
     """创建任务并分配给助教"""
-    data = request.get_json(force=True)
-    title = (data.get("title") or "").strip()
-    description = (data.get("description") or "").strip()
-    priority = data.get("priority") or "normal"
-    deadline = data.get("deadline")
-    assigned_to = (data.get("assigned_to") or "").strip().lower()
-
-    if not title:
-        return jsonify({"ok": False, "error": "Title is required"}), 400
-    if not assigned_to:
-        return jsonify({"ok": False, "error": "Assigned to is required"}), 400
-
-    conn = _db_conn()
-    # 验证助教存在
-    au = conn.execute("SELECT * FROM users WHERE username=? AND role IN ('assistant','admin')",
-                      (assigned_to,)).fetchone()
-    if not au:
-        conn.close()
-        return jsonify({"ok": False, "error": f"User '{assigned_to}' not found or not an assistant"}), 400
-
-    now = datetime.datetime.utcnow().isoformat()
-    conn.execute(
-        "INSERT INTO itask_tasks(title, description, priority, deadline, assigned_to, created_by, status, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)",
-        (title, description, priority, deadline, assigned_to, g.user["username"], "todo", now, now)
-    )
-    task_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
-
-    # 写活动记录
-    conn.execute(
-        "INSERT INTO itask_activities(task_id, author, type, content, created_at) VALUES(?,?,?,?,?)",
-        (task_id, g.user["username"], "created", f"Task created and assigned to {au['name']}", now)
-    )
-    conn.commit()
-    conn.close()
-
-    # 邮件通知助教（失败不影响接口）
-    task_dict = {"title": title, "description": description, "priority": priority, "deadline": deadline}
     try:
-        _notify_task_created(task_dict, au["name"], au.get("email") or GMAIL_USER)
-    except Exception as e:
-        print(f"[internal-tasks] notify_task_created error: {e}")
+        data = request.get_json(force=True)
+        title = (data.get("title") or "").strip()
+        description = (data.get("description") or "").strip()
+        priority = data.get("priority") or "normal"
+        deadline = data.get("deadline")
+        assigned_to = (data.get("assigned_to") or "").strip().lower()
 
-    return jsonify({"ok": True, "task_id": task_id})
+        if not title:
+            return jsonify({"ok": False, "error": "Title is required"}), 400
+        if not assigned_to:
+            return jsonify({"ok": False, "error": "Assigned to is required"}), 400
+
+        conn = _db_conn()
+        # 验证助教存在
+        au = conn.execute("SELECT * FROM users WHERE username=? AND role IN ('assistant','admin')",
+                          (assigned_to,)).fetchone()
+        if not au:
+            conn.close()
+            return jsonify({"ok": False, "error": f"User '{assigned_to}' not found or not an assistant"}), 400
+
+        now = datetime.datetime.utcnow().isoformat()
+        conn.execute(
+            "INSERT INTO itask_tasks(title, description, priority, deadline, assigned_to, created_by, status, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)",
+            (title, description, priority, deadline, assigned_to, g.user["username"], "todo", now, now)
+        )
+        task_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+
+        # 写活动记录
+        conn.execute(
+            "INSERT INTO itask_activities(task_id, author, type, content, created_at) VALUES(?,?,?,?,?)",
+            (task_id, g.user["username"], "created", f"Task created and assigned to {au['name']}", now)
+        )
+        conn.commit()
+        conn.close()
+
+        # 邮件通知助教（失败不影响接口）
+        task_dict = {"title": title, "description": description, "priority": priority, "deadline": deadline}
+        try:
+            _notify_task_created(task_dict, au["name"], au.get("email") or GMAIL_USER)
+        except Exception as e:
+            print(f"[internal-tasks] notify_task_created error: {e}")
+
+        return jsonify({"ok": True, "task_id": task_id})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 
 @bp.route("/admin/task/<int:task_id>", methods=["PUT"])
