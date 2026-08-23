@@ -58,9 +58,10 @@ GMAIL_USER = os.environ.get("GMAIL_USER", "robin12300@gmail.com")
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "")
 NOTIFY_TO = os.environ.get("ITASK_NOTIFY_TO", "robin@snailai.ai")
 
-# ── OpenAI 翻译配置 ──────────────────────────────────────
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
-OPENAI_MODEL = os.environ.get("ITASK_TRANSLATE_MODEL", "gpt-4o-mini")
+# ── HY3 (TokenHub) 翻译配置 ──────────────────────────────
+HY3_API_KEY = os.environ.get("TENCENT_TOKENHUB_HY3_KEY", "")
+HY3_BASE_URL = "https://tokenhub.tencentmaas.com/v1"
+HY3_MODEL = os.environ.get("ITASK_TRANSLATE_MODEL", "hy3")
 
 # ── Admin Token ───────────────────────────────────────────
 ADMIN_TOKEN = os.environ.get("QUOTE_ADMIN_TOKEN", "admin-dev-token")
@@ -86,13 +87,13 @@ def _is_chinese(text: str) -> bool:
 
 def _translate(text: str, target_lang: str) -> str:
     """
-    用 OpenAI API 翻译文本。
+    用 HY3 (TokenHub) API 翻译文本（OpenAI 兼容接口）。
     target_lang: 'en' 或 'zh'
     如果 API key 不可用或翻译失败，返回原文（降级）。
     """
     if not text or not text.strip():
         return text
-    if not OPENAI_API_KEY:
+    if not HY3_API_KEY:
         return text  # 降级：无 key 不翻译
 
     lang_name = "English" if target_lang == "en" else "简体中文"
@@ -100,7 +101,7 @@ def _translate(text: str, target_lang: str) -> str:
 
     try:
         payload = json.dumps({
-            "model": OPENAI_MODEL,
+            "model": HY3_MODEL,
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": text}
@@ -110,11 +111,11 @@ def _translate(text: str, target_lang: str) -> str:
         }).encode("utf-8")
 
         req = urllib.request.Request(
-            "https://api.openai.com/v1/chat/completions",
+            f"{HY3_BASE_URL}/chat/completions",
             data=payload,
             headers={
                 "Content-Type": "application/json",
-                "Authorization": f"Bearer {OPENAI_API_KEY}"
+                "Authorization": f"Bearer {HY3_API_KEY}"
             },
             method="POST"
         )
