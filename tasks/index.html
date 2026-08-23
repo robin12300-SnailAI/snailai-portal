@@ -49,6 +49,8 @@ body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:v
 .status-badge.closed{background:#F3F4F6;color:#9CA3AF}
 .task-meta{display:flex;gap:16px;font-size:12px;color:#888}
 .task-meta span{display:flex;align-items:center;gap:4px}
+.task-budget{display:flex;gap:14px;font-size:12px;color:#b45309;margin-top:8px;padding-top:8px;border-top:1px dashed #eee;flex-wrap:wrap}
+.task-budget .budget-amt{font-weight:700;color:var(--coral)}
 .progress-bar{height:4px;background:#eee;border-radius:2px;margin-top:10px;overflow:hidden}
 .progress-bar .fill{height:100%;border-radius:2px;transition:width .3s}
 .empty{text-align:center;padding:60px 24px;color:#888}
@@ -60,7 +62,7 @@ body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:v
 <body>
 
 <div class="header">
-  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.1.0</span> <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px">Internal Tasks</span></div>
+  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.2.0</span> <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px">Internal Tasks</span></div>
   <div class="header-right">
     <span class="user-name" id="userName"></span>
     <button class="btn btn-outline btn-sm" onclick="doLogout()">Logout</button>
@@ -122,6 +124,11 @@ async function loadTasks(){
         ${t.deadline?`<span>📅 ${t.deadline}</span>`:''}
         <span>📊 ${t.progress_percent||0}%</span>
       </div>
+      ${(t.total_budget_aud!=null||t.estimated_hours!=null||t.hourly_rate_aud!=null)?`<div class="task-budget">
+        ${t.total_budget_aud!=null?`<span class="budget-amt">💰 AUD $${t.total_budget_aud}</span>`:''}
+        ${t.estimated_hours!=null?`<span>⏱ ${t.estimated_hours} hrs</span>`:''}
+        ${t.hourly_rate_aud!=null?`<span>${t.hourly_rate_aud}/hr</span>`:''}
+      </div>`:''}
       <div class="progress-bar"><div class="fill" style="width:${t.progress_percent||0}%;background:${t.progress_percent>=100?'var(--success)':'var(--coral)'}"></div></div>
     </div>
   `).join('');

@@ -253,6 +253,16 @@ def _task_to_dict(row):
         d["description_zh"] = d.get("description", "")
     if "description_en" not in d:
         d["description_en"] = d.get("description", "")
+    # 费用与工时字段（向后兼容旧数据）
+    for field in ("estimated_hours", "hourly_rate_aud", "total_budget_aud"):
+        if field not in d or d.get(field) is None:
+            d[field] = None
+    if "requirements" not in d:
+        d["requirements"] = ""
+    if "requirements_zh" not in d:
+        d["requirements_zh"] = d.get("requirements", "")
+    if "requirements_en" not in d:
+        d["requirements_en"] = d.get("requirements", "")
     return d
 
 
@@ -361,6 +371,21 @@ def _notify_task_created(task, assigned_to_name, assigned_to_email):
     pri_en = PRIORITY_LABELS.get(priority, {}).get("en", priority.upper())
     pri_zh = PRIORITY_LABELS.get(priority, {}).get("zh", priority)
 
+    est_h = task.get("estimated_hours")
+    rate = task.get("hourly_rate_aud")
+    budget = task.get("total_budget_aud")
+    req_zh = task.get("requirements_zh") or task.get("requirements", "") or ""
+    req_en = task.get("requirements_en") or task.get("requirements", "") or ""
+
+    budget_row_en = ""
+    budget_row_zh = ""
+    if budget is not None or est_h is not None or rate is not None:
+        hours_txt = f"{est_h} hrs" if est_h is not None else "-"
+        rate_txt = f"AUD ${rate}/hr" if rate is not None else "-"
+        budget_txt = f"AUD ${budget}" if budget is not None else "-"
+        budget_row_en = f"""<tr><td style="padding:8px;font-weight:bold;width:140px">Budget</td><td style="padding:8px">{budget_txt} &nbsp;|&nbsp; Est. {hours_txt} &nbsp;|&nbsp; {rate_txt}</td></tr>"""
+        budget_row_zh = f"""<tr><td style="padding:8px;font-weight:bold;width:140px">费用</td><td style="padding:8px">{budget_txt} &nbsp;|&nbsp; 预计 {hours_txt} &nbsp;|&nbsp; {rate_txt}</td></tr>"""
+
     subject = f"[SnailAI Task] New Task / 新任务: {title_en}"
 
     body_en = f"""
@@ -370,11 +395,13 @@ def _notify_task_created(task, assigned_to_name, assigned_to_email):
         <tr><td style="padding:8px;font-weight:bold;width:120px">Title</td><td style="padding:8px">{title_en}</td></tr>
         <tr><td style="padding:8px;font-weight:bold">Priority</td><td style="padding:8px">{pri_en}</td></tr>
         <tr><td style="padding:8px;font-weight:bold">Deadline</td><td style="padding:8px">{deadline or 'Not set'}</td></tr>
+        {budget_row_en}
       </table>
       <div style="margin-top:12px;padding:12px;background:#FFF5EE;border-left:4px solid #FF5B1F">
         <p style="margin:0"><strong>Description:</strong></p>
         <p style="margin:8px 0 0;white-space:pre-wrap">{desc_en or 'No description'}</p>
       </div>
+      {f'<div style="margin-top:12px;padding:12px;background:#F0F7FF;border-left:4px solid #2E6CF6"><p style="margin:0"><strong>Requirements / 工作要求:</strong></p><p style="margin:8px 0 0;white-space:pre-wrap">{req_en or "No specific requirements"}</p></div>' if req_en else ''}
       <p style="margin-top:16px">Please log in to the task system to view details and start working.</p>
     """
 
@@ -385,11 +412,13 @@ def _notify_task_created(task, assigned_to_name, assigned_to_email):
         <tr><td style="padding:8px;font-weight:bold;width:120px">标题</td><td style="padding:8px">{title_zh}</td></tr>
         <tr><td style="padding:8px;font-weight:bold">优先级</td><td style="padding:8px">{pri_zh}</td></tr>
         <tr><td style="padding:8px;font-weight:bold">截止日期</td><td style="padding:8px">{deadline or '未设定'}</td></tr>
+        {budget_row_zh}
       </table>
       <div style="margin-top:12px;padding:12px;background:#FFF5EE;border-left:4px solid #FF5B1F">
         <p style="margin:0"><strong>描述：</strong></p>
         <p style="margin:8px 0 0;white-space:pre-wrap">{desc_zh or '无描述'}</p>
       </div>
+      {f'<div style="margin-top:12px;padding:12px;background:#F0F7FF;border-left:4px solid #2E6CF6"><p style="margin:0"><strong>工作要求：</strong></p><p style="margin:8px 0 0;white-space:pre-wrap">{req_zh or "无特殊要求"}</p></div>' if req_zh else ''}
       <p style="margin-top:16px">请登录任务系统查看详情并开始工作。</p>
     """
 
@@ -572,6 +601,14 @@ def init_internal_tasks_db():
     _safe_add_column(c, "itask_activities", "content_zh", "TEXT")
     _safe_add_column(c, "itask_activities", "content_en", "TEXT")
 
+    # 2b. 费用与工时字段迁移（幂等 ALTER）
+    _safe_add_column(c, "itask_tasks", "estimated_hours", "REAL")
+    _safe_add_column(c, "itask_tasks", "hourly_rate_aud", "REAL")
+    _safe_add_column(c, "itask_tasks", "total_budget_aud", "REAL")
+    _safe_add_column(c, "itask_tasks", "requirements", "TEXT")
+    _safe_add_column(c, "itask_tasks", "requirements_zh", "TEXT")
+    _safe_add_column(c, "itask_tasks", "requirements_en", "TEXT")
+
     # 3. 回填旧数据（把旧 title/description/content 复制到双语字段）
     conn.execute("UPDATE itask_tasks SET title_zh=title WHERE title_zh IS NULL AND title IS NOT NULL")
     conn.execute("UPDATE itask_tasks SET title_en=title WHERE title_en IS NULL AND title IS NOT NULL")
@@ -601,6 +638,16 @@ def _safe_add_column(cursor, table, column, col_type):
         cursor.execute(f"ALTER TABLE {table} ADD COLUMN {column} {col_type}")
     except sqlite3.OperationalError:
         pass  # 列已存在
+
+
+def _to_float(value):
+    """把任意输入转成 float，空/非法返回 None"""
+    if value is None or value == "":
+        return None
+    try:
+        return float(value)
+    except (ValueError, TypeError):
+        return None
 
 
 # ═══════════════════════════════════════════════════════════
@@ -935,6 +982,15 @@ def api_admin_create_task():
         priority = data.get("priority") or "normal"
         deadline = data.get("deadline")
         assigned_to = (data.get("assigned_to") or "").strip().lower()
+        requirements = (data.get("requirements") or "").strip()
+
+        # 费用与工时
+        estimated_hours = _to_float(data.get("estimated_hours"))
+        hourly_rate_aud = _to_float(data.get("hourly_rate_aud"))
+        total_budget_aud = _to_float(data.get("total_budget_aud"))
+        # 未手动填总金额时，自动算 estimated_hours × hourly_rate_aud
+        if total_budget_aud is None and estimated_hours is not None and hourly_rate_aud is not None:
+            total_budget_aud = round(estimated_hours * hourly_rate_aud, 2)
 
         if not title:
             return jsonify({"ok": False, "error": "Title is required"}), 400
@@ -951,12 +1007,14 @@ def api_admin_create_task():
         # 自动翻译 title 和 description
         title_bi = _auto_translate(title)
         desc_bi = _auto_translate(description) if description else {"en": "", "zh": ""}
+        req_bi = _auto_translate(requirements) if requirements else {"en": "", "zh": ""}
 
         now = datetime.datetime.utcnow().isoformat()
         conn.execute(
-            "INSERT INTO itask_tasks(title, description, title_zh, title_en, description_zh, description_en, priority, deadline, assigned_to, created_by, status, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO itask_tasks(title, description, title_zh, title_en, description_zh, description_en, priority, deadline, assigned_to, created_by, status, created_at, updated_at, estimated_hours, hourly_rate_aud, total_budget_aud, requirements, requirements_zh, requirements_en) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (title, description, title_bi["zh"], title_bi["en"], desc_bi["zh"], desc_bi["en"],
-             priority, deadline, assigned_to, g.user["username"], "todo", now, now)
+             priority, deadline, assigned_to, g.user["username"], "todo", now, now,
+             estimated_hours, hourly_rate_aud, total_budget_aud, requirements, req_bi["zh"], req_bi["en"])
         )
         task_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
 
@@ -974,7 +1032,10 @@ def api_admin_create_task():
         task_dict = {
             "title": title, "title_zh": title_bi["zh"], "title_en": title_bi["en"],
             "description": description, "description_zh": desc_bi["zh"], "description_en": desc_bi["en"],
-            "priority": priority, "deadline": deadline
+            "priority": priority, "deadline": deadline,
+            "estimated_hours": estimated_hours, "hourly_rate_aud": hourly_rate_aud,
+            "total_budget_aud": total_budget_aud,
+            "requirements": requirements, "requirements_zh": req_bi["zh"], "requirements_en": req_bi["en"],
         }
         try:
             _notify_task_created(task_dict, au["name"], au.get("email") or GMAIL_USER)
@@ -988,6 +1049,11 @@ def api_admin_create_task():
             "title_en": title_bi["en"],
             "description_zh": desc_bi["zh"],
             "description_en": desc_bi["en"],
+            "estimated_hours": estimated_hours,
+            "hourly_rate_aud": hourly_rate_aud,
+            "total_budget_aud": total_budget_aud,
+            "requirements_zh": req_bi["zh"],
+            "requirements_en": req_bi["en"],
         })
     except Exception as e:
         import traceback
@@ -1028,11 +1094,33 @@ def api_admin_update_task(task_id):
         updates.extend(["description=?", "description_zh=?", "description_en=?"])
         params.extend([data["description"], desc_bi["zh"], desc_bi["en"]])
 
+    # 工作要求：更新时同步翻译
+    if "requirements" in data:
+        req_bi = _auto_translate(data["requirements"] or "")
+        updates.extend(["requirements=?", "requirements_zh=?", "requirements_en=?"])
+        params.extend([data["requirements"], req_bi["zh"], req_bi["en"]])
+
+    # 费用与工时字段
+    for field in ("estimated_hours", "hourly_rate_aud", "total_budget_aud"):
+        if field in data:
+            val = _to_float(data[field])
+            updates.append(f"{field}=?")
+            params.append(val)
+            # 若清空 total_budget 但 hours×rate 都有，自动重算
+            if field in ("estimated_hours", "hourly_rate_aud") and "total_budget_aud" not in data:
+                eh = _to_float(data.get("estimated_hours")) if field != "estimated_hours" else val
+                hr = _to_float(data.get("hourly_rate_aud")) if field != "hourly_rate_aud" else val
+                if eh is not None and hr is not None:
+                    updates.append("total_budget_aud=?")
+                    params.append(round(eh * hr, 2))
+
     if updates:
         params.extend([now, task_id])
         conn.execute(f"UPDATE itask_tasks SET {', '.join(updates)}, updated_at=? WHERE id=?", params)
 
-        changes = ", ".join(f"{k}={v}" for k, v in data.items() if k in ("title","description","priority","deadline","assigned_to"))
+        changed_keys = ("title","description","priority","deadline","assigned_to","requirements",
+                        "estimated_hours","hourly_rate_aud","total_budget_aud")
+        changes = ", ".join(f"{k}={v}" for k, v in data.items() if k in changed_keys)
         changes_bi = _auto_translate(f"Task updated: {changes}")
         conn.execute(
             "INSERT INTO itask_activities(task_id, author, type, content, content_en, content_zh, created_at) VALUES(?,?,?,?,?,?,?)",

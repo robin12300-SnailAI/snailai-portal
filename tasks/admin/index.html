@@ -77,7 +77,7 @@ tr:hover td{background:#faf9f6}
 <body>
 
 <div class="header">
-  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.1.0</span> <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px">Internal Tasks Admin</span></div>
+  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.2.0</span> <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px">Internal Tasks Admin</span></div>
   <div class="header-right">
     <button class="btn btn-outline btn-sm" onclick="location.href='../index.html'">← 助教端</button>
   </div>
@@ -101,6 +101,10 @@ tr:hover td{background:#faf9f6}
       <select id="ctPriority"><option value="normal">Normal</option><option value="high">High</option><option value="urgent">Urgent</option><option value="low">Low</option></select>
     </div>
     <div class="field"><label>截止日期</label><input type="date" id="ctDeadline"></div>
+    <div class="field"><label>预计工时（小时）</label><input type="number" id="ctHours" step="0.5" min="0" placeholder="e.g. 3" oninput="calcBudget()"></div>
+    <div class="field"><label>时薪（AUD）</label><input type="number" id="ctRate" step="0.01" min="0" placeholder="e.g. 40" oninput="calcBudget()"></div>
+    <div class="field"><label>总金额（AUD）<span style="font-weight:400;color:#aaa"> — 留空自动按 工时×时薪 计算</span></label><input type="number" id="ctBudget" step="0.01" min="0" placeholder="自动计算"></div>
+    <div class="field"><label>工作要求</label><textarea id="ctRequirements" placeholder="具体的工作要求、交付标准等，中英文均可，自动翻译"></textarea></div>
     <div class="field"><label>分配给 *</label><select id="ctAssignee"></select></div>
     <div class="actions">
       <button class="btn btn-outline" onclick="closeModal('createModal')">取消</button>
@@ -200,12 +204,13 @@ async function loadTasks(){
     </div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>#</th><th>Title</th><th>Assigned</th><th>Priority</th><th>Status</th><th>Progress</th><th>Deadline</th><th>Actions</th></tr></thead>
+        <thead><tr><th>#</th><th>Title</th><th>Assigned</th><th>Budget</th><th>Priority</th><th>Status</th><th>Progress</th><th>Deadline</th><th>Actions</th></tr></thead>
         <tbody>
           ${tasks.map(t=>`<tr>
             <td>${t.id}</td>
-            <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" onclick="location.href='task.html?id=${t.id}'">${esc(t.title_zh||t.title)}<div style="font-size:11px;color:#999;font-weight:400">${esc(t.title_en||'')}</div></td>
+            <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" onclick="location.href='task.html?id=${t.id}'">${esc(t.title_zh||t.title)}<div style="font-size:11px;color:#999;font-weight:400">${esc(t.title_en||'')}</div></td>
             <td>${esc(t.assigned_to_name||t.assigned_to)}</td>
+            <td style="white-space:nowrap">${t.total_budget_aud!=null?`<span style="font-weight:700;color:var(--coral)">$${t.total_budget_aud}</span>`:'-'}${t.estimated_hours!=null?`<div style="font-size:11px;color:#888">${t.estimated_hours}h @ $${t.hourly_rate_aud||'-'}/hr</div>`:''}</td>
             <td><span class="priority ${t.priority}">${(t.priority||'normal').toUpperCase()}</span></td>
             <td><span class="status-badge ${t.status}">${STATUS_ZH[t.status]||t.status}</span></td>
             <td>${t.progress_percent||0}%</td>
@@ -234,7 +239,20 @@ async function openCreateTask(){
   document.getElementById('ctDesc').value='';
   document.getElementById('ctPriority').value='normal';
   document.getElementById('ctDeadline').value='';
+  document.getElementById('ctHours').value='';
+  document.getElementById('ctRate').value='';
+  document.getElementById('ctBudget').value='';
+  document.getElementById('ctRequirements').value='';
   openModal('createModal');
+}
+
+function calcBudget(){
+  const h=parseFloat(document.getElementById('ctHours').value);
+  const r=parseFloat(document.getElementById('ctRate').value);
+  const b=document.getElementById('ctBudget');
+  if(!b.value && !isNaN(h) && !isNaN(r)){
+    b.placeholder=(h*r).toFixed(2);
+  }
 }
 
 async function createTask(){
@@ -243,8 +261,12 @@ async function createTask(){
   const priority=document.getElementById('ctPriority').value;
   const deadline=document.getElementById('ctDeadline').value;
   const assigned_to=document.getElementById('ctAssignee').value;
+  const estimated_hours=document.getElementById('ctHours').value||undefined;
+  const hourly_rate_aud=document.getElementById('ctRate').value||undefined;
+  const total_budget_aud=document.getElementById('ctBudget').value||undefined;
+  const requirements=document.getElementById('ctRequirements').value.trim()||undefined;
   if(!title||!assigned_to){alert('标题和分配人是必填项');return;}
-  const d=await api('/admin/create-task',{method:'POST',body:JSON.stringify({title,description:desc,priority,deadline,assigned_to})});
+  const d=await api('/admin/create-task',{method:'POST',body:JSON.stringify({title,description:desc,priority,deadline,assigned_to,estimated_hours,hourly_rate_aud,total_budget_aud,requirements})});
   if(d&&d.ok){closeModal('createModal');loadTasks();}
   else alert('创建失败: '+(d&&d.error));
 }

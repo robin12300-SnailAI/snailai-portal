@@ -38,6 +38,15 @@ body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:v
 .priority.low{background:#EFF6FF;color:#3B82F6}
 .task-desc{font-size:14px;color:#555;line-height:1.7;white-space:pre-wrap;margin-bottom:12px}
 .task-meta{display:flex;gap:20px;font-size:13px;color:#888;flex-wrap:wrap}
+.budget-card{background:#FFFBF0;border:1px solid #F5DEB3;border-radius:var(--radius);padding:16px 20px;margin-bottom:16px}
+.budget-card h4{font-size:14px;font-weight:700;margin-bottom:10px;color:#92400E}
+.budget-row{display:flex;gap:24px;flex-wrap:wrap}
+.budget-item{font-size:14px;color:#444}
+.budget-item .val{font-weight:700;font-size:18px;color:var(--coral)}
+.budget-item .unit{font-size:12px;color:#888}
+.req-card{background:#F0F7FF;border:1px solid #B3D4FC;border-radius:var(--radius);padding:16px 20px;margin-bottom:16px}
+.req-card h4{font-size:14px;font-weight:700;margin-bottom:8px;color:#1E40AF}
+.req-card .req-text{font-size:14px;color:#444;line-height:1.7;white-space:pre-wrap}
 .progress-wrap{margin-top:14px}
 .progress-label{font-size:12px;color:#888;margin-bottom:4px;display:flex;justify-content:space-between}
 .progress-bar{height:6px;background:#eee;border-radius:3px;overflow:hidden}
@@ -81,7 +90,7 @@ body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:v
 <body>
 
 <div class="header">
-  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.1.0</span></div>
+  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.2.0</span></div>
   <div class="header-right">
     <button class="btn btn-outline btn-sm" onclick="location.href='index.html'">← 返回列表</button>
   </div>
@@ -130,6 +139,24 @@ async function loadTask(){
         <span style="font-size:11px;color:#aaa">#${t.id}</span>
       </div>
       <div class="task-desc">${esc(t.description_zh||t.description||'暂无描述')}${t.description_en&&t.description_en!==t.description_zh?`<div style="font-size:13px;color:#999;margin-top:8px;padding-top:8px;border-top:1px dashed #e0ddd6">🇬🇧 ${esc(t.description_en)}</div>`:''}</div>
+
+      ${(t.total_budget_aud!=null||t.estimated_hours!=null||t.hourly_rate_aud!=null)?`
+      <div class="budget-card">
+        <h4>💰 费用与工时</h4>
+        <div class="budget-row">
+          ${t.total_budget_aud!=null?`<div class="budget-item"><div class="val">$${t.total_budget_aud}</div><div class="unit">总额 AUD</div></div>`:''}
+          ${t.estimated_hours!=null?`<div class="budget-item"><div class="val">${t.estimated_hours}</div><div class="unit">预计工时</div></div>`:''}
+          ${t.hourly_rate_aud!=null?`<div class="budget-item"><div class="val">$${t.hourly_rate_aud}</div><div class="unit">时薪 AUD</div></div>`:''}
+        </div>
+      </div>`:''}
+
+      ${(t.requirements_zh||t.requirements_en||t.requirements)?`
+      <div class="req-card">
+        <h4>📋 工作要求</h4>
+        <div class="req-text">${esc(t.requirements_zh||t.requirements||'无特殊要求')}</div>
+        ${t.requirements_en&&t.requirements_en!==(t.requirements_zh||t.requirements)?`<div style="font-size:13px;color:#666;margin-top:8px;padding-top:8px;border-top:1px dashed #B3D4FC">🇬🇧 ${esc(t.requirements_en)}</div>`:''}
+      </div>`:''}
+
       <div class="task-meta">
         <span>👤 ${esc(t.assigned_to_name||t.assigned_to)}</span>
         ${t.deadline?`<span>📅 ${t.deadline}</span>`:''}
