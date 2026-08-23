@@ -1,0 +1,117 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-08-23",
+  "industry_group": "A",
+  "industry_name": "Construction, Engineering, Trades & Property Management",
+  "common_processes": [
+    "Lead and enquiry intake from website, phone and referrals",
+    "Quoting and estimating for jobs and tenders",
+    "Job scheduling, dispatch and crew allocation",
+    "Site diaries, progress reports and safety documentation",
+    "Timesheets and payroll preparation",
+    "Supplier and subcontractor communication",
+    "Purchase orders and invoice matching",
+    "Variation and approval tracking",
+    "Customer status updates",
+    "Maintenance request triage and scheduling",
+    "Tenant/owner communication in property management",
+    "Inspection report preparation",
+    "Monthly owner/management reporting",
+    "Document filing and retrieval"
+  ],
+  "common_pain_points": [
+    "Manual quote preparation taking hours per job",
+    "Lost follow-ups on submitted quotes",
+    "Duplicate data entry between scheduling, timesheets and invoicing",
+    "Slow response to maintenance requests",
+    "Paper-based site diaries and safety records",
+    "Difficulty tracking variation approvals",
+    "Subcontractor communication gaps",
+    "Tenant/owner queries handled manually one by one"
+  ],
+  "recommended_ai_patterns": [
+    {
+      "pattern": "AI-assisted quoting",
+      "description": "Pre-fill quote templates from job descriptions, historical data and supplier pricing; staff reviews and sends",
+      "human_approval": "Staff must review and approve all quotes before sending to client",
+      "risk": "low"
+    },
+    {
+      "pattern": "Maintenance request triage",
+      "description": "Classify incoming requests by urgency and category; draft response with estimated timeline; assign to appropriate trade",
+      "human_approval": "Property manager approves classification and response before sending",
+      "risk": "medium"
+    },
+    {
+      "pattern": "Site diary auto-draft",
+      "description": "Generate site diary entries from photos, voice notes and checklists; staff reviews and finalises",
+      "human_approval": "Site supervisor reviews and signs off",
+      "risk": "low"
+    },
+    {
+      "pattern": "Invoice matching and coding",
+      "description": "Match incoming invoices to purchase orders and job codes; flag exceptions for manual review",
+      "human_approval": "Accounts staff reviews all matches and approves payments",
+      "risk": "medium"
+    },
+    {
+      "pattern": "Tenant communication drafts",
+      "description": "Draft routine tenant communications (inspection notices, rent reminders, maintenance updates) for manager approval",
+      "human_approval": "Property manager approves all outgoing tenant communications",
+      "risk": "medium"
+    },
+    {
+      "pattern": "Progress report compilation",
+      "description": "Compile progress reports from site diary data, photos and schedules; project manager reviews",
+      "human_approval": "Project manager reviews and approves before distribution",
+      "risk": "low"
+    }
+  ],
+  "software_categories": [
+    "Project management (Procore, Buildertrend, ServiceM8)",
+    "Job management (Simpro, AroFlo)",
+    "Property management (PropertyMe, Console Cloud, PropertyTree, Inspection Express)",
+    "Accounting (Xero, MYOB, QuickBooks)",
+    "Scheduling and dispatch",
+    "Safety and compliance"
+  ],
+  "human_approval_points": [
+    "All quotes before sending to client",
+    "All tenant/owner communications before sending",
+    "All payment approvals",
+    "Safety compliance sign-offs",
+    "Variation approvals",
+    "Any external communication"
+  ],
+  "data_sensitivity": "Generally low to medium. Client project details and financial information require care. No health data typically involved.",
+  "not_recommended_for_automation": [
+    "Final pricing decisions without human review",
+    "Safety compliance sign-off without qualified person",
+    "Building certifier communications",
+    "Contractual commitments to clients without approval",
+    "Automatic payment authorisation above threshold"
+  ],
+  "onsite_discovery_questions": [
+    "Walk us through how a quote is prepared from initial enquiry to submission",
+    "How are maintenance requests received, prioritised and assigned?",
+    "What happens when a variation is needed — who approves and how is it tracked?",
+    "How are site diaries currently kept and who reviews them?",
+    "What is the process for tenant/owner communication at month-end?",
+    "How are subcontractor invoices matched and approved for payment?",
+    "What software systems are used and how do they connect (or not)?"
+  ],
+  "pilot_scope_examples": [
+    "Automate quote draft generation for one service type",
+    "AI-triage maintenance requests for one property portfolio",
+    "Auto-generate site diary drafts from daily photo uploads",
+    "Match incoming invoices to POs for one supplier category"
+  ],
+  "cannot_promise": [
+    "Specific dollar savings without pilot measurement",
+    "Integration with every existing software system",
+    "100% accuracy in automated quoting",
+    "Complete elimination of manual data entry",
+    "Compliance with all building codes and standards"
+  ],
+  "reduction_range_assumption": "20%–50% of current manual hours on identified workflows"
+}

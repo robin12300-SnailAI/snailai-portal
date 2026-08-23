@@ -3517,6 +3517,12 @@ from internal_tasks import bp as itask_bp, init_internal_tasks_db
 app.register_blueprint(itask_bp)
 init_internal_tasks_db()
 
+# ── 注册 Business Opportunity Scan Routes ─────────────────
+from scan_models import init_scan_tables
+from scan_api import register_scan_routes
+init_scan_tables(db_conn())
+register_scan_routes(app)
+
 print(f"[蜗牛AI Portal] 数据库: {DB_PATH}")
 if not os.environ.get("WECHAT_WEBHOOK_URL"):
     print("[蜗牛AI Portal] ⚠️  警告：WECHAT_WEBHOOK_URL 未配置，日报/周报不会推送。"

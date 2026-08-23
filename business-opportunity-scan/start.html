@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Opportunity Scan — Snail AI</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1A2E;--ink-2:#2A2A40;--ink-3:#6A6A85;
+  --paper:#FCFCFA;--paper-2:#F5F4EE;
+  --accent:#FF5B1F;--accent-2:#E84A0F;
+  --line:rgba(26,26,46,0.08);
+  --green:#16a34a;--red:#dc2626;
+  --radius:8px;--radius-lg:12px;
+  --transition:0.2s ease;
+}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Container */
+.app{max-width:640px;margin:0 auto;padding:0 16px 32px}
+
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--line);margin-bottom:8px}
+.logo{font-weight:700;font-size:1.1rem;color:var(--ink)}
+.logo span{color:var(--accent)}
+.version{font-size:0.7rem;color:var(--ink-3);border:1px solid var(--line);padding:2px 8px;border-radius:99px}
+
+/* Progress bar */
+.progress-wrap{margin:12px 0 20px}
+.progress-steps{display:flex;align-items:center;justify-content:space-between;position:relative}
+.progress-steps::before{content:'';position:absolute;top:14px;left:0;right:0;height:2px;background:var(--line);z-index:0}
+.progress-bar-fill{position:absolute;top:14px;left:0;height:2px;background:var(--accent);z-index:1;transition:width var(--transition)}
+.step-dot{width:28px;height:28px;border-radius:50%;background:var(--paper-2);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;color:var(--ink-3);position:relative;z-index:2;transition:all var(--transition)}
+.step-dot.active{border-color:var(--accent);color:var(--accent);background:var(--paper)}
+.step-dot.done{border-color:var(--green);background:var(--green);color:#fff}
+.step-label{font-size:0.6rem;color:var(--ink-3);text-align:center;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60px}
+.step-group{text-align:center}
+
+/* Step panels */
+.step-panel{display:none}
+.step-panel.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.step-title{font-size:1.25rem;font-weight:700;color:var(--ink);margin-bottom:4px}
+.step-desc{font-size:0.85rem;color:var(--ink-3);margin-bottom:20px}
+
+/* Data safety */
+.safety-box{background:#FFF7ED;border:1px solid #FDBA74;border-radius:var(--radius-lg);padding:20px;margin-bottom:20px}
+.safety-box p{font-size:0.9rem;color:var(--ink-2);line-height:1.6}
+
+/* Form elements */
+.field{margin-bottom:16px}
+.field label{display:block;font-size:0.85rem;font-weight:600;color:var(--ink-2);margin-bottom:4px}
+.field label .req{color:var(--red);margin-left:2px}
+.field .hint{font-size:0.75rem;color:var(--ink-3);margin-top:2px}
+.field .error{font-size:0.75rem;color:var(--red);margin-top:2px;display:none}
+.field.has-error .error{display:block}
+.field.has-error input,.field.has-error select,.field.has-error textarea{border-color:var(--red)}
+
+input[type="text"],input[type="email"],input[type="tel"],input[type="url"],select,textarea{
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius);
+  font-size:0.95rem;color:var(--ink);background:#fff;transition:border-color var(--transition);
+  font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,91,31,0.1)}
+textarea{resize:vertical;min-height:80px}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236A6A85' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+
+/* Checkboxes & radios */
+.check-group{margin-bottom:12px}
+.check-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;cursor:pointer}
+.check-item input[type="checkbox"],.check-item input[type="radio"]{margin-top:3px;width:18px;height:18px;accent-color:var(--accent);flex-shrink:0}
+.check-item label{font-size:0.88rem;color:var(--ink-2);cursor:pointer;font-weight:400;line-height:1.4}
+.check-item label .req{color:var(--red)}
+
+/* Website consent */
+.website-consent{display:none;margin-top:8px;padding:10px 12px;background:var(--paper-2);border-radius:var(--radius);font-size:0.85rem;color:var(--ink-2)}
+
+/* Dynamic industry tools */
+.dynamic-section{display:none}
+.dynamic-section.visible{display:block;animation:fadeIn .2s ease}
+
+/* Priority radio section */
+.priority-section{display:none;margin-top:16px;padding:16px;background:#FFF7ED;border-radius:var(--radius-lg)}
+.priority-section.visible{display:block;animation:fadeIn .2s ease}
+.priority-section h4{font-size:0.9rem;font-weight:700;color:var(--ink);margin-bottom:8px}
+
+/* Health disclaimer */
+.health-disclaimer{background:#FEF2F2;border:1px solid #FECACA;border-radius:var(--radius);padding:10px 12px;font-size:0.8rem;color:var(--red);margin-bottom:12px}
+
+/* Navigation */
+.nav-row{display:flex;gap:12px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.btn{padding:12px 24px;border-radius:var(--radius);font-size:0.95rem;font-weight:600;border:none;cursor:pointer;transition:all var(--transition);font-family:inherit}
+.btn-back{background:var(--paper-2);color:var(--ink-2);border:1px solid var(--line)}
+.btn-back:hover{background:var(--line)}
+.btn-next,.btn-submit{background:var(--accent);color:#fff;flex:1}
+.btn-next:hover,.btn-submit:hover{background:var(--accent-2)}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+
+/* Consent checkboxes */
+.consent-item{margin-bottom:10px}
+.consent-item label{font-size:0.85rem;line-height:1.5}
+
+/* Processing */
+.processing{text-align:center;padding:60px 0}
+.spinner{width:40px;height:40px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scan-id{font-family:monospace;font-size:0.9rem;color:var(--ink-3);margin-top:12px}
+
+/* Turnstile */
+.cf-turnstile{margin:16px 0}
+
+/* Privacy link */
+.privacy-link{font-size:0.8rem;color:var(--ink-3);margin-top:8px}
+
+/* Max selection note */
+.max-note{font-size:0.75rem;color:var(--accent);margin-top:4px;font-weight:600}
+
+/* Responsive */
+@media(max-width:480px){
+  .step-label{display:none}
+  .step-title{font-size:1.1rem}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="logo">Snail <span>AI</span></div>
+    <div class="version">V1.0.0</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-steps">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      <div class="step-group"><div class="step-dot" data-step="0">0</div><div class="step-label">Safety</div></div>
+      <div class="step-group"><div class="step-dot" data-step="1">1</div><div class="step-label">Business</div></div>
+      <div class="step-group"><div class="step-dot" data-step="2">2</div><div class="step-label">Industry</div></div>
+      <div class="step-group"><div class="step-dot" data-step="3">3</div><div class="step-label">Tools</div></div>
+      <div class="step-group"><div class="step-dot" data-step="4">4</div><div class="step-label">Pain</div></div>
+      <div class="step-group"><div class="step-dot" data-step="5">5</div><div class="step-label">Readiness</div></div>
+      <div class="step-group"><div class="step-dot" data-step="6">6</div><div class="step-label">Submit</div></div>
+    </div>
+  </div>
+
+  <!-- Step 0: Data Safety -->
+  <div class="step-panel active" id="step0">
+    <div class="step-title">Data Safety Reminder</div>
+    <div class="step-desc">Before we begin, please read and confirm the following.</div>
+    <div class="safety-box">
+      <p>Please describe business processes only. Do not enter personal information about your clients, customers, tenants, employees or patients. Do not upload medical records, financial records, identity documents or confidential files.</p>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="safetyCheck">
+      <label for="safetyCheck">I understand and will not submit personal, confidential, client or patient data.</label>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-next" id="btn0Next" disabled>Next</button>
+    </div>
+  </div>
+
+  <!-- Step 1: Your Business -->
+  <div class="step-panel" id="step1">
+    <div class="step-title">Your Business</div>
+    <div class="step-desc">Tell us about you and your company.</div>
+
+    <div class="field">
+      <label for="f_name">Full name <span class="req">*</span></label>
+      <input type="text" id="f_name" maxlength="80" required>
+      <div class="error">Please enter your full name (2-80 characters).</div>
+    </div>
+
+    <div class="field">
+      <label for="f_email">Work email <span class="req">*</span></label>
+      <input type="email" id="f_email" required>
+      <div class="error">Please enter a valid email address.</div>
+    </div>
+
+    <div class="field">
+      <label for="f_mobile">Mobile number</label>
+      <input type="tel" id="f_mobile" placeholder="+61 4XX XXX XXX">
+      <div class="hint">Australian format preferred</div>
+    </div>
+
+    <div class="field">
+      <label for="f_company">Company name <span class="req">*</span></label>
+      <input type="text" id="f_company" maxlength="120" required>
+      <div class="error">Please enter your company name (2-120 characters).</div>
+    </div>
+
+    <div class="field">
+      <label for="f_website">Company website</label>
+      <input type="url" id="f_website" placeholder="https://">
+      <div class="website-consent" id="websiteConsent">
+        <div class="check-item">
+          <input type="checkbox" id="f_website_consent">
+          <label for="f_website_consent">I allow Snail AI to review publicly available pages on our company website solely to tailor this preliminary report. Do not access login areas, customer portals or non-public information.</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="f_suburb">Suburb <span class="req">*</span></label>
+      <input type="text" id="f_suburb" required>
+      <div class="error">Please enter your suburb.</div>
+    </div>
+
+    <div class="field">
+      <label for="f_postcode">Postcode <span class="req">*</span></label>
+      <input type="text" id="f_postcode" maxlength="4" pattern="\d{4}" inputmode="numeric" required>
+      <div class="error">Please enter a valid 4-digit Australian postcode.</div>
+    </div>
+
+    <div class="field">
+      <label for="f_role">Your role <span class="req">*</span></label>
+      <select id="f_role" required>
+        <option value="">Select...</option>
+        <option>Owner</option>
+        <option>Director</option>
+        <option>Partner</option>
+        <option>General Manager</option>
+        <option>Operations</option>
+        <option>IT</option>
+        <option>Employee</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_decision">Decision authority <span class="req">*</span></label>
+      <select id="f_decision" required>
+        <option value="">Select...</option>
+        <option>Final decision</option>
+        <option>Recommend</option>
+        <option>Researching only</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_employees">Number of employees <span class="req">*</span></label>
+      <select id="f_employees" required>
+        <option value="">Select...</option>
+        <option>1</option>
+        <option>2-4</option>
+        <option>5-9</option>
+        <option>10-19</option>
+        <option>20-49</option>
+        <option>50-99</option>
+        <option>100-199</option>
+        <option>200+</option>
+      </select>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-back" onclick="goStep(-1)">Back</button>
+      <button class="btn btn-next" onclick="validateStep(1)">Next</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Industry -->
+  <div class="step-panel" id="step2">
+    <div class="step-title">Industry</div>
+    <div class="step-desc">Tell us about your industry and goals.</div>
+
+    <div class="field">
+      <label>Industry group <span class="req">*</span></label>
+      <div class="check-group" id="industryGroup">
+        <div class="check-item"><input type="radio" name="industry_group" id="ig_a" value="A"><label for="ig_a">Construction / Engineering / Trades / Property</label></div>
+        <div class="check-item"><input type="radio" name="industry_group" id="ig_b" value="B"><label for="ig_b">Professional Services</label></div>
+        <div class="check-item"><input type="radio" name="industry_group" id="ig_c" value="C"><label for="ig_c">Medical / Healthcare</label></div>
+        <div class="check-item"><input type="radio" name="industry_group" id="ig_other" value="Other"><label for="ig_other">Other / Not sure</label></div>
+      </div>
+      <div class="error">Please select an industry group.</div>
+    </div>
+
+    <div class="field dynamic-section" id="subA">
+      <label for="f_sub_industry_a">Sub-industry <span class="req">*</span></label>
+      <select id="f_sub_industry_a">
+        <option value="">Select...</option>
+        <option>Construction company</option>
+        <option>Builder/Renovation</option>
+        <option>Engineering consultancy</option>
+        <option>Electrical</option>
+        <option>Plumbing</option>
+        <option>HVAC</option>
+        <option>Landscaping</option>
+        <option>Other trade services</option>
+        <option>Property management</option>
+        <option>Strata/facilities management</option>
+      </select>
+    </div>
+
+    <div class="field dynamic-section" id="subB">
+      <label for="f_sub_industry_b">Sub-industry <span class="req">*</span></label>
+      <select id="f_sub_industry_b">
+        <option value="">Select...</option>
+        <option>Accounting/bookkeeping</option>
+        <option>Business consulting</option>
+        <option>Real estate agency</option>
+        <option>Legal services</option>
+        <option>Finance/mortgage services</option>
+        <option>Recruitment/HR services</option>
+        <option>Other professional services</option>
+      </select>
+    </div>
+
+    <div class="field dynamic-section" id="subC">
+      <label for="f_sub_industry_c">Sub-industry <span class="req">*</span></label>
+      <select id="f_sub_industry_c">
+        <option value="">Select...</option>
+        <option>General practice</option>
+        <option>Specialist clinic</option>
+        <option>Dental practice</option>
+        <option>Allied health</option>
+        <option>Physiotherapy</option>
+        <option>Psychology/counselling</option>
+        <option>Aged care administration</option>
+        <option>Other healthcare practice</option>
+      </select>
+    </div>
+
+    <div class="field dynamic-section" id="subOther">
+      <label for="f_sub_industry_other">Sub-industry</label>
+      <input type="text" id="f_sub_industry_other" value="Other / Not sure" readonly>
+    </div>
+
+    <div class="field">
+      <label for="f_years">Years operating <span class="req">*</span></label>
+      <select id="f_years" required>
+        <option value="">Select...</option>
+        <option>&lt;1</option>
+        <option>1-3</option>
+        <option>4-10</option>
+        <option>10+</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_model">Main business model <span class="req">*</span></label>
+      <select id="f_model" required>
+        <option value="">Select...</option>
+        <option>B2B</option>
+        <option>B2C</option>
+        <option>Both</option>
+        <option>Not sure</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_goal">Primary goal for next 12 months <span class="req">*</span></label>
+      <select id="f_goal" required>
+        <option value="">Select...</option>
+        <option>Reduce admin time</option>
+        <option>Grow without hiring at same rate</option>
+        <option>Respond to customers faster</option>
+        <option>Reduce errors and missed follow-ups</option>
+        <option>Improve reporting and visibility</option>
+        <option>Improve staff productivity</option>
+        <option>Modernise existing software</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-back" onclick="goStep(-1)">Back</button>
+      <button class="btn btn-next" onclick="validateStep(2)">Next</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Current Tools -->
+  <div class="step-panel" id="step3">
+    <div class="step-title">Current Tools</div>
+    <div class="step-desc">What software and systems do you use today?</div>
+
+    <div class="field">
+      <label>General tools <span class="req">*</span></label>
+      <div class="check-group" id="generalTools">
+        <div class="check-item"><input type="checkbox" name="gen_tools" id="gt1" value="Microsoft 365/Outlook"><label for="gt1">Microsoft 365 / Outlook</label></div>
+        <div class="check-item"><input type="checkbox" name="gen_tools" id="gt2" value="Google Workspace/Gmail"><label for="gt2">Google Workspace / Gmail</label></div>
+        <div class="check-item"><input type="checkbox" name="gen_tools" id="gt3" value="Xero"><label for="gt3">Xero</label></div>
+        <div class="check-item"><input type="checkbox" name="gen_tools" id="gt4" value="MYOB"><label for="gt4">MYOB</label></div>
+        <div class="check-item"><input type="checkbox" name="gen_tools" id="gt5" value="QuickBooks"><label for="gt5">QuickBooks</label></div>
+        <div class="check-item"><input type="checkbox" name="gen_tools" id="gt6" value="Excel/spreadsheets"><label for="gt6">Excel / spreadsheets</label></div>
+        <div class="check-item"><input type="checkbox" name="gen_tools" id="gt7" value="CRM"><label for="gt7">CRM</label></div>
+        <div class="check-item"><input type="checkbox" name="gen_tools" id="gt8" value="Project management software"><label for="gt8">Project management software</label></div>
+        <div class="check-item"><input type="checkbox" name="gen_tools" id="gt9" value="Industry-specific software"><label for="gt9">Industry-specific software</label></div>
+        <div class="check-item"><input type="checkbox" name="gen_tools" id="gt10" value="Custom software"><label for="gt10">Custom software</label></div>
+        <div class="check-item"><input type="checkbox" name="gen_tools" id="gt11" value="Paper/manual processes"><label for="gt11">Paper / manual processes</label></div>
+        <div class="check-item"><input type="checkbox" name="gen_tools" id="gt12" value="We are not sure"><label for="gt12">We are not sure</label></div>
+      </div>
+      <div class="error">Please select at least one option.</div>
+    </div>
+
+    <div class="field dynamic-section" id="indToolsA">
+      <label>Industry tools</label>
+      <div class="check-group">
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="ita1" value="Procore"><label for="ita1">Procore</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="ita2" value="Buildertrend"><label for="ita2">Buildertrend</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="ita3" value="ServiceM8"><label for="ita3">ServiceM8</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="ita4" value="Simpro"><label for="ita4">Simpro</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="ita5" value="AroFlo"><label for="ita5">AroFlo</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="ita6" value="PropertyMe"><label for="ita6">PropertyMe</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="ita7" value="Console Cloud"><label for="ita7">Console Cloud</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="ita8" value="PropertyTree"><label for="ita8">PropertyTree</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="ita9" value="Inspection Express"><label for="ita9">Inspection Express</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="ita10" value="Other"><label for="ita10">Other</label></div>
+      </div>
+    </div>
+
+    <div class="field dynamic-section" id="indToolsB">
+      <label>Industry tools</label>
+      <div class="check-group">
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itb1" value="Xero Practice Manager"><label for="itb1">Xero Practice Manager</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itb2" value="FYI"><label for="itb2">FYI</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itb3" value="HubSpot"><label for="itb3">HubSpot</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itb4" value="Salesforce"><label for="itb4">Salesforce</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itb5" value="LEAP"><label for="itb5">LEAP</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itb6" value="Clio"><label for="itb6">Clio</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itb7" value="Propertybase"><label for="itb7">Propertybase</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itb8" value="Domain/REA tools"><label for="itb8">Domain / REA tools</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itb9" value="Other"><label for="itb9">Other</label></div>
+      </div>
+    </div>
+
+    <div class="field dynamic-section" id="indToolsC">
+      <label>Industry tools</label>
+      <div class="check-group">
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itc1" value="MedicalDirector"><label for="itc1">MedicalDirector</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itc2" value="Helix"><label for="itc2">Helix</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itc3" value="Best Practice"><label for="itc3">Best Practice</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itc4" value="Cliniko"><label for="itc4">Cliniko</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itc5" value="HotDoc"><label for="itc5">HotDoc</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itc6" value="AutoMed"><label for="itc6">AutoMed</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itc7" value="Healthengine"><label for="itc7">Healthengine</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itc8" value="Tyro"><label for="itc8">Tyro</label></div>
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="itc9" value="Other"><label for="itc9">Other</label></div>
+      </div>
+    </div>
+
+    <div class="field dynamic-section" id="indToolsOther">
+      <label>Industry tools</label>
+      <div class="check-group">
+        <div class="check-item"><input type="checkbox" name="ind_tools" id="ito1" value="None specified"><label for="ito1">None specified</label></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="f_integration">How well do your current systems work together? <span class="req">*</span></label>
+      <select id="f_integration" required>
+        <option value="">Select...</option>
+        <option>Well</option>
+        <option>Some duplication</option>
+        <option>Mostly disconnected</option>
+        <option>Not sure</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_reentry">How often does staff re-enter or copy information between systems? <span class="req">*</span></label>
+      <select id="f_reentry" required>
+        <option value="">Select...</option>
+        <option>Rarely</option>
+        <option>Weekly</option>
+        <option>Daily</option>
+        <option>Many times per day</option>
+        <option>Not sure</option>
+      </select>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-back" onclick="goStep(-1)">Back</button>
+      <button class="btn btn-next" onclick="validateStep(3)">Next</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Workflow Pain -->
+  <div class="step-panel" id="step4">
+    <div class="step-title">Workflow Pain</div>
+    <div class="step-desc">Help us understand your most frustrating process.</div>
+
+    <div class="field">
+      <label for="f_pain_desc">What is the single most repetitive or frustrating process in your business? <span class="req">*</span></label>
+      <textarea id="f_pain_desc" maxlength="600" required></textarea>
+      <div class="hint">20-600 characters</div>
+      <div class="error">Please describe the process (20-600 characters).</div>
+    </div>
+
+    <div class="field">
+      <label for="f_pain_freq">How often does it happen? <span class="req">*</span></label>
+      <select id="f_pain_freq" required>
+        <option value="">Select...</option>
+        <option>Several times a day</option>
+        <option>Daily</option>
+        <option>Weekly</option>
+        <option>Monthly</option>
+        <option>Irregular</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_pain_people">How many people are involved? <span class="req">*</span></label>
+      <select id="f_pain_people" required>
+        <option value="">Select...</option>
+        <option>1</option>
+        <option>2-3</option>
+        <option>4-10</option>
+        <option>11+</option>
+        <option>Not sure</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_pain_hours">Estimated total staff hours spent each week <span class="req">*</span></label>
+      <select id="f_pain_hours" required>
+        <option value="">Select...</option>
+        <option>&lt;2</option>
+        <option>2-5</option>
+        <option>6-10</option>
+        <option>11-20</option>
+        <option>21-40</option>
+        <option>40+</option>
+        <option>Not sure</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>What usually goes wrong? <span class="req">*</span></label>
+      <div class="check-group" id="wrongGroup">
+        <div class="check-item"><input type="checkbox" name="wrong" id="w1" value="Slow response"><label for="w1">Slow response</label></div>
+        <div class="check-item"><input type="checkbox" name="wrong" id="w2" value="Missed follow-up"><label for="w2">Missed follow-up</label></div>
+        <div class="check-item"><input type="checkbox" name="wrong" id="w3" value="Duplicate entry"><label for="w3">Duplicate entry</label></div>
+        <div class="check-item"><input type="checkbox" name="wrong" id="w4" value="Human error"><label for="w4">Human error</label></div>
+        <div class="check-item"><input type="checkbox" name="wrong" id="w5" value="Lost documents"><label for="w5">Lost documents</label></div>
+        <div class="check-item"><input type="checkbox" name="wrong" id="w6" value="Waiting for approval"><label for="w6">Waiting for approval</label></div>
+        <div class="check-item"><input type="checkbox" name="wrong" id="w7" value="Poor visibility"><label for="w7">Poor visibility</label></div>
+        <div class="check-item"><input type="checkbox" name="wrong" id="w8" value="Staff frustration"><label for="w8">Staff frustration</label></div>
+        <div class="check-item"><input type="checkbox" name="wrong" id="w9" value="No major error only too much time"><label for="w9">No major error, only too much time</label></div>
+        <div class="check-item"><input type="checkbox" name="wrong" id="w10" value="Other"><label for="w10">Other</label></div>
+      </div>
+      <div class="error">Please select at least one option.</div>
+    </div>
+
+    <div class="field">
+      <label for="f_success">What would a successful result look like? <span class="req">*</span></label>
+      <textarea id="f_success" maxlength="500" required></textarea>
+      <div class="hint">20-500 characters</div>
+      <div class="error">Please describe a successful result (20-500 characters).</div>
+    </div>
+
+    <!-- Dynamic workflow selection -->
+    <div class="dynamic-section" id="wfA">
+      <div class="field">
+        <label>Which workflows apply to your business? (select up to 5) <span class="req">*</span></label>
+        <div class="max-note" id="maxNoteA" style="display:none">Maximum 5 selections reached.</div>
+        <div class="check-group" id="wfGroupA">
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa1" value="Lead and enquiry intake"><label for="wfa1">Lead and enquiry intake</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa2" value="Quoting and estimating"><label for="wfa2">Quoting and estimating</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa3" value="Tender document preparation"><label for="wfa3">Tender document preparation</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa4" value="Job scheduling and dispatch"><label for="wfa4">Job scheduling and dispatch</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa5" value="Site diaries and progress reports"><label for="wfa5">Site diaries and progress reports</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa6" value="Safety and compliance documentation"><label for="wfa6">Safety and compliance documentation</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa7" value="Timesheets and payroll preparation"><label for="wfa7">Timesheets and payroll preparation</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa8" value="Supplier and subcontractor communication"><label for="wfa8">Supplier and subcontractor communication</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa9" value="Purchase orders and invoice matching"><label for="wfa9">Purchase orders and invoice matching</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa10" value="Variations and approval tracking"><label for="wfa10">Variations and approval tracking</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa11" value="Customer status updates"><label for="wfa11">Customer status updates</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa12" value="Maintenance request triage"><label for="wfa12">Maintenance request triage</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa13" value="Tenant/owner communication"><label for="wfa13">Tenant/owner communication</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa14" value="Inspection report preparation"><label for="wfa14">Inspection report preparation</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa15" value="Monthly owner/management reporting"><label for="wfa15">Monthly owner/management reporting</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_a" id="wfa16" value="Document filing and retrieval"><label for="wfa16">Document filing and retrieval</label></div>
+        </div>
+        <div class="error">Please select at least one workflow.</div>
+      </div>
+    </div>
+
+    <div class="dynamic-section" id="wfB">
+      <div class="field">
+        <label>Which workflows apply to your business? (select up to 5) <span class="req">*</span></label>
+        <div class="max-note" id="maxNoteB" style="display:none">Maximum 5 selections reached.</div>
+        <div class="check-group" id="wfGroupB">
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb1" value="Lead and enquiry intake"><label for="wfb1">Lead and enquiry intake</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb2" value="Client onboarding"><label for="wfb2">Client onboarding</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb3" value="Identity/document collection administration"><label for="wfb3">Identity/document collection administration</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb4" value="Proposal and engagement letter preparation"><label for="wfb4">Proposal and engagement letter preparation</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb5" value="Email triage and response drafting"><label for="wfb5">Email triage and response drafting</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb6" value="Client document chasing"><label for="wfb6">Client document chasing</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb7" value="Meeting notes and action tracking"><label for="wfb7">Meeting notes and action tracking</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb8" value="CRM updates"><label for="wfb8">CRM updates</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb9" value="Appointment and follow-up reminders"><label for="wfb9">Appointment and follow-up reminders</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb10" value="Report preparation"><label for="wfb10">Report preparation</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb11" value="Invoice preparation and payment follow-up"><label for="wfb11">Invoice preparation and payment follow-up</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb12" value="Listing enquiry handling"><label for="wfb12">Listing enquiry handling</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb13" value="Property appraisal preparation"><label for="wfb13">Property appraisal preparation</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb14" value="Marketing content approval workflow"><label for="wfb14">Marketing content approval workflow</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_b" id="wfb15" value="Document filing and retrieval"><label for="wfb15">Document filing and retrieval</label></div>
+        </div>
+        <div class="error">Please select at least one workflow.</div>
+      </div>
+    </div>
+
+    <div class="dynamic-section" id="wfC">
+      <div class="health-disclaimer">Do not include patient names, medical conditions, test results or any other health information.</div>
+      <div class="field">
+        <label>Which workflows apply to your business? (select up to 5) <span class="req">*</span></label>
+        <div class="max-note" id="maxNoteC" style="display:none">Maximum 5 selections reached.</div>
+        <div class="check-group" id="wfGroupC">
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc1" value="General enquiry handling"><label for="wfc1">General enquiry handling</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc2" value="Appointment booking administration"><label for="wfc2">Appointment booking administration</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc3" value="Appointment reminders"><label for="wfc3">Appointment reminders</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc4" value="Pre-appointment form administration"><label for="wfc4">Pre-appointment form administration</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc5" value="Referral document administration"><label for="wfc5">Referral document administration</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc6" value="Incoming document classification"><label for="wfc6">Incoming document classification</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc7" value="Reception email triage"><label for="wfc7">Reception email triage</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc8" value="Non-clinical follow-up drafting"><label for="wfc8">Non-clinical follow-up drafting</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc9" value="Recall administration with human approval"><label for="wfc9">Recall administration with human approval</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc10" value="Billing and payment administration"><label for="wfc10">Billing and payment administration</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc11" value="Staff rostering"><label for="wfc11">Staff rostering</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc12" value="Supplier and inventory administration"><label for="wfc12">Supplier and inventory administration</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc13" value="Public website FAQ"><label for="wfc13">Public website FAQ</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc14" value="Internal policy and procedure search"><label for="wfc14">Internal policy and procedure search</label></div>
+          <div class="check-item"><input type="checkbox" name="wf_c" id="wfc15" value="Operational reporting using de-identified data"><label for="wfc15">Operational reporting using de-identified data</label></div>
+        </div>
+        <div class="error">Please select at least one workflow.</div>
+      </div>
+    </div>
+
+    <!-- Priority selection (dynamic) -->
+    <div class="priority-section" id="prioritySection">
+      <h4>Which is your highest priority?</h4>
+      <div class="check-group" id="priorityGroup"></div>
+      <div class="error">Please select your highest priority.</div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-back" onclick="goStep(-1)">Back</button>
+      <button class="btn btn-next" onclick="validateStep(4)">Next</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Readiness, Risk & Timing -->
+  <div class="step-panel" id="step5">
+    <div class="step-title">Readiness, Risk and Timing</div>
+    <div class="step-desc">Help us understand your readiness and constraints.</div>
+
+    <div class="field">
+      <label for="f_documented">Is the process documented? <span class="req">*</span></label>
+      <select id="f_documented" required>
+        <option value="">Select...</option>
+        <option>Yes</option>
+        <option>Partly</option>
+        <option>No</option>
+        <option>Not sure</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_champion">Is there one person who understands the process well? <span class="req">*</span></label>
+      <select id="f_champion" required>
+        <option value="">Select...</option>
+        <option>Yes</option>
+        <option>No</option>
+        <option>Not sure</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_pilot">Are you willing to begin with one contained pilot? <span class="req">*</span></label>
+      <select id="f_pilot" required>
+        <option value="">Select...</option>
+        <option>Yes</option>
+        <option>Maybe</option>
+        <option>No</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_auto_level">Preferred level of automation <span class="req">*</span></label>
+      <select id="f_auto_level" required>
+        <option value="">Select...</option>
+        <option>Draft only staff approves everything</option>
+        <option>One-click approval</option>
+        <option>Low-risk tasks automated exceptions reviewed</option>
+        <option>Not sure</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_sensitivity">Data sensitivity <span class="req">*</span></label>
+      <select id="f_sensitivity" required>
+        <option value="">Select...</option>
+        <option>General business information only</option>
+        <option>Client/customer information</option>
+        <option>Financial information</option>
+        <option>Legal information</option>
+        <option>Health information</option>
+        <option>Not sure</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_start_time">Desired start time <span class="req">*</span></label>
+      <select id="f_start_time" required>
+        <option value="">Select...</option>
+        <option>Now</option>
+        <option>Within 1-3 months</option>
+        <option>Within 3-6 months</option>
+        <option>Researching only</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_budget">Indicative first-project budget <span class="req">*</span></label>
+      <select id="f_budget" required>
+        <option value="">Select...</option>
+        <option>Under A$2,500</option>
+        <option>A$2,500-A$5,000</option>
+        <option>A$5,000-A$10,000</option>
+        <option>A$10,000-A$25,000</option>
+        <option>A$25,000+</option>
+        <option>Not sure</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="f_onsite">Would you consider a complimentary on-site assessment if eligible? <span class="req">*</span></label>
+      <select id="f_onsite" required>
+        <option value="">Select...</option>
+        <option>Yes</option>
+        <option>Maybe</option>
+        <option>No</option>
+      </select>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-back" onclick="goStep(-1)">Back</button>
+      <button class="btn btn-next" onclick="validateStep(5)">Next</button>
+    </div>
+  </div>
+
+  <!-- Step 6: Consent & Submit -->
+  <div class="step-panel" id="step6">
+    <div class="step-title">Consent and Submit</div>
+    <div class="step-desc">Please review and confirm before submitting.</div>
+
+    <div class="consent-item">
+      <div class="check-item">
+        <input type="checkbox" id="consent1" class="consent-required">
+        <label for="consent1">I agree that the information I submit will be used to generate an AI Opportunity Report for my business. <span class="req">*</span></label>
+      </div>
+    </div>
+
+    <div class="consent-item">
+      <div class="check-item">
+        <input type="checkbox" id="consent2" class="consent-required">
+        <label for="consent2">I confirm I have not submitted personal, patient, client or confidential data. <span class="req">*</span></label>
+      </div>
+    </div>
+
+    <div class="consent-item">
+      <div class="check-item">
+        <input type="checkbox" id="consent3" class="consent-required">
+        <label for="consent3">I have read and understood the <a href="/business-opportunity-scan/privacy/" target="_blank">Privacy Notice</a>. <span class="req">*</span></label>
+      </div>
+    </div>
+
+    <div class="consent-item">
+      <div class="check-item">
+        <input type="checkbox" id="consent4" class="consent-required">
+        <label for="consent4">I agree to receive this report by email. <span class="req">*</span></label>
+      </div>
+    </div>
+
+    <div class="consent-item" style="margin-top:12px">
+      <div class="check-item">
+        <input type="checkbox" id="consent5">
+        <label for="consent5">I would also like to receive occasional practical AI updates from Snail AI. I can unsubscribe at any time.</label>
+      </div>
+    </div>
+
+    <div class="privacy-link"><a href="/business-opportunity-scan/privacy/" target="_blank">Privacy Notice</a></div>
+
+    <div class="cf-turnstile" data-sitekey="TURNSTILE_SITE_KEY" data-callback="onTurnstileSuccess"></div>
+
+    <div class="nav-row">
+      <button class="btn btn-back" onclick="goStep(-1)">Back</button>
+      <button class="btn btn-submit" id="btnSubmit" disabled>Submit Assessment</button>
+    </div>
+  </div>
+
+  <!-- Processing -->
+  <div class="step-panel" id="stepProcessing">
+    <div class="processing">
+      <div class="spinner"></div>
+      <div class="step-title">Processing your assessment</div>
+      <div class="step-desc">Please wait while we prepare your AI Opportunity Report.</div>
+      <div class="scan-id" id="scanIdDisplay"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script>
+(function(){
+  'use strict';
+
+  const TOTAL_STEPS = 6;
+  let currentStep = 0;
+  let turnstileToken = '';
+  const utm = {};
+
+  // Parse UTM params
+  const urlParams = new URLSearchParams(window.location.search);
+  ['utm_source','utm_medium','utm_campaign','utm_term','utm_content'].forEach(k => {
+    if (urlParams.has(k)) utm[k] = urlParams.get(k);
+  });
+
+  // Generate idempotency key
+  function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0;
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  }
+  const idempotencyKey = uuid();
+
+  // Load saved step
+  const saved = localStorage.getItem('bos_current_step');
+  if (saved !== null) {
+    const s = parseInt(saved, 10);
+    if (s >= 0 && s <= TOTAL_STEPS) currentStep = s;
+  }
+
+  // Show step
+  function showStep(step) {
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById('step' + step);
+    if (panel) panel.classList.add('active');
+
+    // Progress
+    const dots = document.querySelectorAll('.step-dot');
+    const fill = document.getElementById('progressFill');
+    const pct = (step / TOTAL_STEPS) * 100;
+    fill.style.width = pct + '%';
+
+    dots.forEach((dot, i) => {
+      dot.classList.remove('active', 'done');
+      if (i < step) dot.classList.add('done');
+      else if (i === step) dot.classList.add('active');
+    });
+
+    currentStep = step;
+    localStorage.setItem('bos_current_step', step);
+    window.scrollTo(0, 0);
+  }
+
+  window.goStep = function(delta) {
+    const next = currentStep + delta;
+    if (next >= 0 && next <= TOTAL_STEPS) showStep(next);
+  };
+
+  // Step 0 safety checkbox
+  const safetyCheck = document.getElementById('safetyCheck');
+  const btn0Next = document.getElementById('btn0Next');
+  safetyCheck.addEventListener('change', () => {
+    btn0Next.disabled = !safetyCheck.checked;
+  });
+  btn0Next.addEventListener('click', () => {
+    if (safetyCheck.checked) showStep(1);
+  });
+
+  // Website field -> show consent
+  const websiteInput = document.getElementById('f_website');
+  const websiteConsent = document.getElementById('websiteConsent');
+  websiteInput.addEventListener('input', () => {
+    websiteConsent.style.display = websiteInput.value.trim() ? 'block' : 'none';
+  });
+
+  // Industry group -> dynamic sub-industry and tools
+  const industryRadios = document.querySelectorAll('input[name="industry_group"]');
+  const subSections = { A: 'subA', B: 'subB', C: 'subC', Other: 'subOther' };
+  const indToolSections = { A: 'indToolsA', B: 'indToolsB', C: 'indToolsC', Other: 'indToolsOther' };
+  const wfSections = { A: 'wfA', B: 'wfB', C: 'wfC' };
+
+  function getIndustryGroup() {
+    const checked = document.querySelector('input[name="industry_group"]:checked');
+    return checked ? checked.value : null;
+  }
+
+  function updateDynamicSections() {
+    const group = getIndustryGroup();
+    // Sub-industry
+    Object.values(subSections).forEach(id => document.getElementById(id).classList.remove('visible'));
+    if (group && subSections[group]) document.getElementById(subSections[group]).classList.add('visible');
+    // Industry tools
+    Object.values(indToolSections).forEach(id => document.getElementById(id).classList.remove('visible'));
+    if (group && indToolSections[group]) document.getElementById(indToolSections[group]).classList.add('visible');
+    // Workflow checkboxes
+    Object.values(wfSections).forEach(id => document.getElementById(id).classList.remove('visible'));
+    if (group && wfSections[group]) document.getElementById(wfSections[group]).classList.add('visible');
+    // Hide priority section until workflows selected
+    document.getElementById('prioritySection').classList.remove('visible');
+  }
+
+  industryRadios.forEach(r => r.addEventListener('change', updateDynamicSections));
+
+  // Workflow max 5 selection + priority
+  function setupWorkflowLimit(groupName, sectionId, maxNoteId) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    section.addEventListener('change', (e) => {
+      if (!e.target.type === 'checkbox') return;
+      const boxes = section.querySelectorAll('input[type="checkbox"]');
+      const checked = section.querySelectorAll('input[type="checkbox"]:checked');
+      const maxNote = document.getElementById(maxNoteId);
+      if (checked.length >= 5) {
+        boxes.forEach(b => { if (!b.checked) b.disabled = true; });
+        if (maxNote) maxNote.style.display = 'block';
+      } else {
+        boxes.forEach(b => b.disabled = false);
+        if (maxNote) maxNote.style.display = 'none';
+      }
+      // Update priority section
+      updatePrioritySection();
+    });
+  }
+
+  setupWorkflowLimit('wf_a', 'wfA', 'maxNoteA');
+  setupWorkflowLimit('wf_b', 'wfB', 'maxNoteB');
+  setupWorkflowLimit('wf_c', 'wfC', 'maxNoteC');
+
+  function updatePrioritySection() {
+    const group = getIndustryGroup();
+    const container = document.getElementById('priorityGroup');
+    container.innerHTML = '';
+    let selected = [];
+
+    if (group && wfSections[group]) {
+      const section = document.getElementById(wfSections[group]);
+      selected = Array.from(section.querySelectorAll('input[type="checkbox"]:checked')).map(c => c.value);
+    }
+
+    if (selected.length > 0) {
+      selected.forEach((val, i) => {
+        const id = 'pri_' + i;
+        const div = document.createElement('div');
+        div.className = 'check-item';
+        div.innerHTML = '<input type="radio" name="priority" id="' + id + '" value="' + val.replace(/"/g, '&quot;') + '"><label for="' + id + '">' + val + '</label>';
+        container.appendChild(div);
+      });
+      document.getElementById('prioritySection').classList.add('visible');
+    } else {
+      document.getElementById('prioritySection').classList.remove('visible');
+    }
+  }
+
+  // Consent checkboxes -> enable submit
+  function checkConsent() {
+    const all = document.querySelectorAll('.consent-required');
+    let ok = true;
+    all.forEach(c => { if (!c.checked) ok = false; });
+    const btn = document.getElementById('btnSubmit');
+    btn.disabled = !ok;
+  }
+  document.querySelectorAll('.consent-required').forEach(c => c.addEventListener('change', checkConsent));
+
+  // Turnstile
+  window.onTurnstileSuccess = function(token) {
+    turnstileToken = token;
+  };
+
+  // Validation
+  function clearErrors(panel) {
+    panel.querySelectorAll('.field').forEach(f => f.classList.remove('has-error'));
+  }
+
+  function addError(fieldEl) {
+    fieldEl.classList.add('has-error');
+  }
+
+  window.validateStep = function(step) {
+    const panel = document.getElementById('step' + step);
+    clearErrors(panel);
+    let valid = true;
+
+    if (step === 1) {
+      const name = document.getElementById('f_name');
+      if (!name.value.trim() || name.value.trim().length < 2 || name.value.trim().length > 80) { addError(name.closest('.field')); valid = false; }
+      const email = document.getElementById('f_email');
+      if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { addError(email.closest('.field')); valid = false; }
+      const company = document.getElementById('f_company');
+      if (!company.value.trim() || company.value.trim().length < 2 || company.value.trim().length > 120) { addError(company.closest('.field')); valid = false; }
+      const suburb = document.getElementById('f_suburb');
+      if (!suburb.value.trim()) { addError(suburb.closest('.field')); valid = false; }
+      const postcode = document.getElementById('f_postcode');
+      if (!/^\d{4}$/.test(postcode.value.trim())) { addError(postcode.closest('.field')); valid = false; }
+      const role = document.getElementById('f_role');
+      if (!role.value) { addError(role.closest('.field')); valid = false; }
+      const decision = document.getElementById('f_decision');
+      if (!decision.value) { addError(decision.closest('.field')); valid = false; }
+      const employees = document.getElementById('f_employees');
+      if (!employees.value) { addError(employees.closest('.field')); valid = false; }
+    }
+
+    if (step === 2) {
+      const group = getIndustryGroup();
+      if (!group) {
+        const ig = document.getElementById('industryGroup').closest('.field');
+        addError(ig); valid = false;
+      }
+      // Sub-industry
+      if (group && subSections[group]) {
+        const subEl = document.getElementById(subSections[group]).querySelector('select, input');
+        if (subEl && subEl.tagName === 'SELECT' && !subEl.value) {
+          addError(subEl.closest('.field')); valid = false;
+        }
+      }
+      const years = document.getElementById('f_years');
+      if (!years.value) { addError(years.closest('.field')); valid = false; }
+      const model = document.getElementById('f_model');
+      if (!model.value) { addError(model.closest('.field')); valid = false; }
+      const goal = document.getElementById('f_goal');
+      if (!goal.value) { addError(goal.closest('.field')); valid = false; }
+    }
+
+    if (step === 3) {
+      const genChecked = document.querySelectorAll('#generalTools input:checked');
+      if (genChecked.length === 0) {
+        addError(document.getElementById('generalTools').closest('.field')); valid = false;
+      }
+      const integ = document.getElementById('f_integration');
+      if (!integ.value) { addError(integ.closest('.field')); valid = false; }
+      const reentry = document.getElementById('f_reentry');
+      if (!reentry.value) { addError(reentry.closest('.field')); valid = false; }
+    }
+
+    if (step === 4) {
+      const desc = document.getElementById('f_pain_desc');
+      if (!desc.value.trim() || desc.value.trim().length < 20 || desc.value.trim().length > 600) { addError(desc.closest('.field')); valid = false; }
+      const freq = document.getElementById('f_pain_freq');
+      if (!freq.value) { addError(freq.closest('.field')); valid = false; }
+      const people = document.getElementById('f_pain_people');
+      if (!people.value) { addError(people.closest('.field')); valid = false; }
+      const hours = document.getElementById('f_pain_hours');
+      if (!hours.value) { addError(hours.closest('.field')); valid = false; }
+      const wrongChecked = document.querySelectorAll('#wrongGroup input:checked');
+      if (wrongChecked.length === 0) {
+        addError(document.getElementById('wrongGroup').closest('.field')); valid = false;
+      }
+      const success = document.getElementById('f_success');
+      if (!success.value.trim() || success.value.trim().length < 20 || success.value.trim().length > 500) { addError(success.closest('.field')); valid = false; }
+
+      // Workflow checkboxes
+      const group = getIndustryGroup();
+      if (group && wfSections[group]) {
+        const wfSection = document.getElementById(wfSections[group]);
+        const wfChecked = wfSection.querySelectorAll('input:checked');
+        if (wfChecked.length === 0) {
+          addError(wfSection.querySelector('.field')); valid = false;
+        }
+      }
+
+      // Priority
+      const priChecked = document.querySelector('input[name="priority"]:checked');
+      if (group && wfSections[group]) {
+        const wfSection = document.getElementById(wfSections[group]);
+        const wfChecked = wfSection.querySelectorAll('input:checked');
+        if (wfChecked.length > 0 && !priChecked) {
+          addError(document.getElementById('prioritySection'));
+          valid = false;
+        }
+      }
+    }
+
+    if (step === 5) {
+      const fields = ['f_documented','f_champion','f_pilot','f_auto_level','f_sensitivity','f_start_time','f_budget','f_onsite'];
+      fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value) { addError(el.closest('.field')); valid = false; }
+      });
+    }
+
+    if (valid) {
+      showStep(step + 1);
+    } else {
+      // Scroll to first error
+      const firstErr = panel.querySelector('.field.has-error');
+      if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  // Collect form data
+  function collectData() {
+    const group = getIndustryGroup();
+    const data = {
+      idempotency_key: idempotencyKey,
+      turnstile_token: turnstileToken,
+      utm: utm,
+      step1: {
+        full_name: document.getElementById('f_name').value.trim(),
+        work_email: document.getElementById('f_email').value.trim(),
+        mobile: document.getElementById('f_mobile').value.trim(),
+        company_name: document.getElementById('f_company').value.trim(),
+        company_website: document.getElementById('f_website').value.trim(),
+        website_consent: document.getElementById('f_website_consent').checked,
+        suburb: document.getElementById('f_suburb').value.trim(),
+        postcode: document.getElementById('f_postcode').value.trim(),
+        role: document.getElementById('f_role').value,
+        decision_authority: document.getElementById('f_decision').value,
+        employees: document.getElementById('f_employees').value
+      },
+      step2: {
+        industry_group: group,
+        sub_industry: '',
+        years_operating: document.getElementById('f_years').value,
+        business_model: document.getElementById('f_model').value,
+        primary_goal: document.getElementById('f_goal').value
+      },
+      step3: {
+        general_tools: Array.from(document.querySelectorAll('#generalTools input:checked')).map(c => c.value),
+        industry_tools: [],
+        integration: document.getElementById('f_integration').value,
+        reentry_frequency: document.getElementById('f_reentry').value
+      },
+      step4: {
+        pain_description: document.getElementById('f_pain_desc').value.trim(),
+        pain_frequency: document.getElementById('f_pain_freq').value,
+        people_involved: document.getElementById('f_pain_people').value,
+        weekly_hours: document.getElementById('f_pain_hours').value,
+        what_goes_wrong: Array.from(document.querySelectorAll('#wrongGroup input:checked')).map(c => c.value),
+        success_description: document.getElementById('f_success').value.trim(),
+        workflows: [],
+        top_priority: ''
+      },
+      step5: {
+        process_documented: document.getElementById('f_documented').value,
+        process_champion: document.getElementById('f_champion').value,
+        willing_pilot: document.getElementById('f_pilot').value,
+        automation_level: document.getElementById('f_auto_level').value,
+        data_sensitivity: document.getElementById('f_sensitivity').value,
+        desired_start: document.getElementById('f_start_time').value,
+        budget: document.getElementById('f_budget').value,
+        onsite_assessment: document.getElementById('f_onsite').value
+      },
+      step6: {
+        consent_report: document.getElementById('consent1').checked,
+        consent_no_personal: document.getElementById('consent2').checked,
+        consent_privacy: document.getElementById('consent3').checked,
+        consent_email: document.getElementById('consent4').checked,
+        newsletter: document.getElementById('consent5').checked
+      }
+    };
+
+    // Sub-industry
+    if (group === 'A') data.step2.sub_industry = document.getElementById('f_sub_industry_a').value;
+    else if (group === 'B') data.step2.sub_industry = document.getElementById('f_sub_industry_b').value;
+    else if (group === 'C') data.step2.sub_industry = document.getElementById('f_sub_industry_c').value;
+    else data.step2.sub_industry = 'Other / Not sure';
+
+    // Industry tools
+    if (group && indToolSections[group]) {
+      const section = document.getElementById(indToolSections[group]);
+      data.step3.industry_tools = Array.from(section.querySelectorAll('input:checked')).map(c => c.value);
+    }
+
+    // Workflows
+    if (group && wfSections[group]) {
+      const section = document.getElementById(wfSections[group]);
+      data.step4.workflows = Array.from(section.querySelectorAll('input:checked')).map(c => c.value);
+    }
+
+    // Priority
+    const priChecked = document.querySelector('input[name="priority"]:checked');
+    if (priChecked) data.step4.top_priority = priChecked.value;
+
+    return data;
+  }
+
+  // Submit
+  document.getElementById('btnSubmit').addEventListener('click', function() {
+    const allConsent = document.querySelectorAll('.consent-required');
+    let ok = true;
+    allConsent.forEach(c => { if (!c.checked) ok = false; });
+    if (!ok) {
+      alert('Please confirm all required consents.');
+      return;
+    }
+
+    const data = collectData();
+
+    // Show processing
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('stepProcessing').classList.add('active');
+
+    fetch('/api/scan/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+      if (result.scan_id) {
+        document.getElementById('scanIdDisplay').textContent = 'Scan ID: ' + result.scan_id;
+        localStorage.removeItem('bos_current_step');
+      }
+    })
+    .catch(err => {
+      document.getElementById('scanIdDisplay').textContent = 'Submission error. Please try again.';
+      console.error('Submit error:', err);
+    });
+  });
+
+  // Auto-save on input change
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('change', () => {
+      localStorage.setItem('bos_form_data', JSON.stringify(collectData()));
+    });
+  });
+
+  // Init
+  showStep(currentStep);
+  updateDynamicSections();
+})();
+</script>
+</body>
+</html>

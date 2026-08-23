@@ -1,0 +1,120 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-08-23",
+  "industry_group": "B",
+  "industry_name": "Professional Services",
+  "common_processes": [
+    "Lead and enquiry intake from website and referrals",
+    "Client onboarding and identity/document collection",
+    "Proposal and engagement letter preparation",
+    "Email triage and response drafting",
+    "Client document chasing and follow-up reminders",
+    "Meeting notes and action tracking",
+    "CRM updates and pipeline management",
+    "Appointment and follow-up reminders",
+    "Report preparation (accounting, advisory, consulting)",
+    "Invoice preparation and payment follow-up",
+    "Listing enquiry handling (real estate)",
+    "Property appraisal preparation (real estate)",
+    "Marketing content approval workflow",
+    "Document filing and retrieval"
+  ],
+  "common_pain_points": [
+    "Hours spent chasing clients for documents and information",
+    "Manual email triage consuming senior staff time",
+    "Repetitive proposal and engagement letter drafting",
+    "Meeting notes not actioned or tracked consistently",
+    "CRM not kept up to date with client interactions",
+    "Slow follow-up on leads and enquiries",
+    "Invoice follow-up taking too much time",
+    "Document filing inconsistent and hard to retrieve"
+  ],
+  "recommended_ai_patterns": [
+    {
+      "pattern": "Email triage and draft responses",
+      "description": "Classify incoming emails by urgency and topic; draft suggested responses for routine queries; staff reviews, edits and sends",
+      "human_approval": "Staff reviews all drafted responses before sending; legal/financial advice emails require senior review",
+      "risk": "medium"
+    },
+    {
+      "pattern": "Client document chasing",
+      "description": "Automated reminders for outstanding documents; escalate overdue items; track receipt in CRM",
+      "human_approval": "Staff reviews reminder content and approves sending; no automatic escalation without review",
+      "risk": "low"
+    },
+    {
+      "pattern": "Proposal and engagement letter drafting",
+      "description": "Pre-fill templates from client and engagement data; staff customises and approves",
+      "human_approval": "Senior staff must review and approve all proposals and engagement letters",
+      "risk": "medium"
+    },
+    {
+      "pattern": "Meeting notes to action items",
+      "description": "Transcribe meeting notes into structured action items with owners and deadlines; sync to task management",
+      "human_approval": "Meeting chair reviews and confirms action items before distribution",
+      "risk": "low"
+    },
+    {
+      "pattern": "CRM auto-update",
+      "description": "Log client interactions, update deal stages, set follow-up reminders based on email and meeting activity",
+      "human_approval": "Staff reviews auto-logged interactions weekly for accuracy",
+      "risk": "low"
+    },
+    {
+      "pattern": "Lead enquiry classification",
+      "description": "Classify and prioritise incoming leads; draft initial response; assign to appropriate team member",
+      "human_approval": "Team lead reviews classification and approves response before sending",
+      "risk": "low"
+    }
+  ],
+  "software_categories": [
+    "Practice management (Xero Practice Manager, FYI)",
+    "CRM (HubSpot, Salesforce)",
+    "Legal practice (LEAP, Clio)",
+    "Real estate (Propertybase, Domain/REA tools)",
+    "Document management",
+    "Accounting (Xero, MYOB, QuickBooks)",
+    "Email and calendar (Outlook, Gmail)"
+  ],
+  "human_approval_points": [
+    "All legal advice must come from qualified legal professionals",
+    "All financial advice must come from qualified financial professionals",
+    "All client-facing communications before sending",
+    "All engagement letters and proposals",
+    "All invoices before sending",
+    "Any commitment on behalf of the firm"
+  ],
+  "data_sensitivity": "Medium to high. Client identity documents, financial information, and legal matters require strict handling. Legal professional privilege may apply.",
+  "not_recommended_for_automation": [
+    "Generating and sending final legal opinions without lawyer review",
+    "Generating and sending final financial advice without qualified professional review",
+    "Automatic acceptance of client instructions",
+    "Direct debit or payment authorisation without approval",
+    "Any communication that could create legal obligations without review",
+    "Sharing client information between matters without consent"
+  ],
+  "onsite_discovery_questions": [
+    "Walk us through how a new client enquiry becomes an engaged client",
+    "How are client documents currently collected and filed?",
+    "What is the email triage process — who handles what?",
+    "How are meeting notes captured and actioned?",
+    "What is the proposal preparation process from start to send?",
+    "How is the CRM kept up to date and by whom?",
+    "What compliance or regulatory requirements affect your document handling?"
+  ],
+  "pilot_scope_examples": [
+    "AI-draft routine email responses for one practice area",
+    "Automated document chasing for one client cohort",
+    "Auto-generate meeting action items for one team",
+    "Lead enquiry classification and initial response draft"
+  ],
+  "cannot_promise": [
+    "Compliance with legal professional privilege requirements",
+    "Replacement of qualified professional judgment",
+    "Integration with all legal practice management systems",
+    "Specific time savings without pilot measurement",
+    "That automated drafts will be error-free"
+  ],
+  "legal_financial_constraints": "Legal and financial professional advice must always involve qualified human professionals. AI can assist with drafting, research and organisation but the final professional opinion, advice or recommendation must come from a licensed professional. This is non-negotiable.",
+  "reduction_range_assumption": "20%–45% of current manual hours on identified workflows"
+}

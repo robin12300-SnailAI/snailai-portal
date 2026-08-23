@@ -1,0 +1,133 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-08-23",
+  "industry_group": "C",
+  "industry_name": "Medical & Healthcare Practices",
+  "scope_limitation": "NON-CLINICAL ADMINISTRATIVE WORKFLOWS ONLY. No clinical decision-making, diagnosis, treatment recommendations, or patient health information processing without explicit human oversight and de-identification.",
+  "common_processes": [
+    "General enquiry handling (phone, email, web)",
+    "Appointment booking administration",
+    "Appointment reminders (SMS/email)",
+    "Pre-appointment form administration",
+    "Referral document administration",
+    "Incoming document classification and filing",
+    "Reception email triage and routing",
+    "Non-clinical follow-up drafting",
+    "Recall administration with human approval",
+    "Billing and payment administration",
+    "Staff rostering",
+    "Supplier and inventory administration",
+    "Public website FAQ content",
+    "Internal policy and procedure search",
+    "Operational reporting using de-identified data"
+  ],
+  "common_pain_points": [
+    "Reception staff spending hours on phone and email triage",
+    "Manual appointment reminders not sent consistently",
+    "Referral documents filed inconsistently or lost",
+    "Billing and payment follow-up taking excessive time",
+    "Recall lists not actioned systematically",
+    "Rostering conflicts and last-minute changes",
+    "Supply ordering reactive rather than proactive",
+    "Website FAQ content not kept current"
+  ],
+  "recommended_ai_patterns": [
+    {
+      "pattern": "Reception email triage",
+      "description": "Classify incoming emails by type (appointment, referral, billing, general); route to appropriate staff; draft routine response for approval",
+      "human_approval": "Reception staff reviews all drafted responses before sending; no clinical content in responses",
+      "risk": "high"
+    },
+    {
+      "pattern": "Appointment reminder automation",
+      "description": "Automated SMS/email reminders at configurable intervals; manage responses (confirm, reschedule, cancel); flag no-responses for follow-up",
+      "human_approval": "Practice manager approves reminder content and scheduling; no clinical information in reminders",
+      "risk": "medium"
+    },
+    {
+      "pattern": "Referral document administration",
+      "description": "Classify incoming referrals by type; extract non-clinical metadata (referring doctor, date, type); file and notify appropriate staff",
+      "human_approval": "Staff reviews classification and metadata extraction; no clinical content is processed or stored by AI",
+      "risk": "high"
+    },
+    {
+      "pattern": "Billing follow-up drafts",
+      "description": "Generate polite payment follow-up correspondence for outstanding accounts; staff reviews and sends",
+      "human_approval": "Billing staff reviews all follow-up correspondence before sending; no patient health information included",
+      "risk": "medium"
+    },
+    {
+      "pattern": "Public website FAQ management",
+      "description": "Help generate and update FAQ content based on common reception questions; practice manager reviews and approves",
+      "human_approval": "Practice manager reviews all FAQ content before publishing; no clinical advice in FAQs",
+      "risk": "low"
+    },
+    {
+      "pattern": "Roster optimisation assistance",
+      "description": "Suggest roster options based on practitioner availability, session types and historical patterns; practice manager decides",
+      "human_approval": "Practice manager reviews and approves all roster decisions",
+      "risk": "low"
+    }
+  ],
+  "software_categories": [
+    "Practice management (MedicalDirector, Helix, Best Practice, Cliniko)",
+    "Patient communication (HotDoc, AutoMed, Healthengine)",
+    "Payment (Tyro, EFTPOS terminals)",
+    "Accounting (Xero, MYOB)",
+    "Scheduling and rostering",
+    "Email and calendar"
+  ],
+  "human_approval_points": [
+    "ALL patient-facing communications must be approved by practice staff",
+    "ALL billing communications must be approved by billing staff",
+    "ALL recall actions must be approved by qualified clinical staff",
+    "NO clinical decisions, triage or priority-setting by AI",
+    "NO access to patient health records, Medicare data or clinical systems",
+    "NO sending of health information without explicit human approval and compliance review",
+    "Referral content must NOT be read, analysed or processed by AI — only administrative metadata"
+  ],
+  "data_sensitivity": "HIGH. Medical practices handle protected health information subject to Privacy Act 1988, My Health Records Act 2012, and potentially state health records legislation. This scan does NOT access, process or store any patient health information. Only non-clinical administrative workflows are assessed.",
+  "not_recommended_for_automation": [
+    "Any clinical decision-making or triage",
+    "Processing or analysing patient health records",
+    "Automated clinical correspondence",
+    "Automatic appointment prioritisation based on clinical need",
+    "Any workflow that copies patient data out of certified practice management systems",
+    "Automated referral processing beyond basic administrative classification",
+    "Any system that bypasses security controls of MedicalDirector, Helix, Best Practice, Cliniko or similar",
+    "Processing Medicare numbers, patient identifiers or health fund details",
+    "Any workflow that could constitute a breach of My Health Records Act"
+  ],
+  "strict_constraints": [
+    "Patient names, dates of birth, Medicare numbers, health record numbers, test results and health conditions must NEVER be entered into this assessment or any AI system",
+    "All workflows are limited to non-clinical administrative processes",
+    "No AI system should replace the clinical judgment of qualified health professionals",
+    "Any future processing of real health data requires a separate privacy impact assessment, architecture review and potentially new vendor contracts",
+    "Practice management system boundaries must be respected — AI tools work alongside, not inside, certified clinical systems"
+  ],
+  "onsite_discovery_questions": [
+    "Walk us through how reception handles a typical day's email and phone enquiries",
+    "How are appointment reminders currently sent?",
+    "What is the process for receiving, filing and actioning referral documents?",
+    "How does billing follow-up work for outstanding accounts?",
+    "How is the staff roster managed?",
+    "What practice management system do you use and what are its automation capabilities?",
+    "What are the biggest time sinks for your administrative (non-clinical) staff?",
+    "What compliance requirements affect your administrative workflows?"
+  ],
+  "pilot_scope_examples": [
+    "AI-triage reception emails for one week (draft responses only, staff approves all)",
+    "Automated appointment reminders for one practitioner's sessions",
+    "Non-clinical referral document classification (admin metadata only, no clinical content)",
+    "Billing follow-up draft generation for accounts over 30 days outstanding"
+  ],
+  "cannot_promise": [
+    "Compliance with Privacy Act 1988, My Health Records Act or any health-specific regulation",
+    "That AI workflows will handle patient data securely without further assessment",
+    "Integration with certified practice management systems",
+    "Any clinical outcome improvement",
+    "That automated administrative workflows will not require further privacy review",
+    "Processing of any health information within acceptable risk bounds without a separate assessment"
+  ],
+  "reduction_range_assumption": "15%–40% of current manual hours on NON-CLINICAL administrative workflows only"
+}

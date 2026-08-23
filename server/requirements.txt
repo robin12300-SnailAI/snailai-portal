@@ -4,6 +4,7 @@ requests>=2.31
 apscheduler>=3.10
 pycryptodome>=3.20
 stripe>=8.0
+weasyprint>=62.0
 # PyMuPDF vendored wheel. IMPORTANT: Render's buildCommand runs from the REPO
 # ROOT (pip install -r server/requirements.txt), and pip resolves wheel paths
 # relative to CWD — so the path below MUST start with server/.
