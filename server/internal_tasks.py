@@ -85,16 +85,10 @@ def _is_chinese(text: str) -> bool:
     return zh_count / max(len(text), 1) > 0.2
 
 
-def _translate(text: str, target_lang: str) -> str:
-    """
-    用 HY3 (TokenHub) API 翻译文本（OpenAI 兼容接口）。
-    target_lang: 'en' 或 'zh'
-    如果 API key 不可用或翻译失败，返回原文（降级）。
-    """
-    if not text or not text.strip():
-        return text
+def _translate_hy3(text: str, target_lang: str) -> str:
+    """用 HY3 (TokenHub) API 翻译（OpenAI 兼容接口），失败返回 None"""
     if not HY3_API_KEY:
-        return text  # 降级：无 key 不翻译
+        return None
 
     lang_name = "English" if target_lang == "en" else "简体中文"
     system_prompt = f"You are a professional translator. Translate the following text to {lang_name}. Output ONLY the translation, no explanations, no quotes, no extra formatting. Preserve the original tone and formatting (line breaks, etc.)."
@@ -123,14 +117,59 @@ def _translate(text: str, target_lang: str) -> str:
         with urllib.request.urlopen(req, timeout=30) as resp:
             result = json.loads(resp.read().decode("utf-8"))
             translated = result["choices"][0]["message"]["content"].strip()
-            # 去掉可能的多余引号
             if translated.startswith('"') and translated.endswith('"'):
                 translated = translated[1:-1]
             return translated
 
     except Exception as e:
-        print(f"[internal-tasks] translate error ({target_lang}): {e}")
-        return text  # 降级：翻译失败返回原文
+        print(f"[internal-tasks] HY3 translate error ({target_lang}): {e}")
+        return None
+
+
+def _translate_mymemory(text: str, source_lang: str, target_lang: str) -> str:
+    """用 MyMemory 免费翻译 API 翻译，失败返回 None"""
+    lang_map = {"zh": "zh-CN", "en": "en"}
+    src = lang_map.get(source_lang, source_lang)
+    tgt = lang_map.get(target_lang, target_lang)
+    lang_pair = f"{src}|{tgt}"
+
+    try:
+        import urllib.parse as _up
+        url = f"https://api.mymemory.translated.net/get?q={_up.quote(text)}&langpair={lang_pair}"
+        with urllib.request.urlopen(url, timeout=10) as resp:
+            result = json.loads(resp.read().decode("utf-8"))
+            translated = result["responseData"]["translatedText"]
+            # MyMemory 对匹配太高的原文会返回全大写警告，过滤
+            if translated.isupper() and len(translated) > 20:
+                return None
+            return translated
+    except Exception as e:
+        print(f"[internal-tasks] MyMemory translate error: {e}")
+        return None
+
+
+def _translate(text: str, target_lang: str) -> str:
+    """
+    三层翻译降级：HY3 → MyMemory → 原文
+    target_lang: 'en' 或 'zh'
+    """
+    if not text or not text.strip():
+        return text
+
+    # 第一层：HY3 (TokenHub) — 质量最好，需 key + 余额
+    result = _translate_hy3(text, target_lang)
+    if result:
+        return result
+
+    # 第二层：MyMemory — 免费，无需 key，每天 ~5000 字
+    source_lang = "zh" if target_lang == "en" else "en"
+    result = _translate_mymemory(text, source_lang, target_lang)
+    if result:
+        return result
+
+    # 第三层：降级返回原文
+    print(f"[internal-tasks] all translate failed, using original text")
+    return text
 
 
 def _auto_translate(text: str) -> dict:
