@@ -722,7 +722,7 @@ def api_admin_create_task():
 
         now = datetime.datetime.utcnow().isoformat()
         conn.execute(
-            "INSERT INTO itask_tasks(title, description, priority, deadline, assigned_to, created_by, status, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO itask_tasks(title, description, priority, deadline, assigned_to, created_by, status, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?,?)",
             (title, description, priority, deadline, assigned_to, g.user["username"], "todo", now, now)
         )
         task_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
