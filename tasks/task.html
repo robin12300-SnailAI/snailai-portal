@@ -95,7 +95,7 @@ body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:v
 <body>
 
 <div class="header">
-  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.0.0</span></div>
+  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.1.0</span></div>
   <div class="header-right">
     <button class="btn btn-outline btn-sm" onclick="location.href='index.html'">← Back</button>
   </div>
@@ -138,13 +138,13 @@ async function loadTask(){
 
   document.getElementById('app').innerHTML=`
     <div class="task-header">
-      <div class="task-title">${esc(t.title)}</div>
+      <div class="task-title">${esc(t.title_en||t.title)}${t.title_zh&&t.title_zh!==t.title_en?`<div style="font-size:14px;font-weight:400;color:#888;margin-top:4px">🇨🇳 ${esc(t.title_zh)}</div>`:''}</div>
       <div class="task-badges">
         <span class="status-badge ${t.status}">${STATUS_LABELS[t.status]||t.status}</span>
         <span class="priority ${t.priority}">${(t.priority||'normal').toUpperCase()}</span>
         <span style="font-size:11px;color:#aaa">#${t.id}</span>
       </div>
-      <div class="task-desc">${esc(t.description||'No description')}</div>
+      <div class="task-desc">${esc(t.description_en||t.description||'No description')}${t.description_zh&&t.description_zh!==t.description_en?`<div style="font-size:13px;color:#999;margin-top:8px;padding-top:8px;border-top:1px dashed #e0ddd6">🇨🇳 ${esc(t.description_zh)}</div>`:''}</div>
       <div class="task-meta">
         <span>👤 ${esc(t.assigned_to_name||t.assigned_to)}</span>
         ${t.deadline?`<span>📅 ${t.deadline}</span>`:''}
@@ -159,6 +159,7 @@ async function loadTask(){
     ${t.status!=='done'&&t.status!=='closed'?`
     <div class="submit-card">
       <h3>Submit Progress Report</h3>
+      <p style="font-size:12px;color:#888;margin-bottom:10px">💡 Write in any language — your report will be auto-translated and emailed to Robin in both English & Chinese.</p>
       <textarea id="progressContent" placeholder="Write your progress report here..."></textarea>
       <div class="progress-input">
         <label>Progress %:</label>
@@ -186,7 +187,7 @@ async function loadTask(){
               <span class="tl-time">${fmtTime(a.created_at)}</span>
               <span class="tl-type ${a.type}">${TYPE_LABELS[a.type]||a.type}</span>
             </div>
-            <div class="tl-content">${esc(a.content||'')}</div>
+            <div class="tl-content">${esc(a.content_en||a.content||'')}${a.content_zh&&a.content_zh!==a.content_en?`<div style="font-size:12px;color:#999;margin-top:4px;padding-top:4px;border-top:1px dashed #eee">🇨🇳 ${esc(a.content_zh)}</div>`:''}</div>
             ${(a.attachments&&a.attachments.length)?`<div class="tl-attachments">${a.attachments.map(att=>`<span class="tl-attachment">📎 ${esc(att.split('/').pop())}</span>`).join('')}</div>`:''}
           </div>
         </div>

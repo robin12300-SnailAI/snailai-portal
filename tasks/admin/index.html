@@ -77,7 +77,7 @@ tr:hover td{background:#faf9f6}
 <body>
 
 <div class="header">
-  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.0.0</span> <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px">Internal Tasks Admin</span></div>
+  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.1.0</span> <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px">Internal Tasks Admin</span></div>
   <div class="header-right">
     <button class="btn btn-outline btn-sm" onclick="location.href='../index.html'">← 助教端</button>
   </div>
@@ -94,6 +94,7 @@ tr:hover td{background:#faf9f6}
 <div class="modal-overlay" id="createModal">
   <div class="modal">
     <h3>创建新任务</h3>
+    <p style="font-size:12px;color:#888;margin-bottom:10px">💡 用中文或英文写均可，系统会自动翻译为双语。</p>
     <div class="field"><label>任务标题 *</label><input id="ctTitle"></div>
     <div class="field"><label>描述</label><textarea id="ctDesc"></textarea></div>
     <div class="field"><label>优先级</label>
@@ -113,7 +114,7 @@ tr:hover td{background:#faf9f6}
   <div class="modal">
     <h3>给出指导/意见</h3>
     <input type="hidden" id="guideTaskId">
-    <div class="field"><label>内容 *</label><textarea id="guideContent" placeholder="写出你的指导、意见或建议..."></textarea></div>
+    <div class="field"><label>内容 *</label><textarea id="guideContent" placeholder="用中文或英文写出你的指导，系统会自动翻译双版发送。"></textarea></div>
     <div class="actions">
       <button class="btn btn-outline" onclick="closeModal('guideModal')">取消</button>
       <button class="btn btn-coral" onclick="submitGuide()">发送</button>
@@ -203,7 +204,7 @@ async function loadTasks(){
         <tbody>
           ${tasks.map(t=>`<tr>
             <td>${t.id}</td>
-            <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" onclick="location.href='task.html?id=${t.id}'">${esc(t.title)}</td>
+            <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" onclick="location.href='task.html?id=${t.id}'">${esc(t.title_zh||t.title)}<div style="font-size:11px;color:#999;font-weight:400">${esc(t.title_en||'')}</div></td>
             <td>${esc(t.assigned_to_name||t.assigned_to)}</td>
             <td><span class="priority ${t.priority}">${(t.priority||'normal').toUpperCase()}</span></td>
             <td><span class="status-badge ${t.status}">${STATUS_ZH[t.status]||t.status}</span></td>

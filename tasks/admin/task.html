@@ -81,7 +81,7 @@ body{font-family:'Inter',Helvetica,Arial,sans-serif;background:var(--bg);color:v
 <body>
 
 <div class="header">
-  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.0.0</span></div>
+  <div class="logo">Snail<span class="ai">AI</span>.AI <span class="ver">V1.1.0</span></div>
   <div class="header-right">
     <button class="btn btn-outline btn-sm" onclick="location.href='index.html'">← 返回列表</button>
   </div>
@@ -123,13 +123,13 @@ async function loadTask(){
 
   document.getElementById('app').innerHTML=`
     <div class="task-header">
-      <div class="task-title">${esc(t.title)}</div>
+      <div class="task-title">${esc(t.title_zh||t.title)}${t.title_en&&t.title_en!==t.title_zh?`<div style="font-size:13px;font-weight:400;color:#888;margin-top:4px">🇬🇧 ${esc(t.title_en)}</div>`:''}</div>
       <div class="task-badges">
         <span class="status-badge ${t.status}">${STATUS_ZH[t.status]||t.status}</span>
         <span class="priority ${t.priority}">${(t.priority||'normal').toUpperCase()}</span>
         <span style="font-size:11px;color:#aaa">#${t.id}</span>
       </div>
-      <div class="task-desc">${esc(t.description||'No description')}</div>
+      <div class="task-desc">${esc(t.description_zh||t.description||'暂无描述')}${t.description_en&&t.description_en!==t.description_zh?`<div style="font-size:13px;color:#999;margin-top:8px;padding-top:8px;border-top:1px dashed #e0ddd6">🇬🇧 ${esc(t.description_en)}</div>`:''}</div>
       <div class="task-meta">
         <span>👤 ${esc(t.assigned_to_name||t.assigned_to)}</span>
         ${t.deadline?`<span>📅 ${t.deadline}</span>`:''}
@@ -151,6 +151,7 @@ async function loadTask(){
     ${t.status!=='closed'?`
     <div class="guide-card">
       <h3>💬 给出指导/意见</h3>
+      <p style="font-size:12px;color:#888;margin-bottom:10px">💡 用中文或英文写均可，系统会自动翻译并双版邮件发送给助教。</p>
       <textarea id="guideContent" placeholder="写出你的指导、意见或建议..."></textarea>
       <div class="guide-actions">
         <button class="btn btn-coral" onclick="submitGuide()">发送指导</button>
@@ -168,7 +169,7 @@ async function loadTask(){
               <span class="tl-time">${fmtTime(a.created_at)}</span>
               <span class="tl-type ${a.type}">${TYPE_LABELS[a.type]||a.type}</span>
             </div>
-            <div class="tl-content">${esc(a.content||'')}</div>
+            <div class="tl-content">${esc(a.content_zh||a.content||'')}${a.content_en&&a.content_en!==a.content_zh?`<div style="font-size:12px;color:#999;margin-top:4px;padding-top:4px;border-top:1px dashed #eee">🇬🇧 ${esc(a.content_en)}</div>`:''}</div>
           </div>
         </div>
       `).join('')}

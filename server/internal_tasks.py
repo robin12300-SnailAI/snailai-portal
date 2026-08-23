@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-SnailAI Internal Task System — Blueprint
-==========================================
-内部任务管理系统：Robin 分配任务给助教，助教提交进度/报告/文件，
-后台自动发邮件通知 Robin。
+SnailAI Internal Task System — Blueprint (Bilingual)
+=====================================================
+内部任务管理系统（双语版）：Robin 分配任务给助教，助教提交进度/报告/文件，
+后台自动翻译+发双版邮件通知。
+
+- 中文输入 → 自动翻译英文
+- 英文输入 → 自动翻译中文
+- 邮件中英双版
 
 路由前缀：/api/internal-tasks/
-  助教端：login, logout, me, my-tasks, task-detail, submit-progress, upload-file
-  管理端：admin/create-task, admin/tasks, admin/task-detail, admin/update-task,
-          admin/guide, admin/approve, admin/close, admin/create-assistant,
-          admin/assistants, admin/delete-file
 
-版本：internal-tasks-v1.0.0
+版本：internal-tasks-v1.1.0 (bilingual)
 """
 
 import os
@@ -22,6 +22,9 @@ import secrets
 import datetime
 import smtplib
 import uuid
+import re
+import urllib.request
+import urllib.error
 from pathlib import Path
 from functools import wraps
 from email.mime.multipart import MIMEMultipart
@@ -55,10 +58,96 @@ GMAIL_USER = os.environ.get("GMAIL_USER", "robin12300@gmail.com")
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "")
 NOTIFY_TO = os.environ.get("ITASK_NOTIFY_TO", "robin@snailai.ai")
 
+# ── OpenAI 翻译配置 ──────────────────────────────────────
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+OPENAI_MODEL = os.environ.get("ITASK_TRANSLATE_MODEL", "gpt-4o-mini")
+
 # ── Admin Token ───────────────────────────────────────────
 ADMIN_TOKEN = os.environ.get("QUOTE_ADMIN_TOKEN", "admin-dev-token")
 
 bp = Blueprint("internal_tasks", __name__, url_prefix="/api/internal-tasks")
+
+
+# ═══════════════════════════════════════════════════════════
+# 双语翻译
+# ═══════════════════════════════════════════════════════════
+
+# 中文字符正则（含 CJK 统一表意文字 + 标点）
+_ZH_RE = re.compile(r'[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]')
+
+
+def _is_chinese(text: str) -> bool:
+    """判断文本是否主要是中文"""
+    if not text:
+        return False
+    zh_count = len(_ZH_RE.findall(text))
+    return zh_count / max(len(text), 1) > 0.2
+
+
+def _translate(text: str, target_lang: str) -> str:
+    """
+    用 OpenAI API 翻译文本。
+    target_lang: 'en' 或 'zh'
+    如果 API key 不可用或翻译失败，返回原文（降级）。
+    """
+    if not text or not text.strip():
+        return text
+    if not OPENAI_API_KEY:
+        return text  # 降级：无 key 不翻译
+
+    lang_name = "English" if target_lang == "en" else "简体中文"
+    system_prompt = f"You are a professional translator. Translate the following text to {lang_name}. Output ONLY the translation, no explanations, no quotes, no extra formatting. Preserve the original tone and formatting (line breaks, etc.)."
+
+    try:
+        payload = json.dumps({
+            "model": OPENAI_MODEL,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": text}
+            ],
+            "temperature": 0.1,
+            "max_tokens": 2000
+        }).encode("utf-8")
+
+        req = urllib.request.Request(
+            "https://api.openai.com/v1/chat/completions",
+            data=payload,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {OPENAI_API_KEY}"
+            },
+            method="POST"
+        )
+
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            result = json.loads(resp.read().decode("utf-8"))
+            translated = result["choices"][0]["message"]["content"].strip()
+            # 去掉可能的多余引号
+            if translated.startswith('"') and translated.endswith('"'):
+                translated = translated[1:-1]
+            return translated
+
+    except Exception as e:
+        print(f"[internal-tasks] translate error ({target_lang}): {e}")
+        return text  # 降级：翻译失败返回原文
+
+
+def _auto_translate(text: str) -> dict:
+    """
+    自动检测语言，返回双语结果。
+    返回 {"en": "...", "zh": "..."}
+    """
+    if not text or not text.strip():
+        return {"en": text or "", "zh": text or ""}
+
+    if _is_chinese(text):
+        # 中文输入 → 翻译英文
+        en = _translate(text, "en")
+        return {"en": en, "zh": text}
+    else:
+        # 英文输入 → 翻译中文
+        zh = _translate(text, "zh")
+        return {"en": text, "zh": zh}
 
 
 # ═══════════════════════════════════════════════════════════
@@ -161,13 +250,27 @@ def _require_assistant(f):
 
 
 def _task_to_dict(row):
-    """把 internal_tasks 行转成可 JSON 化的 dict"""
+    """把 internal_tasks 行转成可 JSON 化的 dict，含双语字段"""
     d = dict(row)
+    # 确保双语字段存在（向后兼容旧数据）
+    if "title_zh" not in d:
+        d["title_zh"] = d.get("title", "")
+    if "title_en" not in d:
+        d["title_en"] = d.get("title", "")
+    if "description_zh" not in d:
+        d["description_zh"] = d.get("description", "")
+    if "description_en" not in d:
+        d["description_en"] = d.get("description", "")
     return d
 
 
 def _activity_to_dict(row):
     d = dict(row)
+    # 确保双语字段存在
+    if "content_zh" not in d:
+        d["content_zh"] = d.get("content", "")
+    if "content_en" not in d:
+        d["content_en"] = d.get("content", "")
     # attachment_paths 是 JSON 数组字符串
     if d.get("attachment_paths"):
         try:
@@ -180,7 +283,7 @@ def _activity_to_dict(row):
 
 
 # ═══════════════════════════════════════════════════════════
-# 邮件发送
+# 双语邮件模板
 # ═══════════════════════════════════════════════════════════
 
 def _send_email(to_addrs, subject, html_body, attachments=None):
@@ -216,72 +319,174 @@ def _send_email(to_addrs, subject, html_body, attachments=None):
         return False
 
 
+# ── 状态映射 ──
+STATUS_LABELS = {
+    "todo": {"en": "To Do", "zh": "待开始"},
+    "in_progress": {"en": "In Progress", "zh": "进行中"},
+    "in_review": {"en": "In Review", "zh": "待审批"},
+    "done": {"en": "Done", "zh": "已完成"},
+    "closed": {"en": "Closed", "zh": "已关闭"},
+}
+
+PRIORITY_LABELS = {
+    "urgent": {"en": "URGENT", "zh": "紧急"},
+    "high": {"en": "HIGH", "zh": "高"},
+    "normal": {"en": "NORMAL", "zh": "普通"},
+    "low": {"en": "LOW", "zh": "低"},
+}
+
+
+def _bilingual_email_section(title_en, title_zh, body_en, body_zh):
+    """生成双语邮件区块"""
+    return f"""
+    <div style="margin-bottom:24px">
+      <div style="background:#F8F9FA;border-left:4px solid #FF5B1F;padding:8px 12px;margin-bottom:4px">
+        <strong style="color:#1A1A2E">🇬🇧 {title_en}</strong>
+      </div>
+      <div style="padding:12px;background:#FFFFFF;border:1px solid #E5E7EB">
+        {body_en}
+      </div>
+    </div>
+    <div style="margin-bottom:24px">
+      <div style="background:#FEF3C7;border-left:4px solid #D4A547;padding:8px 12px;margin-bottom:4px">
+        <strong style="color:#1A1A2E">🇨🇳 {title_zh}</strong>
+      </div>
+      <div style="padding:12px;background:#FFFFFF;border:1px solid #E5E7EB">
+        {body_zh}
+      </div>
+    </div>
+    """
+
+
 def _notify_task_created(task, assigned_to_name, assigned_to_email):
-    """通知助教：新任务分配"""
-    subject = f"[SnailAI Task] New Task: {task['title']}"
+    """通知助教：新任务分配（双版邮件）"""
+    title_zh = task.get("title_zh") or task.get("title", "")
+    title_en = task.get("title_en") or task.get("title", "")
+    desc_zh = task.get("description_zh") or task.get("description", "") or ""
+    desc_en = task.get("description_en") or task.get("description", "") or ""
+    priority = task.get("priority", "normal")
+    deadline = task.get("deadline") or ""
+    pri_en = PRIORITY_LABELS.get(priority, {}).get("en", priority.upper())
+    pri_zh = PRIORITY_LABELS.get(priority, {}).get("zh", priority)
+
+    subject = f"[SnailAI Task] New Task / 新任务: {title_en}"
+
+    body_en = f"""
+      <p>Hi {assigned_to_name},</p>
+      <p>Robin has assigned you a new task:</p>
+      <table style="width:100%;border-collapse:collapse">
+        <tr><td style="padding:8px;font-weight:bold;width:120px">Title</td><td style="padding:8px">{title_en}</td></tr>
+        <tr><td style="padding:8px;font-weight:bold">Priority</td><td style="padding:8px">{pri_en}</td></tr>
+        <tr><td style="padding:8px;font-weight:bold">Deadline</td><td style="padding:8px">{deadline or 'Not set'}</td></tr>
+      </table>
+      <div style="margin-top:12px;padding:12px;background:#FFF5EE;border-left:4px solid #FF5B1F">
+        <p style="margin:0"><strong>Description:</strong></p>
+        <p style="margin:8px 0 0;white-space:pre-wrap">{desc_en or 'No description'}</p>
+      </div>
+      <p style="margin-top:16px">Please log in to the task system to view details and start working.</p>
+    """
+
+    body_zh = f"""
+      <p>{assigned_to_name}，你好！</p>
+      <p>Robin 给你分配了一个新任务：</p>
+      <table style="width:100%;border-collapse:collapse">
+        <tr><td style="padding:8px;font-weight:bold;width:120px">标题</td><td style="padding:8px">{title_zh}</td></tr>
+        <tr><td style="padding:8px;font-weight:bold">优先级</td><td style="padding:8px">{pri_zh}</td></tr>
+        <tr><td style="padding:8px;font-weight:bold">截止日期</td><td style="padding:8px">{deadline or '未设定'}</td></tr>
+      </table>
+      <div style="margin-top:12px;padding:12px;background:#FFF5EE;border-left:4px solid #FF5B1F">
+        <p style="margin:0"><strong>描述：</strong></p>
+        <p style="margin:8px 0 0;white-space:pre-wrap">{desc_zh or '无描述'}</p>
+      </div>
+      <p style="margin-top:16px">请登录任务系统查看详情并开始工作。</p>
+    """
+
     html = f"""
     <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;color:#1A1A2E">
       <div style="background:#FF5B1F;color:white;padding:20px;border-radius:8px 8px 0 0">
-        <h2 style="margin:0">New Task Assigned</h2>
+        <h2 style="margin:0">New Task Assigned / 新任务分配</h2>
       </div>
       <div style="padding:20px;border:1px solid #eee">
-        <p>Hi {assigned_to_name},</p>
-        <p>Robin has assigned you a new task:</p>
-        <table style="width:100%;border-collapse:collapse">
-          <tr><td style="padding:8px;font-weight:bold;width:120px">Title</td><td style="padding:8px">{task['title']}</td></tr>
-          <tr><td style="padding:8px;font-weight:bold">Priority</td><td style="padding:8px">{task.get('priority','normal').upper()}</td></tr>
-          <tr><td style="padding:8px;font-weight:bold">Deadline</td><td style="padding:8px">{task.get('deadline') or 'Not set'}</td></tr>
-        </table>
-        <div style="margin-top:16px;padding:12px;background:#FFF5EE;border-left:4px solid #FF5B1F">
-          <p style="margin:0"><strong>Description:</strong></p>
-          <p style="margin:8px 0 0">{task.get('description') or 'No description'}</p>
-        </div>
-        <p style="margin-top:20px">Please log in to the task system to view details and start working.</p>
+        {_bilingual_email_section("Task Details", "任务详情", body_en, body_zh)}
       </div>
     </div>
     """
     _send_email([assigned_to_email], subject, html)
 
 
-def _notify_progress_submitted(task, assistant_name, progress_text, attachment_names=None):
-    """通知 Robin：助教提交了进度"""
-    subject = f"[SnailAI Task] Progress Update: {task['title']}"
+def _notify_progress_submitted(task, assistant_name, progress_en, progress_zh, attachment_names=None):
+    """通知 Robin：助教提交了进度（双版邮件）"""
+    title_zh = task.get("title_zh") or task.get("title", "")
+    title_en = task.get("title_en") or task.get("title", "")
     att_html = ""
     if attachment_names:
-        att_html = f"<p><strong>Attachments:</strong> {', '.join(attachment_names)}</p>"
+        att_html = f"<p><strong>Attachments / 附件:</strong> {', '.join(attachment_names)}</p>"
+
+    subject = f"[SnailAI Task] Progress Update / 进度更新: {title_en}"
+
+    body_en = f"""
+      <p><strong>{assistant_name}</strong> submitted a progress update on:</p>
+      <h3 style="color:#FF5B1F">{title_en}</h3>
+      <div style="margin:16px 0;padding:12px;background:#FDF6E3;border-left:4px solid #D4A547">
+        <p style="margin:0;white-space:pre-wrap">{progress_en or '(no text)'}</p>
+      </div>
+      {att_html}
+      <p style="margin-top:16px;color:#888">Log in to the admin panel to review and provide guidance.</p>
+    """
+
+    body_zh = f"""
+      <p><strong>{assistant_name}</strong> 提交了任务进度：</p>
+      <h3 style="color:#FF5B1F">{title_zh}</h3>
+      <div style="margin:16px 0;padding:12px;background:#FDF6E3;border-left:4px solid #D4A547">
+        <p style="margin:0;white-space:pre-wrap">{progress_zh or '（无文字）'}</p>
+      </div>
+      {att_html}
+      <p style="margin-top:16px;color:#888">请登录管理后台审阅并给出指导。</p>
+    """
+
     html = f"""
     <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;color:#1A1A2E">
       <div style="background:#D4A547;color:white;padding:20px;border-radius:8px 8px 0 0">
-        <h2 style="margin:0">Progress Update</h2>
+        <h2 style="margin:0">Progress Update / 进度更新</h2>
       </div>
       <div style="padding:20px;border:1px solid #eee">
-        <p><strong>{assistant_name}</strong> submitted a progress update on:</p>
-        <h3 style="color:#FF5B1F">{task['title']}</h3>
-        <div style="margin:16px 0;padding:12px;background:#FDF6E3;border-left:4px solid #D4A547">
-          <p style="margin:0;white-space:pre-wrap">{progress_text or '(no text)'}</p>
-        </div>
-        {att_html}
-        <p style="margin-top:16px;color:#888">Log in to the admin panel to review and provide guidance.</p>
+        {_bilingual_email_section("Report", "报告", body_en, body_zh)}
       </div>
     </div>
     """
     _send_email([NOTIFY_TO], subject, html)
 
 
-def _notify_guidance(task, guidance_text, assistant_email, assistant_name):
-    """通知助教：Robin 给了指导"""
-    subject = f"[SnailAI Task] New Guidance: {task['title']}"
+def _notify_guidance(task, guidance_en, guidance_zh, assistant_email, assistant_name):
+    """通知助教：Robin 给了指导（双版邮件）"""
+    title_zh = task.get("title_zh") or task.get("title", "")
+    title_en = task.get("title_en") or task.get("title", "")
+
+    subject = f"[SnailAI Task] New Guidance / 新指导: {title_en}"
+
+    body_en = f"""
+      <p>Hi {assistant_name},</p>
+      <p>Robin has provided guidance on: <strong>{title_en}</strong></p>
+      <div style="margin:16px 0;padding:12px;background:#FFF5EE;border-left:4px solid #FF5B1F">
+        <p style="margin:0;white-space:pre-wrap">{guidance_en}</p>
+      </div>
+    """
+
+    body_zh = f"""
+      <p>{assistant_name}，你好！</p>
+      <p>Robin 对任务 <strong>{title_zh}</strong> 给出了指导：</p>
+      <div style="margin:16px 0;padding:12px;background:#FFF5EE;border-left:4px solid #FF5B1F">
+        <p style="margin:0;white-space:pre-wrap">{guidance_zh}</p>
+      </div>
+    """
+
     html = f"""
     <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;color:#1A1A2E">
       <div style="background:#FF5B1F;color:white;padding:20px;border-radius:8px 8px 0 0">
-        <h2 style="margin:0">New Guidance from Robin</h2>
+        <h2 style="margin:0">New Guidance from Robin / Robin 的新指导</h2>
       </div>
       <div style="padding:20px;border:1px solid #eee">
-        <p>Hi {assistant_name},</p>
-        <p>Robin has provided guidance on: <strong>{task['title']}</strong></p>
-        <div style="margin:16px 0;padding:12px;background:#FFF5EE;border-left:4px solid #FF5B1F">
-          <p style="margin:0;white-space:pre-wrap">{guidance_text}</p>
-        </div>
+        {_bilingual_email_section("Guidance", "指导", body_en, body_zh)}
       </div>
     </div>
     """
@@ -289,16 +494,31 @@ def _notify_guidance(task, guidance_text, assistant_email, assistant_name):
 
 
 def _notify_status_change(task, new_status, assistant_email, assistant_name):
-    """通知助教：任务状态变更"""
-    subject = f"[SnailAI Task] Status Update: {task['title']} → {new_status}"
+    """通知助教：任务状态变更（双版邮件）"""
+    title_zh = task.get("title_zh") or task.get("title", "")
+    title_en = task.get("title_en") or task.get("title", "")
+    status_en = STATUS_LABELS.get(new_status, {}).get("en", new_status)
+    status_zh = STATUS_LABELS.get(new_status, {}).get("zh", new_status)
+
+    subject = f"[SnailAI Task] Status Update / 状态更新: {title_en} → {status_en}"
+
+    body_en = f"""
+      <p>Hi {assistant_name},</p>
+      <p>Task <strong>{title_en}</strong> has been updated to: <strong>{status_en}</strong></p>
+    """
+
+    body_zh = f"""
+      <p>{assistant_name}，你好！</p>
+      <p>任务 <strong>{title_zh}</strong> 状态已更新为：<strong>{status_zh}</strong></p>
+    """
+
     html = f"""
     <div style="font-family:Inter,sans-serif;max-width:600px;margin:0 auto;color:#1A1A2E">
       <div style="background:#22C55E;color:white;padding:20px;border-radius:8px 8px 0 0">
-        <h2 style="margin:0">Task Status Updated</h2>
+        <h2 style="margin:0">Task Status Updated / 任务状态更新</h2>
       </div>
       <div style="padding:20px;border:1px solid #eee">
-        <p>Hi {assistant_name},</p>
-        <p>Task <strong>{task['title']}</strong> has been updated to: <strong>{new_status}</strong></p>
+        {_bilingual_email_section("Status", "状态", body_en, body_zh)}
       </div>
     </div>
     """
@@ -306,14 +526,15 @@ def _notify_status_change(task, new_status, assistant_email, assistant_name):
 
 
 # ═══════════════════════════════════════════════════════════
-# 数据库迁移（幂等）
+# 数据库迁移（幂等，含双语字段升级）
 # ═══════════════════════════════════════════════════════════
 
 def init_internal_tasks_db():
-    """建表。每次服务启动调用，幂等。"""
+    """建表+双语字段迁移。每次服务启动调用，幂等。"""
     conn = _db_conn()
     c = conn.cursor()
 
+    # 1. 创建基础表（如果不存在）
     c.executescript("""
     CREATE TABLE IF NOT EXISTS itask_tasks(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -351,8 +572,23 @@ def init_internal_tasks_db():
     );
     """)
 
-    # users 表加 role=assistant 支持（无需 ALTER，role 本身是 TEXT 自由字段）
-    # 确保 robin 账号存在（admin 角色）— 如果 users 表还没创建则跳过（由 app.py 主迁移创建）
+    # 2. 双语字段迁移（幂等 ALTER）
+    _safe_add_column(c, "itask_tasks", "title_zh", "TEXT")
+    _safe_add_column(c, "itask_tasks", "title_en", "TEXT")
+    _safe_add_column(c, "itask_tasks", "description_zh", "TEXT")
+    _safe_add_column(c, "itask_tasks", "description_en", "TEXT")
+    _safe_add_column(c, "itask_activities", "content_zh", "TEXT")
+    _safe_add_column(c, "itask_activities", "content_en", "TEXT")
+
+    # 3. 回填旧数据（把旧 title/description/content 复制到双语字段）
+    conn.execute("UPDATE itask_tasks SET title_zh=title WHERE title_zh IS NULL AND title IS NOT NULL")
+    conn.execute("UPDATE itask_tasks SET title_en=title WHERE title_en IS NULL AND title IS NOT NULL")
+    conn.execute("UPDATE itask_tasks SET description_zh=description WHERE description_zh IS NULL AND description IS NOT NULL")
+    conn.execute("UPDATE itask_tasks SET description_en=description WHERE description_en IS NULL AND description IS NOT NULL")
+    conn.execute("UPDATE itask_activities SET content_zh=content WHERE content_zh IS NULL AND content IS NOT NULL")
+    conn.execute("UPDATE itask_activities SET content_en=content WHERE content_en IS NULL AND content IS NOT NULL")
+
+    # 4. users 表 seed
     try:
         robin = c.execute("SELECT id FROM users WHERE username='robin'").fetchone()
         if not robin:
@@ -361,10 +597,18 @@ def init_internal_tasks_db():
                       ("robin", "Robin Luo", "admin", _hash_pw("12345", salt), salt))
             conn.commit()
     except sqlite3.OperationalError:
-        pass  # users 表还不存在，由 app.py 主迁移创建
+        pass
 
     conn.commit()
     conn.close()
+
+
+def _safe_add_column(cursor, table, column, col_type):
+    """安全地添加列（已存在则忽略）"""
+    try:
+        cursor.execute(f"ALTER TABLE {table} ADD COLUMN {column} {col_type}")
+    except sqlite3.OperationalError:
+        pass  # 列已存在
 
 
 # ═══════════════════════════════════════════════════════════
@@ -388,7 +632,6 @@ def api_login():
     if not u:
         return jsonify({"ok": False, "error": "Invalid credentials"}), 401
 
-    # 只允许 assistant 和 admin 登录
     if u["role"] not in ("assistant", "admin"):
         return jsonify({"ok": False, "error": "Access denied"}), 403
 
@@ -447,18 +690,15 @@ def api_my_tasks():
             "SELECT * FROM itask_tasks WHERE assigned_to=? ORDER BY CASE priority WHEN 'urgent' THEN 0 WHEN 'high' THEN 1 WHEN 'normal' THEN 2 ELSE 3 END, created_at DESC",
             (u["username"],)
         ).fetchall()
-    conn.close()
 
     tasks = []
     for r in rows:
         d = _task_to_dict(r)
-        # 助教名
-        conn2 = _db_conn()
-        au = conn2.execute("SELECT name FROM users WHERE username=?", (d["assigned_to"],)).fetchone()
-        conn2.close()
+        au = conn.execute("SELECT name FROM users WHERE username=?", (d["assigned_to"],)).fetchone()
         d["assigned_to_name"] = au["name"] if au else d["assigned_to"]
         tasks.append(d)
 
+    conn.close()
     return jsonify({"ok": True, "tasks": tasks})
 
 
@@ -473,24 +713,20 @@ def api_task_detail(task_id):
         conn.close()
         return jsonify({"ok": False, "error": "Task not found"}), 404
 
-    task = dict(task)
-    # 权限：助教只能看自己的
+    task = _task_to_dict(task)
     if u["role"] != "admin" and task["assigned_to"] != u["username"]:
         conn.close()
         return jsonify({"ok": False, "error": "Access denied"}), 403
 
-    # 助教名
     au = conn.execute("SELECT name FROM users WHERE username=?", (task["assigned_to"],)).fetchone()
     task["assigned_to_name"] = au["name"] if au else task["assigned_to"]
 
-    # 时间线
     activities = conn.execute(
         "SELECT * FROM itask_activities WHERE task_id=? ORDER BY created_at ASC",
         (task_id,)
     ).fetchall()
     activity_list = [_activity_to_dict(a) for a in activities]
 
-    # 文件
     files = conn.execute(
         "SELECT * FROM itask_files WHERE task_id=? ORDER BY uploaded_at DESC",
         (task_id,)
@@ -498,7 +734,6 @@ def api_task_detail(task_id):
     file_list = [dict(f) for f in files]
 
     conn.close()
-
     return jsonify({
         "ok": True,
         "task": task,
@@ -510,7 +745,7 @@ def api_task_detail(task_id):
 @bp.route("/task/<int:task_id>/submit", methods=["POST"])
 @_require_assistant
 def api_submit_progress(task_id):
-    """助教提交进度报告（文字+可选文件），后台自动发邮件给 Robin"""
+    """助教提交进度报告，后台自动翻译+发双版邮件给 Robin"""
     u = g.user
     conn = _db_conn()
     task = conn.execute("SELECT * FROM itask_tasks WHERE id=?", (task_id,)).fetchone()
@@ -530,12 +765,17 @@ def api_submit_progress(task_id):
         conn.close()
         return jsonify({"ok": False, "error": "Content is required"}), 400
 
+    # 自动翻译
+    bilingual = _auto_translate(content)
+    content_en = bilingual["en"]
+    content_zh = bilingual["zh"]
+
     now = datetime.datetime.utcnow().isoformat()
 
-    # 写活动记录
+    # 写活动记录（双语）
     conn.execute(
-        "INSERT INTO itask_activities(task_id, author, type, content, created_at) VALUES(?,?,?,?,?)",
-        (task_id, u["username"], "submit", content, now)
+        "INSERT INTO itask_activities(task_id, author, type, content, content_en, content_zh, created_at) VALUES(?,?,?,?,?,?,?)",
+        (task_id, u["username"], "submit", content, content_en, content_zh, now)
     )
     activity_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
 
@@ -550,19 +790,18 @@ def api_submit_progress(task_id):
         conn.execute("UPDATE itask_tasks SET status='in_progress', updated_at=? WHERE id=?",
                      (now, task_id))
     elif task["status"] == "in_review":
-        # 助教再次提交，回到 in_progress
         conn.execute("UPDATE itask_tasks SET status='in_progress', updated_at=? WHERE id=?",
                      (now, task_id))
 
     conn.commit()
 
-    # 重新获取任务（状态可能变了）
+    # 重新获取任务
     task = conn.execute("SELECT * FROM itask_tasks WHERE id=?", (task_id,)).fetchone()
     conn.close()
 
-    # 自动发邮件给 Robin（失败不影响接口）
+    # 自动发双版邮件给 Robin
     try:
-        _notify_progress_submitted(dict(task), u["name"], content)
+        _notify_progress_submitted(_task_to_dict(task), u["name"], content_en, content_zh)
     except Exception as e:
         print(f"[internal-tasks] notify_progress error: {e}")
 
@@ -593,7 +832,6 @@ def api_upload_file(task_id):
         conn.close()
         return jsonify({"ok": False, "error": "Empty filename"}), 400
 
-    # 检查大小
     file.seek(0, 2)
     size = file.tell()
     file.seek(0)
@@ -601,38 +839,37 @@ def api_upload_file(task_id):
         conn.close()
         return jsonify({"ok": False, "error": f"File too large (max {MAX_FILE_SIZE//1024//1024}MB)"}), 400
 
-    # 保存文件
     task_dir = UPLOAD_DIR / str(task_id)
     task_dir.mkdir(parents=True, exist_ok=True)
 
-    # 防重名：加 UUID 前缀
     safe_name = f"{uuid.uuid4().hex[:8]}_{file.filename}"
     filepath = task_dir / safe_name
     file.save(str(filepath))
 
     now = datetime.datetime.utcnow().isoformat()
 
-    # 写文件记录
+    upload_msg = f"Uploaded file: {file.filename}"
+    bilingual = _auto_translate(upload_msg)
+
     conn.execute(
         "INSERT INTO itask_files(task_id, filename, filepath, uploaded_by, filesize, uploaded_at) VALUES(?,?,?,?,?,?)",
         (task_id, file.filename, str(filepath), u["username"], size, now)
     )
     file_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
 
-    # 写活动记录（带附件标记）
     conn.execute(
-        "INSERT INTO itask_activities(task_id, author, type, content, attachment_paths, created_at) VALUES(?,?,?,?,?,?)",
-        (task_id, u["username"], "upload", f"Uploaded file: {file.filename}", json.dumps([str(filepath)]), now)
+        "INSERT INTO itask_activities(task_id, author, type, content, content_en, content_zh, attachment_paths, created_at) VALUES(?,?,?,?,?,?,?,?)",
+        (task_id, u["username"], "upload", upload_msg, bilingual["en"], bilingual["zh"], json.dumps([str(filepath)]), now)
     )
 
     conn.commit()
     conn.close()
 
-    # 同时发邮件通知 Robin（失败不影响接口）
-    task_dict = dict(task)
+    # 发邮件通知 Robin
+    task_dict = _task_to_dict(task)
     try:
         _notify_progress_submitted(task_dict, u["name"],
-                                   f"[File Upload] {file.filename} ({size//1024}KB)",
+                                   bilingual["en"], bilingual["zh"],
                                    [file.filename])
     except Exception as e:
         print(f"[internal-tasks] notify_upload error: {e}")
@@ -698,7 +935,7 @@ def api_admin_task_detail(task_id):
 @bp.route("/admin/create-task", methods=["POST"])
 @_require_admin
 def api_admin_create_task():
-    """创建任务并分配给助教"""
+    """创建任务并分配给助教（自动翻译为双语）"""
     try:
         data = request.get_json(force=True)
         title = (data.get("title") or "").strip()
@@ -713,36 +950,53 @@ def api_admin_create_task():
             return jsonify({"ok": False, "error": "Assigned to is required"}), 400
 
         conn = _db_conn()
-        # 验证助教存在
         au = conn.execute("SELECT * FROM users WHERE username=? AND role IN ('assistant','admin')",
                           (assigned_to,)).fetchone()
         if not au:
             conn.close()
             return jsonify({"ok": False, "error": f"User '{assigned_to}' not found or not an assistant"}), 400
 
+        # 自动翻译 title 和 description
+        title_bi = _auto_translate(title)
+        desc_bi = _auto_translate(description) if description else {"en": "", "zh": ""}
+
         now = datetime.datetime.utcnow().isoformat()
         conn.execute(
-            "INSERT INTO itask_tasks(title, description, priority, deadline, assigned_to, created_by, status, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?,?)",
-            (title, description, priority, deadline, assigned_to, g.user["username"], "todo", now, now)
+            "INSERT INTO itask_tasks(title, description, title_zh, title_en, description_zh, description_en, priority, deadline, assigned_to, created_by, status, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (title, description, title_bi["zh"], title_bi["en"], desc_bi["zh"], desc_bi["en"],
+             priority, deadline, assigned_to, g.user["username"], "todo", now, now)
         )
         task_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
 
-        # 写活动记录
+        # 活动记录（双语）
+        created_msg = f"Task created and assigned to {au['name']}"
+        created_bi = _auto_translate(created_msg)
         conn.execute(
-            "INSERT INTO itask_activities(task_id, author, type, content, created_at) VALUES(?,?,?,?,?)",
-            (task_id, g.user["username"], "created", f"Task created and assigned to {au['name']}", now)
+            "INSERT INTO itask_activities(task_id, author, type, content, content_en, content_zh, created_at) VALUES(?,?,?,?,?,?,?)",
+            (task_id, g.user["username"], "created", created_msg, created_bi["en"], created_bi["zh"], now)
         )
         conn.commit()
         conn.close()
 
-        # 邮件通知助教（失败不影响接口）
-        task_dict = {"title": title, "description": description, "priority": priority, "deadline": deadline}
+        # 双版邮件通知助教
+        task_dict = {
+            "title": title, "title_zh": title_bi["zh"], "title_en": title_bi["en"],
+            "description": description, "description_zh": desc_bi["zh"], "description_en": desc_bi["en"],
+            "priority": priority, "deadline": deadline
+        }
         try:
             _notify_task_created(task_dict, au["name"], au.get("email") or GMAIL_USER)
         except Exception as e:
             print(f"[internal-tasks] notify_task_created error: {e}")
 
-        return jsonify({"ok": True, "task_id": task_id})
+        return jsonify({
+            "ok": True,
+            "task_id": task_id,
+            "title_zh": title_bi["zh"],
+            "title_en": title_bi["en"],
+            "description_zh": desc_bi["zh"],
+            "description_en": desc_bi["en"],
+        })
     except Exception as e:
         import traceback
         traceback.print_exc()
@@ -752,7 +1006,7 @@ def api_admin_create_task():
 @bp.route("/admin/task/<int:task_id>", methods=["PUT"])
 @_require_admin
 def api_admin_update_task(task_id):
-    """更新任务属性"""
+    """更新任务属性（双语翻译）"""
     conn = _db_conn()
     task = conn.execute("SELECT * FROM itask_tasks WHERE id=?", (task_id,)).fetchone()
     if not task:
@@ -764,21 +1018,33 @@ def api_admin_update_task(task_id):
 
     updates = []
     params = []
-    for field in ("title", "description", "priority", "deadline", "assigned_to"):
+
+    # 基本字段
+    for field in ("priority", "deadline", "assigned_to"):
         if field in data:
             updates.append(f"{field}=?")
             params.append(data[field])
 
+    # 双语字段：title 更新时同步翻译
+    if "title" in data:
+        title_bi = _auto_translate(data["title"])
+        updates.extend(["title=?", "title_zh=?", "title_en=?"])
+        params.extend([data["title"], title_bi["zh"], title_bi["en"]])
+
+    if "description" in data:
+        desc_bi = _auto_translate(data["description"])
+        updates.extend(["description=?", "description_zh=?", "description_en=?"])
+        params.extend([data["description"], desc_bi["zh"], desc_bi["en"]])
+
     if updates:
-        params.append(now)
-        params.append(task_id)
+        params.extend([now, task_id])
         conn.execute(f"UPDATE itask_tasks SET {', '.join(updates)}, updated_at=? WHERE id=?", params)
 
-        # 活动记录
         changes = ", ".join(f"{k}={v}" for k, v in data.items() if k in ("title","description","priority","deadline","assigned_to"))
+        changes_bi = _auto_translate(f"Task updated: {changes}")
         conn.execute(
-            "INSERT INTO itask_activities(task_id, author, type, content, created_at) VALUES(?,?,?,?,?)",
-            (task_id, g.user["username"], "updated", f"Task updated: {changes}", now)
+            "INSERT INTO itask_activities(task_id, author, type, content, content_en, content_zh, created_at) VALUES(?,?,?,?,?,?,?)",
+            (task_id, g.user["username"], "updated", f"Task updated: {changes}", changes_bi["en"], changes_bi["zh"], now)
         )
 
     conn.commit()
@@ -789,7 +1055,7 @@ def api_admin_update_task(task_id):
 @bp.route("/admin/task/<int:task_id>/guide", methods=["POST"])
 @_require_admin
 def api_admin_guide(task_id):
-    """Robin 给指导/意见"""
+    """Robin 给指导/意见（自动翻译为双语）"""
     data = request.get_json(force=True)
     content = (data.get("content") or "").strip()
     if not content:
@@ -801,31 +1067,34 @@ def api_admin_guide(task_id):
         conn.close()
         return jsonify({"ok": False, "error": "Task not found"}), 404
 
+    # 自动翻译指导内容
+    bi = _auto_translate(content)
+
     now = datetime.datetime.utcnow().isoformat()
     conn.execute(
-        "INSERT INTO itask_activities(task_id, author, type, content, created_at) VALUES(?,?,?,?,?)",
-        (task_id, g.user["username"], "guide", content, now)
+        "INSERT INTO itask_activities(task_id, author, type, content, content_en, content_zh, created_at) VALUES(?,?,?,?,?,?,?)",
+        (task_id, g.user["username"], "guide", content, bi["en"], bi["zh"], now)
     )
-    # 状态变为待助教处理
+
     if task["status"] == "in_review":
         conn.execute("UPDATE itask_tasks SET status='in_progress', updated_at=? WHERE id=?",
                      (now, task_id))
 
     conn.commit()
 
-    # 查助教邮箱
     au = conn.execute("SELECT * FROM users WHERE username=?", (task["assigned_to"],)).fetchone()
     conn.close()
 
-    # 邮件通知助教
+    # 双版邮件通知助教
     if au:
         try:
-            _notify_guidance(dict(task), content,
+            task_dict = _task_to_dict(task)
+            _notify_guidance(task_dict, bi["en"], bi["zh"],
                              au.get("email") or GMAIL_USER, au["name"])
         except Exception as e:
             print(f"[internal-tasks] notify_guidance error: {e}")
 
-    return jsonify({"ok": True})
+    return jsonify({"ok": True, "content_zh": bi["zh"], "content_en": bi["en"]})
 
 
 @bp.route("/admin/task/<int:task_id>/status", methods=["POST"])
@@ -854,22 +1123,20 @@ def api_admin_change_status(task_id):
         conn.execute("UPDATE itask_tasks SET progress_percent=100, updated_at=? WHERE id=?",
                      (now, task_id))
 
-    # 活动记录
     status_label = note or f"Status changed to {new_status}"
+    bi = _auto_translate(status_label)
     conn.execute(
-        "INSERT INTO itask_activities(task_id, author, type, content, created_at) VALUES(?,?,?,?,?)",
-        (task_id, g.user["username"], "status_change", status_label, now)
+        "INSERT INTO itask_activities(task_id, author, type, content, content_en, content_zh, created_at) VALUES(?,?,?,?,?,?,?)",
+        (task_id, g.user["username"], "status_change", status_label, bi["en"], bi["zh"], now)
     )
     conn.commit()
 
-    # 查助教
     au = conn.execute("SELECT * FROM users WHERE username=?", (task["assigned_to"],)).fetchone()
     conn.close()
 
-    # 邮件通知助教
     if au:
         try:
-            _notify_status_change(dict(task), new_status,
+            _notify_status_change(_task_to_dict(task), new_status,
                                   au.get("email") or GMAIL_USER, au["name"])
         except Exception as e:
             print(f"[internal-tasks] notify_status_change error: {e}")
@@ -902,7 +1169,6 @@ def api_admin_create_assistant():
     conn = _db_conn()
     existing = conn.execute("SELECT id, role FROM users WHERE username=?", (username,)).fetchone()
     if existing:
-        # 用户已存在：如果角色不是 assistant，升级为 assistant 并重置密码
         if existing["role"] != "assistant":
             salt = secrets.token_hex(8)
             conn.execute("UPDATE users SET role='assistant', name=?, password_hash=?, salt=?, must_change_pw=0 WHERE username=?",
@@ -911,7 +1177,6 @@ def api_admin_create_assistant():
             conn.close()
             return jsonify({"ok": True, "username": username, "password": password, "name": name, "action": "upgraded", "previous_role": existing["role"]})
         else:
-            # 已是 assistant，仅重置密码
             salt = secrets.token_hex(8)
             conn.execute("UPDATE users SET name=?, password_hash=?, salt=?, must_change_pw=0 WHERE username=?",
                          (name, _hash_pw(password, salt), salt, username))
@@ -937,7 +1202,6 @@ def api_admin_delete_file(file_id):
         conn.close()
         return jsonify({"ok": False, "error": "File not found"}), 404
 
-    # 删除物理文件
     filepath = Path(f["filepath"])
     if filepath.exists():
         filepath.unlink()
