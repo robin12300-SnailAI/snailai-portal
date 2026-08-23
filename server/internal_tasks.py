@@ -560,8 +560,11 @@ def api_submit_progress(task_id):
     task = conn.execute("SELECT * FROM itask_tasks WHERE id=?", (task_id,)).fetchone()
     conn.close()
 
-    # 自动发邮件给 Robin
-    _notify_progress_submitted(dict(task), u["name"], content)
+    # 自动发邮件给 Robin（失败不影响接口）
+    try:
+        _notify_progress_submitted(dict(task), u["name"], content)
+    except Exception as e:
+        print(f"[internal-tasks] notify_progress error: {e}")
 
     return jsonify({"ok": True, "activity_id": activity_id})
 
@@ -625,11 +628,14 @@ def api_upload_file(task_id):
     conn.commit()
     conn.close()
 
-    # 同时发邮件通知 Robin（带附件）
+    # 同时发邮件通知 Robin（失败不影响接口）
     task_dict = dict(task)
-    _notify_progress_submitted(task_dict, u["name"],
-                               f"[File Upload] {file.filename} ({size//1024}KB)",
-                               [file.filename])
+    try:
+        _notify_progress_submitted(task_dict, u["name"],
+                                   f"[File Upload] {file.filename} ({size//1024}KB)",
+                                   [file.filename])
+    except Exception as e:
+        print(f"[internal-tasks] notify_upload error: {e}")
 
     return jsonify({"ok": True, "file_id": file_id, "filename": file.filename})
 
@@ -728,9 +734,12 @@ def api_admin_create_task():
     conn.commit()
     conn.close()
 
-    # 邮件通知助教
+    # 邮件通知助教（失败不影响接口）
     task_dict = {"title": title, "description": description, "priority": priority, "deadline": deadline}
-    _notify_task_created(task_dict, au["name"], au.get("email") or GMAIL_USER)
+    try:
+        _notify_task_created(task_dict, au["name"], au.get("email") or GMAIL_USER)
+    except Exception as e:
+        print(f"[internal-tasks] notify_task_created error: {e}")
 
     return jsonify({"ok": True, "task_id": task_id})
 
@@ -805,8 +814,11 @@ def api_admin_guide(task_id):
 
     # 邮件通知助教
     if au:
-        _notify_guidance(dict(task), content,
-                         au.get("email") or GMAIL_USER, au["name"])
+        try:
+            _notify_guidance(dict(task), content,
+                             au.get("email") or GMAIL_USER, au["name"])
+        except Exception as e:
+            print(f"[internal-tasks] notify_guidance error: {e}")
 
     return jsonify({"ok": True})
 
@@ -851,8 +863,11 @@ def api_admin_change_status(task_id):
 
     # 邮件通知助教
     if au:
-        _notify_status_change(dict(task), new_status,
-                              au.get("email") or GMAIL_USER, au["name"])
+        try:
+            _notify_status_change(dict(task), new_status,
+                                  au.get("email") or GMAIL_USER, au["name"])
+        except Exception as e:
+            print(f"[internal-tasks] notify_status_change error: {e}")
 
     return jsonify({"ok": True})
 
