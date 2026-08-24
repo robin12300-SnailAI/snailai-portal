@@ -286,8 +286,17 @@
   }
   .gate-enterprise .gate-cta { background: var(--accent); color: white; }
   .gate-education .gate-cta { background: var(--ink); color: white; }
+  .gate-scan .gate-cta { background: linear-gradient(135deg, var(--accent) 0%, var(--gold) 100%); color: white; }
   .gate-enterprise .pill { background: var(--accent-light); color: var(--accent); }
   .gate-education .pill { background: var(--paper-2); color: var(--ink); }
+  .gate-scan .pill { background: rgba(212,165,71,0.12); color: var(--gold); }
+  .gate-scan { border-color: rgba(212,165,71,0.25); }
+  .scan-badge {
+    display: inline-block; padding: 4px 14px; border-radius: 100px;
+    background: var(--accent); color: white;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.04em;
+    margin-bottom: 14px; text-transform: uppercase;
+  }
   .gate-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .gate-pills .pill {
     padding: 4px 10px; border-radius: 100px;
@@ -901,6 +910,18 @@
       <h2 data-zh="企业教育服务" data-en="Corporate Education">企业教育服务</h2>
       <p data-zh="企业内训 + AI 应用课程：系统使用培训、AI 平台搭建培训、团队 AI 能力工作坊。让企业团队真正驾驭 AI。" data-en="Corporate training + AI courses: system adoption, AI platform setup, and team AI workshops. We train your people to own AI, not rent it.">企业内训 + AI 应用课程：系统使用培训、AI 平台搭建培训、团队 AI 能力工作坊。让企业团队真正驾驭 AI。</p>
       <div class="gate-cta" data-zh="进入教育服务 →" data-en="Education Services →">进入教育服务 →</div>
+    </a>
+
+    <a href="/business-opportunity-scan/start.html" class="hero-choice-card gate-scan">
+      <div class="gate-icon">🔍</div>
+      <span class="scan-badge" data-zh="免费" data-en="FREE">免费</span>
+      <div class="gate-pills">
+        <span class="pill" data-zh="4–6 分钟在线评估" data-en="4–6 min assessment">4–6 分钟在线评估</span>
+        <span class="pill" data-zh="AI 机会报告" data-en="AI Opportunity Report">AI 机会报告</span>
+      </div>
+      <h2 data-zh="AI 商机扫描" data-en="AI Business Scan">AI 商机扫描</h2>
+      <p data-zh="免费在线评估，4–6 分钟获得专属 AI 机会报告：优先级排序 + 风险评估 + 首个试点建议。适合悉尼 5–200 人企业。" data-en="Free online assessment. Get a tailored AI Opportunity Report in minutes: prioritised opportunities + risk assessment + first pilot. For Sydney businesses with 5–200 staff.">免费在线评估，4–6 分钟获得专属 AI 机会报告：优先级排序 + 风险评估 + 首个试点建议。适合悉尼 5–200 人企业。</p>
+      <div class="gate-cta" data-zh="开始免费扫描 →" data-en="Start Free Scan →">开始免费扫描 →</div>
     </a>
   </div>
 </section>
