@@ -609,6 +609,25 @@ def init_internal_tasks_db():
     _safe_add_column(c, "itask_tasks", "requirements_zh", "TEXT")
     _safe_add_column(c, "itask_tasks", "requirements_en", "TEXT")
 
+    # 2c. 项目看板字段迁移（幂等 ALTER）
+    _safe_add_column(c, "itask_tasks", "project_id", "INTEGER REFERENCES itask_projects(id)")
+    _safe_add_column(c, "itask_tasks", "workstream", "TEXT")
+
+    # 2d. 项目表（如果不存在）
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS itask_projects(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      code TEXT NOT NULL UNIQUE,
+      name TEXT NOT NULL,
+      name_en TEXT,
+      target_date TEXT,
+      status TEXT NOT NULL DEFAULT 'active',
+      description TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT
+    )
+    """)
+
     # 3. 回填旧数据（把旧 title/description/content 复制到双语字段）
     conn.execute("UPDATE itask_tasks SET title_zh=title WHERE title_zh IS NULL AND title IS NOT NULL")
     conn.execute("UPDATE itask_tasks SET title_en=title WHERE title_en IS NULL AND title IS NOT NULL")
@@ -1078,7 +1097,7 @@ def api_admin_update_task(task_id):
     params = []
 
     # 基本字段
-    for field in ("priority", "deadline", "assigned_to"):
+    for field in ("priority", "deadline", "assigned_to", "project_id", "workstream"):
         if field in data:
             updates.append(f"{field}=?")
             params.append(data[field])
@@ -1307,3 +1326,204 @@ def api_admin_stats():
         by_person[row["assigned_to"]] = {"name": au["name"] if au else row["assigned_to"], "count": row["n"]}
     conn.close()
     return jsonify({"ok": True, "total": total, "by_status": by_status, "by_person": by_person})
+
+
+# ═══════════════════════════════════════════════════════════
+# 项目看板 API（协同看板模块 V1.0）
+# ═══════════════════════════════════════════════════════════
+
+@bp.route("/projects", methods=["GET"])
+@_require_assistant
+def api_list_projects():
+    """列出所有项目"""
+    conn = _db_conn()
+    rows = conn.execute("SELECT * FROM itask_projects ORDER BY id DESC").fetchall()
+    projects = []
+    for p in rows:
+        d = dict(p)
+        # 每个项目的任务统计
+        stats = conn.execute(
+            "SELECT status, COUNT(*) AS n, AVG(progress_percent) AS avg_progress FROM itask_tasks WHERE project_id=? GROUP BY status",
+            (d["id"],)
+        ).fetchall()
+        total = sum(s["n"] for s in stats)
+        done = sum(s["n"] for s in stats if s["status"] == "done")
+        d["total_tasks"] = total
+        d["done_tasks"] = done
+        d["progress"] = round(done / total * 100) if total else 0
+        projects.append(d)
+    conn.close()
+    return jsonify({"ok": True, "projects": projects})
+
+
+@bp.route("/projects", methods=["POST"])
+@_require_admin
+def api_create_project():
+    """创建新项目"""
+    data = request.get_json(force=True)
+    code = (data.get("code") or "").strip()
+    name = (data.get("name") or "").strip()
+    name_en = (data.get("name_en") or "").strip()
+    target_date = data.get("target_date")
+    description = (data.get("description") or "").strip()
+
+    if not code or not name:
+        return jsonify({"ok": False, "error": "code and name are required"}), 400
+
+    conn = _db_conn()
+    existing = conn.execute("SELECT id FROM itask_projects WHERE code=?", (code,)).fetchone()
+    if existing:
+        conn.close()
+        return jsonify({"ok": False, "error": f"Project code '{code}' already exists"}), 400
+
+    now = datetime.datetime.utcnow().isoformat()
+    conn.execute(
+        "INSERT INTO itask_projects(code, name, name_en, target_date, status, description, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?)",
+        (code, name, name_en, target_date, "active", description, now, now)
+    )
+    project_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+    conn.commit()
+    conn.close()
+    return jsonify({"ok": True, "project_id": project_id})
+
+
+@bp.route("/projects/<int:project_id>", methods=["GET"])
+@_require_assistant
+def api_get_project(project_id):
+    """获取项目详情 + 按工作线分组的任务"""
+    conn = _db_conn()
+    proj = conn.execute("SELECT * FROM itask_projects WHERE id=?", (project_id,)).fetchone()
+    if not proj:
+        conn.close()
+        return jsonify({"ok": False, "error": "Project not found"}), 404
+    proj = dict(proj)
+
+    rows = conn.execute(
+        "SELECT * FROM itask_tasks WHERE project_id=? ORDER BY workstream, id",
+        (project_id,)
+    ).fetchall()
+    tasks = []
+    for r in rows:
+        d = _task_to_dict(r)
+        au = conn.execute("SELECT name FROM users WHERE username=?", (d["assigned_to"],)).fetchone()
+        d["assigned_to_name"] = au["name"] if au else d["assigned_to"]
+        tasks.append(d)
+
+    # 按 workstream 分组
+    workstreams = {}
+    for t in tasks:
+        ws = t.get("workstream") or "未分类"
+        if ws not in workstreams:
+            workstreams[ws] = []
+        workstreams[ws].append(t)
+
+    # 统计
+    total = len(tasks)
+    done = sum(1 for t in tasks if t["status"] == "done")
+    proj["total_tasks"] = total
+    proj["done_tasks"] = done
+    proj["progress"] = round(done / total * 100) if total else 0
+
+    conn.close()
+    return jsonify({"ok": True, "project": proj, "workstreams": workstreams, "tasks": tasks})
+
+
+@bp.route("/projects/<int:project_id>/tasks/<int:task_id>/status", methods=["POST"])
+@_require_assistant
+def api_board_update_status(project_id, task_id):
+    """看板模式：参与者更新自己负责的任务状态"""
+    u = g.user
+    conn = _db_conn()
+    task = conn.execute("SELECT * FROM itask_tasks WHERE id=? AND project_id=?", (task_id, project_id)).fetchone()
+    if not task:
+        conn.close()
+        return jsonify({"ok": False, "error": "Task not found"}), 404
+
+    data = request.get_json(force=True)
+    new_status = (data.get("status") or "").strip()
+    progress_percent = data.get("progress_percent")
+
+    valid = ("todo", "in_progress", "in_review", "done", "closed")
+    if new_status and new_status not in valid:
+        conn.close()
+        return jsonify({"ok": False, "error": f"Invalid status"}), 400
+
+    now = datetime.datetime.utcnow().isoformat()
+    updates = []
+    params = []
+
+    # 权限：admin 可改任何任务，assistant 只能改自己的
+    if u["role"] != "admin" and task["assigned_to"] != u["username"]:
+        conn.close()
+        return jsonify({"ok": False, "error": "You can only update your own tasks"}), 403
+
+    if new_status:
+        updates.append("status=?")
+        params.append(new_status)
+        if new_status == "done":
+            updates.append("progress_percent=100")
+
+    if progress_percent is not None and new_status != "done":
+        progress_percent = max(0, min(100, int(progress_percent)))
+        updates.append("progress_percent=?")
+        params.append(progress_percent)
+
+    if updates:
+        updates.append("updated_at=?")
+        params.append(now)
+        params.append(task_id)
+        conn.execute(f"UPDATE itask_tasks SET {', '.join(updates)} WHERE id=?", params)
+
+        # 活动记录
+        change_desc = f"Status: {new_status}" if new_status else f"Progress: {progress_percent}%"
+        bi = _auto_translate(change_desc)
+        conn.execute(
+            "INSERT INTO itask_activities(task_id, author, type, content, content_en, content_zh, created_at) VALUES(?,?,?,?,?,?,?)",
+            (task_id, u["username"], "status_change", change_desc, bi["en"], bi["zh"], now)
+        )
+        conn.commit()
+
+    conn.close()
+    return jsonify({"ok": True})
+
+
+@bp.route("/projects/<int:project_id>/tasks/<int:task_id>/workstream", methods=["POST"])
+@_require_admin
+def api_board_set_workstream(project_id, task_id):
+    """设置任务所属工作线"""
+    data = request.get_json(force=True)
+    workstream = (data.get("workstream") or "").strip()
+    conn = _db_conn()
+    conn.execute("UPDATE itask_tasks SET workstream=? WHERE id=? AND project_id=?",
+                 (workstream, task_id, project_id))
+    conn.commit()
+    conn.close()
+    return jsonify({"ok": True})
+
+
+@bp.route("/projects/<int:project_id>", methods=["PUT"])
+@_require_admin
+def api_update_project(project_id):
+    """更新项目信息"""
+    data = request.get_json(force=True)
+    conn = _db_conn()
+    proj = conn.execute("SELECT * FROM itask_projects WHERE id=?", (project_id,)).fetchone()
+    if not proj:
+        conn.close()
+        return jsonify({"ok": False, "error": "Project not found"}), 404
+
+    now = datetime.datetime.utcnow().isoformat()
+    updates = []
+    params = []
+    for field in ("name", "name_en", "target_date", "status", "description"):
+        if field in data:
+            updates.append(f"{field}=?")
+            params.append(data[field])
+    if updates:
+        updates.append("updated_at=?")
+        params.append(now)
+        params.append(project_id)
+        conn.execute(f"UPDATE itask_projects SET {', '.join(updates)} WHERE id=?", params)
+        conn.commit()
+    conn.close()
+    return jsonify({"ok": True})
