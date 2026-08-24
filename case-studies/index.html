@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-title-zh="蜗牛 AI · 案例展示" data-title-en="Snail AI · Case Studies">
+<head>
+<style>body{opacity:0;transition:opacity .12s ease}html.lang-ready body{opacity:1}</style><noscript><style>body{opacity:1!important}</style></noscript><script>window.addEventListener("load",function(){document.documentElement.classList.add("lang-ready");});</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snail AI · Case Studies</title>
+<meta name="description" content="Real projects delivered by Snail AI — B2B e-commerce, audio rental, corporate training, AI automation. Live, iterated, real results.">
+<link rel="icon" type="image/png" href="../assets/snailai_logo.png">
+<link rel="canonical" href="https://snailai.ai/case-studies/">
+<style>
+  :root {
+    --ink: #1A1A2E; --ink-2: #2A2A40; --ink-3: #6A6A85;
+    --paper: #FCFCFA; --paper-2: #F5F4EE;
+    --accent: #FF5B1F; --accent-2: #E84A0F; --accent-light: rgba(255,91,31,0.08); --accent-warm: #FFF5EE;
+    --line: rgba(26,26,46,0.08);
+    --shadow-sm: 0 1px 3px rgba(26,26,46,0.04), 0 2px 8px rgba(26,26,46,0.04);
+    --shadow-md: 0 4px 16px rgba(26,26,46,0.08); --shadow-lg: 0 12px 36px rgba(26,26,46,0.12);
+    --r-lg: 16px;
+    --sans: 'Inter','Helvetica Neue','Helvetica','Arial','PingFang SC','Microsoft YaHei UI','Noto Sans SC',sans-serif;
+    --mono: 'JetBrains Mono','SF Mono','Menlo','Consolas',monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:var(--sans); background:var(--paper); color:var(--ink); line-height:1.7; -webkit-font-smoothing:antialiased; }
+
+  .nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:16px 40px; background:linear-gradient(180deg,rgba(252,252,250,.96),rgba(252,252,250,.85)); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+  .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink); }
+  .nav-logo img { height:32px; width:auto; }
+  .nav-logo span { font-weight:800; font-size:15px; }
+  .nav-links { display:flex; gap:28px; align-items:center; }
+  .nav-links a { font-size:13px; font-weight:600; color:var(--ink-3); text-decoration:none; transition:color .2s; }
+  .nav-links a:hover { color:var(--accent); }
+  .lang-switch { display:inline-flex; gap:4px; border:1px solid var(--line); border-radius:100px; padding:3px; background:white; }
+  .lang-btn { background:none; border:none; cursor:pointer; padding:5px 12px; border-radius:100px; font-size:12px; font-weight:700; color:var(--ink-3); transition:all .2s; }
+  .lang-btn.active { background:var(--ink); color:white; }
+
+  .hero { padding:140px 40px 60px; max-width:1280px; margin:0 auto; text-align:center; }
+  .hero h1 { font-size:clamp(2rem,4vw,3rem); font-weight:900; letter-spacing:-0.025em; margin-bottom:16px; }
+  .hero h1 .accent { color:var(--accent); }
+  .hero .subtitle { font-size:clamp(1rem,1.6vw,1.2rem); color:var(--ink-3); max-width:720px; margin:0 auto; line-height:1.65; }
+
+  section { padding:60px 40px; }
+  .section-inner { max-width:1280px; margin:0 auto; }
+
+  .case-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:28px; }
+  .case-card { background:white; border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden; transition:all .3s ease; }
+  .case-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-md); }
+  .case-card iframe { width:100%; height:300px; border:none; }
+  .case-body { padding:28px 32px; }
+  .case-body h3 { font-size:1.2rem; font-weight:800; margin-bottom:10px; }
+  .case-body p { font-size:0.92rem; color:var(--ink-3); line-height:1.6; margin-bottom:14px; }
+  .case-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .case-tags span { padding:4px 12px; background:var(--accent-light); color:var(--accent); border-radius:100px; font-size:11px; font-weight:700; }
+  .case-link { display:inline-block; color:var(--accent); font-size:0.88rem; font-weight:700; text-decoration:none; }
+  .case-link:hover { color:var(--accent-2); }
+
+  .results-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:16px; }
+  .result-item { text-align:center; padding:16px; background:var(--accent-light); border-radius:12px; }
+  .result-item .num { font-size:1.5rem; font-weight:900; color:var(--accent); }
+  .result-item .label { font-size:0.78rem; color:var(--ink-3); margin-top:4px; }
+
+  .footer { text-align:center; padding:40px; border-top:1px solid var(--line); }
+  .footer img { height:28px; margin-bottom:12px; }
+  .footer p { font-size:0.84rem; color:var(--ink-3); }
+  .footer .version { font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:8px; }
+
+  @media (max-width:768px) {
+    .nav { padding:12px 20px; }
+    .nav-links a:not(.btn) { display:none; }
+    section { padding:40px 20px; }
+    .case-grid { grid-template-columns:1fr; }
+    .results-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="../assets/snailai_logo.png" alt="Snail AI Logo">
+    <span data-zh="蜗牛 AI" data-en="SnailAI.AI">蜗牛 AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="/enterprise/" data-zh="企业 AI" data-en="Business AI">企业 AI</a>
+    <a href="/corporate-training/" data-zh="企业培训" data-en="Training">企业培训</a>
+    <a href="/case-studies/" data-zh="案例" data-en="Case Studies">案例</a>
+    <a href="/enterprise/#contact" data-zh="联系" data-en="Contact">联系</a>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1><span data-zh="数字基础设施" data-en="Digital Foundations">数字基础设施</span> <span class="accent" data-zh="落地案例" data-en="Delivered">落地案例</span></h1>
+  <p class="subtitle" data-zh="每个案例都是真实上线、持续迭代的交付成果。不是概念，是结果。" data-en="Every case study is live, iterated, and delivering real results. Not concepts — outcomes.">每个案例都是真实上线、持续迭代的交付成果。不是概念，是结果。</p>
+</section>
+
+<section>
+  <div class="section-inner">
+    <div class="case-grid">
+      <!-- Case 1: Xianlu Workwear -->
+      <div class="case-card">
+        <iframe src="https://robin12300-snailai.github.io/xianlu-workwear/" loading="lazy" title="Xianlu Workwear"></iframe>
+        <div class="case-body">
+          <h3 data-zh="仙路工作服 · B2B 电商" data-en="Xianlu Workwear · B2B E-Commerce">仙路工作服 · B2B 电商</h3>
+          <p data-zh="面向全澳企业的工装在线采购平台。产品目录浏览、购物车、Stripe 支付、后台库存管理、SEO 优化。从零到上线 4 周交付，持续迭代 10+ 版本。" data-en="Australia-wide B2B workwear procurement platform. Product catalogue, cart, Stripe payments, admin inventory, SEO. Delivered in 4 weeks, 10+ iterations ongoing.">面向全澳企业的工装在线采购平台。产品目录浏览、购物车、Stripe 支付、后台库存管理、SEO 优化。从零到上线 4 周交付，持续迭代 10+ 版本。</p>
+          <div class="case-tags">
+            <span>Next.js</span><span>Stripe</span><span>SEO</span><span>Admin Panel</span>
+          </div>
+          <div class="results-grid">
+            <div class="result-item"><div class="num">4w</div><div class="label" data-zh="首版交付" data-en="First Delivery">首版交付</div></div>
+            <div class="result-item"><div class="num">10+</div><div class="label" data-zh="版本迭代" data-en="Iterations">版本迭代</div></div>
+            <div class="result-item"><div class="num">B2B</div><div class="label" data-zh="企业客户" data-en="Enterprise">企业客户</div></div>
+          </div>
+          <a href="https://robin12300-snailai.github.io/xianlu-workwear/" target="_blank" rel="noopener" class="case-link" data-zh="访问网站 →" data-en="Visit Site →">访问网站 →</a>
+        </div>
+      </div>
+
+      <!-- Case 2: BC Audio Solutions -->
+      <div class="case-card">
+        <iframe src="https://bcaudiosolutions.com.au" loading="lazy" title="BC Audio Solutions"></iframe>
+        <div class="case-body">
+          <h3 data-zh="BC Audio Solutions · Bose 音响租赁" data-en="BC Audio Solutions · Bose Audio Hire">BC Audio Solutions · Bose 音响租赁</h3>
+          <p data-zh="悉尼高端 Bose 音响租赁品牌网站。品牌视觉设计、在线租赁询价、SEO 优化、移动端体验优化。17+ 版本迭代，持续打磨用户体验。" data-en="Sydney premium Bose audio hire site. Branding, hire enquiries, SEO, mobile UX. 17+ version iterations, continuously refining the user experience.">悉尼高端 Bose 音响租赁品牌网站。品牌视觉设计、在线租赁询价、SEO 优化、移动端体验优化。17+ 版本迭代，持续打磨用户体验。</p>
+          <div class="case-tags">
+            <span>Branding</span><span>SEO</span><span>Mobile UX</span><span>Enquiry Flow</span>
+          </div>
+          <div class="results-grid">
+            <div class="result-item"><div class="num">17+</div><div class="label" data-zh="版本迭代" data-en="Iterations">版本迭代</div></div>
+            <div class="result-item"><div class="num">SEO</div><div class="label" data-zh="搜索优化" data-en="Optimized">搜索优化</div></div>
+            <div class="result-item"><div class="num">Mobile</div><div class="label" data-zh="移动优先" data-en="First">移动优先</div></div>
+          </div>
+          <a href="https://bcaudiosolutions.com.au" target="_blank" rel="noopener" class="case-link" data-zh="访问网站 →" data-en="Visit Site →">访问网站 →</a>
+        </div>
+      </div>
+
+      <!-- Case 3: AI Automation -->
+      <div class="case-card">
+        <div style="width:100%;height:300px;background:linear-gradient(135deg,var(--accent-warm),white);display:flex;align-items:center;justify-content:center;font-size:3rem;">⚡</div>
+        <div class="case-body">
+          <h3 data-zh="AI 流程自动化 · 企业内部系统" data-en="AI Process Automation · Internal Systems">AI 流程自动化 · 企业内部系统</h3>
+          <p data-zh="为悉尼中小企业搭建 AI 自动化工作流：报价生成、发票 OCR 录入、客户跟进提醒、报表自动汇总。接入 Xero / Google Workspace / CRM。" data-en="AI automation workflows for Sydney SMEs: quote generation, invoice OCR, follow-up reminders, auto-reporting. Integrates with Xero / Google Workspace / CRM.">为悉尼中小企业搭建 AI 自动化工作流：报价生成、发票 OCR 录入、客户跟进提醒、报表自动汇总。接入 Xero / Google Workspace / CRM。</p>
+          <div class="case-tags">
+            <span>AI Workflow</span><span>Xero</span><span>Google Workspace</span><span>OCR</span>
+          </div>
+          <div class="results-grid">
+            <div class="result-item"><div class="num">30min→2min</div><div class="label" data-zh="报价生成" data-en="Quote Gen">报价生成</div></div>
+            <div class="result-item"><div class="num">24/7</div><div class="label" data-zh="自动提醒" data-en="Reminders">自动提醒</div></div>
+            <div class="result-item"><div class="num">$2500</div><div class="label" data-zh="起步价" data-en="From">起步价</div></div>
+          </div>
+          <a href="/enterprise/#contact" class="case-link" data-zh="咨询类似方案 →" data-en="Enquire About Similar →">咨询类似方案 →</a>
+        </div>
+      </div>
+
+      <!-- Case 4: Corporate Training -->
+      <div class="case-card">
+        <div style="width:100%;height:300px;background:linear-gradient(135deg,#F5F4EE,white);display:flex;align-items:center;justify-content:center;font-size:3rem;">🎓</div>
+        <div class="case-body">
+          <h3 data-zh="企业 AI 培训 · 团队能力升级" data-en="Corporate AI Training · Team Upskilling">企业 AI 培训 · 团队能力升级</h3>
+          <p data-zh="为悉尼企业提供定制化 AI 培训：系统使用培训、AI 平台搭建指导、团队 AI 工作坊。培训后团队独立操作 AI 系统，无需持续依赖外部支持。" data-en="Customised AI training for Sydney businesses: system adoption, AI platform setup, team workshops. Teams operate independently after training — no ongoing vendor dependency.">为悉尼企业提供定制化 AI 培训：系统使用培训、AI 平台搭建指导、团队 AI 工作坊。培训后团队独立操作 AI 系统，无需持续依赖外部支持。</p>
+          <div class="case-tags">
+            <span>Training</span><span>Workshop</span><span>Hands-On</span><span>Independent</span>
+          </div>
+          <div class="results-grid">
+            <div class="result-item"><div class="num">100%</div><div class="label" data-zh="实操教学" data-en="Hands-On">实操教学</div></div>
+            <div class="result-item"><div class="num">No Lock-in</div><div class="label" data-zh="不制造依赖" data-en="No Lock-in">不制造依赖</div></div>
+            <div class="result-item"><div class="num">Bilingual</div><div class="label" data-zh="中英双语" data-en="Bilingual">中英双语</div></div>
+          </div>
+          <a href="/corporate-training/" class="case-link" data-zh="查看企业培训 →" data-en="View Corporate Training →">查看企业培训 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <img src="../assets/snailai_logo.png" alt="Snail AI Logo">
+  <p data-zh="© 2026 蜗牛 AI · 企业AI服务 · 悉尼" data-en="© 2026 SnailAI.AI · Business AI Services · Sydney">© 2026 蜗牛 AI · 企业AI服务 · 悉尼</p>
+  <div class="version">V1.0.0 · 2026-08-24 · SnailAI Case Studies</div>
+</footer>
+
+<script>
+  const LANG_KEY = 'snailai-lang';
+  function applyLang(lang) {
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+    const _t = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
+    if (_t) document.title = _t;
+    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', () => applyLang(btn.dataset.lang)));
+  let savedLang = 'en';
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'en'; } catch(e) {}
+  applyLang(savedLang);
+</script>
+</body>
+</html>
