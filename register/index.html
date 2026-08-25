@@ -3,20 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>蜗牛AI 毕业展览日 2026 — 登记报名</title>
+<title>SnailAI Graduation Expo 2026 — Registration</title>
 <style>
   :root {
-    --coral: #FF5B1F;
-    --coral-light: #FFF5EE;
-    --gold: #D4A547;
-    --gold-bg: #FDF6E3;
-    --ink: #1A1A2E;
-    --success: #22C55E;
-    --bg: #FAFAFA;
+    --green-dark: #0D4F3C;
+    --green-mid: #1A7B5C;
+    --green-light: #E8F5EE;
+    --green-pale: #F2FAF6;
+    --gold: #D4A843;
+    --gold-light: #FFF8E7;
+    --ink: #1A2E28;
+    --ink-light: #2D4A40;
+    --muted: #5A7268;
+    --bg: var(--green-pale);
     --card: #FFFFFF;
-    --border: #E5E7EB;
-    --muted: #6B7280;
-    --radius: 12px;
+    --border: #C8DDD2;
+    --success: #16A34A;
+    --radius: 14px;
+    --shadow: 0 4px 24px rgba(13,79,60,0.10);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -28,244 +32,287 @@
     flex-direction: column;
     align-items: center;
   }
+
+  /* ===== Header ===== */
   .header {
     width: 100%;
-    background: linear-gradient(135deg, var(--coral), #FF8A50);
-    padding: 24px 16px 20px;
+    background: linear-gradient(160deg, var(--green-dark) 0%, var(--green-mid) 50%, #2A9D70 100%);
+    padding: 36px 20px 28px;
     text-align: center;
     color: white;
+    position: relative;
+    overflow: hidden;
   }
-  .header .logo { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -30%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -20%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(212,168,67,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header .logo {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    opacity: 0.95;
+  }
   .header .logo .ai { color: var(--gold); }
-  .header .event-title { font-size: 22px; font-weight: 800; margin-top: 8px; }
-  .header .event-date { font-size: 14px; opacity: 0.9; margin-top: 4px; }
+  .header .event-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-top: 14px;
+    letter-spacing: 1px;
+    line-height: 1.35;
+  }
+  .header .event-title-en {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-top: 6px;
+  }
+  .header .event-date {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 14px;
+    opacity: 0.95;
+  }
+  .header .event-time {
+    font-size: 13px;
+    margin-top: 4px;
+    opacity: 0.8;
+  }
+
+  /* ===== Container ===== */
   .container {
     width: 100%;
     max-width: 480px;
-    padding: 20px 16px 40px;
+    padding: 24px 18px 48px;
     flex: 1;
   }
+
+  /* ===== Notice Banner ===== */
+  .notice-banner {
+    background: linear-gradient(135deg, var(--gold-light), #FFFBF0);
+    border: 1px solid rgba(212,168,67,0.3);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    box-shadow: 0 2px 12px rgba(212,168,67,0.08);
+  }
+  .notice-banner .icon { font-size: 18px; line-height: 1.4; flex-shrink: 0; }
+  .notice-banner .text {
+    font-size: 13px;
+    color: #8B6914;
+    line-height: 1.55;
+    font-weight: 500;
+  }
+  .notice-banner .text strong { color: #6B5200; }
+
+  /* ===== Card ===== */
   .card {
     background: var(--card);
     border-radius: var(--radius);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    padding: 20px;
-    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    border: 1px solid rgba(13,79,60,0.06);
   }
   .card h2 {
     font-size: 17px;
     font-weight: 700;
-    margin-bottom: 16px;
-    color: var(--ink);
-  }
-  .tab-bar {
-    display: flex;
-    gap: 0;
-    background: var(--border);
-    border-radius: 8px;
-    padding: 3px;
     margin-bottom: 20px;
+    color: var(--green-dark);
+    text-align: center;
+    position: relative;
+    padding-bottom: 14px;
   }
-  .tab-btn {
-    flex: 1;
-    padding: 10px 0;
-    border: none;
-    background: transparent;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--muted);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
+  .card h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green-mid), var(--gold));
+    border-radius: 2px;
   }
-  .tab-btn.active {
-    background: var(--card);
-    color: var(--coral);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  }
-  .form-group { margin-bottom: 14px; }
+
+  /* ===== Form ===== */
+  .form-group { margin-bottom: 16px; }
   .form-group label {
     display: block;
     font-size: 13px;
     font-weight: 600;
-    color: var(--muted);
+    color: var(--ink-light);
     margin-bottom: 6px;
   }
-  .form-group label .required { color: var(--coral); }
+  .form-group label .en {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-left: 4px;
+  }
+  .form-group label .required { color: #DC2626; }
   .form-group input, .form-group select {
     width: 100%;
-    padding: 12px 14px;
+    padding: 13px 16px;
     border: 1.5px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 15px;
     color: var(--ink);
-    background: var(--card);
-    transition: border-color 0.2s;
+    background: var(--green-pale);
+    transition: border-color 0.25s, box-shadow 0.25s;
     -webkit-appearance: none;
   }
   .form-group input:focus, .form-group select:focus {
     outline: none;
-    border-color: var(--coral);
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 3px rgba(26,123,92,0.12);
   }
+  .form-group input::placeholder { color: #9CB8AA; }
+
+  /* ===== Button ===== */
   .btn {
     width: 100%;
-    padding: 14px;
+    padding: 15px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s;
+    margin-top: 6px;
   }
   .btn-primary {
-    background: linear-gradient(135deg, var(--coral), #FF8A50);
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
     color: white;
+    box-shadow: 0 4px 16px rgba(13,79,60,0.25);
   }
-  .btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  .btn-primary:hover:not(:disabled) {
+    box-shadow: 0 6px 24px rgba(13,79,60,0.35);
+    transform: translateY(-1px);
   }
+  .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
   .btn-primary:active:not(:disabled) { transform: scale(0.98); }
-  .ref-code-banner {
-    background: var(--coral-light);
-    border: 1.5px solid var(--coral);
-    border-radius: 8px;
-    padding: 12px 14px;
-    margin-bottom: 16px;
-    font-size: 13px;
-    color: var(--coral);
-    display: none;
-  }
-  .ref-code-banner.show { display: block; }
+
+  /* ===== Result Card ===== */
   .result-card {
     text-align: center;
-    padding: 30px 20px;
+    padding: 40px 24px;
   }
-  .result-card .icon { font-size: 48px; margin-bottom: 12px; }
-  .result-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-  .result-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
-  .ref-code-display {
-    display: inline-block;
-    background: var(--coral);
-    color: white;
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: 3px;
-    padding: 12px 28px;
-    border-radius: 10px;
-    margin: 16px 0;
-  }
-  .share-hint {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 8px;
-  }
+  .result-card .icon { font-size: 52px; margin-bottom: 14px; }
+  .result-card h3 { font-size: 21px; font-weight: 700; margin-bottom: 10px; color: var(--green-dark); }
+  .result-card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+  /* ===== Error ===== */
   .error-msg {
     background: #FEF2F2;
     border: 1px solid #FCA5A5;
     color: #DC2626;
-    padding: 10px 14px;
-    border-radius: 8px;
+    padding: 11px 15px;
+    border-radius: 10px;
     font-size: 13px;
     margin-bottom: 14px;
     display: none;
   }
   .error-msg.show { display: block; }
+
   .hidden { display: none !important; }
+
+  /* ===== Footer ===== */
   footer {
     width: 100%;
     text-align: center;
-    padding: 16px;
+    padding: 20px;
     font-size: 12px;
     color: var(--muted);
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 380px) {
+    .header { padding: 28px 16px 22px; }
+    .header .event-title { font-size: 19px; }
+    .container { padding: 18px 14px 40px; }
+    .card { padding: 20px 16px; }
   }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="logo">Snail<span class="ai">AI</span></div>
-  <div class="event-title">🎓 毕业展览日 2026</div>
-  <div class="event-date">9月26日（周六）· Killara Golf Club</div>
+  <div class="header-inner">
+    <div class="logo">Snail<span class="ai">AI</span></div>
+    <div class="event-title">蜗牛AI应用教育学院<br>第一期毕业展览会 2026</div>
+    <div class="event-title-en">SnailAI Academy · 1st Graduation Expo 2026</div>
+    <div class="event-date">📍 9月26日（周六）· Killara Golf Club</div>
+    <div class="event-time">⏰ 1:30 PM – 5:30 PM</div>
+  </div>
 </div>
 
 <div class="container">
   <!-- 登记表单 -->
   <div id="form-view">
-    <div class="tab-bar">
-      <button class="tab-btn active" onclick="switchTab('visitor')">参观登记</button>
-      <button class="tab-btn" onclick="switchTab('referrer')">推荐人登记</button>
+
+    <div class="notice-banner">
+      <span class="icon">💻</span>
+      <span class="text"><strong>温馨提示 / Note:</strong><br>免费安装蜗牛AI，请把您的笔记本电脑带过来<br>Free SnailAI setup — please bring your laptop</span>
     </div>
 
-    <div class="ref-code-banner" id="ref-banner">
-      🎉 您通过推荐人 <strong id="ref-name-display"></strong> 的邀请链接来访！
-    </div>
+    <div class="card" id="visitor-form">
+      <h2>报名登记<br><span style="font-size:12px;font-weight:500;color:var(--muted);letter-spacing:1px">REGISTRATION</span></h2>
 
-    <!-- 参观登记 -->
-    <div id="visitor-form" class="card">
-      <h2>参观登记</h2>
       <div class="error-msg" id="visitor-error"></div>
+
       <div class="form-group">
-        <label>姓名 <span class="required">*</span></label>
-        <input type="text" id="v-name" placeholder="请输入您的姓名" maxlength="50">
+        <label>姓名 <span class="required">*</span> <span class="en">Name</span></label>
+        <input type="text" id="v-name" placeholder="请输入您的姓名 / Your name" maxlength="50">
       </div>
+
       <div class="form-group">
-        <label>手机号 <span class="required">*</span></label>
+        <label>手机号 <span class="required">*</span> <span class="en">Mobile</span></label>
         <input type="tel" id="v-phone" placeholder="04xx xxx xxx" maxlength="20">
       </div>
+
       <div class="form-group">
-        <label>微信号</label>
-        <input type="text" id="v-wechat" placeholder="选填" maxlength="50">
+        <label>微信号 <span class="en">WeChat (optional)</span></label>
+        <input type="text" id="v-wechat" placeholder="选填 / Optional" maxlength="50">
       </div>
+
       <div class="form-group">
-        <label>邮箱</label>
-        <input type="email" id="v-email" placeholder="选填" maxlength="100">
+        <label>邮箱 <span class="en">Email (optional)</span></label>
+        <input type="email" id="v-email" placeholder="选填 / Optional" maxlength="100">
       </div>
+
       <div class="form-group">
-        <label>公司/机构</label>
-        <input type="text" id="v-company" placeholder="选填" maxlength="100">
+        <label>公司/机构 <span class="en">Company (optional)</span></label>
+        <input type="text" id="v-company" placeholder="选填 / Optional" maxlength="100">
       </div>
+
       <div class="form-group">
-        <label>感兴趣的课程</label>
-        <select id="v-interest">
-          <option value="">请选择</option>
-          <option value="AI应用线上班">AI 应用线上班 ($599)</option>
-          <option value="AI财富线下班">AI 财富线下班 ($1,999)</option>
-          <option value="企业定制培训">企业定制培训</option>
-          <option value="暂不确定">暂不确定</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>携伴人数（含自己）</label>
+        <label>携伴人数（含自己）<span class="en">Guests (incl. yourself)</span></label>
         <input type="number" id="v-headcount" value="1" min="1" max="10">
       </div>
-      <button class="btn btn-primary" id="v-submit" onclick="submitVisitor()">提交登记</button>
-    </div>
 
-    <!-- 推荐人登记 -->
-    <div id="referrer-form" class="card hidden">
-      <h2>成为推荐人</h2>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">
-        注册为推荐人，获取专属推荐码。每成功推荐一位付费学员，您将获得该学员学费 <strong style="color:var(--coral)">20%</strong> 的佣金奖励！
-      </p>
-      <div class="error-msg" id="referrer-error"></div>
-      <div class="form-group">
-        <label>姓名 <span class="required">*</span></label>
-        <input type="text" id="r-name" placeholder="请输入您的姓名" maxlength="50">
-      </div>
-      <div class="form-group">
-        <label>手机号</label>
-        <input type="tel" id="r-phone" placeholder="选填（方便去重）" maxlength="20">
-      </div>
-      <div class="form-group">
-        <label>微信号</label>
-        <input type="text" id="r-wechat" placeholder="选填" maxlength="50">
-      </div>
-      <div class="form-group">
-        <label>预计推荐人数</label>
-        <input type="number" id="r-count" value="0" min="0" max="100">
-      </div>
-      <button class="btn btn-primary" id="r-submit" onclick="submitReferrer()">获取推荐码</button>
+      <button class="btn btn-primary" id="v-submit" onclick="submitVisitor()">提交登记 / Submit</button>
     </div>
   </div>
 
@@ -275,42 +322,20 @@
   </div>
 </div>
 
-<footer>© 2026 SnailAI.AI · 蜗牛AI</footer>
+<footer>&copy; 2026 SnailAI.AI &middot; 蜗牛AI应用教育学院</footer>
 
 <script>
 const API = '/api/grad-registrations';
 
-// 解析 URL 参数中的 ref_code
+// 解析 URL 参数中的 ref_code（静默关联，不显示横幅）
 const urlParams = new URLSearchParams(window.location.search);
 const refCode = urlParams.get('ref_code') || '';
-const referral = urlParams.get('referral') || '';
-
-// 如果有 ref_code，切换到推荐人模式或显示邀请横幅
-if (referral === '1') {
-  switchTab('referrer');
-} else if (refCode) {
-  document.getElementById('ref-banner').classList.add('show');
-  document.getElementById('ref-name-display').textContent = refCode;
-}
-
-function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  if (tab === 'visitor') {
-    document.querySelectorAll('.tab-btn')[0].classList.add('active');
-    document.getElementById('visitor-form').classList.remove('hidden');
-    document.getElementById('referrer-form').classList.add('hidden');
-  } else {
-    document.querySelectorAll('.tab-btn')[1].classList.add('active');
-    document.getElementById('visitor-form').classList.add('hidden');
-    document.getElementById('referrer-form').classList.remove('hidden');
-  }
-}
 
 function showError(id, msg) {
   const el = document.getElementById(id);
   el.textContent = msg;
   el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 5000);
+  setTimeout(() => el.classList.remove('show'), 6000);
 }
 
 function showResult(html) {
@@ -323,13 +348,13 @@ async function submitVisitor() {
   const name = document.getElementById('v-name').value.trim();
   const phone = document.getElementById('v-phone').value.trim();
   if (!name || !phone) {
-    showError('visitor-error', '请填写姓名和手机号');
+    showError('visitor-error', '请填写姓名和手机号 / Please fill in name and mobile');
     return;
   }
 
   const btn = document.getElementById('v-submit');
   btn.disabled = true;
-  btn.textContent = '提交中...';
+  btn.textContent = '提交中... / Submitting...';
 
   try {
     const res = await fetch(API + '/register', {
@@ -341,7 +366,7 @@ async function submitVisitor() {
         wechat: document.getElementById('v-wechat').value.trim(),
         email: document.getElementById('v-email').value.trim(),
         company: document.getElementById('v-company').value.trim(),
-        interest: document.getElementById('v-interest').value,
+        interest: '',
         headcount: parseInt(document.getElementById('v-headcount').value) || 1,
         ref_code: refCode || ''
       })
@@ -351,74 +376,24 @@ async function submitVisitor() {
     if (res.ok) {
       showResult(`
         <div class="icon">✅</div>
-        <h3>登记成功！</h3>
-        <p>感谢您报名参加蜗牛AI 2026毕业展览日<br>我们将在活动前发送详细通知</p>
-        <p style="margin-top:12px;font-size:12px;color:var(--muted)">登记编号：#${data.id}</p>
+        <h3>登记成功！<br><span style="font-size:14px;font-weight:500;color:var(--muted)">Registered Successfully!</span></h3>
+        <p>感谢您报名参加蜗牛AI第一期毕业展览会<br>Thank you for registering for SnailAI 1st Graduation Expo<br>我们将在活动前发送详细通知 / We'll send details before the event</p>
+        <p style="margin-top:14px;font-size:12px;color:var(--muted)">登记编号 / Reg #: <strong>#${data.id}</strong></p>
       `);
     } else if (res.status === 409) {
       showResult(`
         <div class="icon">ℹ️</div>
-        <h3>您已登记</h3>
-        <p>该手机号已完成登记，无需重复提交<br>9月26日我们在 KGC 见！</p>
+        <h3>您已登记<br><span style="font-size:14px;font-weight:500;color:var(--muted)">Already Registered</span></h3>
+        <p>该手机号已完成登记，无需重复提交<br>This mobile number is already registered<br>9月26日我们在 KGC 见！/ See you at KGC on Sep 26!</p>
       `);
     } else {
-      showError('visitor-error', data.error || '提交失败，请重试');
+      showError('visitor-error', data.error || '提交失败，请重试 / Submission failed, please retry');
     }
   } catch (e) {
-    showError('visitor-error', '网络错误，请检查连接后重试');
+    showError('visitor-error', '网络错误，请检查连接后重试 / Network error, please check connection');
   } finally {
     btn.disabled = false;
-    btn.textContent = '提交登记';
-  }
-}
-
-async function submitReferrer() {
-  const name = document.getElementById('r-name').value.trim();
-  if (!name) {
-    showError('referrer-error', '请填写姓名');
-    return;
-  }
-
-  const btn = document.getElementById('r-submit');
-  btn.disabled = true;
-  btn.textContent = '提交中...';
-
-  try {
-    const res = await fetch(API + '/referrer', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        name,
-        phone: document.getElementById('r-phone').value.trim(),
-        wechat: document.getElementById('r-wechat').value.trim(),
-        declared_count: parseInt(document.getElementById('r-count').value) || 0
-      })
-    });
-    const data = await res.json();
-
-    if (res.ok || res.status === 200) {
-      const code = data.ref_code;
-      const shareUrl = window.location.origin + '/register?ref_code=' + code;
-      showResult(`
-        <div class="icon">🎉</div>
-        <h3>推荐码获取成功！</h3>
-        <div class="ref-code-display">${code}</div>
-        <p class="share-hint">将以下链接分享给朋友，他们登记时会自动关联到您</p>
-        <div style="background:var(--gold-bg);border-radius:8px;padding:12px;margin-top:12px;word-break:break-all;font-size:13px;">
-          <a href="${shareUrl}" style="color:var(--coral);">${shareUrl}</a>
-        </div>
-        <p style="margin-top:16px;font-size:13px;color:var(--muted)">
-          佣金规则：每成功推荐一位付费学员 = 该学员学费 × 20%
-        </p>
-      `);
-    } else {
-      showError('referrer-error', data.error || '提交失败，请重试');
-    }
-  } catch (e) {
-    showError('referrer-error', '网络错误，请检查连接后重试');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '获取推荐码';
+    btn.textContent = '提交登记 / Submit';
   }
 }
 </script>
