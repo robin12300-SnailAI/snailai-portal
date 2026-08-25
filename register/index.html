@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>蜗牛AI 毕业展览日 2026 — 登记报名</title>
+<style>
+  :root {
+    --coral: #FF5B1F;
+    --coral-light: #FFF5EE;
+    --gold: #D4A547;
+    --gold-bg: #FDF6E3;
+    --ink: #1A1A2E;
+    --success: #22C55E;
+    --bg: #FAFAFA;
+    --card: #FFFFFF;
+    --border: #E5E7EB;
+    --muted: #6B7280;
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .header {
+    width: 100%;
+    background: linear-gradient(135deg, var(--coral), #FF8A50);
+    padding: 24px 16px 20px;
+    text-align: center;
+    color: white;
+  }
+  .header .logo { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+  .header .logo .ai { color: var(--gold); }
+  .header .event-title { font-size: 22px; font-weight: 800; margin-top: 8px; }
+  .header .event-date { font-size: 14px; opacity: 0.9; margin-top: 4px; }
+  .container {
+    width: 100%;
+    max-width: 480px;
+    padding: 20px 16px 40px;
+    flex: 1;
+  }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card h2 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    background: var(--border);
+    border-radius: 8px;
+    padding: 3px;
+    margin-bottom: 20px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: var(--card);
+    color: var(--coral);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .form-group { margin-bottom: 14px; }
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .form-group label .required { color: var(--coral); }
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--card);
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  .form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--coral);
+  }
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--coral), #FF8A50);
+    color: white;
+  }
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .btn-primary:active:not(:disabled) { transform: scale(0.98); }
+  .ref-code-banner {
+    background: var(--coral-light);
+    border: 1.5px solid var(--coral);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--coral);
+    display: none;
+  }
+  .ref-code-banner.show { display: block; }
+  .result-card {
+    text-align: center;
+    padding: 30px 20px;
+  }
+  .result-card .icon { font-size: 48px; margin-bottom: 12px; }
+  .result-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .result-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+  .ref-code-display {
+    display: inline-block;
+    background: var(--coral);
+    color: white;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    padding: 12px 28px;
+    border-radius: 10px;
+    margin: 16px 0;
+  }
+  .share-hint {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  .error-msg {
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    color: #DC2626;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .error-msg.show { display: block; }
+  .hidden { display: none !important; }
+  footer {
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">Snail<span class="ai">AI</span></div>
+  <div class="event-title">🎓 毕业展览日 2026</div>
+  <div class="event-date">9月26日（周六）· Killara Golf Club</div>
+</div>
+
+<div class="container">
+  <!-- 登记表单 -->
+  <div id="form-view">
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('visitor')">参观登记</button>
+      <button class="tab-btn" onclick="switchTab('referrer')">推荐人登记</button>
+    </div>
+
+    <div class="ref-code-banner" id="ref-banner">
+      🎉 您通过推荐人 <strong id="ref-name-display"></strong> 的邀请链接来访！
+    </div>
+
+    <!-- 参观登记 -->
+    <div id="visitor-form" class="card">
+      <h2>参观登记</h2>
+      <div class="error-msg" id="visitor-error"></div>
+      <div class="form-group">
+        <label>姓名 <span class="required">*</span></label>
+        <input type="text" id="v-name" placeholder="请输入您的姓名" maxlength="50">
+      </div>
+      <div class="form-group">
+        <label>手机号 <span class="required">*</span></label>
+        <input type="tel" id="v-phone" placeholder="04xx xxx xxx" maxlength="20">
+      </div>
+      <div class="form-group">
+        <label>微信号</label>
+        <input type="text" id="v-wechat" placeholder="选填" maxlength="50">
+      </div>
+      <div class="form-group">
+        <label>邮箱</label>
+        <input type="email" id="v-email" placeholder="选填" maxlength="100">
+      </div>
+      <div class="form-group">
+        <label>公司/机构</label>
+        <input type="text" id="v-company" placeholder="选填" maxlength="100">
+      </div>
+      <div class="form-group">
+        <label>感兴趣的课程</label>
+        <select id="v-interest">
+          <option value="">请选择</option>
+          <option value="AI应用线上班">AI 应用线上班 ($599)</option>
+          <option value="AI财富线下班">AI 财富线下班 ($1,999)</option>
+          <option value="企业定制培训">企业定制培训</option>
+          <option value="暂不确定">暂不确定</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>携伴人数（含自己）</label>
+        <input type="number" id="v-headcount" value="1" min="1" max="10">
+      </div>
+      <button class="btn btn-primary" id="v-submit" onclick="submitVisitor()">提交登记</button>
+    </div>
+
+    <!-- 推荐人登记 -->
+    <div id="referrer-form" class="card hidden">
+      <h2>成为推荐人</h2>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">
+        注册为推荐人，获取专属推荐码。每成功推荐一位付费学员，您将获得该学员学费 <strong style="color:var(--coral)">20%</strong> 的佣金奖励！
+      </p>
+      <div class="error-msg" id="referrer-error"></div>
+      <div class="form-group">
+        <label>姓名 <span class="required">*</span></label>
+        <input type="text" id="r-name" placeholder="请输入您的姓名" maxlength="50">
+      </div>
+      <div class="form-group">
+        <label>手机号</label>
+        <input type="tel" id="r-phone" placeholder="选填（方便去重）" maxlength="20">
+      </div>
+      <div class="form-group">
+        <label>微信号</label>
+        <input type="text" id="r-wechat" placeholder="选填" maxlength="50">
+      </div>
+      <div class="form-group">
+        <label>预计推荐人数</label>
+        <input type="number" id="r-count" value="0" min="0" max="100">
+      </div>
+      <button class="btn btn-primary" id="r-submit" onclick="submitReferrer()">获取推荐码</button>
+    </div>
+  </div>
+
+  <!-- 成功结果 -->
+  <div id="result-view" class="hidden">
+    <div class="card result-card" id="result-content"></div>
+  </div>
+</div>
+
+<footer>© 2026 SnailAI.AI · 蜗牛AI</footer>
+
+<script>
+const API = '/api/grad-registrations';
+
+// 解析 URL 参数中的 ref_code
+const urlParams = new URLSearchParams(window.location.search);
+const refCode = urlParams.get('ref_code') || '';
+const referral = urlParams.get('referral') || '';
+
+// 如果有 ref_code，切换到推荐人模式或显示邀请横幅
+if (referral === '1') {
+  switchTab('referrer');
+} else if (refCode) {
+  document.getElementById('ref-banner').classList.add('show');
+  document.getElementById('ref-name-display').textContent = refCode;
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  if (tab === 'visitor') {
+    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    document.getElementById('visitor-form').classList.remove('hidden');
+    document.getElementById('referrer-form').classList.add('hidden');
+  } else {
+    document.querySelectorAll('.tab-btn')[1].classList.add('active');
+    document.getElementById('visitor-form').classList.add('hidden');
+    document.getElementById('referrer-form').classList.remove('hidden');
+  }
+}
+
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 5000);
+}
+
+function showResult(html) {
+  document.getElementById('form-view').classList.add('hidden');
+  document.getElementById('result-view').classList.remove('hidden');
+  document.getElementById('result-content').innerHTML = html;
+}
+
+async function submitVisitor() {
+  const name = document.getElementById('v-name').value.trim();
+  const phone = document.getElementById('v-phone').value.trim();
+  if (!name || !phone) {
+    showError('visitor-error', '请填写姓名和手机号');
+    return;
+  }
+
+  const btn = document.getElementById('v-submit');
+  btn.disabled = true;
+  btn.textContent = '提交中...';
+
+  try {
+    const res = await fetch(API + '/register', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        name,
+        phone,
+        wechat: document.getElementById('v-wechat').value.trim(),
+        email: document.getElementById('v-email').value.trim(),
+        company: document.getElementById('v-company').value.trim(),
+        interest: document.getElementById('v-interest').value,
+        headcount: parseInt(document.getElementById('v-headcount').value) || 1,
+        ref_code: refCode || ''
+      })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      showResult(`
+        <div class="icon">✅</div>
+        <h3>登记成功！</h3>
+        <p>感谢您报名参加蜗牛AI 2026毕业展览日<br>我们将在活动前发送详细通知</p>
+        <p style="margin-top:12px;font-size:12px;color:var(--muted)">登记编号：#${data.id}</p>
+      `);
+    } else if (res.status === 409) {
+      showResult(`
+        <div class="icon">ℹ️</div>
+        <h3>您已登记</h3>
+        <p>该手机号已完成登记，无需重复提交<br>9月26日我们在 KGC 见！</p>
+      `);
+    } else {
+      showError('visitor-error', data.error || '提交失败，请重试');
+    }
+  } catch (e) {
+    showError('visitor-error', '网络错误，请检查连接后重试');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '提交登记';
+  }
+}
+
+async function submitReferrer() {
+  const name = document.getElementById('r-name').value.trim();
+  if (!name) {
+    showError('referrer-error', '请填写姓名');
+    return;
+  }
+
+  const btn = document.getElementById('r-submit');
+  btn.disabled = true;
+  btn.textContent = '提交中...';
+
+  try {
+    const res = await fetch(API + '/referrer', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        name,
+        phone: document.getElementById('r-phone').value.trim(),
+        wechat: document.getElementById('r-wechat').value.trim(),
+        declared_count: parseInt(document.getElementById('r-count').value) || 0
+      })
+    });
+    const data = await res.json();
+
+    if (res.ok || res.status === 200) {
+      const code = data.ref_code;
+      const shareUrl = window.location.origin + '/register?ref_code=' + code;
+      showResult(`
+        <div class="icon">🎉</div>
+        <h3>推荐码获取成功！</h3>
+        <div class="ref-code-display">${code}</div>
+        <p class="share-hint">将以下链接分享给朋友，他们登记时会自动关联到您</p>
+        <div style="background:var(--gold-bg);border-radius:8px;padding:12px;margin-top:12px;word-break:break-all;font-size:13px;">
+          <a href="${shareUrl}" style="color:var(--coral);">${shareUrl}</a>
+        </div>
+        <p style="margin-top:16px;font-size:13px;color:var(--muted)">
+          佣金规则：每成功推荐一位付费学员 = 该学员学费 × 20%
+        </p>
+      `);
+    } else {
+      showError('referrer-error', data.error || '提交失败，请重试');
+    }
+  } catch (e) {
+    showError('referrer-error', '网络错误，请检查连接后重试');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '获取推荐码';
+  }
+}
+</script>
+</body>
+</html>

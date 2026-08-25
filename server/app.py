@@ -3523,6 +3523,11 @@ from scan_api import register_scan_routes
 init_scan_tables(db_conn())
 register_scan_routes(app)
 
+# ── 注册 Grad Registration Blueprint ────────────────────
+from grad_reg import bp as grad_reg_bp, init_grad_reg_db
+app.register_blueprint(grad_reg_bp)
+init_grad_reg_db()
+
 print(f"[蜗牛AI Portal] 数据库: {DB_PATH}")
 if not os.environ.get("WECHAT_WEBHOOK_URL"):
     print("[蜗牛AI Portal] ⚠️  警告：WECHAT_WEBHOOK_URL 未配置，日报/周报不会推送。"
