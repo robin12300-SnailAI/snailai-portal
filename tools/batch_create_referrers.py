@@ -61,6 +61,8 @@ def api(base, path, method="GET", body=None, token=None):
     data = json.dumps(body).encode() if body is not None else None
     req = urllib.request.Request(url, data=data, method=method)
     req.add_header("Content-Type", "application/json")
+    # Cloudflare 会拦截 Python-urllib 默认 UA（error 1010），必须带自定义 UA
+    req.add_header("User-Agent", "SnailAI-GradReg-Tool/1.0")
     if token:
         req.add_header("X-Admin-Token", token)
     try:
