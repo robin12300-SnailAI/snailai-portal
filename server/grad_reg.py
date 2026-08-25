@@ -28,8 +28,8 @@ elif os.path.exists("/data"):
 else:
     DB_PATH = Path(Path(__file__).resolve().parent / "snailai.db")
 
-# Admin Token（复用报价系统的同一个环境变量）
-ADMIN_TOKEN = os.environ.get("QUOTE_ADMIN_TOKEN", "")
+# Admin Token（GRAD_ADMIN_TOKEN 优先，兼容报价系统的 QUOTE_ADMIN_TOKEN）
+ADMIN_TOKEN = os.environ.get("GRAD_ADMIN_TOKEN") or os.environ.get("QUOTE_ADMIN_TOKEN", "")
 
 bp = Blueprint("grad_registrations", __name__, url_prefix="/api/grad-registrations")
 
@@ -315,6 +315,45 @@ def api_mark_referrer_synced(ref_id):
         if cur.rowcount == 0:
             return jsonify({"error": "推荐人不存在"}), 404
         return jsonify({"ok": True}), 200
+    finally:
+        conn.close()
+
+
+@bp.route("/referrers/<int:ref_id>", methods=["DELETE"])
+@_admin_required
+def api_delete_referrer(ref_id):
+    """删除推荐人（管理用，清理测试数据）；关联登记的 ref_code 置空"""
+    conn = _db()
+    try:
+        row = conn.execute(
+            "SELECT id, ref_code FROM event_referrers WHERE id = ?", (ref_id,)
+        ).fetchone()
+        if not row:
+            return jsonify({"error": "推荐人不存在"}), 404
+        conn.execute(
+            "UPDATE event_registrations SET ref_code = NULL WHERE ref_code = ?",
+            (row["ref_code"],)
+        )
+        conn.execute("DELETE FROM event_referrers WHERE id = ?", (ref_id,))
+        conn.commit()
+        return jsonify({"ok": True, "deleted": ref_id}), 200
+    finally:
+        conn.close()
+
+
+@bp.route("/registrations/<int:reg_id>", methods=["DELETE"])
+@_admin_required
+def api_delete_registration(reg_id):
+    """删除登记记录（管理用，清理测试数据）"""
+    conn = _db()
+    try:
+        cur = conn.execute(
+            "DELETE FROM event_registrations WHERE id = ?", (reg_id,)
+        )
+        conn.commit()
+        if cur.rowcount == 0:
+            return jsonify({"error": "登记不存在"}), 404
+        return jsonify({"ok": True, "deleted": reg_id}), 200
     finally:
         conn.close()
 
