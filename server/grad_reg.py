@@ -363,3 +363,47 @@ def api_stats():
         }), 200
     finally:
         conn.close()
+
+
+@bp.route("/public-stats", methods=["GET"])
+def api_public_stats():
+    """公开只读统计 — 无需 admin token，不含佣金明细，供看板/推荐人查看"""
+    conn = _db()
+    try:
+        total = conn.execute(
+            "SELECT COUNT(*) AS n FROM event_registrations"
+        ).fetchone()["n"]
+
+        by_ref = conn.execute(
+            """SELECT r.ref_code, ef.name AS referrer_name, COUNT(*) AS cnt
+               FROM event_registrations r
+               LEFT JOIN event_referrers ef ON r.ref_code = ef.ref_code
+               WHERE r.ref_code IS NOT NULL
+               GROUP BY r.ref_code
+               ORDER BY cnt DESC"""
+        ).fetchall()
+
+        total_headcount = conn.execute(
+            "SELECT COALESCE(SUM(headcount), 0) AS n FROM event_registrations"
+        ).fetchone()["n"]
+
+        referrer_count = conn.execute(
+            "SELECT COUNT(*) AS n FROM event_referrers"
+        ).fetchone()["n"]
+
+        # 自然流量（无推荐码）
+        organic = conn.execute(
+            "SELECT COUNT(*) AS n FROM event_registrations WHERE ref_code IS NULL"
+        ).fetchone()["n"]
+
+        return jsonify({
+            "event": "蜗牛AI · 第1期毕业展览日",
+            "date": "2026-09-26",
+            "total_registrations": total,
+            "total_headcount": total_headcount,
+            "total_referrers": referrer_count,
+            "organic_registrations": organic,
+            "by_referrer": [dict(r) for r in by_ref],
+        }), 200
+    finally:
+        conn.close()

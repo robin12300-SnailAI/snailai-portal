@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蜗牛AI · 毕业展览日 · 登记看板</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐌</text></svg>-->
+<style>
+/* ── Light Theme (default) ── */
+:root, [data-theme="light"] {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface2: #eef0f4;
+  --border: #d8dbe5;
+  --text: #1a1d27;
+  --text2: #6b7280;
+  --accent: #c75a3a;
+  --accent-dim: #fde8e0;
+  --green: #16a07a;
+  --green-dim: #d4f5e9;
+  --blue: #2563eb;
+  --blue-dim: #dbeafe;
+  --amber: #b45309;
+  --amber-dim: #fef3c7;
+  --card-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+/* ── Dark Theme ── */
+[data-theme="dark"] {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #242836;
+  --border: #2e3348;
+  --text: #e8eaed;
+  --text2: #9aa0b0;
+  --accent: #d97757;
+  --accent-dim: #3a2218;
+  --green: #5dcaa5;
+  --green-dim: #1d4e3e;
+  --blue: #85b7eb;
+  --blue-dim: #1a3a5c;
+  --amber: #fac775;
+  --amber-dim: #4a3a10;
+  --card-shadow: 0 2px 8px rgba(0,0,0,.3);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* ── Header ── */
+.header { background:var(--surface); border-bottom:1px solid var(--border); padding:16px 20px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
+.header-left { display:flex; align-items:center; gap:12px; }
+.logo { font-size:24px; }
+.title { font-size:18px; font-weight:700; }
+.subtitle { font-size:12px; color:var(--text2); }
+.theme-btn { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:6px 12px; cursor:pointer; font-size:14px; color:var(--text); }
+
+/* ── Countdown ── */
+.countdown-bar { background:linear-gradient(135deg,var(--accent-dim),var(--surface)); padding:12px 20px; text-align:center; border-bottom:1px solid var(--border); }
+.countdown-bar .label { font-size:13px; color:var(--text2); }
+.countdown-bar .days { font-size:28px; font-weight:800; color:var(--accent); }
+
+/* ── Stats Grid ── */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; padding:16px 20px; }
+.stat-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; text-align:center; box-shadow:var(--card-shadow); }
+.stat-card .num { font-size:32px; font-weight:800; line-height:1.1; }
+.stat-card .lbl { font-size:12px; color:var(--text2); margin-top:4px; }
+.stat-card.accent .num { color:var(--accent); }
+.stat-card.green .num { color:var(--green); }
+.stat-card.blue .num { color:var(--blue); }
+.stat-card.amber .num { color:var(--amber); }
+
+/* ── Referrer Table ── */
+.section { padding:0 20px 16px; }
+.section-title { font-size:15px; font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.table-wrap { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; box-shadow:var(--card-shadow); }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+th { background:var(--surface2); text-align:left; padding:10px 14px; font-weight:600; font-size:12px; color:var(--text2); text-transform:uppercase; letter-spacing:.5px; }
+td { padding:10px 14px; border-top:1px solid var(--border); }
+tr:hover td { background:var(--surface2); }
+.ref-code { font-family:monospace; font-weight:700; color:var(--accent); background:var(--accent-dim); padding:2px 8px; border-radius:4px; font-size:13px; }
+.bar-cell { width:40%; }
+.bar-wrap { background:var(--surface2); border-radius:4px; height:20px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:4px; transition:width .6s ease; }
+.bar-fill.c-accent { background:var(--accent); }
+.bar-fill.c-green { background:var(--green); }
+
+/* ── Footer ── */
+.footer { text-align:center; padding:16px; font-size:11px; color:var(--text2); border-top:1px solid var(--border); margin-top:8px; }
+
+/* ── Refresh ── */
+.refresh-info { font-size:11px; color:var(--text2); text-align:center; padding:0 20px 8px; }
+
+/* ── Responsive ── */
+@media (max-width:480px) {
+  .stats-grid { grid-template-columns:repeat(2,1fr); }
+  .stat-card .num { font-size:26px; }
+  th,td { padding:8px 10px; font-size:13px; }
+}
+
+/* ── Loading ── */
+.loading { text-align:center; padding:40px; color:var(--text2); }
+.loading::after { content:''; display:inline-block; width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin-left:8px; vertical-align:middle; }
+@keyframes spin { to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <span class="logo">🐌</span>
+    <div>
+      <div class="title">毕业展览日 · 登记看板</div>
+      <div class="subtitle">2026年9月26日 · Killara Golf Club</div>
+    </div>
+  </div>
+  <button class="theme-btn" onclick="toggleTheme()" title="切换亮/暗色">🌓</button>
+</div>
+
+<div class="countdown-bar">
+  <div class="label">距离展览日</div>
+  <div class="days" id="countdown">--</div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card accent">
+    <div class="num" id="s-total">-</div>
+    <div class="lbl">登记人数</div>
+  </div>
+  <div class="stat-card green">
+    <div class="num" id="s-headcount">-</div>
+    <div class="lbl">预计到场（含携伴）</div>
+  </div>
+  <div class="stat-card blue">
+    <div class="num" id="s-referrers">-</div>
+    <div class="lbl">推荐人</div>
+  </div>
+  <div class="stat-card amber">
+    <div class="num" id="s-organic">-</div>
+    <div class="lbl">自然流量</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">📊 推荐人排行</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>推荐码</th><th>推荐人</th><th>登记数</th><th>占比</th></tr></thead>
+      <tbody id="ref-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="refresh-info">自动刷新 · 每60秒 · <span id="last-update">-</span></div>
+
+<div class="footer">蜗牛AI Academy · 实时数据</div>
+
+<script>
+const EVENT_DATE = new Date('2026-09-26T10:00:00+10:00');
+const API = '/api/grad-registrations/public-stats';
+
+// Theme
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('grad-board-theme', next);
+}
+(function initTheme() {
+  const saved = localStorage.getItem('grad-board-theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+})();
+
+// Countdown
+function updateCountdown() {
+  const now = new Date();
+  const diff = EVENT_DATE - now;
+  if (diff <= 0) { document.getElementById('countdown').textContent = '🎉 今天！'; return; }
+  const days = Math.ceil(diff / 86400000);
+  document.getElementById('countdown').textContent = days + ' 天';
+}
+
+// Fetch stats
+async function refresh() {
+  try {
+    const r = await fetch(API);
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+
+    document.getElementById('s-total').textContent = d.total_registrations;
+    document.getElementById('s-headcount').textContent = d.total_headcount;
+    document.getElementById('s-referrers').textContent = d.total_referrers;
+    document.getElementById('s-organic').textContent = d.organic_registrations;
+
+    const tbody = document.getElementById('ref-tbody');
+    const maxCnt = d.by_referrer.length ? d.by_referrer[0].cnt : 1;
+    tbody.innerHTML = d.by_referrer.map(r => {
+      const pct = d.total_registrations ? Math.round(r.cnt / d.total_registrations * 100) : 0;
+      const barW = Math.round(r.cnt / maxCnt * 100);
+      return `<tr>
+        <td><span class="ref-code">${r.ref_code}</span></td>
+        <td>${r.referrer_name || '-'}</td>
+        <td><strong>${r.cnt}</strong></td>
+        <td class="bar-cell">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="bar-wrap" style="flex:1"><div class="bar-fill c-accent" style="width:${barW}%"></div></div>
+            <span style="font-size:12px;color:var(--text2)">${pct}%</span>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('last-update').textContent = new Date().toLocaleTimeString('zh-CN');
+  } catch(e) {
+    console.error('Failed to fetch stats:', e);
+  }
+}
+
+updateCountdown();
+refresh();
+setInterval(refresh, 60000);
+setInterval(updateCountdown, 60000);
+</script>
+</body>
+</html>
