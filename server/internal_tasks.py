@@ -1428,6 +1428,46 @@ def api_get_project(project_id):
     return jsonify({"ok": True, "project": proj, "workstreams": workstreams, "tasks": tasks})
 
 
+@bp.route("/projects/<int:project_id>/public", methods=["GET"])
+def api_get_project_public(project_id):
+    """公开只读 API：不需登录，返回项目进度 + 任务清单（用于公开看板）"""
+    conn = _db_conn()
+    proj = conn.execute("SELECT * FROM itask_projects WHERE id=? AND status='active'", (project_id,)).fetchone()
+    if not proj:
+        conn.close()
+        return jsonify({"ok": False, "error": "Project not found"}), 404
+    proj = dict(proj)
+
+    rows = conn.execute(
+        "SELECT id, title, description, status, priority, deadline, assigned_to, workstream, progress_percent, created_at FROM itask_tasks WHERE project_id=? ORDER BY workstream, id",
+        (project_id,)
+    ).fetchall()
+    tasks = []
+    for r in rows:
+        d = dict(r)
+        au = conn.execute("SELECT name FROM users WHERE username=?", (d["assigned_to"],)).fetchone()
+        d["assigned_to_name"] = au["name"] if au else d["assigned_to"]
+        tasks.append(d)
+
+    # 按 workstream 分组
+    workstreams = {}
+    for t in tasks:
+        ws = t.get("workstream") or "未分类"
+        if ws not in workstreams:
+            workstreams[ws] = []
+        workstreams[ws].append(t)
+
+    # 统计
+    total = len(tasks)
+    done = sum(1 for t in tasks if t["status"] == "done")
+    proj["total_tasks"] = total
+    proj["done_tasks"] = done
+    proj["progress"] = round(done / total * 100) if total else 0
+
+    conn.close()
+    return jsonify({"ok": True, "project": proj, "workstreams": workstreams})
+
+
 @bp.route("/projects/<int:project_id>/tasks/<int:task_id>/status", methods=["POST"])
 @_require_assistant
 def api_board_update_status(project_id, task_id):
