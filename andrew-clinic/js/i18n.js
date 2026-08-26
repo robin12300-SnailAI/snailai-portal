@@ -21,9 +21,9 @@
   function getCurrentLang() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === LANG_EN || stored === LANG_ZH) return stored;
-    // Auto-detect browser language on first visit
-    const nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-    return nav.startsWith('zh') ? LANG_ZH : LANG_EN;
+    // Default to English — this is an English-speaking clinic.
+    // Chinese only activates when user explicitly clicks the toggle.
+    return LANG_EN;
   }
 
   function applyLanguage(lang) {
