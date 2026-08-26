@@ -231,3 +231,30 @@
   }
   .btn:hover { transform: none; }
 }
+
+/* ===== V2.1 New Sections (VISIA / PICO / PDT) ===== */
+@media (max-width: 1024px) {
+  .visia-grid { grid-template-columns: 1fr; gap: 44px; }
+  .visia-visual { max-width: 520px; margin: 0 auto; width: 100%; }
+  .pico-grid { grid-template-columns: 1fr; gap: 44px; }
+  .pico-visual { max-width: 480px; margin: 0 auto; width: 100%; }
+  .pico-steps { grid-template-columns: 1fr; gap: 16px; }
+  .pdt-grid { grid-template-columns: 1fr; gap: 48px; }
+  .pdt-visual { max-width: 560px; margin: 0 auto; width: 100%; }
+}
+
+@media (max-width: 768px) {
+  .visia-grid { gap: 36px; }
+  .visia-tags { gap: 9px; }
+  .visia-tag { padding: 7px 15px; font-size: 0.64rem; }
+  .visia .btn, .pdt-benefits .btn { width: 100%; }
+  .visia-img-grid { grid-template-columns: repeat(4, 1fr); gap: 7px; }
+  .pico-grid { gap: 36px; }
+  .pico-benefits { grid-template-columns: 1fr; gap: 10px; }
+  .pico-faq { padding: 19px 20px; }
+  .pico-step { padding: 24px 22px; }
+  .pico-step-num { width: 40px; height: 40px; font-size: 1.1rem; margin-bottom: 14px; }
+  .pdt-grid { gap: 38px; }
+  .pdt-img-row { gap: 9px; }
+  .pdt-benefit-list li { font-size: 0.88rem; }
+}

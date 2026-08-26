@@ -1584,3 +1584,231 @@ p { margin-bottom: var(--space-md); }
 .sidebar-card p { font-size: 0.86rem; color: var(--color-gray); }
 .detail-section { margin-bottom: clamp(32px, 4vw, 48px); }
 .detail-content img { border-radius: var(--radius-md); margin: 24px 0; }
+
+/* ============================================
+   V2.1 — VISIA / PICO / PDT SECTIONS
+   ============================================ */
+
+/* --- VISIA Skin Analysis --- */
+.visia { background: var(--color-bg-alt); }
+.visia-grid {
+  display: grid;
+  grid-template-columns: 6fr 5fr;
+  gap: clamp(40px, 6vw, 84px);
+  align-items: center;
+}
+.visia-tags { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0 32px; }
+.visia-tag {
+  padding: 9px 20px;
+  border: 1px solid var(--color-gold-dim);
+  border-radius: 24px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  background: rgba(199, 147, 35, 0.06);
+  transition: all var(--transition-slow);
+}
+.visia-tag:hover {
+  background: var(--color-gold);
+  color: var(--color-black);
+  transform: translateY(-2px);
+}
+.visia-visual { position: relative; }
+.visia-img-main {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--color-border);
+}
+.visia-img-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.visia-visual:hover .visia-img-main img { transform: scale(1.04); }
+.visia-img-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+.visia-img-grid img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  transition: all var(--transition-slow);
+}
+.visia-img-grid img:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-gold-dim);
+  box-shadow: var(--shadow-md);
+}
+
+/* --- PICO Laser / FracRevive --- */
+.pico-grid {
+  display: grid;
+  grid-template-columns: 5fr 6fr;
+  gap: clamp(36px, 5vw, 72px);
+  align-items: center;
+  margin-bottom: clamp(44px, 6vw, 64px);
+}
+.pico-img {
+  border-radius: var(--radius-xl) var(--radius-sm) var(--radius-xl) var(--radius-sm);
+  overflow: hidden;
+  aspect-ratio: 4 / 4.4;
+  border: 1px solid var(--color-border);
+}
+.pico-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pico-grid:hover .pico-img img { transform: scale(1.04); }
+.pico-benefits {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px 18px;
+  margin-bottom: 28px;
+}
+.pico-benefits li {
+  position: relative;
+  padding-left: 26px;
+  font-size: 0.88rem;
+  color: var(--color-gray);
+}
+.pico-benefits li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 14px;
+  height: 1.5px;
+  background: var(--color-gold);
+}
+.pico-benefits li::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-gold);
+}
+.pico-faq {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 22px 26px;
+}
+.pico-faq-title {
+  font-size: 1.05rem;
+  color: var(--color-gold);
+  margin-bottom: 10px;
+}
+.pico-faq p { margin: 0; font-size: 0.87rem; }
+
+.pico-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.pico-step {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 30px 28px;
+  transition: all var(--transition-slow);
+  position: relative;
+}
+.pico-step:hover {
+  transform: translateY(-6px);
+  border-color: var(--color-gold-dim);
+  box-shadow: var(--shadow-md);
+}
+.pico-step-num {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-gold);
+  color: var(--color-gold);
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+.pico-step-title { font-size: 1.1rem; color: var(--color-light); margin-bottom: 11px; }
+.pico-step-text { font-size: 0.85rem; color: var(--color-gray); line-height: 1.66; margin: 0; }
+
+/* --- PDT Medical Benefits --- */
+.pdt-benefits { background: var(--color-bg-alt); }
+.pdt-grid {
+  display: grid;
+  grid-template-columns: 6fr 5fr;
+  gap: clamp(40px, 6vw, 84px);
+  align-items: center;
+}
+.pdt-benefit-list { margin: 26px 0 34px; }
+.pdt-benefit-list li {
+  position: relative;
+  padding-left: 34px;
+  margin-bottom: 15px;
+  font-size: 0.92rem;
+  color: var(--color-gray);
+  line-height: 1.6;
+}
+.pdt-benefit-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 18px;
+  height: 1.5px;
+  background: var(--color-gold);
+}
+.pdt-benefit-list li::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-gold);
+}
+.pdt-visual { position: relative; }
+.pdt-img-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.pdt-img-row img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  transition: all var(--transition-slow);
+}
+.pdt-img-row img:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-gold-dim);
+  box-shadow: var(--shadow-md);
+}
+.pdt-visual-note {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--color-gray-muted);
+  letter-spacing: 0.08em;
+  font-style: italic;
+}
