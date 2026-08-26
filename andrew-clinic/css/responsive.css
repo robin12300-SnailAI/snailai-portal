@@ -68,6 +68,10 @@
   .hero-bg-video { display: none; }
   .hero-bg-static { display: block; }
 
+  /* Journey stack on mobile */
+  .journey-grid { grid-template-columns: 1fr; gap: 32px; }
+  .journey-image { aspect-ratio: 16 / 10; }
+
   /* Nav: only logo + burger */
   .nav-left, .nav-right > .nav-link, .nav-right > .nav-lang, .nav-right > .nav-cta { display: none; }
   .nav-burger { display: flex; }
