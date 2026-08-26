@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SnailAI Graduation Expo 2026 — Registration</title>
+<title>SnailAI Student AI Project Showcase — Registration</title>
 <style>
   :root {
     --green-dark: #0D4F3C;
@@ -23,14 +23,18 @@
     --shadow: 0 4px 24px rgba(13,79,60,0.10);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
     color: var(--ink);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* ===== Header ===== */
@@ -65,6 +69,7 @@
   }
   .header-inner { position: relative; z-index: 1; }
   .header .logo {
+    font-family: 'Inter', sans-serif;
     font-size: 22px;
     font-weight: 700;
     letter-spacing: 2px;
@@ -72,8 +77,9 @@
   }
   .header .logo .ai { color: var(--gold); }
   .header .event-title {
+    font-family: 'Noto Serif SC', 'Inter', serif;
     font-size: 22px;
-    font-weight: 800;
+    font-weight: 900;
     margin-top: 14px;
     letter-spacing: 1px;
     line-height: 1.35;
@@ -136,6 +142,7 @@
     border: 1px solid rgba(13,79,60,0.06);
   }
   .card h2 {
+    font-family: 'Noto Serif SC', 'Inter', serif;
     font-size: 17px;
     font-weight: 700;
     margin-bottom: 20px;
@@ -196,6 +203,7 @@
     padding: 15px;
     border: none;
     border-radius: 10px;
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
@@ -220,7 +228,7 @@
     padding: 40px 24px;
   }
   .result-card .icon { font-size: 52px; margin-bottom: 14px; }
-  .result-card h3 { font-size: 21px; font-weight: 700; margin-bottom: 10px; color: var(--green-dark); }
+  .result-card h3 { font-family: 'Noto Serif SC', 'Inter', serif; font-size: 21px; font-weight: 700; margin-bottom: 10px; color: var(--green-dark); }
   .result-card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
 
   /* ===== Error ===== */
@@ -261,8 +269,8 @@
 <div class="header">
   <div class="header-inner">
     <div class="logo">snail<span class="ai">AI.ai</span></div>
-    <div class="event-title">蜗牛AI应用教育学院<br>第一期毕业展览会 2026</div>
-    <div class="event-title-en">SnailAI Academy · 1st Graduation Expo 2026</div>
+    <div class="event-title">蜗牛AI应用教育学院<br>第一期学员AI项目毕业展示会</div>
+    <div class="event-title-en">SnailAI Academy · 1st Student AI Project Showcase</div>
     <div class="event-date">📍 9月26日（周六）· Killara Golf Club</div>
     <div class="event-time">⏰ 1:30 PM – 5:30 PM</div>
   </div>
@@ -377,7 +385,7 @@ async function submitVisitor() {
       showResult(`
         <div class="icon">✅</div>
         <h3>登记成功！<br><span style="font-size:14px;font-weight:500;color:var(--muted)">Registered Successfully!</span></h3>
-        <p>感谢您报名参加蜗牛AI第一期毕业展览会<br>Thank you for registering for SnailAI 1st Graduation Expo<br>我们将在活动前发送详细通知 / We'll send details before the event</p>
+        <p>感谢您报名参加第一期学员AI项目毕业展示会<br>Thank you for registering for SnailAI 1st Student AI Project Showcase<br>我们将在活动前发送详细通知 / We'll send details before the event</p>
         <p style="margin-top:14px;font-size:12px;color:var(--muted)">登记编号 / Reg #: <strong>#${data.id}</strong></p>
       `);
     } else if (res.status === 409) {
