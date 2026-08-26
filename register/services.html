@@ -335,46 +335,22 @@
     Bring your laptop — we'll set it up for FREE!</p>
   </div>
 
-  <!-- AI Experience Trial -->
-  <div class="service-card">
-    <div class="service-icon">🧪</div>
-    <h3>AI体验课</h3>
-    <div class="service-en">AI Trial Session</div>
-    <div class="service-desc">
-      1对1在线体验，感受AI如何改变您的工作效率。45分钟私人定制演示，涵盖文档生成、数据分析、邮件处理等核心场景。
-    </div>
-    <div class="price">
-      <span class="currency">AUD</span>
-      <span class="amount">$1</span>
-      <span class="period">/ 体验一次</span>
-    </div>
-    <ul class="features">
-      <li>1对1 在线AI演示</li>
-      <li>45分钟私人定制</li>
-      <li>文档/数据/邮件三大场景</li>
-      <li>零基础友好</li>
-    </ul>
-    <button class="btn-pay btn-pay-primary" onclick="handlePay('trial')">立即体验 / Try Now</button>
-  </div>
-
   <!-- Online Course -->
   <div class="service-card">
     <div class="service-icon">💻</div>
     <h3>AI应用线上班</h3>
     <div class="service-en">AI Application Online Course</div>
     <div class="service-desc">
-      12节系统化课程，从零基础到独立完成AI实战项目。每周1节，含作业点评+助教辅导+项目实战。
+      2个月9节课系统化课程，从零基础到独立完成AI实战项目。含作业点评+助教辅导+项目实战。
     </div>
     <div class="price">
       <span class="currency">AUD</span>
-      <span class="amount">$599</span>
+      <span class="amount">$999</span>
       <span class="period">/ 全部课程</span>
-      <span class="original">$999</span>
     </div>
     <ul class="features">
-      <li>12节系统化AI课程</li>
-      <li>每周1节 + 作业点评</li>
-      <li>助教1对1辅导</li>
+      <li>2个月9节系统化AI课程</li>
+      <li>作业点评 + 助教辅导</li>
       <li>结业完成1个AI实战项目</li>
       <li>终身学员社区权益</li>
     </ul>
@@ -388,7 +364,7 @@
     <h3>AI财富线下班</h3>
     <div class="service-en">AI Wealth Offline Course</div>
     <div class="service-desc">
-      24节沉浸式线下教学，小班制（≤8人），涵盖AI+投资理财、AI+商业运营、AI+个人品牌。含1对1项目辅导和商业落地指导。
+      2个月18节沉浸式线下教学，小班制（≤8人），涵盖AI+投资理财、AI+商业运营、AI+个人品牌。含1对1项目辅导和商业落地指导。
     </div>
     <div class="price">
       <span class="currency">AUD</span>
@@ -397,7 +373,7 @@
       <span class="original">$3,999</span>
     </div>
     <ul class="features">
-      <li>24节沉浸式线下教学</li>
+      <li>2个月18节沉浸式线下教学</li>
       <li>小班制（≤8人）</li>
       <li>AI+投资/商业/品牌三大模块</li>
       <li>1对1项目辅导</li>
@@ -415,12 +391,10 @@
 function handlePay(tier) {
   // Map tier to the existing Stripe checkout endpoint
   const priceMap = {
-    trial: 1,
-    online: 599,
+    online: 999,
     offline: 1999
   };
   const labelMap = {
-    trial: 'AI体验课',
     online: 'AI应用线上班',
     offline: 'AI财富线下班'
   };

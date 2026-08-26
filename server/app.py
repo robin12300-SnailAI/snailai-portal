@@ -3357,8 +3357,7 @@ _STRIPE_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
 _stripe.api_key = _STRIPE_KEY
 
 _COURSE_PRICES = {
-    "trial":   {"name_zh": "AI 体验课", "name_en": "AI Trial Class",              "amount_cents": 100},
-    "online":  {"name_zh": "AI 应用线上课", "name_en": "AI Application Online Course",  "amount_cents": 59900},
+    "online":  {"name_zh": "AI 应用线上课", "name_en": "AI Application Online Course",  "amount_cents": 99900},
     "wealth":   {"name_zh": "AI 财富管理线下课", "name_en": "AI Wealth Management Offline", "amount_cents": 199900},
 }
 
