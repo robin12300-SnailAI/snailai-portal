@@ -1059,7 +1059,8 @@ def _send_sign_email(to_addr, subject, html_body, attachments=None, from_addr=No
 def _embed_signature(pdf_path, sig_png_path, sign_rects, signed_name, signed_at_str):
     """用 PyMuPDF 把签名图 + 打印名 + 日期嵌入 PDF 指定页的指定坐标。
     sign_rects 格式: {"page":N, "signature":[x0,y0,x1,y1], "name":[x0,y0,x1,y1], "date":[x0,y0,x1,y1]}
-    坐标为 PDF pt 坐标系（原点左下角）。
+    坐标为 PyMuPDF 页面坐标系（原点左上角、y 轴向下）——调用方传入的矩形必须按此语义提供，
+    measure_rects.py / page.search_for() 的输出即为此语义，直接使用。（2026-08-27 修正：旧注释误写为左下角原点）
     返回修改后的 PDF bytes。"""
     import fitz
     doc = fitz.open(pdf_path)
