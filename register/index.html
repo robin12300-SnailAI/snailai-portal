@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SnailAI Student AI Project Showcase — Registration</title>
+<title>蜗牛AI第一期学员AI项目毕业展示会 — 报名登记</title>
+<link rel="icon" href="/assets/snailai_logo.png" type="image/png">
 <style>
   :root {
     --green-dark: #0D4F3C;
@@ -19,11 +20,15 @@
     --card: #FFFFFF;
     --border: #C8DDD2;
     --success: #16A34A;
+    --red: #DC2626;
+    --red-dark: #991B1B;
+    --red-bg: #FEF2F2;
+    --red-border: #FECACA;
     --radius: 14px;
     --shadow: 0 4px 24px rgba(13,79,60,0.10);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
   body {
     font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
@@ -41,7 +46,7 @@
   .header {
     width: 100%;
     background: linear-gradient(160deg, var(--green-dark) 0%, var(--green-mid) 50%, #2A9D70 100%);
-    padding: 36px 20px 28px;
+    padding: 28px 20px 24px;
     text-align: center;
     color: white;
     position: relative;
@@ -68,19 +73,22 @@
     border-radius: 50%;
   }
   .header-inner { position: relative; z-index: 1; }
-  .header .logo {
-    font-family: 'Inter', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    opacity: 0.95;
+
+  /* Logo */
+  .header .logo-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
   }
-  .header .logo .ai { color: var(--gold); }
+  .header .logo-img {
+    height: 52px;
+    width: auto;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
+  }
   .header .event-title {
     font-family: 'Noto Serif SC', 'Inter', serif;
     font-size: 22px;
     font-weight: 900;
-    margin-top: 14px;
     letter-spacing: 1px;
     line-height: 1.35;
   }
@@ -104,12 +112,123 @@
     opacity: 0.8;
   }
 
+  /* ===== Nav Tabs ===== */
+  .nav-tabs {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    background: white;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .nav-tabs a {
+    flex: 1;
+    text-align: center;
+    padding: 12px 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.25s;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+  }
+  .nav-tabs a:hover { color: var(--green-dark); }
+  .nav-tabs a.active {
+    color: var(--green-dark);
+    border-bottom-color: var(--gold);
+  }
+  .nav-tabs a .tab-icon { font-size: 15px; display: block; margin-bottom: 2px; }
+
   /* ===== Container ===== */
   .container {
     width: 100%;
     max-width: 480px;
-    padding: 24px 18px 48px;
+    padding: 20px 18px 48px;
     flex: 1;
+  }
+
+  /* ===== Section: About ===== */
+  .section-about {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px 20px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(13,79,60,0.06);
+  }
+  .section-about h3 {
+    font-family: 'Noto Serif SC', 'Inter', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 10px;
+  }
+  .section-about p {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--ink-light);
+  }
+  .section-about p + p { margin-top: 8px; }
+
+  /* ===== Red Banner: Super Offer ===== */
+  .super-offer {
+    background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(220,38,38,0.3);
+  }
+  .super-offer::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -10%;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .super-offer .offer-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .super-offer .offer-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 19px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .super-offer .offer-desc {
+    font-size: 13.5px;
+    line-height: 1.55;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+  }
+  .super-offer .offer-highlight {
+    display: inline;
+    background: rgba(255,255,255,0.25);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
   }
 
   /* ===== Notice Banner ===== */
@@ -257,10 +376,12 @@
 
   /* ===== Responsive ===== */
   @media (max-width: 380px) {
-    .header { padding: 28px 16px 22px; }
+    .header { padding: 24px 16px 20px; }
+    .header .logo-img { height: 44px; }
     .header .event-title { font-size: 19px; }
-    .container { padding: 18px 14px 40px; }
+    .container { padding: 16px 14px 40px; }
     .card { padding: 20px 16px; }
+    .super-offer .offer-title { font-size: 17px; }
   }
 </style>
 </head>
@@ -268,7 +389,9 @@
 
 <div class="header">
   <div class="header-inner">
-    <div class="logo">snail<span class="ai">AI.ai</span></div>
+    <div class="logo-wrap">
+      <img src="/assets/snailai_logo.png" alt="SnailAI Logo" class="logo-img" onerror="this.style.display='none'">
+    </div>
     <div class="event-title">蜗牛AI应用教育学院<br>第一期学员AI项目毕业展示会</div>
     <div class="event-title-en">SnailAI Academy · 1st Student AI Project Showcase</div>
     <div class="event-date">📍 9月26日（周六）· Killara Golf Club</div>
@@ -276,8 +399,35 @@
   </div>
 </div>
 
+<!-- Nav Tabs -->
+<nav class="nav-tabs">
+  <a href="/register/" class="active"><span class="tab-icon">📝</span>报名登记</a>
+  <a href="/register/students.html"><span class="tab-icon">🎓</span>学员风采</a>
+  <a href="/register/services.html"><span class="tab-icon">💡</span>蜗牛AI服务</a>
+</nav>
+
 <div class="container">
-  <!-- 登记表单 -->
+
+  <!-- About Section -->
+  <div class="section-about">
+    <h3>🎓 关于展示会 / About the Showcase</h3>
+    <p>蜗牛AI第一期学员经过12周系统学习，从零基础到独立完成AI实战项目——涵盖电商网站、股票筛选器、邮件助手、音响租赁平台等多个领域。这场展示会是他们学习成果的集中呈现，也是您了解AI如何改变工作和生活的绝佳机会。</p>
+    <p style="margin-top:6px;font-size:12px;color:var(--muted)">Our 1st cohort students completed 12 weeks of systematic AI training, from zero to building real AI projects — e-commerce sites, stock screeners, email assistants & more. Come see what AI can do for you!</p>
+  </div>
+
+  <!-- Super Offer Banner -->
+  <div class="super-offer">
+    <div class="offer-badge">🔥 限时特惠 / Limited Offer</div>
+    <div class="offer-title">对澳洲华人的<br>天大优惠！</div>
+    <div class="offer-desc">
+      现场免费安装 <span class="offer-highlight">龙虾 (SnailAI 桌面版)</span>，一键拥有你的AI私人助理！<br>
+      请把您的笔记本电脑带过来，我们帮您现场安装配置。<br><br>
+      Free on-site setup of <span class="offer-highlight">SnailAI (龙虾)</span> — your personal AI assistant!<br>
+      Bring your laptop and we'll install & configure it for you!
+    </div>
+  </div>
+
+  <!-- Registration Form -->
   <div id="form-view">
 
     <div class="notice-banner">
@@ -324,7 +474,7 @@
     </div>
   </div>
 
-  <!-- 成功结果 -->
+  <!-- Success Result -->
   <div id="result-view" class="hidden">
     <div class="card result-card" id="result-content"></div>
   </div>
@@ -335,7 +485,7 @@
 <script>
 const API = '/api/grad-registrations';
 
-// 解析 URL 参数中的 ref_code（静默关联，不显示横幅）
+// Parse ref_code from URL (silent attribution, no banner)
 const urlParams = new URLSearchParams(window.location.search);
 const refCode = urlParams.get('ref_code') || '';
 

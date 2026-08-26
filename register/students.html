@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>学员风采 — 蜗牛AI第一期学员AI项目毕业展示会</title>
+<link rel="icon" href="/assets/snailai_logo.png" type="image/png">
+<style>
+  :root {
+    --green-dark: #0D4F3C;
+    --green-mid: #1A7B5C;
+    --green-light: #E8F5EE;
+    --green-pale: #F2FAF6;
+    --gold: #D4A843;
+    --gold-light: #FFF8E7;
+    --ink: #1A2E28;
+    --ink-light: #2D4A40;
+    --muted: #5A7268;
+    --bg: var(--green-pale);
+    --card: #FFFFFF;
+    --border: #C8DDD2;
+    --radius: 14px;
+    --shadow: 0 4px 24px rgba(13,79,60,0.10);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+  body {
+    font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== Header ===== */
+  .header {
+    width: 100%;
+    background: linear-gradient(160deg, var(--green-dark) 0%, var(--green-mid) 50%, #2A9D70 100%);
+    padding: 20px 20px 16px;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60%; right: -30%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header .logo-wrap { display: flex; justify-content: center; margin-bottom: 8px; }
+  .header .logo-img { height: 40px; width: auto; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2)); }
+  .header .page-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  .header .page-subtitle {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-top: 4px;
+  }
+
+  /* ===== Nav Tabs ===== */
+  .nav-tabs {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    background: white;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .nav-tabs a {
+    flex: 1;
+    text-align: center;
+    padding: 12px 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.25s;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+  }
+  .nav-tabs a:hover { color: var(--green-dark); }
+  .nav-tabs a.active {
+    color: var(--green-dark);
+    border-bottom-color: var(--gold);
+  }
+  .nav-tabs a .tab-icon { font-size: 15px; display: block; margin-bottom: 2px; }
+
+  /* ===== Container ===== */
+  .container {
+    width: 100%;
+    max-width: 480px;
+    padding: 20px 18px 48px;
+    flex: 1;
+  }
+
+  .section-intro {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .section-intro h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 6px;
+  }
+  .section-intro p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ===== Student Grid ===== */
+  .student-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .student-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 14px 14px;
+    text-align: center;
+    border: 1px solid rgba(13,79,60,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .student-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(13,79,60,0.15);
+  }
+  .student-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green-light), var(--gold-light));
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    border: 2px solid var(--green-mid);
+  }
+  .student-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 3px;
+  }
+  .student-role {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+  }
+  .role-student { background: var(--green-light); color: var(--green-mid); }
+  .role-ta { background: var(--gold-light); color: #8B6914; }
+  .role-both { background: #F0E6FF; color: #7C3AED; }
+  .student-project {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 380px) {
+    .student-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .student-card { padding: 14px 10px 10px; }
+    .student-avatar { width: 54px; height: 54px; font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <img src="/assets/snailai_logo.png" alt="SnailAI Logo" class="logo-img" onerror="this.style.display='none'">
+    </div>
+    <div class="page-title">🎓 学员风采</div>
+    <div class="page-subtitle">Student Showcase</div>
+  </div>
+</div>
+
+<nav class="nav-tabs">
+  <a href="/register/"><span class="tab-icon">📝</span>报名登记</a>
+  <a href="/register/students.html" class="active"><span class="tab-icon">🎓</span>学员风采</a>
+  <a href="/register/services.html"><span class="tab-icon">💡</span>蜗牛AI服务</a>
+</nav>
+
+<div class="container">
+  <div class="section-intro">
+    <h2>第一期学员与助教</h2>
+    <p>他们从零开始，12周完成AI实战项目<br>From zero to AI project builders in 12 weeks</p>
+  </div>
+
+  <div class="student-grid">
+
+    <!-- Students -->
+    <div class="student-card">
+      <div class="student-avatar">🚀</div>
+      <div class="student-name">Nova</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">AI股票筛选器</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">📊</div>
+      <div class="student-name">Wang</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">Burwood房产销售平台</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">🔊</div>
+      <div class="student-name">SHOU390</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">Bose音响租赁平台</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">🎨</div>
+      <div class="student-name">Jason 王</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">AI创意设计工具</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">🏫</div>
+      <div class="student-name">Coco</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">学校假期活动平台</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">🤖</div>
+      <div class="student-name">Lucyshi333</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">AI项目</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">🐰</div>
+      <div class="student-name">Scamp-rabbit</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">AI项目</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">🐇</div>
+      <div class="student-name">Scamprabbit</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">AI项目</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">⚡</div>
+      <div class="student-name">danjin111</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">AI项目</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">🌟</div>
+      <div class="student-name">serenaxie888</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">AI项目</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">⭐</div>
+      <div class="student-name">simonzy168</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">AI项目</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">🎭</div>
+      <div class="student-name">tellmood</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">AI项目</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">💼</div>
+      <div class="student-name">xdliu788</div>
+      <span class="student-role role-student">学员</span>
+      <div class="student-project">AI邮件助手</div>
+    </div>
+
+    <!-- Both: Student + TA -->
+    <div class="student-card">
+      <div class="student-avatar">🏆</div>
+      <div class="student-name">Michael</div>
+      <span class="student-role role-both">学员+助教</span>
+      <div class="student-project">KSI投资管理</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">🌺</div>
+      <div class="student-name">Maureen</div>
+      <span class="student-role role-both">学员+助教</span>
+      <div class="student-project">AI项目</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">👔</div>
+      <div class="student-name">仙路</div>
+      <span class="student-role role-both">学员+助教</span>
+      <div class="student-project">工装销售平台</div>
+    </div>
+
+    <!-- TAs -->
+    <div class="student-card">
+      <div class="student-avatar">🎯</div>
+      <div class="student-name">Jason918262</div>
+      <span class="student-role role-ta">助教</span>
+      <div class="student-project">教学辅导</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">🎨</div>
+      <div class="student-name">ksiwuqing</div>
+      <span class="student-role role-ta">助教</span>
+      <div class="student-project">教学辅导</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">📐</div>
+      <div class="student-name">ZRR168</div>
+      <span class="student-role role-ta">助教</span>
+      <div class="student-project">教学辅导</div>
+    </div>
+
+    <div class="student-card">
+      <div class="student-avatar">🛡️</div>
+      <div class="student-name">rssz12300</div>
+      <span class="student-role role-ta">助教</span>
+      <div class="student-project">技术支持</div>
+    </div>
+
+  </div>
+</div>
+
+<footer>&copy; 2026 SnailAI.AI &middot; 蜗牛AI应用教育学院</footer>
+</body>
+</html>
