@@ -427,6 +427,19 @@ h1, h2, h3, h4, h5, h6 {
   object-position: center;
   filter: brightness(0.88) saturate(1.02);
   display: block;
+  /* Ken Burns drift — guarantees visible motion even when the AI
+     "orbital" clip is nearly static. Slow scale + pan, 12s loop. */
+  animation: heroKenBurns 12s ease-in-out infinite alternate;
+  will-change: transform;
+}
+/* Static fallback also drifts (mobile) so it never looks frozen */
+.hero-bg-static {
+  animation: heroKenBurns 12s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes heroKenBurns {
+  0%   { transform: scale(1.00) translate(0, 0); }
+  100% { transform: scale(1.16) translate(-2.2%, -1.8%); }
 }
 .hero-card {
   position: relative;
