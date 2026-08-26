@@ -1,13 +1,14 @@
 /**
  * SKIN CANCER LASER CENTRE — Bilingual Switch Engine
- * Version: 1.0.0
+ * Version: 2.0.0 — Text-replacement engine
  *
- * Implementation:
- * - body.lang-en → English visible, Chinese hidden
- * - body.lang-zh → Chinese visible, English hidden
- * - Default: English (no body class)
- * - localStorage key: "sclc-lang" persists user choice
- * - Toggle button: .lang-toggle with EN/ZH buttons
+ * How it works:
+ * - Every translatable element carries data-en / data-zh attributes
+ * - On switch, elements WITHOUT element children get textContent replaced
+ *   (elements with child nodes are skipped — their children handle themselves)
+ * - body.lang-en / body.lang-zh classes toggle CSS styling hooks
+ * - localStorage key "sclc-lang" persists user choice
+ * - Buttons: .lang-toggle [data-lang="en|zh"]
  */
 
 (function() {
@@ -20,46 +21,51 @@
   function getCurrentLang() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === LANG_EN || stored === LANG_ZH) return stored;
-    return LANG_EN; // default
+    // Auto-detect browser language on first visit
+    const nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+    return nav.startsWith('zh') ? LANG_ZH : LANG_EN;
   }
 
-  function setLang(lang) {
-    const body = document.body;
-    body.classList.remove('lang-en', 'lang-zh');
+  function applyLanguage(lang) {
+    const isZh = lang === LANG_ZH;
+    document.body.classList.toggle('lang-zh', isZh);
+    document.body.classList.toggle('lang-en', !isZh);
+    document.documentElement.lang = isZh ? 'zh' : 'en';
 
-    if (lang === LANG_ZH) {
-      body.classList.add('lang-zh');
-    }
-    // English is default — no class needed, but add for explicitness
-    // body.classList.add('lang-en'); // optional, CSS handles both
+    // Replace text on leaf elements only
+    const nodes = document.querySelectorAll('[data-en]');
+    nodes.forEach(el => {
+      const hasElementChild = el.children.length > 0;
+      if (hasElementChild) return; // let inner elements handle themselves
+      const text = isZh ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      if (text !== null && text !== '') el.textContent = text;
+    });
 
     localStorage.setItem(STORAGE_KEY, lang);
     updateToggleButtons(lang);
-    document.documentElement.lang = lang === LANG_ZH ? 'zh' : 'en';
   }
 
   function updateToggleButtons(lang) {
-    const buttons = document.querySelectorAll('.lang-toggle button');
-    buttons.forEach(btn => {
-      const btnLang = btn.dataset.lang;
-      btn.classList.toggle('active', btnLang === lang);
+    document.querySelectorAll('.lang-toggle button').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
     });
   }
 
   function init() {
-    const lang = getCurrentLang();
-    setLang(lang);
+    // Apply saved / detected language
+    applyLanguage(getCurrentLang());
 
-    // Bind toggle buttons
+    // Bind all toggle buttons (nav desktop + mobile drawer)
     document.querySelectorAll('.lang-toggle button').forEach(btn => {
       btn.addEventListener('click', function() {
-        const newLang = this.dataset.lang;
-        setLang(newLang);
+        applyLanguage(this.dataset.lang);
       });
     });
+
+    // Allow dynamically added content to be translated
+    window.SCLC_i18n = { apply: applyLanguage, current: getCurrentLang };
   }
 
-  // Initialize on DOM ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
