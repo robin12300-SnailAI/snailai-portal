@@ -63,6 +63,10 @@
    MOBILE (max-width: 768px)
    ============================================ */
 @media (max-width: 768px) {
+  /* Hero background: downgrade to static image on mobile (save data/battery) */
+  .hero-bg-video { display: none; }
+  .hero-bg-static { display: block; }
+
   /* Nav: only logo + burger */
   .nav-left, .nav-right > .nav-link, .nav-right > .nav-lang, .nav-right > .nav-cta { display: none; }
   .nav-burger { display: flex; }

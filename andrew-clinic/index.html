@@ -62,7 +62,12 @@
 
 <!-- ========== HERO ========== -->
 <section class="hero" id="hero">
-  <div class="hero-bg" style="background-image:url('images/hero-treatment.jpg');"></div>
+  <!-- Static fallback (mobile / no-video) -->
+  <div class="hero-bg hero-bg-static" style="background-image:url('images/hero-treatment.jpg');"></div>
+  <!-- Video background (desktop) -->
+  <video class="hero-bg hero-bg-video" autoplay muted loop playsinline preload="metadata" poster="images/hero-treatment.jpg">
+    <source src="images/hero-treatment.mp4" type="video/mp4">
+  </video>
   <div class="hero-card reveal">
     <div class="hero-eyebrow" data-en="MEDICAL SPA IN SYDNEY, AUSTRALIA" data-zh="悉尼医疗美容 · 澳大利亚">MEDICAL SPA IN SYDNEY, AUSTRALIA</div>
     <h1 class="hero-title">
