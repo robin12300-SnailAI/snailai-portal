@@ -111,7 +111,7 @@
   .membership-text { padding: 36px 28px; }
 
   /* Team cards */
-  #team .services-grid { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr; }
 
   /* Summary quote */
   .summary-text { font-size: 1.4rem; }

@@ -1327,3 +1327,27 @@ body { background: var(--color-bg); color: var(--color-text); }
   transition: transform 1.2s var(--ease);
 }
 .journey-image:hover img { transform: scale(1.04); }
+
+/* ====================================================
+   V3.2.2 — TEAM (independent from services carousel)
+   ==================================================== */
+.team-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+.team-card-v2 {
+  background: var(--color-text);   /* black card, white text reads */
+  color: #ffffff;
+  overflow: hidden;
+  transition: transform var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+}
+.team-card-v2:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+.team-card-v2 .service-card-name { color: #ffffff; }
+.team-card-v2 .service-card-cta { color: #ffffff; border-color: #ffffff; }
+.team-card-v2 .service-card-cta:hover { background: #ffffff; color: #000000; }
