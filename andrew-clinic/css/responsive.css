@@ -1,0 +1,79 @@
+/* ============================================
+   SKIN CANCER LASER CENTRE — Responsive
+   Version: 1.0.0
+   ============================================ */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .service-grid { grid-template-columns: repeat(2, 1fr); }
+  .doctors-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--space-lg); }
+  .detail-grid { grid-template-columns: 1fr; }
+  .detail-sidebar { position: static; }
+  .cta-grid { grid-template-columns: 1fr; }
+  .hero-side-img { display: none; }
+  .process-steps { grid-template-columns: repeat(2, 1fr); }
+  .contact-grid { grid-template-columns: 1fr; }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  :root { --nav-height: 64px; }
+
+  .nav-links {
+    position: fixed;
+    top: var(--nav-height);
+    left: 0; right: 0;
+    background: var(--color-white);
+    flex-direction: column;
+    padding: var(--space-lg);
+    gap: var(--space-md);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: all var(--transition);
+    z-index: 999;
+  }
+  .nav-links.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+  .nav-toggle { display: flex; }
+
+  .service-grid { grid-template-columns: 1fr; }
+  .doctors-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+
+  .hero {
+    min-height: 80vh;
+  }
+  .hero h1 {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+  }
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .process-steps { grid-template-columns: 1fr; }
+
+  .cta-buttons .btn {
+    max-width: 100%;
+  }
+
+  .section { padding: var(--space-2xl) 0; }
+  .section-header { margin-bottom: var(--space-xl); }
+
+  .comparison-table { font-size: 0.8rem; }
+  .comparison-table th,
+  .comparison-table td { padding: 8px 10px; }
+}
+
+/* Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+  .container { padding: 0 var(--space-md); }
+  .hero { min-height: 70vh; }
+  .btn { padding: 12px 24px; font-size: 0.8rem; }
+  .doctor-photo { width: 180px; height: 210px; }
+}

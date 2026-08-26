@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Detail — SKIN CANCER LASER CENTRE</title>
+  <meta name="description" content="Learn about our advanced dermatology treatments.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Judson:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.png" alt="SCLC Logo">
+      <div class="nav-logo-text">SKIN CANCER<br><span>LASER CENTRE</span><span class="version-badge" style="margin-left:8px;">V1.0.0</span></div>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" data-en="Home" data-zh="首页">Home</a>
+      <a href="doctors.html" data-en="Doctors" data-zh="医生团队">Doctors</a>
+      <a href="services.html" data-en="Services" data-zh="服务项目">Services</a>
+      <a href="contact.html" data-en="Contact" data-zh="联系我们">Contact</a>
+      <a href="appointment.html" data-en="Appointment" data-zh="预约">Appointment</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-toggle"><button data-lang="en" class="active">EN</button><button data-lang="zh">中文</button></div>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Dynamic content injected by JS -->
+<section class="detail-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html" data-en="Home" data-zh="首页">Home</a> / <a href="services.html" data-en="Services" data-zh="服务项目">Services</a> / <span id="breadcrumbTitle"></span>
+    </div>
+    <h1 id="detailTitle"></h1>
+    <p id="detailSubtitle" style="color:var(--color-gray);font-size:1.1rem;"></p>
+  </div>
+</section>
+
+<section class="detail-content">
+  <div class="container">
+    <div class="detail-grid">
+      <div class="detail-main" id="detailMain">
+        <p id="detailDesc" style="font-size:1.05rem;line-height:1.8;margin-bottom:var(--space-2xl);"></p>
+        <div id="detailSections"></div>
+      </div>
+      <div class="detail-sidebar">
+        <div class="sidebar-card" style="text-align:center;">
+          <h4 data-en="Ready to Start?" data-zh="准备开始？">Ready to Start?</h4>
+          <p data-en="Book a consultation with our specialists" data-zh="预约我们的专家咨询" style="font-size:0.9rem;color:var(--color-gray);margin-bottom:var(--space-md);">Book a consultation with our specialists</p>
+          <a id="sidebarCta" href="appointment.html" class="btn btn-primary" style="width:100%;">Book Now</a>
+        </div>
+        <div class="sidebar-card">
+          <h4 data-en="Contact" data-zh="联系方式">Contact</h4>
+          <p style="font-size:0.9rem;">📧 info@skincancerlasercentre.com.au</p>
+          <p style="font-size:0.9rem;">📞 +61 2 XXXX XXXX</p>
+        </div>
+        <div class="sidebar-card">
+          <h4 data-en="Other Services" data-zh="其他服务">Other Services</h4>
+          <div id="sidebarServices"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <img src="images/footer-banner.png" alt="" class="footer-banner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>SKIN CANCER <span style="color:var(--color-gold)">LASER CENTRE</span></h4>
+        <p data-en="Advanced dermatology and laser treatments in Sydney." data-zh="在悉尼提供先进的皮肤科和激光治疗。">Advanced dermatology and laser treatments in Sydney.</p>
+      </div>
+      <div class="footer-links">
+        <h4 data-en="Quick Links" data-zh="快速链接">Quick Links</h4>
+        <a href="index.html" data-en="Home" data-zh="首页">Home</a>
+        <a href="doctors.html" data-en="Doctors" data-zh="医生团队">Doctors</a>
+        <a href="services.html" data-en="Services" data-zh="服务项目">Services</a>
+        <a href="contact.html" data-en="Contact" data-zh="联系我们">Contact</a>
+      </div>
+      <div class="footer-links">
+        <h4 data-en="Treatments" data-zh="治疗项目">Treatments</h4>
+        <a href="service-detail.html?id=pdt">PDT</a>
+        <a href="service-detail.html?id=pico-laser">Pico Laser</a>
+        <a href="service-detail.html?id=dermal-enhancement">Dermal Enhancement</a>
+        <a href="service-detail.html?id=healite-ii">Healite II</a>
+      </div>
+      <div class="footer-contact">
+        <h4 data-en="Contact Us" data-zh="联系我们">Contact Us</h4>
+        <p>📧 info@skincancerlasercentre.com.au</p>
+        <p>📞 +61 2 XXXX XXXX</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-en="© 2026 SKIN CANCER LASER CENTRE. All rights reserved." data-zh="© 2026 SKIN CANCER LASER CENTRE. 保留所有权利。">© 2026 SKIN CANCER LASER CENTRE. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/services-data.js"></script>
+<script src="js/i18n.js"></script>
+<script>
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id') || 'pdt';
+  const s = SERVICES_DATA[id];
+
+  if (!s) {
+    document.getElementById('detailMain').innerHTML = '<p>Service not found. <a href="services.html">View all services</a></p>';
+    return;
+  }
+
+  const lang = (localStorage.getItem('sclc-lang') === 'zh') ? 'zh' : 'en';
+
+  // Set page title
+  document.title = s.title[lang] + ' — SKIN CANCER LASER CENTRE';
+
+  // Hero
+  document.getElementById('breadcrumbTitle').setAttribute('data-en', s.title.en);
+  document.getElementById('breadcrumbTitle').setAttribute('data-zh', s.title.zh);
+  document.getElementById('breadcrumbTitle').textContent = s.title[lang];
+
+  const titleEl = document.getElementById('detailTitle');
+  titleEl.setAttribute('data-en', s.title.en);
+  titleEl.setAttribute('data-zh', s.title.zh);
+  titleEl.textContent = s.title[lang];
+
+  const subEl = document.getElementById('detailSubtitle');
+  subEl.setAttribute('data-en', s.subtitle.en);
+  subEl.setAttribute('data-zh', s.subtitle.zh);
+  subEl.textContent = s.subtitle[lang];
+
+  // Description
+  const descEl = document.getElementById('detailDesc');
+  descEl.setAttribute('data-en', s.description.en);
+  descEl.setAttribute('data-zh', s.description.zh);
+  descEl.textContent = s.description[lang];
+
+  // Sections
+  const sectionsEl = document.getElementById('detailSections');
+  s.sections.forEach(sec => {
+    let html = `<div class="detail-section">`;
+    html += `<h3 data-en="${sec.title.en}" data-zh="${sec.title.zh}">${sec.title[lang]}</h3>`;
+
+    if (sec.type === 'list') {
+      html += '<ul>';
+      sec.items[lang].forEach(item => { html += `<li>${item}</li>`; });
+      html += '</ul>';
+    } else if (sec.type === 'steps') {
+      html += '<div class="process-steps">';
+      sec.steps.forEach(step => {
+        html += `<div class="process-step">
+          <div class="step-num">${step.num}</div>
+          <h4 data-en="${step.title.en}" data-zh="${step.title.zh}">${step.title[lang]}</h4>
+          <p data-en="${step.desc.en}" data-zh="${step.desc.zh}">${step.desc[lang]}</p>
+        </div>`;
+      });
+      html += '</div>';
+    } else if (sec.type === 'comparison') {
+      html += '<table class="comparison-table"><thead><tr>';
+      sec.headers[lang].forEach(h => { html += `<th>${h}</th>`; });
+      html += '</tr></thead><tbody>';
+      sec.rows.forEach(row => {
+        html += '<tr>';
+        row[lang].forEach(cell => { html += `<td data-en="${cell}" data-zh="${cell}">${cell}</td>`; });
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+    }
+
+    html += '</div>';
+    sectionsEl.innerHTML += html;
+  });
+
+  // CTA
+  const ctaEl = document.getElementById('sidebarCta');
+  ctaEl.setAttribute('data-en', s.cta.en);
+  ctaEl.setAttribute('data-zh', s.cta.zh);
+  ctaEl.textContent = s.cta[lang];
+  ctaEl.href = `mailto:info@skincancerlasercentre.com.au?subject=${encodeURIComponent(s.cta.en)}%20Request`;
+
+  // Sidebar other services
+  const sidebarServices = document.getElementById('sidebarServices');
+  Object.keys(SERVICES_DATA).forEach(sid => {
+    if (sid === id) return;
+    const svc = SERVICES_DATA[sid];
+    sidebarServices.innerHTML += `<a href="service-detail.html?id=${sid}" style="display:block;padding:4px 0;font-size:0.85rem;color:var(--color-dark);transition:color 0.3s;" data-en="${svc.title.en}" data-zh="${svc.title.zh}">${svc.title[lang]}</a>`;
+  });
+})();
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>

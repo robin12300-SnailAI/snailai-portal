@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services — SKIN CANCER LASER CENTRE</title>
+  <meta name="description" content="Explore our comprehensive range of dermatology and laser services at SKIN CANCER LASER CENTRE.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Judson:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.png" alt="SCLC Logo">
+      <div class="nav-logo-text">SKIN CANCER<br><span>LASER CENTRE</span><span class="version-badge" style="margin-left:8px;">V1.0.0</span></div>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" data-en="Home" data-zh="首页">Home</a>
+      <a href="doctors.html" data-en="Doctors" data-zh="医生团队">Doctors</a>
+      <a href="services.html" data-en="Services" data-zh="服务项目">Services</a>
+      <a href="contact.html" data-en="Contact" data-zh="联系我们">Contact</a>
+      <a href="appointment.html" data-en="Appointment" data-zh="预约">Appointment</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-toggle"><button data-lang="en" class="active">EN</button><button data-lang="zh">中文</button></div>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<section class="detail-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html" data-en="Home" data-zh="首页">Home</a> / <span data-en="Services" data-zh="服务项目">Services</span>
+    </div>
+    <h1 data-en="Our Services" data-zh="我们的服务">Our Services</h1>
+    <p data-en="Comprehensive skin care using the latest medical technology" data-zh="运用最新医疗技术提供全方位皮肤护理">Comprehensive skin care using the latest medical technology</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="service-grid" id="servicesGrid"></div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container" style="text-align:center;">
+    <h2 data-en="Not Sure Which Treatment?" data-zh="不确定哪种治疗适合您？">Not Sure Which Treatment?</h2>
+    <p data-en="Book a consultation and our team will recommend the best treatment plan for you." data-zh="预约咨询，我们的团队将为您推荐最佳治疗方案。" style="margin-bottom:var(--space-xl);">Book a consultation and our team will recommend the best treatment plan for you.</p>
+    <a href="appointment.html" class="btn btn-primary" data-en="Book Consultation" data-zh="预约咨询">Book Consultation</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <img src="images/footer-banner.png" alt="" class="footer-banner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>SKIN CANCER <span style="color:var(--color-gold)">LASER CENTRE</span></h4>
+        <p data-en="Advanced dermatology and laser treatments in Sydney." data-zh="在悉尼提供先进的皮肤科和激光治疗。">Advanced dermatology and laser treatments in Sydney.</p>
+      </div>
+      <div class="footer-links">
+        <h4 data-en="Quick Links" data-zh="快速链接">Quick Links</h4>
+        <a href="index.html" data-en="Home" data-zh="首页">Home</a>
+        <a href="doctors.html" data-en="Doctors" data-zh="医生团队">Doctors</a>
+        <a href="services.html" data-en="Services" data-zh="服务项目">Services</a>
+        <a href="contact.html" data-en="Contact" data-zh="联系我们">Contact</a>
+      </div>
+      <div class="footer-links">
+        <h4 data-en="Treatments" data-zh="治疗项目">Treatments</h4>
+        <a href="service-detail.html?id=pdt">PDT</a>
+        <a href="service-detail.html?id=pico-laser">Pico Laser</a>
+        <a href="service-detail.html?id=dermal-enhancement">Dermal Enhancement</a>
+        <a href="service-detail.html?id=healite-ii">Healite II</a>
+      </div>
+      <div class="footer-contact">
+        <h4 data-en="Contact Us" data-zh="联系我们">Contact Us</h4>
+        <p>📧 info@skincancerlasercentre.com.au</p>
+        <p>📞 +61 2 XXXX XXXX</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-en="© 2026 SKIN CANCER LASER CENTRE. All rights reserved." data-zh="© 2026 SKIN CANCER LASER CENTRE. 保留所有权利。">© 2026 SKIN CANCER LASER CENTRE. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/services-data.js"></script>
+<script src="js/i18n.js"></script>
+<script>
+// Dynamically render all services
+(function() {
+  const grid = document.getElementById('servicesGrid');
+  const order = ['skin-cancer-check','skin-analysis','pdt','dermal-enhancement','pico-laser','healite-ii','wrinkles-pores','uv-brown-spots','spots','acne'];
+  order.forEach(id => {
+    const s = SERVICES_DATA[id];
+    if (!s) return;
+    grid.innerHTML += `
+      <a href="service-detail.html?id=${id}" class="service-card">
+        <div class="service-card-img" style="background:linear-gradient(135deg,${s.color},#fff);display:flex;align-items:center;justify-content:center;">
+          ${s.icon}
+        </div>
+        <div class="service-card-body">
+          <h3 data-en="${s.title.en}" data-zh="${s.title.zh}">${s.title.en}</h3>
+          <p data-en="${s.subtitle.en}" data-zh="${s.subtitle.zh}">${s.subtitle.en}</p>
+          <span class="learn-more" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+        </div>
+      </a>`;
+  });
+})();
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>

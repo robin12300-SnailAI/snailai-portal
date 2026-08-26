@@ -3478,6 +3478,27 @@ def wecom_callback():
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve(path):
+    host = request.host.split(":")[0]  # andrew.snailai.ai or snailai.ai
+
+    # Andrew Clinic 域名路由：andrew.snailai.ai → andrew-clinic/ 目录
+    if host == "andrew.snailai.ai":
+        andrew_base = BASE / "andrew-clinic"
+        if not path:
+            return send_from_directory(andrew_base, "index.html")
+        target = (andrew_base / path).resolve()
+        if andrew_base not in target.parents and target != andrew_base:
+            return send_from_directory(andrew_base, "index.html")
+        if target.is_dir():
+            idx = target / "index.html"
+            if idx.is_file():
+                return send_from_directory(andrew_base, path.rstrip("/") + "/index.html")
+            return send_from_directory(andrew_base, "index.html")
+        if not target.exists() and target.with_suffix(".html").is_file():
+            return send_from_directory(andrew_base, path + ".html")
+        if target.is_file():
+            return send_from_directory(andrew_base, path)
+        return send_from_directory(andrew_base, "index.html")
+
     # 根路径 -> 官网首页（已合并为 repo 根 index.html）
     if not path:
         return send_from_directory(BASE, "index.html")

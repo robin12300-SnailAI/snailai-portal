@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointment — SKIN CANCER LASER CENTRE</title>
+  <meta name="description" content="Book an appointment at SKIN CANCER LASER CENTRE.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Judson:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.png" alt="SCLC Logo">
+      <div class="nav-logo-text">SKIN CANCER<br><span>LASER CENTRE</span><span class="version-badge" style="margin-left:8px;">V1.0.0</span></div>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" data-en="Home" data-zh="首页">Home</a>
+      <a href="doctors.html" data-en="Doctors" data-zh="医生团队">Doctors</a>
+      <a href="services.html" data-en="Services" data-zh="服务项目">Services</a>
+      <a href="contact.html" data-en="Contact" data-zh="联系我们">Contact</a>
+      <a href="appointment.html" data-en="Appointment" data-zh="预约">Appointment</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-toggle"><button data-lang="en" class="active">EN</button><button data-lang="zh">中文</button></div>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<section class="detail-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html" data-en="Home" data-zh="首页">Home</a> / <span data-en="Appointment" data-zh="预约">Appointment</span>
+    </div>
+    <h1 data-en="Book an Appointment" data-zh="预约就诊">Book an Appointment</h1>
+    <p data-en="Choose the option that best suits your needs" data-zh="选择最适合您需求的方式">Choose the option that best suits your needs</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-xl);max-width:800px;margin:0 auto;">
+
+      <!-- Online Booking -->
+      <div style="background:var(--color-light);border-radius:8px;padding:var(--space-xl);text-align:center;border:2px solid transparent;transition:border-color 0.3s;" onmouseover="this.style.borderColor='var(--color-gold)'" onmouseout="this.style.borderColor='transparent'">
+        <div style="font-size:3rem;margin-bottom:var(--space-md);">🌐</div>
+        <h3 data-en="Online Booking" data-zh="在线预约">Online Booking</h3>
+        <p data-en="Book your appointment through our online system" data-zh="通过我们的在线系统预约" style="font-size:0.9rem;color:var(--color-gray);margin-bottom:var(--space-lg);">Book your appointment through our online system</p>
+        <a href="mailto:info@skincancerlasercentre.com.au?subject=Online%20Booking%20Request" class="btn btn-primary" data-en="Book Now" data-zh="立即预约">Book Now</a>
+      </div>
+
+      <!-- 30 Min Consultation -->
+      <div style="background:var(--color-light);border-radius:8px;padding:var(--space-xl);text-align:center;border:2px solid transparent;transition:border-color 0.3s;" onmouseover="this.style.borderColor='var(--color-gold)'" onmouseout="this.style.borderColor='transparent'">
+        <div style="font-size:3rem;margin-bottom:var(--space-md);">💬</div>
+        <h3 data-en="30 Min Consultation" data-zh="30 分钟咨询">30 Min Consultation</h3>
+        <p data-en="A brief consultation to discuss your concerns and options" data-zh="简要咨询，讨论您的需求和方案" style="font-size:0.9rem;color:var(--color-gray);margin-bottom:var(--space-lg);">A brief consultation to discuss your concerns and options</p>
+        <a href="mailto:info@skincancerlasercentre.com.au?subject=30%20Min%20Consultation%20Request" class="btn btn-primary" data-en="Request" data-zh="申请">Request</a>
+      </div>
+
+      <!-- Treatment Bookings -->
+      <div style="background:var(--color-light);border-radius:8px;padding:var(--space-xl);text-align:center;border:2px solid transparent;transition:border-color 0.3s;" onmouseover="this.style.borderColor='var(--color-gold)'" onmouseout="this.style.borderColor='transparent'">
+        <div style="font-size:3rem;margin-bottom:var(--space-md);">⚕️</div>
+        <h3 data-en="Treatment Bookings" data-zh="治疗预约">Treatment Bookings</h3>
+        <p data-en="Schedule your treatment session with our specialists" data-zh="与我们的专家安排治疗时间" style="font-size:0.9rem;color:var(--color-gray);margin-bottom:var(--space-lg);">Schedule your treatment session with our specialists</p>
+        <a href="mailto:info@skincancerlasercentre.com.au?subject=Treatment%20Booking%20Request" class="btn btn-primary" data-en="Book Treatment" data-zh="预约治疗">Book Treatment</a>
+      </div>
+
+      <!-- Create Account -->
+      <div style="background:var(--color-light);border-radius:8px;padding:var(--space-xl);text-align:center;border:2px solid transparent;transition:border-color 0.3s;" onmouseover="this.style.borderColor='var(--color-gold)'" onmouseout="this.style.borderColor='transparent'">
+        <div style="font-size:3rem;margin-bottom:var(--space-md);">📋</div>
+        <h3 data-en="Create Account" data-zh="创建账户">Create Account</h3>
+        <p data-en="Create a patient account for easier booking and records" data-zh="创建患者账户，方便预约和查看记录" style="font-size:0.9rem;color:var(--color-gray);margin-bottom:var(--space-lg);">Create a patient account for easier booking and records</p>
+        <a href="mailto:info@skincancerlasercentre.com.au?subject=Create%20Account%20Request" class="btn btn-primary" data-en="Get Started" data-zh="开始注册">Get Started</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ-style info -->
+<section class="section section-light">
+  <div class="container" style="max-width:700px;">
+    <h2 style="text-align:center;margin-bottom:var(--space-xl);" data-en="What to Expect" data-zh="就诊须知">What to Expect</h2>
+    <div style="space-y:var(--space-lg);">
+      <div style="margin-bottom:var(--space-lg);padding:var(--space-lg);background:var(--color-white);border-radius:8px;">
+        <h4 style="color:var(--color-gold);margin-bottom:var(--space-sm);" data-en="First Visit" data-zh="首次就诊">First Visit</h4>
+        <p data-en="Please arrive 10 minutes early to complete your patient registration form. Bring your Medicare card and any relevant medical records or referral letters." data-zh="请提前 10 分钟到达以完成患者登记表。请携带您的 Medicare 卡和任何相关的医疗记录或转诊信。" style="font-size:0.95rem;">Please arrive 10 minutes early to complete your patient registration form. Bring your Medicare card and any relevant medical records or referral letters.</p>
+      </div>
+      <div style="margin-bottom:var(--space-lg);padding:var(--space-lg);background:var(--color-white);border-radius:8px;">
+        <h4 style="color:var(--color-gold);margin-bottom:var(--space-sm);" data-en="Referrals" data-zh="转诊">Referrals</h4>
+        <p data-en="A referral from your GP is recommended but not always required. Medicare rebates may apply for referred consultations." data-zh="建议携带全科医生转诊信，但并非总是必需。转诊咨询可能适用 Medicare 回扣。" style="font-size:0.95rem;">A referral from your GP is recommended but not always required. Medicare rebates may apply for referred consultations.</p>
+      </div>
+      <div style="padding:var(--space-lg);background:var(--color-white);border-radius:8px;">
+        <h4 style="color:var(--color-gold);margin-bottom:var(--space-sm);" data-en="Cancellation Policy" data-zh="取消政策">Cancellation Policy</h4>
+        <p data-en="Please provide at least 24 hours notice for cancellations or rescheduling. Late cancellations may incur a fee." data-zh="请至少提前 24 小时通知取消或改期。逾期取消可能会收取费用。" style="font-size:0.95rem;">Please provide at least 24 hours notice for cancellations or rescheduling. Late cancellations may incur a fee.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <img src="images/footer-banner.png" alt="" class="footer-banner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>SKIN CANCER <span style="color:var(--color-gold)">LASER CENTRE</span></h4>
+        <p data-en="Advanced dermatology and laser treatments in Sydney." data-zh="在悉尼提供先进的皮肤科和激光治疗。">Advanced dermatology and laser treatments in Sydney.</p>
+      </div>
+      <div class="footer-links">
+        <h4 data-en="Quick Links" data-zh="快速链接">Quick Links</h4>
+        <a href="index.html" data-en="Home" data-zh="首页">Home</a>
+        <a href="doctors.html" data-en="Doctors" data-zh="医生团队">Doctors</a>
+        <a href="services.html" data-en="Services" data-zh="服务项目">Services</a>
+        <a href="contact.html" data-en="Contact" data-zh="联系我们">Contact</a>
+      </div>
+      <div class="footer-links">
+        <h4 data-en="Treatments" data-zh="治疗项目">Treatments</h4>
+        <a href="service-detail.html?id=pdt">PDT</a>
+        <a href="service-detail.html?id=pico-laser">Pico Laser</a>
+        <a href="service-detail.html?id=dermal-enhancement">Dermal Enhancement</a>
+        <a href="service-detail.html?id=healite-ii">Healite II</a>
+      </div>
+      <div class="footer-contact">
+        <h4 data-en="Contact Us" data-zh="联系我们">Contact Us</h4>
+        <p>📧 info@skincancerlasercentre.com.au</p>
+        <p>📞 +61 2 XXXX XXXX</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-en="© 2026 SKIN CANCER LASER CENTRE. All rights reserved." data-zh="© 2026 SKIN CANCER LASER CENTRE. 保留所有权利。">© 2026 SKIN CANCER LASER CENTRE. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
