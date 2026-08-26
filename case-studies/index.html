@@ -44,6 +44,10 @@
   .section-inner { max-width:1280px; margin:0 auto; }
 
   .case-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:28px; }
+  .model-callout { background:var(--accent-warm); border:2px solid var(--accent); border-radius:var(--r-lg); padding:36px 32px; margin-bottom:28px; text-align:center; }
+  .model-callout-badge { display:inline-block; padding:6px 20px; background:var(--accent); color:white; border-radius:100px; font-size:13px; font-weight:800; letter-spacing:0.04em; margin-bottom:16px; }
+  .model-callout h3 { font-size:1.4rem; font-weight:900; color:var(--accent); margin-bottom:12px; }
+  .model-callout p { font-size:1rem; color:var(--ink-2); line-height:1.75; max-width:720px; margin:0 auto; }
   .case-card { background:white; border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden; transition:all .3s ease; }
   .case-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-md); }
   .case-card iframe { width:100%; height:300px; border:none; }
@@ -100,10 +104,15 @@
 
 <section>
   <div class="section-inner">
+    <div class="model-callout">
+      <div class="model-callout-badge" data-zh="🎁 免费 Model 网站复刻" data-en="🎁 Free Model Website Replication">🎁 免费 Model 网站复刻</div>
+      <h3 data-zh="你想要的样子，我们都能做" data-en="Any Website You Want, We Can Build">你想要的样子，我们都能做</h3>
+      <p data-zh="AI 时代我们做网站采用 Model 复刻方式：只要你找到一个喜欢的 Model（参考）网站，我们就能按照它进行完美复刻和升级。所以，你在外面看到的案例并不重要——重要的是你想要什么。把网址发给我们，我们免费为你提供想要的原型网站。" data-en="In the AI era, we build websites by Model Replication: find any website you like as a Model, and we will replicate and upgrade it perfectly. So the cases you see here don't matter — what matters is what you want. Send us the URL and we'll build your prototype website for free.">AI 时代我们做网站采用 Model 复刻方式：只要你找到一个喜欢的 Model（参考）网站，我们就能按照它进行完美复刻和升级。所以，你在外面看到的案例并不重要——重要的是你想要什么。把网址发给我们，我们免费为你提供想要的原型网站。</p>
+    </div>
     <div class="case-grid">
       <!-- Case 1: Xianlu Workwear -->
       <div class="case-card">
-        <iframe src="https://robin12300-snailai.github.io/xianlu-workwear/" loading="lazy" title="Xianlu Workwear"></iframe>
+        <iframe src="https://djworkwear.com.au" loading="lazy" title="Xianlu Workwear"></iframe>
         <div class="case-body">
           <h3 data-zh="仙路工作服 · B2B 电商" data-en="Xianlu Workwear · B2B E-Commerce">仙路工作服 · B2B 电商</h3>
           <p data-zh="面向全澳企业的工装在线采购平台。产品目录浏览、购物车、Stripe 支付、后台库存管理、SEO 优化。从零到上线 4 周交付，持续迭代 10+ 版本。" data-en="Australia-wide B2B workwear procurement platform. Product catalogue, cart, Stripe payments, admin inventory, SEO. Delivered in 4 weeks, 10+ iterations ongoing.">面向全澳企业的工装在线采购平台。产品目录浏览、购物车、Stripe 支付、后台库存管理、SEO 优化。从零到上线 4 周交付，持续迭代 10+ 版本。</p>
@@ -115,7 +124,7 @@
             <div class="result-item"><div class="num">10+</div><div class="label" data-zh="版本迭代" data-en="Iterations">版本迭代</div></div>
             <div class="result-item"><div class="num">B2B</div><div class="label" data-zh="企业客户" data-en="Enterprise">企业客户</div></div>
           </div>
-          <a href="https://robin12300-snailai.github.io/xianlu-workwear/" target="_blank" rel="noopener" class="case-link" data-zh="访问网站 →" data-en="Visit Site →">访问网站 →</a>
+          <a href="https://djworkwear.com.au" target="_blank" rel="noopener" class="case-link" data-zh="访问网站 →" data-en="Visit Site →">访问网站 →</a>
         </div>
       </div>
 
@@ -179,7 +188,7 @@
 <footer class="footer">
   <img src="../assets/snailai_logo.png" alt="Snail AI Logo">
   <p data-zh="© 2026 蜗牛 AI · 企业AI服务 · 悉尼" data-en="© 2026 SnailAI.AI · Business AI Services · Sydney">© 2026 蜗牛 AI · 企业AI服务 · 悉尼</p>
-  <div class="version">V1.0.0 · 2026-08-24 · SnailAI Case Studies</div>
+  <div class="version">V1.1.0 · 2026-08-26 · SnailAI Case Studies</div>
 </footer>
 
 <script>

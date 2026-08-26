@@ -140,6 +140,10 @@
 
   /* Case Study */
   .case-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .model-callout { background: var(--accent-warm); border: 2px solid var(--accent); border-radius: var(--r-lg); padding: 36px 32px; margin-bottom: 32px; text-align: center; }
+  .model-callout-badge { display: inline-block; padding: 6px 20px; background: var(--accent); color: white; border-radius: 100px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; margin-bottom: 16px; }
+  .model-callout h3 { font-size: 1.4rem; font-weight: 900; color: var(--accent); margin-bottom: 12px; }
+  .model-callout p { font-size: 1rem; color: var(--ink-2); line-height: 1.75; max-width: 720px; margin: 0 auto; }
   .case-card { background: white; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; transition: all .3s ease; }
   .case-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
   .case-card iframe { width: 100%; height: 260px; border: none; }
@@ -224,7 +228,8 @@
   </h1>
   <p class="subtitle" data-zh="面向悉尼 5–200 人中小企业，从业务 AI 流程化到软件加 AI 模块，一个团队全程负责。CEO 亲自免费上门 2 小时。" data-en="For Sydney businesses with 5–200 staff. From AI process automation to AI-enabling your software — one team, end to end. Our CEO visits your office free for 2 hours.">面向悉尼 5–200 人中小企业，从业务 AI 流程化到软件加 AI 模块，一个团队全程负责。CEO 亲自免费上门 2 小时。</p>
   <div class="hero-badge-row">
-    <span class="hero-badge hero-badge--orange" data-zh="💰 AI Project cost from $2500" data-en="💰 AI Project cost from $2500">💰 AI Project cost from $2500</span>
+    <span class="hero-badge hero-badge--orange" data-zh="🎁 免费提供网站原型" data-en="🎁 Free Website Prototype">🎁 免费提供网站原型</span>
+    <span class="hero-badge hero-badge--ink" data-zh="💰 AI Project cost from $2500" data-en="💰 AI Project cost from $2500">💰 AI Project cost from $2500</span>
     <span class="hero-badge hero-badge--ink" data-zh="🤝 免费 2 小时上门会面" data-en="🤝 Free 2-Hour On-Site Consultation">🤝 免费 2 小时上门会面</span>
     <span class="hero-badge hero-badge--warm" data-zh="📋 免费书面方案与报价" data-en="📋 Free Written Proposal & Quote">📋 免费书面方案与报价</span>
     <span class="hero-badge hero-badge--outline" data-zh="🇦🇺 悉尼都会区" data-en="🇦🇺 Sydney Metro Only">🇦🇺 悉尼都会区</span>
@@ -440,16 +445,21 @@
     <div class="section-tag" data-zh="Case Studies" data-en="Case Studies">Case Studies</div>
     <h2 class="section-title" data-zh="数字基础设施落地案例" data-en="Digital Foundations We Have Delivered">数字基础设施落地案例</h2>
     <p class="section-desc" data-zh="Snail AI 团队指导交付的实战项目 — 真实上线、真实迭代。" data-en="Projects delivered under Snail AI guidance — live, iterated, real.">Snail AI 团队指导交付的实战项目 — 真实上线、真实迭代。</p>
+    <div class="model-callout">
+      <div class="model-callout-badge" data-zh="🎁 免费 Model 网站复刻" data-en="🎁 Free Model Website Replication">🎁 免费 Model 网站复刻</div>
+      <h3 data-zh="你想要的样子，我们都能做" data-en="Any Website You Want, We Can Build">你想要的样子，我们都能做</h3>
+      <p data-zh="AI 时代我们做网站采用 Model 复刻方式：只要你找到一个喜欢的 Model（参考）网站，我们就能按照它进行完美复刻和升级。所以，你在外面看到的案例并不重要——重要的是你想要什么。把网址发给我们，我们免费为你提供想要的原型网站。" data-en="In the AI era, we build websites by Model Replication: find any website you like as a Model, and we will replicate and upgrade it perfectly. So the cases you see here don't matter — what matters is what you want. Send us the URL and we'll build your prototype website for free.">AI 时代我们做网站采用 Model 复刻方式：只要你找到一个喜欢的 Model（参考）网站，我们就能按照它进行完美复刻和升级。所以，你在外面看到的案例并不重要——重要的是你想要什么。把网址发给我们，我们免费为你提供想要的原型网站。</p>
+    </div>
     <div class="case-grid">
       <div class="case-card">
-        <iframe src="https://robin12300-snailai.github.io/xianlu-workwear/" loading="lazy" title="Xianlu Workwear"></iframe>
+        <iframe src="https://djworkwear.com.au" loading="lazy" title="Xianlu Workwear"></iframe>
         <div class="case-body">
           <h3 data-zh="仙路工作服电商" data-en="Xianlu Workwear E-Commerce">仙路工作服电商</h3>
           <p data-zh="B2B 工作服在线采购平台：产品目录、购物车、Stripe 支付、后台管理、SEO。" data-en="B2B workwear procurement platform: product catalogue, cart, Stripe payments, admin panel, SEO.">B2B 工作服在线采购平台：产品目录、购物车、Stripe 支付、后台管理、SEO。</p>
           <div class="case-tags">
             <span>Next.js</span><span>Stripe</span><span>SEO</span>
           </div>
-          <a href="https://robin12300-snailai.github.io/xianlu-workwear/" target="_blank" rel="noopener" class="case-link" data-zh="访问网站 →" data-en="Visit Site →">访问网站 →</a>
+          <a href="https://djworkwear.com.au" target="_blank" rel="noopener" class="case-link" data-zh="访问网站 →" data-en="Visit Site →">访问网站 →</a>
         </div>
       </div>
       <div class="case-card">
@@ -539,7 +549,7 @@
     <a href="/terms/" style="font-size:0.78rem;color:var(--ink-3);text-decoration:none;" data-zh="服务条款" data-en="Terms">服务条款</a>
     <a href="/ai-data-principles/" style="font-size:0.78rem;color:var(--ink-3);text-decoration:none;" data-zh="AI 数据原则" data-en="AI Data Principles">AI 数据原则</a>
   </div>
-  <div class="version" id="version-tag">V2.2.0 · 2026-08-24 · SnailAI Enterprise</div>
+  <div class="version" id="version-tag">V2.3.0 · 2026-08-26 · SnailAI Enterprise</div>
 </footer>
 
 <script>
