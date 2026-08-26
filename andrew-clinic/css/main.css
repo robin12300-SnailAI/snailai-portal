@@ -320,14 +320,24 @@ p { margin-bottom: var(--space-md); }
   flex-shrink: 0;
 }
 .nav-logo-img {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  border: 1.5px solid var(--color-gold-dim);
-  object-fit: cover;
+  width: 110px;
+  height: auto;
+  object-fit: contain;
   transition: transform var(--transition-slow);
+  display: block;
 }
-.nav-logo:hover .nav-logo-img { transform: rotate(8deg) scale(1.05); }
+.nav-logo-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  background: #ffffff;
+  border-radius: 28px;
+  border: 1px solid rgba(199, 147, 35, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+.nav-logo:hover .nav-logo-pill { transform: scale(1.04); box-shadow: 0 4px 14px rgba(199, 147, 35, 0.35); }
+.nav-logo:hover .nav-logo-img { transform: scale(1.06); }
 .nav-logo-text {
   font-family: var(--font-heading);
   font-size: 0.98rem;
@@ -867,7 +877,7 @@ p { margin-bottom: var(--space-md); }
   padding-bottom: 15px;
   border-bottom: 1px solid var(--color-border);
 }
-.team-bio { font-size: 0.85rem; color: var(--color-gray); line-height: 1.68; }
+.team-bio { font-size: 0.85rem; color: var(--color-gray); line-height: 1.68; white-space: pre-line; }
 
 /* --- Journey --- */
 .journey { background: var(--color-bg-alt); }
@@ -1156,10 +1166,20 @@ p { margin-bottom: var(--space-md); }
   margin-bottom: 20px;
 }
 .footer-logo img {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  border: 1.5px solid var(--color-gold-dim);
+  width: 130px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+.footer-logo-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 16px;
+  background: #ffffff;
+  border-radius: 30px;
+  border: 1px solid rgba(199, 147, 35, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 .footer-logo-text {
   font-family: var(--font-heading);
@@ -1382,7 +1402,7 @@ p { margin-bottom: var(--space-md); }
   color: var(--color-gold);
   margin-bottom: 14px;
 }
-.bio { font-size: 0.87rem; color: var(--color-gray); line-height: 1.68; margin: 0; }
+.bio { font-size: 0.87rem; color: var(--color-gray); line-height: 1.68; margin: 0; white-space: pre-line; }
 
 /* Service cards (V1 pages) */
 .service-grid {

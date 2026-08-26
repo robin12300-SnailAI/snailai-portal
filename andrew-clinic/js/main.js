@@ -15,6 +15,82 @@
 (function() {
   'use strict';
 
+  /* ====================================================
+   * V2.2 — Prototype-only click guard
+   * Disable all mailto: links and form submits (no email client pop-up).
+   * Snackbar feedback instead. Drop this entire block to restore live behaviour.
+   * ==================================================== */
+  function initPrototypeGuard() {
+    // 1. Block any mailto link at capture phase so click never reaches the browser
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest && e.target.closest('a[href^="mailto:"], a[href^="tel:"], a[href^="javascript:void(0)"], a[href="#book"], a[data-prototype-cta], button[data-prototype-cta]');
+      if (link) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        showPrototypeToast(link.textContent.trim() || 'Booking');
+        return false;
+      }
+    }, true); // capture phase
+
+    // 2. Block any form submission (especially mailto: forms)
+    document.addEventListener('submit', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      showPrototypeToast('Enquiry');
+      return false;
+    }, true);
+
+    // 3. Strip mailto: ctas any time JS wires them up post-DOM
+    document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
+      a.setAttribute('data-prototype-cta', '');
+      a.setAttribute('aria-disabled', 'true');
+      a.removeAttribute('href');
+      a.style.cursor = 'not-allowed';
+    });
+
+    // 4. Disable submit buttons so they cannot trigger submit
+    document.querySelectorAll('form button[type="submit"], form input[type="submit"]').forEach(b => {
+      b.setAttribute('data-prototype-cta', '');
+      b.setAttribute('aria-disabled', 'true');
+      b.style.cursor = 'not-allowed';
+    });
+  }
+
+  // Tiny toast (no DOM deps, no layout shift)
+  let _toastTimer = null;
+  function showPrototypeToast(actionLabel) {
+    let el = document.getElementById('prototype-toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'prototype-toast';
+      el.setAttribute('role', 'status');
+      el.setAttribute('aria-live', 'polite');
+      el.style.cssText = `
+        position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+        background: rgba(20,18,14,0.96); color: #c79323; border: 1px solid #c79323;
+        padding: 12px 22px; border-radius: 30px; font-family: 'Inter',sans-serif;
+        font-size: 0.84rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+        z-index: 99999; opacity: 0; pointer-events: none;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.6);`;
+      el.innerHTML = '<span style="margin-right:8px;">●</span><span id="prototype-toast-text"></span>';
+      document.body.appendChild(el);
+    }
+    document.getElementById('prototype-toast-text').textContent = `PROTOTYPE — ${actionLabel} is not active yet`;
+    clearTimeout(_toastTimer);
+    requestAnimationFrame(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateX(-50%) translateY(0)';
+    });
+    _toastTimer = setTimeout(() => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 1800);
+  }
+
   /* --- Page Loading --- */
   function initPageLoading() {
     const loader = document.getElementById('pageLoading');
@@ -185,6 +261,7 @@
 
   /* --- Init all --- */
   function init() {
+    initPrototypeGuard();   // V2.2 — disable mailto/form before any other handler binds
     initPageLoading();
     initNavbar();
     initDrawer();
