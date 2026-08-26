@@ -389,23 +389,16 @@
 
 <script>
 function handlePay(tier) {
-  // Map tier to the existing Stripe checkout endpoint
-  const priceMap = {
-    online: 999,
-    offline: 1999
-  };
-  const labelMap = {
-    online: 'AI应用线上班',
-    offline: 'AI财富线下班'
-  };
   // Use the existing /api/create-checkout-session endpoint
+  // Must send {course: tier} to match backend's data.get("course")
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '处理中... / Processing...';
   fetch('/api/create-checkout-session', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
-      price: priceMap[tier],
-      label: labelMap[tier],
-      tier: tier
+      course: tier
     })
   })
   .then(r => r.json())
@@ -413,11 +406,15 @@ function handlePay(tier) {
     if (data.url) {
       window.location.href = data.url;
     } else {
-      alert('支付链接生成失败，请联系客服 / Payment link error, please contact us');
+      alert('支付链接生成失败: ' + (data.error || '未知错误') + '\n请联系客服 / Payment error, please contact us');
+      btn.disabled = false;
+      btn.textContent = tier === 'online' ? '报名线上班 / Enroll Online' : '报名线下班 / Enroll Offline';
     }
   })
   .catch(() => {
     alert('网络错误，请重试 / Network error, please retry');
+    btn.disabled = false;
+    btn.textContent = tier === 'online' ? '报名线上班 / Enroll Online' : '报名线下班 / Enroll Offline';
   });
 }
 </script>
