@@ -254,6 +254,15 @@
     transform: translateY(-1px);
   }
   .btn-pay:active { transform: scale(0.98); }
+  .start-date { text-align:center; margin:10px 0 6px; font-size:14px; font-weight:600; color:var(--dark); }
+  .enterprise-card { border:2px solid #1a365d; background:linear-gradient(135deg,#f0f4ff 0%,#e8edf5 100%); }
+  .btn-pay-enterprise {
+    display:block; width:100%; padding:14px 0; border:none; border-radius:10px;
+    background:linear-gradient(135deg,#1a365d 0%,#2b4c7e 100%); color:#fff;
+    font-size:16px; font-weight:700; cursor:pointer; text-decoration:none; text-align:center;
+    transition:transform .15s,box-shadow .15s;
+  }
+  .btn-pay-enterprise:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(26,54,93,.35); }
 
   /* ===== Free Setup Card ===== */
   .free-card {
@@ -348,6 +357,7 @@
       <span class="amount">$999</span>
       <span class="period">/ 全部课程</span>
     </div>
+    <div class="start-date">📅 预计开课：2026年10月20日<br><span style="font-size:11px;color:var(--muted)">Estimated start: Oct 20, 2026</span></div>
     <ul class="features">
       <li>2个月9节系统化AI课程</li>
       <li>作业点评 + 助教辅导</li>
@@ -372,6 +382,7 @@
       <span class="period">/ 全部课程</span>
       <span class="original">$3,999</span>
     </div>
+    <div class="start-date">📅 预计开课：2026年10月20日<br><span style="font-size:11px;color:var(--muted)">Estimated start: Oct 20, 2026</span></div>
     <ul class="features">
       <li>2个月18节沉浸式线下教学</li>
       <li>小班制（≤8人）</li>
@@ -381,6 +392,23 @@
       <li>终身VIP社区权益</li>
     </ul>
     <button class="btn-pay btn-pay-gold" onclick="handlePay('wealth')">报名线下班 / Enroll Offline</button>
+  </div>
+
+  <!-- Enterprise Service -->
+  <div class="service-card enterprise-card">
+    <div class="service-icon">🏢</div>
+    <h3>企业服务</h3>
+    <div class="service-en">Enterprise AI Services</div>
+    <div class="service-desc">
+      为澳洲企业量身定制AI解决方案——AI流程自动化、智能客服、数据洞察、员工AI培训。帮助企业降本增效，拥抱AI时代。
+    </div>
+    <ul class="features">
+      <li>AI流程自动化 & 智能客服</li>
+      <li>数据洞察 & 商业分析</li>
+      <li>企业定制AI培训方案</li>
+      <li>1对1咨询 + 落地实施</li>
+    </ul>
+    <a href="/enterprise/" class="btn-pay btn-pay-enterprise">了解企业服务 →<br><span style="font-size:11px">Learn More About Enterprise AI</span></a>
   </div>
 
 </div>
