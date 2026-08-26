@@ -46,7 +46,8 @@
   }
 
   function updateToggleButtons(lang) {
-    document.querySelectorAll('.lang-toggle button').forEach(btn => {
+    // Support both .lang-toggle (legacy sub pages) and .nav-lang (V3 index)
+    document.querySelectorAll('.lang-toggle button, .nav-lang button').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.lang === lang);
     });
   }
@@ -56,7 +57,7 @@
     applyLanguage(getCurrentLang());
 
     // Bind all toggle buttons (nav desktop + mobile drawer)
-    document.querySelectorAll('.lang-toggle button').forEach(btn => {
+    document.querySelectorAll('.lang-toggle button, .nav-lang button').forEach(btn => {
       btn.addEventListener('click', function() {
         applyLanguage(this.dataset.lang);
       });
