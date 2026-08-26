@@ -33,8 +33,9 @@
   .value-strip-item:nth-child(2) { border-right: 0; padding-right: 0; }
   .value-strip-item:not(:last-child) { border-right: 0; }
 
-  /* Services — 2 columns */
-  .services-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+  /* Services carousel — 2 cards visible on tablet */
+  .services-carousel { padding: 0 50px; }
+  .service-card-img { flex: 0 0 calc((100% - 18px) / 2); }
 
   /* SKIN THAT GLOWS thumbs */
   .skin-glows-thumbs { grid-template-columns: repeat(3, 1fr); }
@@ -91,9 +92,9 @@
   .value-strip-grid { grid-template-columns: 1fr; gap: 8px; }
   .value-strip-item { padding: 6px 0; }
 
-  /* Services — 1 column */
-  .services-grid { grid-template-columns: 1fr; gap: 12px; }
-  .service-card { min-height: 220px; padding: 26px 22px 22px; }
+  /* Services carousel — 1.2 cards on mobile (peek of next) */
+  .services-carousel { padding: 0 16px; }
+  .service-card-img { flex: 0 0 78%; }
 
   /* Italic quote */
   .italic-quote { font-size: 1.4rem; }

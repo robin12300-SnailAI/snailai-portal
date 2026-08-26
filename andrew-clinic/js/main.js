@@ -296,6 +296,105 @@
   }
 
   /* ====================================================
+   * V3.1 — Services horizontal carousel
+   * One instance per .services-carousel (4 categories).
+   * 4 cards visible (desktop), 2 (tablet), 1.2 (mobile).
+   * Prev/next black square buttons + dot indicators.
+   * ==================================================== */
+  function initServicesCarousel() {
+    const carousels = document.querySelectorAll('.services-carousel[data-carousel]');
+    if (!carousels.length) return;
+
+    carousels.forEach((root) => {
+      const track   = root.querySelector('.services-track');
+      const prev    = root.querySelector('.carousel-prev');
+      const next    = root.querySelector('.carousel-next');
+      const dots    = root.querySelectorAll('.carousel-dots button');
+      const cards   = root.querySelectorAll('.service-card-img');
+      if (!track || !prev || !next || !cards.length) return;
+
+      let pos = 0;
+
+      function getVisibleCount() {
+        const w = window.innerWidth;
+        if (w < 768) return 1;     // 1.2 cards visible (78% width set in CSS)
+        if (w < 1024) return 2;
+        return 4;
+      }
+
+      function getGap() {
+        // gap = 18px on desktop, 18px on tablet (matches CSS), 0 on mobile (CSS uses 0)
+        return window.innerWidth < 768 ? 0 : 18;
+      }
+
+      function getCardWidth() {
+        const vw = root.querySelector('.services-viewport').clientWidth;
+        const visible = getVisibleCount();
+        const gapTotal = (visible - 1) * getGap();
+        return (vw - gapTotal) / visible;
+      }
+
+      function maxPos() {
+        return Math.max(0, cards.length - getVisibleCount());
+      }
+
+      function update() {
+        const w = getCardWidth();
+        const gap = getGap();
+        // Card flex-basis is already set by CSS; just set width for precision
+        cards.forEach(c => { c.style.flex = `0 0 ${w}px`; });
+        const offset = pos * (w + gap);
+        track.style.transform = `translateX(-${offset}px)`;
+        prev.disabled = pos <= 0;
+        next.disabled = pos >= maxPos();
+        if (dots.length) {
+          dots.forEach((d, i) => d.classList.toggle('is-active', i === pos));
+        }
+      }
+
+      prev.addEventListener('click', () => {
+        if (pos > 0) { pos--; update(); }
+      });
+      next.addEventListener('click', () => {
+        if (pos < maxPos()) { pos++; update(); }
+      });
+      dots.forEach((d, i) => {
+        d.addEventListener('click', () => {
+          if (i <= maxPos()) { pos = i; update(); }
+        });
+      });
+
+      // Touch swipe support
+      let touchStartX = 0, touchDeltaX = 0, swiping = false;
+      const viewport = root.querySelector('.services-viewport');
+      if (viewport) {
+        viewport.addEventListener('touchstart', (e) => {
+          touchStartX = e.touches[0].clientX;
+          swiping = true;
+        }, { passive: true });
+        viewport.addEventListener('touchmove', (e) => {
+          if (!swiping) return;
+          touchDeltaX = e.touches[0].clientX - touchStartX;
+        }, { passive: true });
+        viewport.addEventListener('touchend', () => {
+          if (!swiping) return;
+          swiping = false;
+          if (Math.abs(touchDeltaX) > 50) {
+            if (touchDeltaX < 0 && pos < maxPos()) pos++;
+            else if (touchDeltaX > 0 && pos > 0) pos--;
+            update();
+          }
+          touchDeltaX = 0;
+        });
+      }
+
+      window.addEventListener('resize', update);
+      // Initial update after a tick (so flex-basis in CSS has applied)
+      setTimeout(update, 50);
+    });
+  }
+
+  /* ====================================================
    * Init
    * ==================================================== */
   function init() {
@@ -309,6 +408,7 @@
     initFAQ();
     initTestimonials();
     initInstagram();
+    initServicesCarousel();
   }
 
   if (document.readyState === 'loading') {
