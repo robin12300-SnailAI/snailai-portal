@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SKIN CANCER LASER CENTRE — Treatment Tailored to You</title>
-  <meta name="description" content="Advanced dermatology and laser treatments in Sydney. PDT, Pico Laser, Dermal Enhancement, VISIA Skin Analysis, Healite II and more.">
-  <meta property="og:title" content="SKIN CANCER LASER CENTRE">
-  <meta property="og:description" content="Treatment tailored to you. Advanced dermatology and laser treatments.">
-  <meta property="og:type" content="website">
+  <title>SKIN CANCER LASER CENTRE — Sydney, Australia</title>
+  <meta name="description" content="Comprehensive skin cancer screening & advanced pico laser treatments in Sydney. Performed by licensed medical providers." data-en="Comprehensive skin cancer screening & advanced pico laser treatments in Sydney. Performed by licensed medical providers." data-zh="悉尼全面的皮肤癌筛查与先进皮秒激光治疗。由持牌医疗专业人员执行。">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Judson:wght@400;700&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
@@ -24,41 +22,36 @@
 <!-- Scroll Progress -->
 <div class="scroll-progress" id="scrollProgress"><span></span></div>
 
-<!-- ========== NAVIGATION ========== -->
+<!-- ========== NAVBAR ========== -->
 <nav class="navbar" id="navbar">
   <div class="container nav-container">
+    <!-- Left links -->
+    <div class="nav-left">
+      <a href="#about" class="nav-link" data-en="ABOUT" data-zh="关于">ABOUT</a>
+      <a href="#services" class="nav-link" data-en="SERVICES" data-zh="服务">SERVICES</a>
+      <a href="#team" class="nav-link" data-en="DOCTORS" data-zh="医生">DOCTORS</a>
+    </div>
+
+    <!-- Center logo -->
     <a href="index.html" class="nav-logo" aria-label="SKIN CANCER LASER CENTRE Home">
       <span class="nav-logo-pill">
         <img src="images/logo-sclc-410.png" alt="SCLC Logo" class="nav-logo-img">
       </span>
-      <div class="nav-logo-text">
-        SKIN CANCER<br><span>LASER CENTRE</span>
-        <span class="version-badge">V2.2.0</span>
+      <div class="nav-logo-text" style="display:none;">
+        <span class="version-badge footer-version-pill">V3.0.0</span>
       </div>
     </a>
 
-    <div class="nav-links" id="navLinks">
-      <div class="nav-links-inner">
-        <a href="index.html" data-en="Home" data-zh="首页" class="nav-link">Home</a>
-        <a href="doctors.html" data-en="Doctors" data-zh="医生团队" class="nav-link">Doctors</a>
-        <a href="services.html" data-en="Services" data-zh="服务项目" class="nav-link">Services</a>
-        <a href="contact.html" data-en="Contact" data-zh="联系我们" class="nav-link">Contact</a>
-        <a href="appointment.html" class="nav-link nav-cta" data-en="Appointment" data-zh="预约">Appointment</a>
-        <div class="nav-lang lang-toggle" id="langToggle">
-          <button data-lang="en" class="active" aria-label="English">EN</button>
-          <span class="lang-divider">/</span>
-          <button data-lang="zh" aria-label="中文">中文</button>
-        </div>
-      </div>
-    </div>
-
+    <!-- Right links -->
     <div class="nav-right">
-      <div class="lang-toggle lang-toggle-desktop">
-        <button data-lang="en" class="active" aria-label="English">EN</button>
-        <span class="lang-divider">/</span>
-        <button data-lang="zh" aria-label="中文">中文</button>
+      <a href="#gallery" class="nav-link" data-en="GALLERY" data-zh="图库">GALLERY</a>
+      <a href="#faq" class="nav-link" data-en="FAQ" data-zh="常见问题">FAQ</a>
+      <div class="nav-lang">
+        <button data-lang="en" class="active">EN</button>
+        <button data-lang="zh">中</button>
       </div>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <a href="#schedule" class="nav-cta" data-en="BOOK NOW" data-zh="立即预约">BOOK NOW</a>
+      <button class="nav-burger" id="navBurger" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -69,633 +62,482 @@
 
 <!-- ========== HERO ========== -->
 <section class="hero" id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-overlay"></div>
-  <div class="container hero-container">
-    <div class="hero-content">
-      <div class="hero-eyebrow reveal" data-en="SKIN CANCER & LASER CENTRE · SYDNEY" data-zh="皮肤癌与激光中心 · 悉尼">SKIN CANCER & LASER CENTRE · SYDNEY</div>
-      <h1 class="hero-title">
-        <span class="hero-line reveal" data-en="TREATMENT" data-zh="为您量身">TREATMENT</span>
-        <span class="hero-line hero-line-gold reveal" data-en="TAILORED TO YOU" data-zh="定制的治疗">TAILORED TO YOU</span>
-      </h1>
-      <p class="hero-subtitle reveal" data-en="Advanced dermatology and laser treatments delivered by experienced medical professionals. Your skin health is our priority." data-zh="由经验丰富的医疗专业人员提供的先进皮肤科与激光治疗。您的皮肤健康，是我们的首要任务。">Advanced dermatology and laser treatments delivered by experienced medical professionals. Your skin health is our priority.</p>
-      <div class="hero-cta reveal">
-        <a href="appointment.html" class="btn btn-primary btn-sweep" data-en="Book Consultation" data-zh="预约咨询">
-          <span data-en="Book Consultation" data-zh="预约咨询">Book Consultation</span>
-        </a>
-        <a href="#services" class="btn btn-outline" data-en="Explore Services" data-zh="探索服务">Explore Services</a>
-      </div>
-      <div class="hero-stats reveal">
-        <div class="hero-stat">
-          <div class="hero-stat-num" data-counter="20000">0</div>
-          <div class="hero-stat-label" data-en="Patients Treated" data-zh="成功治疗患者">Patients Treated</div>
-        </div>
-        <div class="hero-stat-divider"></div>
-        <div class="hero-stat">
-          <div class="hero-stat-num">6</div>
-          <div class="hero-stat-label" data-en="Advanced Treatments" data-zh="先进治疗项目">Advanced Treatments</div>
-        </div>
-        <div class="hero-stat-divider"></div>
-        <div class="hero-stat">
-          <div class="hero-stat-num" data-en="7 Days" data-zh="每周 7 天">7 Days</div>
-          <div class="hero-stat-label" data-en="Open Weekly 8AM–6PM" data-zh="每周开放 8AM–6PM">Open Weekly 8AM–6PM</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <a href="#trust" class="hero-scroll" aria-label="Scroll down">
-    <span class="hero-scroll-mouse"><span class="hero-scroll-wheel"></span></span>
-    <span class="hero-scroll-text" data-en="SCROLL" data-zh="向下滚动">SCROLL</span>
-  </a>
-</section>
-
-<!-- ========== TRUST BAND ========== -->
-<section class="trust" id="trust">
-  <div class="container">
-    <div class="trust-grid">
-      <div class="trust-item reveal">
-        <div class="trust-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L4 6v6c0 5.25 3.4 9.74 8 11 4.6-1.26 8-5.75 8-11V6l-8-4z"/><path d="M9 12l2 2 4-4"/></svg>
-        </div>
-        <div class="trust-text">
-          <div class="trust-title" data-en="Medical Grade" data-zh="专业医疗级">Medical Grade</div>
-          <div class="trust-desc" data-en="Licensed medical providers under physician direction" data-zh="持证医疗专业人员，医生督导执业">Licensed medical providers under physician direction</div>
-        </div>
-      </div>
-      <div class="trust-item reveal">
-        <div class="trust-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        </div>
-        <div class="trust-text">
-          <div class="trust-title" data-en="Advanced Technology" data-zh="先进科技设备">Advanced Technology</div>
-          <div class="trust-desc" data-en="FDA-cleared laser & diagnostic systems" data-zh="FDA 认证激光与诊断系统">FDA-cleared laser & diagnostic systems</div>
-        </div>
-      </div>
-      <div class="trust-item reveal">
-        <div class="trust-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-        </div>
-        <div class="trust-text">
-          <div class="trust-title" data-en="Personalised Care" data-zh="个性化定制方案">Personalised Care</div>
-          <div class="trust-desc" data-en="Treatment plans tailored to your skin's needs" data-zh="根据您的肌肤需求量身定制治疗方案">Treatment plans tailored to your skin's needs</div>
-        </div>
-      </div>
-      <div class="trust-item reveal">
-        <div class="trust-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-        </div>
-        <div class="trust-text">
-          <div class="trust-title" data-en="Open 7 Days" data-zh="每周 7 天开放">Open 7 Days</div>
-          <div class="trust-desc" data-en="Monday to Sunday, 8:00AM – 6:00PM" data-zh="周一至周日，上午 8 点至下午 6 点">Monday to Sunday, 8:00AM – 6:00PM</div>
-        </div>
-      </div>
+  <div class="hero-bg" style="background-image:url('images/hero-treatment.jpg');"></div>
+  <div class="hero-card reveal">
+    <div class="hero-eyebrow" data-en="MEDICAL SPA IN SYDNEY, AUSTRALIA" data-zh="悉尼医疗美容 · 澳大利亚">MEDICAL SPA IN SYDNEY, AUSTRALIA</div>
+    <h1 class="hero-title">
+      <span class="hero-title-line-1" data-en="Define your own unique" data-zh="为您量身定制">Define your own unique</span>
+      <span class="hero-title-line-2"><span data-en="beauty" data-zh="焕新">beauty</span> &amp; <span data-en="confidence" data-zh="自信">confidence</span></span>
+    </h1>
+    <p class="hero-desc" data-en="Botox, dermal fillers, skin cancer medicine, laser &amp; advanced skin treatments — performed by licensed medical providers in the heart of Sydney, Australia." data-zh="肉毒杆菌、真皮填充、皮肤癌医学、激光与先进皮肤治疗 — 由悉尼市中心持牌医疗专业人员执行。">Botox, dermal fillers, skin cancer medicine, laser &amp; advanced skin treatments — performed by licensed medical providers in the heart of Sydney, Australia.</p>
+    <div class="hero-ctas">
+      <a href="#schedule" class="btn btn-primary" data-en="BOOK CONSULTATION" data-zh="预约咨询">BOOK CONSULTATION</a>
+      <a href="#services" class="btn btn-light" data-en="FIND YOUR PROCEDURE" data-zh="查看服务项目">FIND YOUR PROCEDURE</a>
     </div>
   </div>
 </section>
 
-<!-- ========== ABOUT / BRAND STORY ========== -->
-<section class="section about" id="about">
+<!-- ========== ABOUT ========== -->
+<section class="about" id="about">
   <div class="container">
     <div class="about-grid">
-      <div class="about-visual reveal">
-        <div class="about-img-main">
-          <img src="images/portrait-large.jpg" loading="eager" alt="Professional skin consultation at SKIN CANCER LASER CENTRE" loading="lazy">
-        </div>
-        <div class="about-img-accent">
-          <img src="images/foundation-photo.jpg" loading="eager" alt="Skin foundation analysis" loading="lazy">
-        </div>
-        <div class="about-badge">
-          <div class="about-badge-num">20+</div>
-          <div class="about-badge-text" data-en="Years of Excellence" data-zh="余年卓越经验">Years of Excellence</div>
-        </div>
-      </div>
-      <div class="about-content">
-        <div class="section-eyebrow reveal" data-en="ABOUT THE CENTRE" data-zh="关于我们">ABOUT THE CENTRE</div>
-        <h2 class="section-title reveal" data-en="Skin Health & Cancer Prevention Go Hand-in-Hand" data-zh="皮肤健康与癌症预防，相辅而行">Skin Health & Cancer Prevention Go Hand-in-Hand</h2>
-        <p class="section-text reveal" data-en="Your skin is more than just a covering — it's your body's largest organ and its first line of defence against the outside world. It protects, regulates, and reflects your internal health." data-zh="皮肤不仅仅是您的外在——它是人体最大的器官，也是抵御外界的第一道防线。它保护您、调节机能，并反映您的内在健康。">Your skin is more than just a covering — it's your body's largest organ and its first line of defence against the outside world. It protects, regulates, and reflects your internal health.</p>
-        <p class="section-text reveal" data-en="Our approach is rooted in both medical care and aesthetic expertise. We specialise in early detection and prevention of skin cancer, while also offering advanced treatments that rejuvenate and repair skin from within." data-zh="我们的诊疗理念植根于医疗服务与美学专业的深度结合。我们专注于皮肤癌的早期检测与预防，同时提供由内而外焕活与修复肌肤的先进治疗。">Our approach is rooted in both medical care and aesthetic expertise. We specialise in early detection and prevention of skin cancer, while also offering advanced treatments that rejuvenate and repair skin from within.</p>
-        <ul class="about-list reveal">
-          <li data-en="Early detection and prevention of skin cancer" data-zh="皮肤癌的早期检测与预防">Early detection and prevention of skin cancer</li>
-          <li data-en="Advanced laser rejuvenation and repair" data-zh="先进激光焕活与修复技术">Advanced laser rejuvenation and repair</li>
-          <li data-en="Individualised treatment plans for every patient" data-zh="为每位患者量身定制个性化治疗方案">Individualised treatment plans for every patient</li>
+      <div class="about-text-col reveal">
+        <div class="eyebrow" data-en="TOP MEDICAL SKIN CLINIC IN SYDNEY" data-zh="悉尼顶级医疗皮肤诊所">TOP MEDICAL SKIN CLINIC IN SYDNEY</div>
+        <h2 class="about-title" data-en="Unmatched results, from a team Sydney trusts" data-zh="由悉尼信赖的团队，带来无可比拟的成果">Unmatched results, from a team Sydney trusts</h2>
+        <p class="about-text" data-en="At SKIN CANCER LASER CENTRE, we are passionate about empowering confidence through personalised, evidence-based skin treatments. As a trusted medical skin clinic in Sydney, our commitment from day one has been to deliver the highest quality experience and natural, transformative results." data-zh="SKIN CANCER LASER CENTRE 致力于以个性化、循证为本的皮肤治疗，让每位客户焕发自信。作为悉尼值得信赖的医疗皮肤诊所，我们从第一天起就以最高品质的体验和自然、焕然一新的成果为承诺。">At SKIN CANCER LASER CENTRE, we are passionate about empowering confidence through personalised, evidence-based skin treatments. As a trusted medical skin clinic in Sydney, our commitment from day one has been to deliver the highest quality experience and natural, transformative results.</p>
+        <p class="about-text" data-en="Our practice is led by Founder &amp; Skin Cancer Specialist <strong>Dr. Andrew Li</strong>, with care overseen by Medical Director <strong>Mr Omid Zarbaft</strong> — so every injectable, skin cancer screening and advanced skin treatment is performed to a true medical standard." data-zh="诊所由创始人兼皮肤癌专家 <strong>李医生（Dr. Andrew Li）</strong> 主导，由医疗总监 <strong>Mr Omid Zarbaft</strong> 监督 — 确保每一次注射、皮肤癌筛查与先进皮肤治疗都遵循真正的医疗标准。">Our practice is led by Founder &amp; Skin Cancer Specialist <strong>Dr. Andrew Li</strong>, with care overseen by Medical Director <strong>Mr Omid Zarbaft</strong> — so every injectable, skin cancer screening and advanced skin treatment is performed to a true medical standard.</p>
+        <p class="about-text"><strong data-en="Result-driven treatments tailored to your unique goals" data-zh="为您独特目标量身定制、以结果为导向的治疗">Result-driven treatments tailored to your unique goals</strong></p>
+        <ul class="about-list">
+          <li data-en="Medical-grade skincare and FDA-cleared technology" data-zh="医用级护肤与 FDA 认证的设备">Medical-grade skincare and FDA-cleared technology</li>
+          <li data-en="Licensed providers under physician medical direction" data-zh="由医师督导下的持牌专业人员">Licensed providers under physician medical direction</li>
+          <li data-en="Serving Sydney CBD, North Shore, Eastern Suburbs &amp; Greater Sydney" data-zh="服务悉尼 CBD、北岸、东区及大悉尼地区">Serving Sydney CBD, North Shore, Eastern Suburbs &amp; Greater Sydney</li>
         </ul>
-        <div class="reveal">
-          <a href="doctors.html" class="btn btn-outline-gold" data-en="Meet Our Team" data-zh="认识我们的团队">Meet Our Team</a>
-        </div>
+      </div>
+      <div class="about-image reveal" data-reveal-delay="200">
+        <img src="images/dr-andrew-li-official.jpg" alt="Dr. Andrew Li" loading="eager">
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ========== VALUE STRIP (4 labels black bar) ========== -->
+<section class="value-strip">
+  <div class="container">
+    <div class="value-strip-grid">
+      <div class="value-strip-item" data-en="RESULT-DRIVEN TREATMENTS" data-zh="以结果为导向">RESULT-DRIVEN TREATMENTS</div>
+      <div class="value-strip-item" data-en="MEDICAL-GRADE SKINCARE" data-zh="医用级护肤">MEDICAL-GRADE SKINCARE</div>
+      <div class="value-strip-item" data-en="FDA-CLEARED TECHNOLOGY" data-zh="FDA 认证设备">FDA-CLEARED TECHNOLOGY</div>
+      <div class="value-strip-item" data-en="LICENSED PROVIDERS" data-zh="持牌专业人员">LICENSED PROVIDERS</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ITALIC QUOTE PANEL ========== -->
+<section class="italic-panel">
+  <div class="container">
+    <div class="eyebrow reveal" data-en="YOUR AESTHETIC HUB IN SYDNEY, AU" data-zh="您的悉尼美学中心">YOUR AESTHETIC HUB IN SYDNEY, AU</div>
+    <p class="italic-quote reveal" data-reveal-delay="100">
+      <span data-en="We're here to define your unique" data-zh="我们为您定义独特的">We're here to define your unique</span>
+      <span class="accent-rose" data-en="beauty" data-zh="美丽">beauty</span>
+      <span data-en="and help you feel confident" data-zh="，帮您重获自信">and help you feel confident</span>
+    </p>
+    <a href="#about" class="btn btn-outline" data-en="ABOUT US" data-zh="关于我们">ABOUT US</a>
   </div>
 </section>
 
 <!-- ========== SERVICES ========== -->
-<section class="section services" id="services">
+<section class="services" id="services">
   <div class="container">
-    <div class="section-header">
-      <div class="section-eyebrow reveal" data-en="OUR TREATMENTS" data-zh="我们的治疗项目">OUR TREATMENTS</div>
-      <h2 class="section-title reveal" data-en="Treatments Tailored to You" data-zh="为您量身定制的治疗方案">Treatments Tailored to You</h2>
-      <p class="section-subtitle reveal" data-en="Whether you're concerned about signs of ageing, pigmentation, acne, or focused on early cancer detection and prevention — we provide individualised treatment plans with expert medical oversight and cutting-edge technology." data-zh="无论您关注的是衰老迹象、色素沉着、痘痘问题，还是专注于皮肤癌的早期检测与预防——我们以专业医疗督导与前沿科技，为您量身定制个性化治疗方案。">Whether you're concerned about signs of ageing, pigmentation, acne, or focused on early cancer detection and prevention — we provide individualised treatment plans with expert medical oversight and cutting-edge technology.</p>
+    <div class="services-header reveal">
+      <div class="eyebrow" data-en="TREATMENT TAILORED TO YOU" data-zh="为您量身定制">TREATMENT TAILORED TO YOU</div>
+      <h2 class="section-title" data-en="Advanced, non-invasive treatments in Sydney" data-zh="悉尼先进、无创的皮肤治疗">Advanced, non-invasive treatments in Sydney</h2>
+      <p class="section-text section-text--muted" data-en="Our skilled aesthetic and medical providers use the latest techniques to rejuvenate and enhance your appearance. Explore our full clinic menu by category." data-zh="我们资深的医美与医疗专业人员，运用最新技术为您焕活与提升容颜。按类别探索完整诊所菜单。">Our skilled aesthetic and medical providers use the latest techniques to rejuvenate and enhance your appearance. Explore our full clinic menu by category.</p>
     </div>
 
-    <div class="services-grid">
-      <!-- 01 SKIN ANALYSIS -->
-      <a href="service-detail.html?id=skin-analysis" class="service-card-v2 reveal">
-        <div class="service-num">01</div>
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v3l2 2"/></svg>
+    <!-- Category 1: Skin Cancer -->
+    <div class="services-category reveal">
+      <h3 class="services-category-title" data-en="Skin Cancer" data-zh="皮肤癌治疗">Skin Cancer</h3>
+      <div class="services-grid">
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="SKIN CANCER" data-zh="皮肤癌">SKIN CANCER</div>
+            <div class="service-card-name" data-en="Full Body Skin Check" data-zh="全身皮肤检查">Full Body Skin Check</div>
+          </div>
+          <a href="service-detail.html?id=skc-check" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
         </div>
-        <h3 class="service-title" data-en="SKIN ANALYSIS" data-zh="皮肤分析">SKIN ANALYSIS</h3>
-        <p class="service-desc" data-en="VISIA digital skin analysis for comprehensive skin health assessment" data-zh="VISIA 数字皮肤分析，全面评估皮肤健康状况">VISIA digital skin analysis for comprehensive skin health assessment</p>
-        <span class="service-more" data-en="Learn More" data-zh="了解更多">Learn More<span class="service-more-arrow">→</span></span>
-      </a>
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="SKIN CANCER" data-zh="皮肤癌">SKIN CANCER</div>
+            <div class="service-card-name" data-en="Skin Cancer Treatment" data-zh="皮肤癌治疗">Skin Cancer Treatment</div>
+          </div>
+          <a href="service-detail.html?id=skc-treat" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
+        </div>
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="SKIN CANCER" data-zh="皮肤癌">SKIN CANCER</div>
+            <div class="service-card-name" data-en="Mole Mapping" data-zh="痣图谱检查">Mole Mapping</div>
+          </div>
+          <a href="service-detail.html?id=skc-mole" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
+        </div>
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="SKIN CANCER" data-zh="皮肤癌">SKIN CANCER</div>
+            <div class="service-card-name" data-en="Dermoscopy" data-zh="皮肤镜检查">Dermoscopy</div>
+          </div>
+          <a href="service-detail.html?id=skc-derm" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
+        </div>
+      </div>
+    </div>
 
-      <!-- 02 PDT -->
-      <a href="service-detail.html?id=pdt" class="service-card-v2 reveal">
-        <div class="service-num">02</div>
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    <!-- Category 2: Pico Laser -->
+    <div class="services-category reveal">
+      <h3 class="services-category-title" data-en="Pico Laser" data-zh="皮秒激光">Pico Laser</h3>
+      <div class="services-grid">
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="PICO LASER" data-zh="皮秒激光">PICO LASER</div>
+            <div class="service-card-name" data-en="Pigmentation Removal" data-zh="色素沉着去除">Pigmentation Removal</div>
+          </div>
+          <a href="service-detail.html?id=pico-pig" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
         </div>
-        <h3 class="service-title" data-en="PHOTO DYNAMIC THERAPY" data-zh="光动力疗法">PHOTO DYNAMIC THERAPY</h3>
-        <p class="service-desc" data-en="Advanced light-activated treatment for skin cancer and pre-cancerous lesions" data-zh="先进的光激活治疗，针对皮肤癌与癌前病变">Advanced light-activated treatment for skin cancer and pre-cancerous lesions</p>
-        <span class="service-more" data-en="Learn More" data-zh="了解更多">Learn More<span class="service-more-arrow">→</span></span>
-      </a>
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="PICO LASER" data-zh="皮秒激光">PICO LASER</div>
+            <div class="service-card-name" data-en="Melasma Treatment" data-zh="黄褐斑治疗">Melasma Treatment</div>
+          </div>
+          <a href="service-detail.html?id=pico-mel" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
+        </div>
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="PICO LASER" data-zh="皮秒激光">PICO LASER</div>
+            <div class="service-card-name" data-en="Scar Revision" data-zh="疤痕修复">Scar Revision</div>
+          </div>
+          <a href="service-detail.html?id=pico-scar" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
+        </div>
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="PICO LASER" data-zh="皮秒激光">PICO LASER</div>
+            <div class="service-card-name" data-en="Skin Rejuvenation" data-zh="皮肤年轻化">Skin Rejuvenation</div>
+          </div>
+          <a href="service-detail.html?id=pico-rej" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
+        </div>
+      </div>
+    </div>
 
-      <!-- 03 DERMAL ENHANCEMENT -->
-      <a href="service-detail.html?id=dermal-enhancement" class="service-card-v2 reveal">
-        <div class="service-num">03</div>
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+    <!-- Category 3: PDT -->
+    <div class="services-category reveal">
+      <h3 class="services-category-title" data-en="Light-Activated Therapy" data-zh="光激活疗法">Light-Activated Therapy</h3>
+      <div class="services-grid">
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="PDT THERAPY" data-zh="PDT 疗法">PDT THERAPY</div>
+            <div class="service-card-name" data-en="Actinic Keratosis PDT" data-zh="光化性角化病 PDT">Actinic Keratosis PDT</div>
+          </div>
+          <a href="service-detail.html?id=pdt-ak" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
         </div>
-        <h3 class="service-title" data-en="DERMAL ENHANCEMENT" data-zh="皮肤焕新">DERMAL ENHANCEMENT</h3>
-        <p class="service-desc" data-en="FracRevive® Nd:YAG laser for skin rejuvenation and collagen stimulation" data-zh="FracRevive® Nd:YAG 激光，焕活肌肤、刺激胶原蛋白新生">FracRevive® Nd:YAG laser for skin rejuvenation and collagen stimulation</p>
-        <span class="service-more" data-en="Learn More" data-zh="了解更多">Learn More<span class="service-more-arrow">→</span></span>
-      </a>
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="PDT THERAPY" data-zh="PDT 疗法">PDT THERAPY</div>
+            <div class="service-card-name" data-en="Skin Rejuvenation PDT" data-zh="皮肤年轻化 PDT">Skin Rejuvenation PDT</div>
+          </div>
+          <a href="service-detail.html?id=pdt-rej" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
+        </div>
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="PDT THERAPY" data-zh="PDT 疗法">PDT THERAPY</div>
+            <div class="service-card-name" data-en="Acne PDT" data-zh="痤疮 PDT">Acne PDT</div>
+          </div>
+          <a href="service-detail.html?id=pdt-acne" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
+        </div>
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="PDT THERAPY" data-zh="PDT 疗法">PDT THERAPY</div>
+            <div class="service-card-name" data-en="Sun-Damage Repair" data-zh="日光损伤修复">Sun-Damage Repair</div>
+          </div>
+          <a href="service-detail.html?id=pdt-sun" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
+        </div>
+      </div>
+    </div>
 
-      <!-- 04 PICO LASER -->
-      <a href="service-detail.html?id=pico-laser" class="service-card-v2 reveal">
-        <div class="service-num">04</div>
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    <!-- Category 4: VISIA Skin Analysis -->
+    <div class="services-category reveal">
+      <h3 class="services-category-title" data-en="Skin Analysis" data-zh="皮肤分析">Skin Analysis</h3>
+      <div class="services-grid">
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="VISIA CONSULT" data-zh="VISIA 咨询">VISIA CONSULT</div>
+            <div class="service-card-name" data-en="VISIA Skin Analysis" data-zh="VISIA 皮肤分析">VISIA Skin Analysis</div>
+          </div>
+          <a href="service-detail.html?id=visia" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
         </div>
-        <h3 class="service-title" data-en="PICO LASER" data-zh="皮秒激光">PICO LASER</h3>
-        <p class="service-desc" data-en="Fotona StarWalker® PICO Pro for tattoo removal and pigmentation" data-zh="Fotona StarWalker® PICO Pro，用于纹身清除与色素治疗">Fotona StarWalker® PICO Pro for tattoo removal and pigmentation</p>
-        <span class="service-more" data-en="Learn More" data-zh="了解更多">Learn More<span class="service-more-arrow">→</span></span>
-      </a>
-
-      <!-- 05 HEALITE II -->
-      <a href="service-detail.html?id=healite-ii" class="service-card-v2 reveal">
-        <div class="service-num">05</div>
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M6.3 6.3L4.9 4.9M19.1 19.1l-1.4-1.4M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/><circle cx="12" cy="12" r="4"/></svg>
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="DERMAL ENHANCEMENT" data-zh="皮肤增强">DERMAL ENHANCEMENT</div>
+            <div class="service-card-name" data-en="FracRevive® Resurfacing" data-zh="FracRevive® 焕肤">FracRevive® Resurfacing</div>
+          </div>
+          <a href="service-detail.html?id=fracrevive" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
         </div>
-        <h3 class="service-title" data-en="HEALITE II" data-zh="Healite II 光疗">HEALITE II</h3>
-        <p class="service-desc" data-en="Medical-grade LED phototherapy for wound healing, pain relief and skin rejuvenation" data-zh="医疗级 LED 光疗，促进伤口愈合、缓解疼痛、焕活肌肤">Medical-grade LED phototherapy for wound healing, pain relief and skin rejuvenation</p>
-        <span class="service-more" data-en="Learn More" data-zh="了解更多">Learn More<span class="service-more-arrow">→</span></span>
-      </a>
-
-      <!-- 06 WRINKLES & PORES -->
-      <a href="service-detail.html?id=wrinkles-pores" class="service-card-v2 reveal">
-        <div class="service-num">06</div>
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0M3 12c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0M3 17c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0"/></svg>
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="DERMAL ENHANCEMENT" data-zh="皮肤增强">DERMAL ENHANCEMENT</div>
+            <div class="service-card-name" data-en="Healite LED Therapy" data-zh="Healite LED 光疗">Healite LED Therapy</div>
+          </div>
+          <a href="service-detail.html?id=healite" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
         </div>
-        <h3 class="service-title" data-en="WRINKLES & PORES" data-zh="皱纹与毛孔">WRINKLES & PORES</h3>
-        <p class="service-desc" data-en="Targeted treatments for fine lines, wrinkles and enlarged pores" data-zh="针对细纹、皱纹与毛孔粗大的精准治疗方案">Targeted treatments for fine lines, wrinkles and enlarged pores</p>
-        <span class="service-more" data-en="Learn More" data-zh="了解更多">Learn More<span class="service-more-arrow">→</span></span>
-      </a>
+        <div class="service-card">
+          <div>
+            <div class="service-card-label" data-en="WELLNESS" data-zh="健康保健">WELLNESS</div>
+            <div class="service-card-name" data-en="Skin Wellness Plan" data-zh="皮肤健康方案">Skin Wellness Plan</div>
+          </div>
+          <a href="service-detail.html?id=wellness" class="service-card-cta" data-en="VIEW DETAILS" data-zh="查看详情">VIEW DETAILS</a>
+        </div>
+      </div>
     </div>
 
     <div class="services-cta reveal">
-      <a href="services.html" class="btn btn-outline" data-en="View All Treatments" data-zh="查看全部治疗项目">View All Treatments</a>
+      <a href="services.html" class="btn btn-outline" data-en="VIEW ALL TREATMENTS" data-zh="查看全部治疗项目">VIEW ALL TREATMENTS</a>
     </div>
   </div>
 </section>
 
-<!-- ========== VISIA SKIN ANALYSIS ========== -->
-<section class="section visia" id="visia">
+<!-- ========== SKIN THAT GLOWS (Before & After, dark) ========== -->
+<section class="skin-glows" id="gallery">
   <div class="container">
-    <div class="visia-grid">
-      <div class="visia-content">
-        <div class="section-eyebrow reveal" data-en="SKIN ANALYSIS · VISIA" data-zh="皮肤分析 · VISIA">SKIN ANALYSIS · VISIA</div>
-        <h2 class="section-title reveal"><span data-en="Revolutionise" data-zh="革新">Revolutionise</span> <span class="text-gold" data-en="Your Consultations" data-zh="您的咨询体验">Your Consultations</span></h2>
-        <p class="section-text reveal" data-en="VISIA's capture module rotates smoothly around the subject to easily photograph left, right and frontal facial views." data-zh="VISIA 拍摄模块围绕受检者平稳旋转，轻松拍摄左、右、正面多个面部视图。">VISIA's capture module rotates smoothly around the subject to easily photograph left, right and frontal facial views.</p>
-        <p class="section-text reveal" data-en="The multi-point positioning system and live image overlay make it easy to capture perfectly registered images to document progress over time." data-zh="多点定位系统与实时图像叠加技术，让每次拍摄精准对位，轻松记录肌肤的改善历程。">The multi-point positioning system and live image overlay make it easy to capture perfectly registered images to document progress over time.</p>
-        <p class="section-text reveal" data-en="Simplify the imaging process while providing greater comfort for the client." data-zh="简化影像采集流程，同时为客户带来更舒适的体验。">Simplify the imaging process while providing greater comfort for the client.</p>
-        <div class="visia-tags reveal">
-          <span class="visia-tag" data-en="WRINKLES" data-zh="皱纹">WRINKLES</span>
-          <span class="visia-tag" data-en="PORES" data-zh="毛孔">PORES</span>
-          <span class="visia-tag" data-en="UV / BROWN SPOTS" data-zh="紫外线 / 褐斑">UV / BROWN SPOTS</span>
-          <span class="visia-tag" data-en="SPOTS" data-zh="斑点">SPOTS</span>
-        </div>
-        <div class="reveal">
-          <a href="service-detail.html?id=skin-analysis" class="btn btn-outline-gold" data-en="Learn More About VISIA" data-zh="了解更多 VISIA">Learn More About VISIA</a>
-        </div>
-      </div>
-      <div class="visia-visual reveal">
-        <div class="visia-img-main">
-          <img src="images/visia-device.jpg" loading="eager" alt="VISIA skin analysis device">
-        </div>
-        <div class="visia-img-grid">
-          <img src="images/svc-image7.png" loading="eager" alt="VISIA skin analysis result 1">
-          <img src="images/svc-image6.png" loading="eager" alt="VISIA skin analysis result 2">
-          <img src="images/svc-image5.png" loading="eager" alt="VISIA skin analysis result 3">
-          <img src="images/svc-image4.png" loading="eager" alt="VISIA skin analysis result 4">
-        </div>
-      </div>
+    <div class="eyebrow" data-en="Before &amp; After" data-zh="治疗前 &amp; 治疗后">Before &amp; After</div>
+    <h2 class="section-title section-title--italic section-title--center section-title--on-dark" data-en="SKIN THAT GLOWS" data-zh="肌肤焕发新生">SKIN THAT GLOWS</h2>
+    <a href="#schedule" class="btn btn-on-dark" data-en="VIEW BEFORE + AFTER PHOTOS" data-zh="查看治疗前后对比">VIEW BEFORE + AFTER PHOTOS</a>
+    <div class="skin-glows-thumbs">
+      <div class="skin-glows-thumb reveal"><img src="images/case-pigmentation.jpg" alt="" loading="eager"></div>
+      <div class="skin-glows-thumb reveal" data-reveal-delay="100"><img src="images/case-melasma.jpg" alt="" loading="eager"></div>
+      <div class="skin-glows-thumb reveal" data-reveal-delay="200"><img src="images/case-actinic-keratosis.jpg" alt="" loading="eager"></div>
+      <div class="skin-glows-thumb reveal" data-reveal-delay="300"><img src="images/case-scar.jpg" alt="" loading="eager"></div>
+      <div class="skin-glows-thumb reveal" data-reveal-delay="400"><img src="images/case-melasma-hands.jpg" alt="" loading="eager"></div>
     </div>
   </div>
 </section>
 
-<!-- ========== PICO LASER / FRACREVIVE ========== -->
-<section class="section pico" id="pico">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-eyebrow reveal" data-en="DERMAL ENHANCEMENT" data-zh="皮肤焕新">DERMAL ENHANCEMENT</div>
-      <h2 class="section-title reveal" data-en="Our Most Advanced Pico Laser" data-zh="我们最先进的皮秒激光">Our Most Advanced Pico Laser</h2>
-      <p class="section-subtitle reveal" data-en="Skin Rejuvenation and Tone Improvement" data-zh="肌肤焕新与肤色改善">Skin Rejuvenation and Tone Improvement</p>
+<!-- ========== MEMBERSHIP (Begin Your Journey) ========== -->
+<section class="membership" id="membership">
+  <div class="membership-grid">
+    <div class="membership-text reveal">
+      <div class="eyebrow" data-en="BEGIN YOUR JOURNEY" data-zh="开启您的焕新之旅">BEGIN YOUR JOURNEY</div>
+      <h2 class="section-title" data-en="The Skin Wellness Membership" data-zh="皮肤健康会员计划">The Skin Wellness Membership</h2>
+      <p data-en="Discover exclusive memberships at SKIN CANCER LASER CENTRE designed to offer unique value and benefits all year round." data-zh="加入 SKIN CANCER LASER CENTRE 独家会员，全年享受独特价值与专属福利。">Discover exclusive memberships at SKIN CANCER LASER CENTRE designed to offer unique value and benefits all year round.</p>
+      <p data-en="Members save on treatments, plus exclusive perks and priority booking." data-zh="会员享受治疗折扣、专属特权与优先预约。">Members save on treatments, plus exclusive perks and priority booking.</p>
+      <a href="#schedule" class="btn" data-en="VIEW MEMBERSHIPS" data-zh="查看会员计划">VIEW MEMBERSHIPS</a>
     </div>
-
-    <div class="pico-grid">
-      <div class="pico-visual reveal">
-        <div class="pico-img">
-          <img src="images/pdt-hero.jpg" loading="eager" alt="Advanced pico laser treatment">
-        </div>
-      </div>
-      <div class="pico-content">
-        <ul class="pico-benefits reveal">
-          <li data-en="Improves spots and wrinkles" data-zh="改善斑点与皱纹">Improves spots and wrinkles</li>
-          <li data-en="Reduces pore size" data-zh="缩小毛孔">Reduces pore size</li>
-          <li data-en="Improves skin texture and tone" data-zh="改善肌肤质感与肤色">Improves skin texture and tone</li>
-          <li data-en="High patient satisfaction" data-zh="患者满意度高">High patient satisfaction</li>
-          <li data-en="Minimally invasive" data-zh="微创治疗">Minimally invasive</li>
-          <li data-en="Minimal downtime" data-zh="恢复期短">Minimal downtime</li>
-          <li data-en="Comfortable and fast treatment" data-zh="治疗舒适快捷">Comfortable and fast treatment</li>
-          <li data-en="Easy to perform" data-zh="操作简便">Easy to perform</li>
-        </ul>
-        <div class="pico-faq reveal">
-          <h3 class="pico-faq-title" data-en="What is FracRevive®?" data-zh="什么是 FracRevive®？">What is FracRevive®?</h3>
-          <p class="section-text" data-en="FracRevive® is an efficient two-step skin rejuvenation treatment with minimal downtime, performed with both full-beam and fractional Q-switched Nd:YAG laser. The treatment improves the patient's skin tone and texture as well as reduces pore size, pigmentation, and static wrinkles." data-zh="FracRevive® 是一种高效的两步焕肤治疗方案，恢复期短，采用全束与点阵调 Q 开关 Nd:YAG 激光联合操作。该治疗可改善患者的肤色与肤质，同时缩小毛孔、减少色素沉着与静态皱纹。">FracRevive® is an efficient two-step skin rejuvenation treatment with minimal downtime, performed with both full-beam and fractional Q-switched Nd:YAG laser. The treatment improves the patient's skin tone and texture as well as reduces pore size, pigmentation, and static wrinkles.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="pico-steps">
-      <div class="pico-step reveal">
-        <div class="pico-step-num">1</div>
-        <h3 class="pico-step-title" data-en="Step 1" data-zh="第一步">Step 1</h3>
-        <p class="pico-step-text" data-en="In the first step, three to four passes of full-beam MaQX-1 Nd:YAG are applied utilising a quick brushing method to cover the entire face." data-zh="第一步，采用快速扫动手法，以全束 MaQX-1 Nd:YAG 激光对面部进行三至四遍全覆盖治疗。">In the first step, three to four passes of full-beam MaQX-1 Nd:YAG are applied utilising a quick brushing method to cover the entire face.</p>
-      </div>
-      <div class="pico-step reveal">
-        <div class="pico-step-num">2</div>
-        <h3 class="pico-step-title" data-en="Step 2" data-zh="第二步">Step 2</h3>
-        <p class="pico-step-text" data-en="Minimally ablative FracTAT® technology is used in step 2. Two passes are performed to cover the entire face, with an additional two passes applied on areas with more pronounced problems such as large pores, pigmentation, and uneven skin tone. The treatment can be repeated after four to six weeks." data-zh="第二步采用微剥脱 FracTAT® 技术。两遍即可覆盖全面部，针对毛孔粗大、色素沉着与肤色不均等问题较明显的区域，可追加两遍治疗。治疗可在四至六周后重复进行。">Minimally ablative FracTAT® technology is used in step 2. Two passes are performed to cover the entire face, with an additional two passes applied on areas with more pronounced problems such as large pores, pigmentation, and uneven skin tone. The treatment can be repeated after four to six weeks.</p>
-      </div>
-      <div class="pico-step reveal">
-        <div class="pico-step-num">★</div>
-        <h3 class="pico-step-title" data-en="High Patient Satisfaction" data-zh="患者满意度高">High Patient Satisfaction</h3>
-        <p class="pico-step-text" data-en="Improved skin tone and texture can be observed already after just one treatment, while four sessions are recommended for optimal results. Once the desirable improvement is achieved, the treatment can be repeated every three to four months as a maintenance therapy. Patients report high satisfaction with the procedure and great improvement in skin complexion." data-zh="仅一次治疗后即可观察到肤色与肤质的改善，建议进行四次治疗以达到最佳效果。达到理想改善后，可每三至四个月重复治疗作为维护方案。患者对该治疗满意度高，并反馈肤色显著改善。">Improved skin tone and texture can be observed already after just one treatment, while four sessions are recommended for optimal results. Once the desirable improvement is achieved, the treatment can be repeated every three to four months as a maintenance therapy. Patients report high satisfaction with the procedure and great improvement in skin complexion.</p>
-      </div>
+    <div class="membership-image reveal" data-reveal-delay="200">
+      <img src="images/insta-glow.jpg" alt="Skin Wellness" loading="eager">
     </div>
   </div>
 </section>
 
-<!-- ========== TEAM ========== -->
-<section class="section team" id="team">
+<!-- ========== TEAM (doctors) ========== -->
+<section class="services" id="team" style="background: var(--color-bg-soft);">
   <div class="container">
-    <div class="section-header">
-      <div class="section-eyebrow reveal" data-en="DOCTORS AND CLINICIANS" data-zh="医生与临床专家">DOCTORS AND CLINICIANS</div>
-      <h2 class="section-title reveal" data-en="Meet Our Team" data-zh="认识我们的团队">Meet Our Team</h2>
-      <p class="section-subtitle reveal" data-en="Experienced medical professionals dedicated to your skin health" data-zh="致力于您皮肤健康的资深医疗专家团队">Experienced medical professionals dedicated to your skin health</p>
+    <div class="services-header reveal" style="text-align:center; max-width:none;">
+      <div class="eyebrow" data-en="DOCTORS AND CLINICIANS" data-zh="医生与临床专家">DOCTORS AND CLINICIANS</div>
+      <h2 class="section-title" data-en="Meet our team" data-zh="认识我们的团队">Meet our team</h2>
     </div>
-
-    <div class="team-grid">
+    <div class="services-grid" style="grid-template-columns: 1fr 1fr; gap: 30px; max-width: 920px; margin: 0 auto;">
       <!-- Dr. Andrew Li -->
-      <div class="team-card reveal">
-        <div class="team-photo">
-          <img src="images/dr-andrew-li-official.jpg" loading="eager" alt="Dr. Andrew Li">
+      <div class="service-card reveal" style="min-height: auto; padding: 0;">
+        <div style="aspect-ratio: 4/3; overflow: hidden;">
+          <img src="images/dr-andrew-li-official.jpg" alt="Dr. Andrew Li" loading="eager" style="width:100%; height:100%; object-fit:cover;">
         </div>
-        <div class="team-body">
-          <h3 class="team-name">Dr. Andrew Li</h3>
-          <div class="team-role" data-en="Founder · Skin Cancer Medicine" data-zh="创始人 · 皮肤癌医学">Founder · Skin Cancer Medicine</div>
-          <p class="team-bio" data-en="MBBS, FRACGP, Dip SCCA, Cert AAAM.
+        <div style="padding: 32px 28px;">
+          <h3 class="service-card-name" data-en="Dr. Andrew Li" data-zh="李医生">Dr. Andrew Li</h3>
+          <p style="font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom: 16px;" data-en="FOUNDER · SKIN CANCER MEDICINE" data-zh="创始人 · 皮肤癌医学">FOUNDER · SKIN CANCER MEDICINE</p>
+          <p style="font-size:0.85rem; line-height:1.7; color:rgba(255,255,255,0.92); white-space:pre-line; margin-bottom: 18px;" data-en="MBBS, FRACGP, Dip SCCA, Cert AAAM.
 
 In 2001 he joined the training program for the Royal Australian College of General Practitioners. During this time he spent 2 years in North Queensland where he treated thousands of patients with skin cancer and gained extensive experience in this area. He successfully completed all requirements of the college and was awarded a Fellowship of the Royal Australian College of General Practitioners in 2004.
 
 Dr Li has also pursued further studies specific to Skin Cancer Medicine. He successfully completed all requirements of the Skin Cancer College Australasia and was awarded a Diploma of Skin Cancer Medicine in 2010. In order to achieve highest possible accuracy of diagnosing early skin cancer, Dr Li has also completed an advanced skin cancer diagnosed course through the Skin Cancer College Australasia and has been awarded a Certificate of Dermoscopy. Over the years he has successfully treated tens of thousands of patients with all forms of skin cancers range from early to advanced skin cancers, from melanoma to non melanoma skin cancers such as basal cell carcinoma and squamous cell carcinoma using surgical and non surgical treatment techniques. His high level of surgical skills and expertise in the areas of skin cancer medicine and male circumcision enable his patients to achieve best possible treatment outcomes in almost all cases that he has treated." data-zh="MBBS、FRACGP、澳大利亚皮肤癌学院文凭（Dip SCCA）、皮肤镜认证。
 
-李医生于 2001 年加入澳大利亚皇家全科医学院培训项目，期间在北昆士兰工作两年，治疗了数千名皮肤癌患者并积累了丰富的临床经验。他顺利完成了学院的全部要求，于 2004 年获颁澳大利亚皇家全科医学院院士资格。
+李医生于 2001 年加入澳大利亚皇家全科医师学院培训项目，期间在北昆士兰工作两年，治疗了数千名皮肤癌患者并积累了丰富的临床经验。他顺利完成了学院的全部要求，于 2004 年获颁澳大利亚皇家全科医师学院院士资格。
 
 李医生还在皮肤癌医学领域持续深造，已完成澳大利亚皮肤癌学院的全部课程，并于 2010 年获得皮肤癌医学文凭。为提升早期皮肤癌的诊断准确率，他还修完了澳大利亚皮肤癌学院开设的高级皮肤癌诊断课程，并获得皮肤镜检查证书。多年来，他已成功治疗数万名各类皮肤癌患者，涵盖从早期到晚期的黑色素瘤与非黑色素瘤皮肤癌（包括基底细胞癌、鳞状细胞癌），运用手术与非手术等多种治疗方案。凭借高超的手术技巧以及在皮肤癌医学与男性包皮环切领域的深厚专长，他为几乎所有接诊患者带来了最佳治疗结果。">MBBS, FRACGP, Dip SCCA, Cert AAAM.
 
 In 2001 he joined the training program for the Royal Australian College of General Practitioners. During this time he spent 2 years in North Queensland where he treated thousands of patients with skin cancer and gained extensive experience in this area. He successfully completed all requirements of the college and was awarded a Fellowship of the Royal Australian College of General Practitioners in 2004.
 
 Dr Li has also pursued further studies specific to Skin Cancer Medicine. He successfully completed all requirements of the Skin Cancer College Australasia and was awarded a Diploma of Skin Cancer Medicine in 2010. In order to achieve highest possible accuracy of diagnosing early skin cancer, Dr Li has also completed an advanced skin cancer diagnosed course through the Skin Cancer College Australasia and has been awarded a Certificate of Dermoscopy. Over the years he has successfully treated tens of thousands of patients with all forms of skin cancers range from early to advanced skin cancers, from melanoma to non melanoma skin cancers such as basal cell carcinoma and squamous cell carcinoma using surgical and non surgical treatment techniques. His high level of surgical skills and expertise in the areas of skin cancer medicine and male circumcision enable his patients to achieve best possible treatment outcomes in almost all cases that he has treated.</p>
+          <a href="doctors.html" class="service-card-cta" data-en="READ MORE" data-zh="了解更多">READ MORE</a>
         </div>
       </div>
-
       <!-- Mr. Omid Zarbaft -->
-      <div class="team-card reveal">
-        <div class="team-photo">
-          <img src="images/omid-zarbaft.jpg" loading="eager" alt="Mr Omid Zarbaft">
+      <div class="service-card reveal" data-reveal-delay="200" style="min-height: auto; padding: 0;">
+        <div style="aspect-ratio: 4/3; overflow: hidden;">
+          <img src="images/omid-zarbaft.jpg" alt="Mr Omid Zarbaft" loading="eager" style="width:100%; height:100%; object-fit:cover;">
         </div>
-        <div class="team-body">
-          <h3 class="team-name">Mr Omid Zarbaft</h3>
-          <div class="team-role" data-en="Dermal Clinician" data-zh="皮肤临床专家">Dermal Clinician</div>
-          <p class="team-bio" data-en="As a dedicated dermal clinician, I specialise in advanced skin treatments and aesthetic enhancements, utilising high-end pico laser devices to deliver precise and effective results. With a strong foundation in medical and biological sciences, I have cultivated a particular passion for the skin—the body's largest and most complex organ. Over the past five years at Drummoyne Cosmetic and Skin Cancer Clinic in Sydney, I have honed my expertise through hands-on experience, complemented by recurrent professional training at the Australian Academy of Cosmetic Dermal Science. My practice reflects a commitment to combining scientific knowledge with cutting-edge technology to achieve optimal skin health and aesthetic outcomes." data-zh="作为一名专注的皮肤临床专家，我专注于先进的皮肤治疗与美学提升，运用高端皮秒激光设备带来精准而有效的成果。凭借医学与生物科学的扎实根基，我对皮肤——人体最大且最复杂的器官——抱有特别的热情。过去五年在悉尼 Drummoyne 美容与皮肤癌诊所，我通过一线临床经验不断磨练专业能力，同时在澳大利亚美容皮肤科学学院接受持续的专业进修。我的执业理念体现了一种承诺：以前沿科学知识与尖端技术相结合，让每位患者获得最佳的皮肤健康与美学成果。">As a dedicated dermal clinician, I specialise in advanced skin treatments and aesthetic enhancements, utilising high-end pico laser devices to deliver precise and effective results. With a strong foundation in medical and biological sciences, I have cultivated a particular passion for the skin—the body's largest and most complex organ. Over the past five years at Drummoyne Cosmetic and Skin Cancer Clinic in Sydney, I have honed my expertise through hands-on experience, complemented by recurrent professional training at the Australian Academy of Cosmetic Dermal Science. My practice reflects a commitment to combining scientific knowledge with cutting-edge technology to achieve optimal skin health and aesthetic outcomes.</p>
-        </div>
-      </div>
-
-      <!-- Dr. Shahnam Ajdari -->
-      <div class="team-card reveal">
-        <div class="team-photo team-photo-initial">
-          <span class="team-initial">SA</span>
-        </div>
-        <div class="team-body">
-          <h3 class="team-name">Dr. Shahnam Ajdari</h3>
-          <div class="team-role" data-en="MD, PhD, FRACGP" data-zh="MD、PhD、FRACGP">MD, PhD, FRACGP</div>
-          <p class="team-bio" data-en="Holds a PhD in Skin Cancer Studies from the University of Sydney with nearly three decades of clinical experience. Special interest in injectable treatments, wrinkle relaxers, dermal fillers and facial rejuvenation. Fluent in English and Persian." data-zh="悉尼大学皮肤癌研究博士，拥有近三十年临床经验。专长注射美容、除皱、真皮填充与面部年轻化。精通英语与波斯语。">Holds a PhD in Skin Cancer Studies from the University of Sydney with nearly three decades of clinical experience. Special interest in injectable treatments, wrinkle relaxers, dermal fillers and facial rejuvenation. Fluent in English and Persian.</p>
+        <div style="padding: 32px 28px;">
+          <h3 class="service-card-name" data-en="Mr Omid Zarbaft" data-zh="Mr Omid Zarbaft">Mr Omid Zarbaft</h3>
+          <p style="font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom: 16px;" data-en="DERMAL CLINICIAN" data-zh="皮肤临床专家">DERMAL CLINICIAN</p>
+          <p style="font-size:0.85rem; line-height:1.7; color:rgba(255,255,255,0.92); margin-bottom: 18px;" data-en="As a dedicated dermal clinician, I specialise in advanced skin treatments and aesthetic enhancements, utilising high-end pico laser devices to deliver precise and effective results. With a strong foundation in medical and biological sciences, I have cultivated a particular passion for the skin—the body's largest and most complex organ. Over the past five years at Drummoyne Cosmetic and Skin Cancer Clinic in Sydney, I have honed my expertise through hands-on experience, complemented by recurrent professional training at the Australian Academy of Cosmetic Dermal Science. My practice reflects a commitment to combining scientific knowledge with cutting-edge technology to achieve optimal skin health and aesthetic outcomes." data-zh="作为一名专注的皮肤临床专家，我专注于先进的皮肤治疗与美学提升，运用高端皮秒激光设备带来精准而有效的成果。凭借医学与生物科学的扎实根基，我对皮肤——人体最大且最复杂的器官——抱有特别的热情。过去五年在悉尼 Drummoyne 美容与皮肤癌诊所，我通过一线临床经验不断磨练专业能力，同时在澳大利亚美容皮肤科学学院接受持续的专业进修。我的执业理念体现了一种承诺：以前沿科学知识与尖端技术相结合，让每位患者获得最佳的皮肤健康与美学成果。">As a dedicated dermal clinician, I specialise in advanced skin treatments and aesthetic enhancements, utilising high-end pico laser devices to deliver precise and effective results. With a strong foundation in medical and biological sciences, I have cultivated a particular passion for the skin—the body's largest and most complex organ. Over the past five years at Drummoyne Cosmetic and Skin Cancer Clinic in Sydney, I have honed my expertise through hands-on experience, complemented by recurrent professional training at the Australian Academy of Cosmetic Dermal Science. My practice reflects a commitment to combining scientific knowledge with cutting-edge technology to achieve optimal skin health and aesthetic outcomes.</p>
+          <a href="doctors.html" class="service-card-cta" data-en="READ MORE" data-zh="了解更多">READ MORE</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ========== JOURNEY / BOOKING ========== -->
-<section class="section journey" id="journey">
+<!-- ========== TESTIMONIALS CAROUSEL ========== -->
+<section class="testimonials" id="testimonials">
   <div class="container">
-    <div class="journey-grid">
-      <div class="journey-content">
-        <div class="section-eyebrow reveal" data-en="BEGIN YOUR JOURNEY" data-zh="开启您的焕肤之旅">BEGIN YOUR JOURNEY</div>
-        <h2 class="section-title reveal" data-en="Take the first step towards healthier, more radiant skin" data-zh="迈出通往更健康、更焕亮肌肤的第一步">Take the first step towards healthier, more radiant skin</h2>
-        <div class="journey-options">
-          <a href="appointment.html" class="journey-option reveal">
-            <div class="journey-option-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
-            </div>
-            <div class="journey-option-text">
-              <div class="journey-option-title" data-en="Online Booking" data-zh="在线预约">Online Booking</div>
-              <div class="journey-option-desc" data-en="Easily book your first consultation or treatment online in just a few clicks" data-zh="只需几次点击，即可轻松在线预约您的首次咨询或治疗">Easily book your first consultation or treatment online in just a few clicks</div>
-            </div>
-            <span class="journey-option-arrow">→</span>
-          </a>
-          <a href="appointment.html" class="journey-option reveal">
-            <div class="journey-option-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-            </div>
-            <div class="journey-option-text">
-              <div class="journey-option-title" data-en="30 Min Consultation" data-zh="30 分钟咨询服务">30 Min Consultation</div>
-              <div class="journey-option-desc" data-en="Each consultation is tailored to you — we carefully assess your skin to create a personalised treatment plan" data-zh="每次咨询都为您量身定制——我们仔细评估您的肌肤，制定个性化治疗方案">Each consultation is tailored to you — we carefully assess your skin to create a personalised treatment plan</div>
-            </div>
-            <span class="journey-option-arrow">→</span>
-          </a>
-          <a href="appointment.html" class="journey-option reveal">
-            <div class="journey-option-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-            </div>
-            <div class="journey-option-text">
-              <div class="journey-option-title" data-en="Treatment Bookings" data-zh="治疗预约">Treatment Bookings</div>
-              <div class="journey-option-desc" data-en="Schedule your treatments online once you've completed at least one consultation" data-zh="完成至少一次咨询后，即可在线预约您的后续治疗">Schedule your treatments online once you've completed at least one consultation</div>
-            </div>
-            <span class="journey-option-arrow">→</span>
-          </a>
-          <a href="appointment.html" class="journey-option reveal">
-            <div class="journey-option-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
-            </div>
-            <div class="journey-option-text">
-              <div class="journey-option-title" data-en="Create Your Account" data-zh="创建您的账户">Create Your Account</div>
-              <div class="journey-option-desc" data-en="Set up your account for faster online bookings, and easily manage your appointments and payments" data-zh="创建账户，享受更快捷的在线预约，轻松管理您的预约与付款">Set up your account for faster online bookings, and easily manage your appointments and payments</div>
-            </div>
-            <span class="journey-option-arrow">→</span>
-          </a>
+    <div class="testimonials-grid">
+      <div class="reveal">
+        <h2 class="section-title" data-en="Testimonials" data-zh="客户评价">Testimonials</h2>
+        <div class="testimonial-viewport">
+          <div class="testimonial-slide is-active">
+            <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+            <p class="testimonial-quote" data-en="&ldquo;Dr Li was amazing. His professionalism and care made me feel completely at ease. I had a full body check and three suspicious moles removed — all results came back clear. I cannot recommend this clinic highly enough.&rdquo;" data-zh="&ldquo;李医生非常出色。他的专业和细心让我完全放心。我做了全身检查并切除了三颗可疑的痣 — 所有结果都正常。我强烈推荐这家诊所。&rdquo;">&ldquo;Dr Li was amazing. His professionalism and care made me feel completely at ease. I had a full body check and three suspicious moles removed — all results came back clear. I cannot recommend this clinic highly enough.&rdquo;</p>
+            <p class="testimonial-author">— <span data-en="Ava D." data-zh="Ava D.">Ava D.</span></p>
+          </div>
+          <div class="testimonial-slide">
+            <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+            <p class="testimonial-quote" data-en="&ldquo;After three Pico Laser sessions for pigmentation, my skin is glowing. The team explained every step, downtime was minimal, and the results are better than I expected. A truly medical-grade experience.&rdquo;" data-zh="&ldquo;经过三次皮秒激光治疗色素沉着后，我的皮肤焕发着光泽。团队详细解释了每一步，恢复期很短，效果超出预期。真正的医用级体验。&rdquo;">&ldquo;After three Pico Laser sessions for pigmentation, my skin is glowing. The team explained every step, downtime was minimal, and the results are better than I expected. A truly medical-grade experience.&rdquo;</p>
+            <p class="testimonial-author">— <span data-en="Mei L." data-zh="Mei L.">Mei L.</span></p>
+          </div>
+          <div class="testimonial-slide">
+            <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+            <p class="testimonial-quote" data-en="&ldquo;PDT treatment for my sun-damaged skin was a game-changer. Dr Li and Omid were so thorough and gentle. The clinic feels like a luxury spa but the care is genuinely medical.&rdquo;" data-zh="&ldquo;PDT 治疗我的日光损伤皮肤是一个改变。我和李医生、Omid 都很细致、温柔。诊所感觉像豪华水疗中心，但护理是真正医疗级的。&rdquo;">&ldquo;PDT treatment for my sun-damaged skin was a game-changer. Dr Li and Omid were so thorough and gentle. The clinic feels like a luxury spa but the care is genuinely medical.&rdquo;</p>
+            <p class="testimonial-author">— <span data-en="James H." data-zh="James H.">James H.</span></p>
+          </div>
+        </div>
+        <div class="testimonial-dots">
+          <button class="is-active" aria-label="Slide 1"></button>
+          <button aria-label="Slide 2"></button>
+          <button aria-label="Slide 3"></button>
         </div>
       </div>
-      <div class="journey-visual reveal">
-        <div class="journey-img">
-          <img src="images/booking.jpg" loading="eager" alt="Consultation booking at our centre" loading="lazy">
+      <div class="testimonial-image reveal" data-reveal-delay="200">
+        <img src="images/insta-reception.jpg" alt="" loading="eager">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SUMMARY QUOTE (white) ========== -->
+<section class="summary-quote">
+  <div class="container">
+    <div class="summary-stars reveal">★ ★ ★ ★ ★</div>
+    <p class="summary-text reveal" data-reveal-delay="100" data-en="&ldquo;You won't find a better medical skin clinic in Sydney.&rdquo;" data-zh="&ldquo;在悉尼您找不到比这更好的医疗皮肤诊所。&rdquo;">&ldquo;You won't find a better medical skin clinic in Sydney.&rdquo;</p>
+    <p class="summary-meta reveal" data-reveal-delay="200" data-en="4.9 rating based on 200+ reviews" data-zh="基于 200+ 评价，4.9 评分">4.9 rating based on 200+ reviews</p>
+  </div>
+</section>
+
+<!-- ========== FAQ ========== -->
+<section class="faq" id="faq">
+  <div class="container">
+    <h2 class="section-title section-title--center reveal" data-en="Skin clinic questions, answered" data-zh="皮肤诊所常见问题解答">Skin clinic questions, answered</h2>
+    <div class="faq-list reveal" data-reveal-delay="100">
+      <div class="faq-item">
+        <button class="faq-question">
+          <span data-en="Do I need a referral to see a doctor at SCLC?" data-zh="我需要转诊才能到 SCLC 看医生吗？">Do I need a referral to see a doctor at SCLC?</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p data-en="No referral is required. You can book directly online or call our clinic to schedule a skin check, pico laser consultation, or PDT treatment with our team." data-zh="不需要转诊。您可以直接在线预约或致电诊所，与我们的团队安排皮肤检查、皮秒激光咨询或 PDT 治疗。">No referral is required. You can book directly online or call our clinic to schedule a skin check, pico laser consultation, or PDT treatment with our team.</p>
         </div>
-        <div class="journey-img-accent">
-          <img src="images/female-sun.jpg" loading="eager" alt="Healthy radiant skin" loading="lazy">
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span data-en="What should I expect on my first visit?" data-zh="第一次到访我应该准备什么？">What should I expect on my first visit?</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p data-en="Please arrive 10 minutes early to complete your patient registration form. Bring your Medicare card and any relevant medical records or referral letters. Our doctor will perform a thorough assessment and discuss your treatment plan." data-zh="请提前 10 分钟到达以完成患者登记表。请携带您的 Medicare 卡和任何相关的医疗记录或转诊信。我们的医生将进行彻底评估并与您讨论治疗方案。">Please arrive 10 minutes early to complete your patient registration form. Bring your Medicare card and any relevant medical records or referral letters. Our doctor will perform a thorough assessment and discuss your treatment plan.</p>
         </div>
-        <div class="journey-float-card">
-          <div class="journey-float-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L4 6v6c0 5.25 3.4 9.74 8 11 4.6-1.26 8-5.75 8-11V6l-8-4z"/><path d="M9 12l2 2 4-4"/></svg>
-          </div>
-          <div class="journey-float-text">
-            <div class="journey-float-title" data-en="Medical Supervision" data-zh="医疗督导">Medical Supervision</div>
-            <div class="journey-float-desc" data-en="Every treatment performed to a true medical standard" data-zh="每项治疗均严格遵循医疗标准">Every treatment performed to a true medical standard</div>
-          </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span data-en="How long does a full body skin check take?" data-zh="全身皮肤检查需要多长时间？">How long does a full body skin check take?</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p data-en="A full body skin check typically takes 20–30 minutes. Dr Li uses dermoscopy for high-accuracy assessment of moles and skin lesions. If any suspicious lesions are found, treatment options will be discussed on the same visit." data-zh="全身皮肤检查通常需要 20-30 分钟。李医生使用皮肤镜对痣和皮肤病变进行高精度评估。如果发现可疑病变，将在同次就诊中讨论治疗方案。">A full body skin check typically takes 20–30 minutes. Dr Li uses dermoscopy for high-accuracy assessment of moles and skin lesions. If any suspicious lesions are found, treatment options will be discussed on the same visit.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span data-en="What payment methods do you accept?" data-zh="诊所接受哪些支付方式？">What payment methods do you accept?</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p data-en="We accept EFTPOS, Visa, Mastercard, AMEX, cash, and HICAPS for instant private health fund rebates on eligible services. Medicare rebates apply to certain skin cancer treatments." data-zh="我们接受 EFTPOS、Visa、Mastercard、AMEX、现金，以及 HICAPS 即时私人健康基金报销（适用于合资格服务）。Medicare 报销适用于某些皮肤癌治疗。">We accept EFTPOS, Visa, Mastercard, AMEX, cash, and HICAPS for instant private health fund rebates on eligible services. Medicare rebates apply to certain skin cancer treatments.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span data-en="Are the Pico Laser treatments painful?" data-zh="皮秒激光治疗痛吗？">Are the Pico Laser treatments painful?</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p data-en="Most patients describe Pico Laser as a mild snapping sensation. We use a cooling device and topical anaesthetic to ensure your comfort. Downtime is minimal — most patients return to normal activities the same day." data-zh="大多数患者形容皮秒激光像轻微的弹击感。我们使用冷却设备和表面麻醉以确保您的舒适度。恢复期极短 — 大多数患者当天即可恢复正常活动。">Most patients describe Pico Laser as a mild snapping sensation. We use a cooling device and topical anaesthetic to ensure your comfort. Downtime is minimal — most patients return to normal activities the same day.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span data-en="How do I book an appointment?" data-zh="我如何预约？">How do I book an appointment?</span>
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p data-en="Click the BOOK NOW button in the navigation, or call us directly. You can also walk in to book your next visit after any consultation." data-zh="点击导航栏的 BOOK NOW 按钮，或直接致电我们。您也可以在任何咨询后亲自到访预约下次复诊。">Click the BOOK NOW button in the navigation, or call us directly. You can also walk in to book your next visit after any consultation.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ========== RESULTS / BEFORE & AFTER ========== -->
-<section class="section results" id="results">
+<!-- ========== INSTAGRAM FEED ========== -->
+<section class="instagram" id="instagram">
   <div class="container">
-    <div class="section-header">
-      <div class="section-eyebrow reveal" data-en="BEFORE & AFTER" data-zh="治疗案例对比">BEFORE & AFTER</div>
-      <h2 class="section-title reveal" data-en="Visible Skin Transformation" data-zh="看得见的肌肤改善">Visible Skin Transformation</h2>
-      <p class="section-subtitle reveal" data-en="Real clinical results from light-activated and laser treatments. Individual outcomes may vary — a personal consultation is the first step to your tailored plan." data-zh="光动力与激光治疗的真实临床案例。个体效果因人而异——个性化咨询是您定制治疗方案的第一步。">Real clinical results from light-activated and laser treatments. Individual outcomes may vary — a personal consultation is the first step to your tailored plan.</p>
+    <h2 class="section-title reveal" data-en="FOLLOW US ON INSTAGRAM" data-zh="关注我们的 Instagram">FOLLOW US ON INSTAGRAM</h2>
+    <div class="insta-viewport reveal" data-reveal-delay="100">
+      <div class="insta-track" id="instaTrack">
+        <a class="insta-card" href="#">
+          <img src="images/insta-consult.jpg" alt="Consultation" loading="eager">
+          <span class="insta-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span class="insta-card-caption" data-en="Consultation with Dr. Li" data-zh="与李医生会诊">Consultation with Dr. Li</span>
+        </a>
+        <a class="insta-card" href="#">
+          <img src="images/insta-laser.jpg" alt="Pico Laser" loading="eager">
+          <span class="insta-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span class="insta-card-caption" data-en="Pico Laser in action" data-zh="皮秒激光进行中">Pico Laser in action</span>
+        </a>
+        <a class="insta-card" href="#">
+          <img src="images/insta-glow.jpg" alt="Skin glow" loading="eager">
+          <span class="insta-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span class="insta-card-caption" data-en="Glowing results" data-zh="焕新成果">Glowing results</span>
+        </a>
+        <a class="insta-card" href="#">
+          <img src="images/insta-products.jpg" alt="Products" loading="eager">
+          <span class="insta-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span class="insta-card-caption" data-en="Medical-grade skincare" data-zh="医用级护肤">Medical-grade skincare</span>
+        </a>
+        <a class="insta-card" href="#">
+          <img src="images/insta-reception.jpg" alt="Reception" loading="eager">
+          <span class="insta-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span class="insta-card-caption" data-en="Our Sydney clinic" data-zh="悉尼诊所">Our Sydney clinic</span>
+        </a>
+      </div>
     </div>
-
-    <div class="results-grid">
-      <div class="result-card reveal">
-        <div class="result-img">
-          <img src="images/case-pigmentation.jpg" loading="eager" alt="Pigmentation before and after treatment" loading="lazy">
-          <span class="result-tag" data-en="Before / After" data-zh="治疗前 / 治疗后">Before / After</span>
-        </div>
-        <div class="result-body">
-          <h3 class="result-title" data-en="Pigmentation & Sun Spots" data-zh="色素沉着与晒斑">Pigmentation & Sun Spots</h3>
-          <p class="result-desc" data-en="Reduction of hyper-pigmented spots, sunspots and uneven skin colour caused by sun damage" data-zh="减少因日晒损伤导致的色素斑点、晒斑与肤色不均">Reduction of hyper-pigmented spots, sunspots and uneven skin colour caused by sun damage</p>
-        </div>
-      </div>
-
-      <div class="result-card reveal">
-        <div class="result-img">
-          <img src="images/case-melasma.jpg" loading="eager" alt="Melasma before and after treatment" loading="lazy">
-          <span class="result-tag" data-en="Before / After" data-zh="治疗前 / 治疗后">Before / After</span>
-        </div>
-        <div class="result-body">
-          <h3 class="result-title" data-en="Melasma Treatment" data-zh="黄褐斑治疗">Melasma Treatment</h3>
-          <p class="result-desc" data-en="Pigmentation improvement and evening of skin tone with light-activated therapy" data-zh="光动力疗法改善色素沉着，均匀肤色">Pigmentation improvement and evening of skin tone with light-activated therapy</p>
-        </div>
-      </div>
-
-      <div class="result-card reveal">
-        <div class="result-img">
-          <img src="images/case-actinic-keratosis.jpg" loading="eager" alt="Actinic keratosis before and after" loading="lazy">
-          <span class="result-tag" data-en="Before / After" data-zh="治疗前 / 治疗后">Before / After</span>
-        </div>
-        <div class="result-body">
-          <h3 class="result-title" data-en="Actinic Keratoses" data-zh="光化性角化病">Actinic Keratoses</h3>
-          <p class="result-desc" data-en="Highly effective treatment for pre-cancerous sun-damaged lesions — a non-invasive alternative to surgery" data-zh="针对癌前日晒损伤病灶的高效治疗——非侵入性手术替代方案">Highly effective treatment for pre-cancerous sun-damaged lesions — a non-invasive alternative to surgery</p>
-        </div>
-      </div>
-
-      <div class="result-card reveal">
-        <div class="result-img">
-          <img src="images/case-scar.jpg" loading="eager" alt="Scar revision before and after" loading="lazy">
-          <span class="result-tag" data-en="Before / After" data-zh="治疗前 / 治疗后">Before / After</span>
-        </div>
-        <div class="result-body">
-          <h3 class="result-title" data-en="Scar Revision" data-zh="疤痕修复">Scar Revision</h3>
-          <p class="result-desc" data-en="Minimally scarring treatment with faster recovery compared to surgical procedures" data-zh="微创治疗，较外科手术恢复更快">Minimally scarring treatment with faster recovery compared to surgical procedures</p>
-        </div>
-      </div>
-
-      <div class="result-card reveal">
-        <div class="result-img">
-          <img src="images/case-melasma-hands.jpg" loading="eager" alt="Melasma on hands before and after" loading="lazy">
-          <span class="result-tag" data-en="Before / After" data-zh="治疗前 / 治疗后">Before / After</span>
-        </div>
-        <div class="result-body">
-          <h3 class="result-title" data-en="Melasma · Hands" data-zh="手部黄褐斑">Melasma · Hands</h3>
-          <p class="result-desc" data-en="Triggers natural cell death and accelerates new healthy cell growth on sun-damaged areas" data-zh="启动自然细胞更新，加速日晒损伤部位健康细胞新生">Triggers natural cell death and accelerates new healthy cell growth on sun-damaged areas</p>
-        </div>
-      </div>
-
-      <div class="result-card reveal">
-        <div class="result-img">
-          <img src="images/case-scar-p2.jpg" loading="eager" alt="Scar treatment phase two">
-          <span class="result-tag" data-en="Before / After" data-zh="治疗前 / 治疗后">Before / After</span>
-        </div>
-        <div class="result-body">
-          <h3 class="result-title" data-en="Scar · Advanced" data-zh="疤痕 · 进阶治疗">Scar · Advanced</h3>
-          <p class="result-desc" data-en="Stimulates collagen production, improving fine lines, skin elasticity and texture" data-zh="刺激胶原蛋白新生，改善细纹、肌肤弹性与质感">Stimulates collagen production, improving fine lines, skin elasticity and texture</p>
-        </div>
-      </div>
-
-      <div class="result-card reveal">
-        <div class="result-img">
-          <img src="images/comparison-2.jpg" loading="eager" alt="Skin comparison result 2">
-          <span class="result-tag" data-en="Before / After" data-zh="治疗前 / 治疗后">Before / After</span>
-        </div>
-        <div class="result-body">
-          <h3 class="result-title" data-en="Skin Tone Improvement" data-zh="肤色改善">Skin Tone Improvement</h3>
-          <p class="result-desc" data-en="Visible improvement in skin tone and overall complexion after tailored laser treatment" data-zh="定制激光治疗后，肤色与整体肤质显著改善">Visible improvement in skin tone and overall complexion after tailored laser treatment</p>
-        </div>
-      </div>
-
-      <div class="result-card reveal">
-        <div class="result-img">
-          <img src="images/comparison-3.jpg" loading="eager" alt="Skin comparison result 3">
-          <span class="result-tag" data-en="Before / After" data-zh="治疗前 / 治疗后">Before / After</span>
-        </div>
-        <div class="result-body">
-          <h3 class="result-title" data-en="Laser Rejuvenation" data-zh="激光焕肤">Laser Rejuvenation</h3>
-          <p class="result-desc" data-en="Advanced pico laser treatment restoring healthy, radiant skin" data-zh="先进皮秒激光治疗，焕回健康亮泽肌肤">Advanced pico laser treatment restoring healthy, radiant skin</p>
-        </div>
-      </div>
-
-      <div class="result-card reveal">
-        <div class="result-img">
-          <img src="images/comparison-4.jpg" loading="eager" alt="Skin comparison result 4">
-          <span class="result-tag" data-en="Before / After" data-zh="治疗前 / 治疗后">Before / After</span>
-        </div>
-        <div class="result-body">
-          <h3 class="result-title" data-en="Texture Refinement" data-zh="肤质精修">Texture Refinement</h3>
-          <p class="result-desc" data-en="Noticeable refinement in skin texture with FracRevive® technology" data-zh="FracRevive® 技术带来肉眼可见的肤质改善">Noticeable refinement in skin texture with FracRevive® technology</p>
-        </div>
-      </div>
-
-      <div class="result-card reveal">
-        <div class="result-img">
-          <img src="images/comparison-5.jpg" loading="eager" alt="Skin comparison result 5">
-          <span class="result-tag" data-en="Before / After" data-zh="治疗前 / 治疗后">Before / After</span>
-        </div>
-        <div class="result-body">
-          <h3 class="result-title" data-en="Radiant Complexion" data-zh="焕亮肤色">Radiant Complexion</h3>
-          <p class="result-desc" data-en="Restored natural glow and even, healthy-looking skin" data-zh="重现自然光泽，恢复均匀健康的肌肤状态">Restored natural glow and even, healthy-looking skin</p>
-        </div>
-      </div>
+    <div class="insta-controls">
+      <button class="insta-btn" id="instaPrev" aria-label="Previous">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="insta-btn" id="instaNext" aria-label="Next">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+      </button>
     </div>
   </div>
 </section>
 
-<!-- ========== PDT MEDICAL BENEFITS ========== -->
-<section class="section pdt-benefits" id="pdt-benefits">
+<!-- ========== SCHEDULE CTA ========== -->
+<section class="schedule-cta" id="schedule">
   <div class="container">
-    <div class="pdt-grid">
-      <div class="pdt-content">
-        <div class="section-eyebrow reveal" data-en="PHOTO DYNAMIC THERAPY" data-zh="光动力疗法">PHOTO DYNAMIC THERAPY</div>
-        <h2 class="section-title reveal" data-en="Medical Benefits" data-zh="医学功效">Medical Benefits</h2>
-        <ul class="pdt-benefit-list reveal">
-          <li data-en="Treatment of actinic keratoses — highly effective for precancerous sun-damaged lesions" data-zh="治疗光化性角化病——对癌前日晒损伤病灶具有高度疗效">Treatment of actinic keratoses — highly effective for precancerous sun-damaged lesions</li>
-          <li data-en="Management of superficial basal cell carcinoma (BCC): non-invasive alternative to surgery for certain BCCs" data-zh="管理浅表性基底细胞癌（BCC）：针对特定 BCC 的非侵入性手术替代方案">Management of superficial basal cell carcinoma (BCC): non-invasive alternative to surgery for certain BCCs</li>
-          <li data-en="Treatment of Bowen's disease" data-zh="治疗鲍温病（Bowen's disease）">Treatment of Bowen's disease</li>
-          <li data-en="Acne management" data-zh="痤疮管理">Acne management</li>
-          <li data-en="Repeatable therapy" data-zh="可重复治疗">Repeatable therapy</li>
-          <li data-en="Antimicrobial effects — killing bacteria, fungi, and viruses" data-zh="抗菌功效——杀灭细菌、真菌与病毒">Antimicrobial effects — killing bacteria, fungi, and viruses</li>
-        </ul>
-        <div class="reveal">
-          <a href="service-detail.html?id=pdt" class="btn btn-outline-gold" data-en="Learn More About PDT" data-zh="了解更多光动力疗法">Learn More About PDT</a>
+    <div class="schedule-grid">
+      <div class="reveal">
+        <h2 class="schedule-title" data-en="Schedule Your Consultation Today" data-zh="今天就预约您的咨询">Schedule Your Consultation Today</h2>
+        <a href="#schedule" class="btn btn-primary" data-en="BOOK NOW" data-zh="立即预约">BOOK NOW</a>
+        <div class="schedule-phone">
+          <span class="schedule-phone-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </span>
+          <span data-en="+61 2 8000 0000" data-zh="+61 2 8000 0000">+61 2 8000 0000</span>
         </div>
       </div>
-      <div class="pdt-visual reveal">
-        <div class="pdt-img-row">
-          <img src="images/pdt-1.jpg" loading="eager" alt="Photo Dynamic Therapy treatment 1">
-          <img src="images/product-shot.jpg" loading="eager" alt="Photo Dynamic Therapy treatment 2">
-          <img src="images/pdt-3.jpg" loading="eager" alt="Photo Dynamic Therapy treatment 3">
-        </div>
-        <div class="pdt-visual-note reveal" data-en="Light-activated therapy performed under medical supervision" data-zh="医疗督导下的光激活治疗">Light-activated therapy performed under medical supervision</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ========== CONTACT / LOCATION ========== -->
-<section class="section contact" id="contact">
-  <div class="container">
-    <div class="contact-grid">
-      <div class="contact-info">
-        <div class="section-eyebrow reveal" data-en="CONTACT / LOCATIONS" data-zh="联系方式 / 位置">CONTACT / LOCATIONS</div>
-        <h2 class="section-title reveal" data-en="Get In Touch" data-zh="联系我们">Get In Touch</h2>
-        <p class="section-text reveal" data-en="We're open 7 days a week and ready to help you begin your journey to healthier skin." data-zh="我们每周 7 天开放，随时准备协助您开启健康肌肤之旅。">We're open 7 days a week and ready to help you begin your journey to healthier skin.</p>
-
-        <div class="contact-items">
-          <div class="contact-item reveal">
-            <div class="contact-item-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-            </div>
-            <div class="contact-item-text">
-              <div class="contact-item-label" data-en="OPENING HOURS" data-zh="营业时间">OPENING HOURS</div>
-              <div class="contact-item-value" data-en="7 Days a Week · 8:00AM – 6:00PM" data-zh="每周 7 天 · 上午 8:00 – 下午 6:00">7 Days a Week · 8:00AM – 6:00PM</div>
-            </div>
-          </div>
-          <div class="contact-item reveal">
-            <div class="contact-item-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-7-5.1-7-11a7 7 0 0114 0c0 5.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-            </div>
-            <div class="contact-item-text">
-              <div class="contact-item-label" data-en="ADDRESS" data-zh="地址">ADDRESS</div>
-              <div class="contact-item-value" data-en="Sydney, NSW, Australia" data-zh="澳大利亚新南威尔士州悉尼">Sydney, NSW, Australia</div>
-            </div>
-          </div>
-          <div class="contact-item reveal">
-            <div class="contact-item-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
-            </div>
-            <div class="contact-item-text">
-              <div class="contact-item-label" data-en="PHONE" data-zh="电话">PHONE</div>
-              <div class="contact-item-value" data-en="Contact us for appointments" data-zh="欢迎来电咨询预约">Contact us for appointments</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="reveal">
-          <a href="contact.html" class="btn btn-primary btn-sweep" data-en="Contact Us" data-zh="联系页面">Contact Us</a>
-        </div>
-      </div>
-
-      <div class="contact-map reveal">
-        <img src="images/map-screenshot.png" loading="eager" alt="Our location in Sydney" loading="lazy">
-        <div class="contact-map-overlay">
-          <div class="contact-map-pin">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-7-5.1-7-11a7 7 0 0114 0c0 5.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-          </div>
-          <div class="contact-map-label" data-en="SKIN CANCER LASER CENTRE · SYDNEY" data-zh="皮肤癌与激光中心 · 悉尼">SKIN CANCER LASER CENTRE · SYDNEY</div>
-        </div>
+      <div class="schedule-image reveal" data-reveal-delay="200">
+        <img src="images/insta-consult.jpg" alt="Schedule consultation" loading="eager">
       </div>
     </div>
   </div>
@@ -705,77 +547,61 @@ Dr Li has also pursued further studies specific to Skin Cancer Medicine. He succ
 
 <!-- ========== FOOTER ========== -->
 <footer class="footer">
-  <div class="footer-banner">
-    <img src="images/logo-sclc.png" alt="SKIN CANCER LASER CENTRE" loading="lazy">
-  </div>
-
   <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <span class="footer-logo-pill">
-            <img src="images/logo-sclc-410.png" alt="SCLC Logo" loading="lazy">
-          </span>
-          <div class="footer-logo-text">SKIN CANCER<br><span>LASER CENTRE</span></div>
+    <nav class="footer-nav">
+      <a href="#services" data-en="SERVICES" data-zh="服务">SERVICES</a>
+      <a href="#team" data-en="DOCTORS" data-zh="医生">DOCTORS</a>
+      <a href="#about" data-en="ABOUT" data-zh="关于">ABOUT</a>
+      <a href="#gallery" data-en="GALLERY" data-zh="图库">GALLERY</a>
+      <a href="#faq" data-en="FAQ" data-zh="常见问题">FAQ</a>
+      <a href="#schedule" data-en="BOOK" data-zh="预约">BOOK</a>
+    </nav>
+
+    <div class="footer-info">
+      <div class="footer-info-col">
+        <h4 data-en="Address" data-zh="地址">Address</h4>
+        <p data-en="Suite 12, 200 Pacific Highway" data-zh="太平洋公路 200 号 12 室">Suite 12, 200 Pacific Highway</p>
+        <p data-en="Sydney NSW 2060, Australia" data-zh="澳大利亚 NSW 悉尼 2060">Sydney NSW 2060, Australia</p>
+        <p class="footer-time" data-en="Mon–Fri: 9am – 6pm" data-zh="周一至周五：上午 9 点 – 下午 6 点">Mon–Fri: 9am – 6pm</p>
+        <p class="footer-time" data-en="Sat: 9am – 3pm" data-zh="周六：上午 9 点 – 下午 3 点">Sat: 9am – 3pm</p>
+      </div>
+      <div class="footer-logo-block">
+        <div class="footer-logo-pill">
+          <img src="images/logo-sclc-410.png" alt="SCLC Logo" loading="lazy">
         </div>
-        <p class="footer-desc" data-en="Advanced dermatology and laser treatments delivered by experienced medical professionals. Your skin health is our priority." data-zh="由资深医疗专业人员提供的先进皮肤科与激光治疗。您的皮肤健康，是我们的首要任务。">Advanced dermatology and laser treatments delivered by experienced medical professionals. Your skin health is our priority.</p>
-        <div class="footer-social">
+      </div>
+      <div class="footer-info-col" style="text-align: right;">
+        <h4 data-en="Contacts" data-zh="联系方式">Contacts</h4>
+        <p data-en="+61 2 8000 0000" data-zh="+61 2 8000 0000">+61 2 8000 0000</p>
+        <p>contact@skincancerlasercentre.com.au</p>
+        <div class="footer-social" style="justify-content: flex-end;">
           <a href="#" class="footer-social-icon" aria-label="Facebook">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          </a>
+          <a href="#" class="footer-social-icon" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
           </a>
           <a href="#" class="footer-social-icon" aria-label="LinkedIn">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
           </a>
-          <a href="#" class="footer-social-icon" aria-label="YouTube">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.33z"/><path d="M9.75 15.02V8.48l5.75 3.27z" fill="#0a0a0a"/></svg>
-          </a>
-          <a href="#" class="footer-social-icon" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-          </a>
         </div>
-      </div>
-
-      <div class="footer-links">
-        <h4 class="footer-heading" data-en="Quick Links" data-zh="快速链接">Quick Links</h4>
-        <a href="index.html" data-en="Home" data-zh="首页">Home</a>
-        <a href="doctors.html" data-en="Doctors & Clinicians" data-zh="医生团队">Doctors & Clinicians</a>
-        <a href="services.html" data-en="Services" data-zh="服务项目">Services</a>
-        <a href="contact.html" data-en="Contact" data-zh="联系我们">Contact</a>
-        <a href="appointment.html" data-en="Appointment" data-zh="在线预约">Appointment</a>
-      </div>
-
-      <div class="footer-links">
-        <h4 class="footer-heading" data-en="Treatments" data-zh="治疗项目">Treatments</h4>
-        <a href="service-detail.html?id=skin-analysis" data-en="Skin Analysis" data-zh="皮肤分析">Skin Analysis</a>
-        <a href="service-detail.html?id=pdt" data-en="Photo Dynamic Therapy" data-zh="光动力疗法">Photo Dynamic Therapy</a>
-        <a href="service-detail.html?id=dermal-enhancement" data-en="Dermal Enhancement" data-zh="皮肤焕新">Dermal Enhancement</a>
-        <a href="service-detail.html?id=pico-laser" data-en="Pico Laser" data-zh="皮秒激光">Pico Laser</a>
-        <a href="service-detail.html?id=healite-ii" data-en="Healite II" data-zh="Healite II 光疗">Healite II</a>
-        <a href="service-detail.html?id=wrinkles-pores" data-en="Wrinkles & Pores" data-zh="皱纹与毛孔">Wrinkles & Pores</a>
-      </div>
-
-      <div class="footer-contact">
-        <h4 class="footer-heading" data-en="Visit Us" data-zh="到访信息">Visit Us</h4>
-        <div class="footer-contact-row">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-          <span data-en="Open 7 Days · 8:00AM – 6:00PM" data-zh="每周 7 天 · 上午 8:00 – 下午 6:00">Open 7 Days · 8:00AM – 6:00PM</span>
-        </div>
-        <div class="footer-contact-row">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-7-5.1-7-11a7 7 0 0114 0c0 5.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-          <span data-en="Sydney, NSW, Australia" data-zh="澳大利亚新南威尔士州悉尼">Sydney, NSW, Australia</span>
-        </div>
-        <a href="appointment.html" class="btn btn-outline-gold btn-sm" data-en="Book Now" data-zh="立即预约">Book Now</a>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <p data-en="© 2026 SKIN CANCER LASER CENTRE. All rights reserved." data-zh="© 2026 SKIN CANCER LASER CENTRE 保留所有权利。">© 2026 SKIN CANCER LASER CENTRE. All rights reserved.</p>
-      <button class="back-to-top" id="backToTop" aria-label="Back to top">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 15l-6-6-6 6"/></svg>
-      </button>
+      <span>© 2026 SKIN CANCER LASER CENTRE <span class="footer-version-pill">V3.0.0</span></span>
+      <div class="footer-bottom-right">
+        <a href="#" data-en="Terms &amp; Conditions" data-zh="条款与条件">Terms &amp; Conditions</a>
+        <a href="#" data-en="Privacy Policy" data-zh="隐私政策">Privacy Policy</a>
+      </div>
     </div>
   </div>
 </footer>
+
+<!-- Back to top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
 
 <script src="js/i18n.js"></script>
 <script src="js/main.js"></script>
