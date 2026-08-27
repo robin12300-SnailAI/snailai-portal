@@ -249,18 +249,18 @@
   <div class="student-grid">
 
     <!-- Students -->
-    <div class="student-card">
-      <div class="student-avatar">🚀</div>
+    <div class="student-card featured" data-student="nova" role="button" tabindex="0">
+      <div class="student-avatar"><img src="/assets/students-3d/nova/avatar.jpg" alt="Nova 的3D角色形象" onerror="this.parentNode.textContent='🚀'"></div>
       <div class="student-name">Nova</div>
       <span class="student-role role-student">学员</span>
-      <div class="student-project">AI股票筛选器</div>
+      <div class="student-project">ZOE 股票筛选器</div>
     </div>
 
     <div class="student-card">
       <div class="student-avatar">📊</div>
       <div class="student-name">Wang</div>
       <span class="student-role role-student">学员</span>
-      <div class="student-project">Burwood房产销售平台</div>
+      <div class="student-project">Burwood 房产私售</div>
     </div>
 
     <div class="student-card">
@@ -270,11 +270,11 @@
       <div class="student-project">Bose音响租赁平台</div>
     </div>
 
-    <div class="student-card">
-      <div class="student-avatar">🎨</div>
+    <div class="student-card featured" data-student="jasonwang" role="button" tabindex="0">
+      <div class="student-avatar"><img src="/assets/students-3d/jasonwang/avatar.jpg" alt="Jason 王的3D角色形象" onerror="this.parentNode.textContent='🎨'"></div>
       <div class="student-name">Jason 王</div>
       <span class="student-role role-student">学员</span>
-      <div class="student-project">AI创意设计工具</div>
+      <div class="student-project">Jason AI CRM</div>
     </div>
 
     <div class="student-card featured" data-student="coco" role="button" tabindex="0">
@@ -305,18 +305,18 @@
       <div class="student-project">AI项目</div>
     </div>
 
-    <div class="student-card">
-      <div class="student-avatar">⚡</div>
+    <div class="student-card featured" data-student="dan" role="button" tabindex="0">
+      <div class="student-avatar"><img src="/assets/students-3d/dan/avatar.jpg" alt="danjin111 的3D角色形象" onerror="this.parentNode.textContent='⚡'"></div>
       <div class="student-name">danjin111</div>
       <span class="student-role role-student">学员</span>
       <div class="student-project">AI项目</div>
     </div>
 
-    <div class="student-card">
-      <div class="student-avatar">🌟</div>
+    <div class="student-card featured" data-student="serena" role="button" tabindex="0">
+      <div class="student-avatar"><img src="/assets/students-3d/serena/avatar.jpg" alt="serenaxie888 的3D角色形象" onerror="this.parentNode.textContent='🌟'"></div>
       <div class="student-name">serenaxie888</div>
       <span class="student-role role-student">学员</span>
-      <div class="student-project">AI项目</div>
+      <div class="student-project">AI 房产财务操作系统</div>
     </div>
 
     <div class="student-card">
@@ -326,18 +326,18 @@
       <div class="student-project">AI项目</div>
     </div>
 
-    <div class="student-card">
-      <div class="student-avatar">🎭</div>
+    <div class="student-card featured" data-student="mandy" role="button" tabindex="0">
+      <div class="student-avatar"><img src="/assets/students-3d/mandy/avatar.jpg" alt="tellmood 的3D角色形象" onerror="this.parentNode.textContent='🎭'"></div>
       <div class="student-name">tellmood</div>
       <span class="student-role role-student">学员</span>
-      <div class="student-project">AI项目</div>
+      <div class="student-project">Mandy 护肤品电商网站</div>
     </div>
 
     <div class="student-card">
       <div class="student-avatar">💼</div>
       <div class="student-name">xdliu788</div>
       <span class="student-role role-student">学员</span>
-      <div class="student-project">AI邮件助手</div>
+      <div class="student-project">老刘邮件AI助手</div>
     </div>
 
     <!-- Both: Student + TA -->
@@ -348,11 +348,11 @@
       <div class="student-project">KSI投资管理</div>
     </div>
 
-    <div class="student-card">
-      <div class="student-avatar">🌺</div>
+    <div class="student-card featured" data-student="maureen" role="button" tabindex="0">
+      <div class="student-avatar"><img src="/assets/students-3d/maureen/avatar.jpg" alt="Maureen 的3D角色形象" onerror="this.parentNode.textContent='🌺'"></div>
       <div class="student-name">Maureen</div>
       <span class="student-role role-both">学员+助教</span>
-      <div class="student-project">AI项目</div>
+      <div class="student-project">THE-RED-APPLE Unity 游戏</div>
     </div>
 
     <div class="student-card featured" data-student="xianlu" role="button" tabindex="0">
@@ -439,6 +439,60 @@ const STUDENTS_3D = {
     projDesc: '品牌孵化与 30 天养生音频课程平台，含课程中心、学习进度跟踪、会员注册/订单与管理后台（Flask 全栈）。',
     url: '',
     photos: ['/assets/students-3d/lucy/photo1.jpg', '/assets/students-3d/lucy/photo2.jpg', '/assets/students-3d/lucy/photo3.jpg']
+  },
+  nova: {
+    name: 'Nova',
+    role: '学员',
+    project: 'ZOE 股票筛选器',
+    bio: '第一期学员 Nova，零编程基础起步，12 周内独立完成一个实时金融数据驱动的股票筛选平台。',
+    projDesc: '基于 AI 的澳洲股市智能选股工具，支持多维度筛选、实时行情展示与自定义策略，帮助投资者从海量数据中快速定位目标股票。',
+    url: '',
+    photos: ['/assets/students-3d/nova/photo1.jpg', '/assets/students-3d/nova/photo2.jpg', '/assets/students-3d/nova/photo3.jpg']
+  },
+  jasonwang: {
+    name: 'Jason 王',
+    role: '学员',
+    project: 'Jason AI CRM',
+    bio: '第一期学员 Jason 王，从设计背景跨入全栈开发，将审美直觉与技术能力结合，打造属于自己的客户管理工具。',
+    projDesc: '面向小微企业的 AI 驱动 CRM 系统，整合客户信息管理、智能跟进提醒与销售漏斗可视化，让客户关系管理从繁琐变轻松。',
+    url: '',
+    photos: ['/assets/students-3d/jasonwang/photo1.jpg', '/assets/students-3d/jasonwang/photo2.jpg', '/assets/students-3d/jasonwang/photo3.jpg']
+  },
+  dan: {
+    name: 'danjin111',
+    role: '学员',
+    project: 'AI 项目（开发中）',
+    bio: '第一期学员 danjin111，正将一个属于自己的 AI 应用从想法变成可运行的产品。',
+    projDesc: '项目正在积极开发中，将在毕业展示日揭开面纱——敬请期待。',
+    url: '',
+    photos: ['/assets/students-3d/dan/photo1.jpg', '/assets/students-3d/dan/photo2.jpg', '/assets/students-3d/dan/photo3.jpg']
+  },
+  serena: {
+    name: 'serenaxie888',
+    role: '学员',
+    project: 'AI 房产财务操作系统',
+    bio: '第一期学员 serenaxie888，把房产投资与财务管理的实战经验融入 AI 应用，让数据替人做决策。',
+    projDesc: '整合房产投资组合、财务分析与智能提醒的全流程操作系统，帮助投资者一目了然掌握资产与现金流全貌。',
+    url: '',
+    photos: ['/assets/students-3d/serena/photo1.jpg', '/assets/students-3d/serena/photo2.jpg', '/assets/students-3d/serena/photo3.jpg']
+  },
+  mandy: {
+    name: 'tellmood',
+    role: '学员',
+    project: 'Mandy 护肤品电商网站',
+    bio: '第一期学员 tellmood，把自己对护肤的热爱变成一门线上生意——从选品到建站全流程亲手搞定。',
+    projDesc: '澳洲护肤品在线商城，支持产品分类、购物车、Stripe 安全支付与订单管理，让好护肤触手可及。',
+    url: '',
+    photos: ['/assets/students-3d/mandy/photo1.jpg', '/assets/students-3d/mandy/photo2.jpg', '/assets/students-3d/mandy/photo3.jpg']
+  },
+  maureen: {
+    name: 'Maureen',
+    role: '学员 + 助教',
+    project: 'THE-RED-APPLE Unity 游戏',
+    bio: '第一期学员兼助教 Maureen，从游戏玩家进阶为游戏开发者——用 Unity 将创意变成可玩的互动世界。',
+    projDesc: '基于 Unity 引擎的原创互动游戏 THE-RED-APPLE，融合叙事驱动与关卡设计，从美术到编程全部独立完成。',
+    url: '',
+    photos: ['/assets/students-3d/maureen/photo1.jpg', '/assets/students-3d/maureen/photo2.jpg', '/assets/students-3d/maureen/photo3.jpg']
   }
 };
 
