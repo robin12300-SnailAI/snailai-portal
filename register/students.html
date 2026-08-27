@@ -198,6 +198,28 @@
     .student-card { padding: 14px 10px 10px; }
     .student-avatar { width: 54px; height: 54px; font-size: 22px; }
   }
+
+  /* ===== 样板学员 3D 角色卡 ===== */
+  .student-card.featured { cursor: pointer; border-color: var(--gold); }
+  .student-card.featured .student-avatar { border-color: var(--gold); overflow: hidden; }
+  .student-card.featured .student-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .student-card.featured::after { content: '👆 点击查看 3D 角色'; display: block; font-size: 10px; color: #8B6914; margin-top: 8px; }
+
+  /* ===== 学员详情弹层 ===== */
+  .modal-overlay { position: fixed; inset: 0; z-index: 999; background: rgba(13,79,60,0.62); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; padding: 16px; }
+  .modal-overlay.open { display: flex; }
+  .modal-box { width: 100%; max-width: 430px; max-height: 88vh; background: white; border-radius: 18px; box-shadow: 0 20px 60px rgba(13,79,60,0.35); padding: 20px 18px 24px; position: relative; overflow-y: auto; }
+  .modal-close { position: sticky; top: 0; float: right; width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--green-light); color: var(--green-dark); font-size: 17px; cursor: pointer; z-index: 2; }
+  .modal-gallery { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; border-radius: 12px; margin-bottom: 14px; scrollbar-width: none; clear: both; }
+  .modal-gallery::-webkit-scrollbar { display: none; }
+  .modal-gallery img { flex: 0 0 82%; scroll-snap-align: center; border-radius: 10px; aspect-ratio: 800/1019; object-fit: cover; background: var(--green-pale); }
+  .modal-box h3 { font-family: 'Noto Serif SC', serif; font-size: 20px; color: var(--green-dark); margin-bottom: 4px; }
+  .modal-role { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 10px; background: var(--gold-light); color: #8B6914; margin-bottom: 10px; }
+  .modal-box p { font-size: 13px; line-height: 1.7; color: var(--ink-light); margin-bottom: 10px; }
+  .modal-sec-title { font-size: 14px; font-weight: 700; color: var(--green-dark); margin: 12px 0 6px; }
+  .modal-visit-btn { display: block; text-align: center; margin-top: 14px; padding: 12px; background: linear-gradient(135deg, var(--green-dark), var(--green-mid)); color: #fff; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 14px; }
+  .modal-url-pending { text-align: center; margin-top: 14px; padding: 12px; background: var(--green-pale); color: var(--muted); border-radius: 12px; font-size: 13px; }
+  body.modal-open { overflow: hidden; }
 </style>
 </head>
 <body>
@@ -255,18 +277,18 @@
       <div class="student-project">AI创意设计工具</div>
     </div>
 
-    <div class="student-card">
-      <div class="student-avatar">🏫</div>
+    <div class="student-card featured" data-student="coco" role="button" tabindex="0">
+      <div class="student-avatar"><img src="/assets/students-3d/coco/avatar.jpg" alt="Coco 的3D角色形象" onerror="this.parentNode.textContent='🏫'"></div>
       <div class="student-name">Coco</div>
       <span class="student-role role-student">学员</span>
-      <div class="student-project">学校假期活动平台</div>
+      <div class="student-project">Southern Cross HVAC 空调网站</div>
     </div>
 
-    <div class="student-card">
-      <div class="student-avatar">🤖</div>
-      <div class="student-name">Lucyshi333</div>
+    <div class="student-card featured" data-student="lucy" role="button" tabindex="0">
+      <div class="student-avatar"><img src="/assets/students-3d/lucy/avatar.jpg" alt="Lucy 的3D角色形象" onerror="this.parentNode.textContent='🤖'"></div>
+      <div class="student-name">Lucy</div>
       <span class="student-role role-student">学员</span>
-      <div class="student-project">AI项目</div>
+      <div class="student-project">诗露舒养身心平台</div>
     </div>
 
     <div class="student-card">
@@ -333,11 +355,11 @@
       <div class="student-project">AI项目</div>
     </div>
 
-    <div class="student-card">
-      <div class="student-avatar">👔</div>
+    <div class="student-card featured" data-student="xianlu" role="button" tabindex="0">
+      <div class="student-avatar"><img src="/assets/students-3d/xianlu/avatar.jpg" alt="仙路的3D角色形象" onerror="this.parentNode.textContent='👔'"></div>
       <div class="student-name">仙路</div>
       <span class="student-role role-both">学员+助教</span>
-      <div class="student-project">工装销售平台</div>
+      <div class="student-project">仙路工服网站</div>
     </div>
 
     <!-- TAs -->
@@ -373,5 +395,108 @@
 </div>
 
 <footer>&copy; 2026 SnailAI.AI &middot; 蜗牛AI应用教育学院</footer>
+
+<!-- 学员3D角色详情弹层 -->
+<div class="modal-overlay" id="studentModal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-box">
+    <button class="modal-close" aria-label="关闭">✕</button>
+    <div class="modal-gallery" id="modalGallery"></div>
+    <h3 id="modalName"></h3>
+    <span class="modal-role" id="modalRole"></span>
+    <p id="modalBio"></p>
+    <div class="modal-sec-title" id="modalProjTitle"></div>
+    <p id="modalProjDesc"></p>
+    <a class="modal-visit-btn" id="modalVisitBtn" target="_blank" rel="noopener" style="display:none">查看项目 ↗</a>
+    <div class="modal-url-pending" id="modalUrlPending" style="display:none">🔗 项目公开网址即将上线，敬请期待</div>
+  </div>
+</div>
+
+<script>
+const STUDENTS_3D = {
+  coco: {
+    name: 'Coco',
+    role: '学员',
+    project: 'Southern Cross HVAC 空调网站',
+    bio: '蜗牛AI 第一期学员，从零基础起步，12 周内学会建站全流程，独立完成第一个商业级企业官网。',
+    projDesc: '面向澳洲本地空调公司的企业官网，含住宅/商业空调服务展示、在线报价向导与项目询价功能，页面设计到内容组织全部独立完成。',
+    url: '',
+    photos: ['/assets/students-3d/coco/photo1.jpg', '/assets/students-3d/coco/photo2.jpg', '/assets/students-3d/coco/photo3.jpg']
+  },
+  xianlu: {
+    name: '仙路',
+    role: '学员 + 助教',
+    project: '仙路工服网站',
+    bio: '第一期学员兼助教，把自己家族工装生意搬上互联网——从需求梳理到技术选型全程亲手完成，是同学眼里的"实战标杆"。',
+    projDesc: '澳洲工装在线商城，支持产品分类浏览、购物车与 Stripe 付款流程、后台产品管理与 SEO 基础，专为零基础可维护而设计。',
+    url: '',
+    photos: ['/assets/students-3d/xianlu/photo1.jpg', '/assets/students-3d/xianlu/photo2.jpg', '/assets/students-3d/xianlu/photo3.jpg']
+  },
+  lucy: {
+    name: 'Lucy',
+    role: '学员',
+    project: '诗露舒养身心平台',
+    bio: '第一期学员 Lucy，用 12 周把自己的养生事业数字化，完成了从品牌展示到会员系统的完整全栈平台。',
+    projDesc: '品牌孵化与 30 天养生音频课程平台，含课程中心、学习进度跟踪、会员注册/订单与管理后台（Flask 全栈）。',
+    url: '',
+    photos: ['/assets/students-3d/lucy/photo1.jpg', '/assets/students-3d/lucy/photo2.jpg', '/assets/students-3d/lucy/photo3.jpg']
+  }
+};
+
+const overlay = document.getElementById('studentModal');
+
+function openModal(id) {
+  const s = STUDENTS_3D[id];
+  if (!s) return;
+  const gallery = document.getElementById('modalGallery');
+  gallery.innerHTML = '';
+  s.photos.forEach((src, i) => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = s.name + ' 的3D角色图 ' + (i + 1);
+    img.loading = 'lazy';
+    gallery.appendChild(img);
+  });
+  document.getElementById('modalName').textContent = s.name;
+  document.getElementById('modalRole').textContent = s.role;
+  document.getElementById('modalBio').textContent = s.bio;
+  document.getElementById('modalProjTitle').textContent = '💡 ' + s.project;
+  document.getElementById('modalProjDesc').textContent = s.projDesc;
+  const btn = document.getElementById('modalVisitBtn');
+  const pending = document.getElementById('modalUrlPending');
+  if (s.url) {
+    btn.href = s.url;
+    btn.style.display = 'block';
+    pending.style.display = 'none';
+  } else {
+    btn.style.display = 'none';
+    pending.style.display = 'block';
+  }
+  overlay.classList.add('open');
+  overlay.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+  document.querySelector('.modal-close').focus();
+}
+
+function closeModal() {
+  overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  document.getElementById('modalGallery').innerHTML = '';
+}
+
+// 仅样板卡可点（未来新增样板只需加 featured 卡 + 一条数据）
+document.querySelectorAll('.student-card.featured').forEach(card => {
+  const trigger = () => openModal(card.dataset.student);
+  card.addEventListener('click', trigger);
+  card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); trigger(); }
+  });
+});
+document.querySelector('.modal-close').addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+});
+</script>
 </body>
 </html>
