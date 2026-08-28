@@ -1832,6 +1832,89 @@ def api_me():
     return jsonify(resp)
 
 
+@app.route("/api/portal/event-registrations", methods=["GET"])
+@_rate_limit_deco(_RL_QUERY_LIMIT, _RL_QUERY_WINDOW)
+def api_portal_event_registrations():
+    """学员/助教/admin 登录后查看活动报名数据（按角色分级）。
+
+    student       → 仅总览数字 + 排行榜链接（外部访客隐私）
+    ta/instructor → 上述 + 全员名单（手机号打码）+ 推荐人归属
+    admin         → 上述 + 完整名单（含手机号）+ CRM 同步状态
+
+    数据源：event_registrations LEFT JOIN event_referrers。
+    两表由 server/grad_reg.py 建立，与 app.py 共用同一 DB_PATH。
+    预计到场 = 总登记 × 30%（与「蜗牛活动人数统计」技能口径一致）。
+    """
+    user = _current_user()
+    if not user:
+        return jsonify(ok=False, error="未登录"), 401
+    role = user.get("role", "student")
+
+    conn = db_conn()
+    try:
+        ov = conn.execute(
+            """SELECT COUNT(*) AS total,
+                      COALESCE(SUM(headcount), 0) AS headcount,
+                      SUM(CASE WHEN status='synced' THEN 1 ELSE 0 END) AS synced,
+                      MAX(crm_synced_at) AS last_sync
+               FROM event_registrations"""
+        ).fetchone()
+        refs = conn.execute("SELECT COUNT(*) AS n FROM event_referrers").fetchone()["n"]
+        by_ref = conn.execute(
+            """SELECT r.ref_code, ef.name AS referrer_name, COUNT(*) AS cnt,
+                      COALESCE(SUM(r.headcount), 0) AS headcount
+               FROM event_registrations r
+               LEFT JOIN event_referrers ef ON r.ref_code = ef.ref_code
+               WHERE r.ref_code IS NOT NULL AND r.ref_code != ''
+               GROUP BY r.ref_code ORDER BY cnt DESC, r.ref_code"""
+        ).fetchall()
+
+        rows = []
+        can_see_list = role in ("ta", "instructor", "admin")
+        if can_see_list:
+            rows = conn.execute(
+                """SELECT r.id, r.ref_code, r.name, r.phone, r.headcount, r.status,
+                          r.crm_synced_at, r.created_at, ef.name AS referrer_name
+                   FROM event_registrations r
+                   LEFT JOIN event_referrers ef ON r.ref_code = ef.ref_code
+                   ORDER BY r.id DESC"""
+            ).fetchall()
+    finally:
+        conn.close()
+
+    def _mask(p):
+        p = (p or "").strip()
+        return (p[:3] + "****" + p[-2:]) if len(p) >= 6 else ("***" if p else "")
+
+    def _shape(row):
+        d = dict(row)
+        if role != "admin":
+            d["phone"] = _mask(d.get("phone"))
+        return d
+
+    total = ov["total"] or 0
+    synced = ov["synced"] or 0
+    return jsonify(
+        ok=True,
+        role=role,
+        can_see_list=can_see_list,
+        overview={
+            "event": "蜗牛AI · 第1期毕业展览日",
+            "date": "2026-09-26",
+            "total_registrations": total,
+            "total_headcount": ov["headcount"] or 0,
+            "estimated_attendance": int(round(total * 0.3)),
+            "total_referrers": refs,
+            "synced": synced,
+            "pending": total - synced,
+            "last_sync_at": ov["last_sync"] or "",
+            "board_url": "/grad-reg-board/",
+        },
+        by_referrer=[dict(r) for r in by_ref],
+        registrations=[_shape(r) for r in rows],
+    ), 200
+
+
 @app.route("/api/me/token", methods=["GET"])
 @_rate_limit_deco(_RL_QUERY_LIMIT, _RL_QUERY_WINDOW)
 def api_me_token():
