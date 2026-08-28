@@ -376,13 +376,15 @@ def api_stats():
             "SELECT status, COUNT(*) AS n FROM event_registrations GROUP BY status"
         ).fetchall()
 
+        # cnt = 登记笔数（人数）；headcount = 人次（各笔登记的到场人数之和）
         by_ref = conn.execute(
-            """SELECT r.ref_code, ef.name AS referrer_name, COUNT(*) AS cnt
+            """SELECT r.ref_code, ef.name AS referrer_name, COUNT(*) AS cnt,
+                      COALESCE(SUM(r.headcount), 0) AS headcount
                FROM event_registrations r
                LEFT JOIN event_referrers ef ON r.ref_code = ef.ref_code
                WHERE r.ref_code IS NOT NULL
                GROUP BY r.ref_code
-               ORDER BY cnt DESC"""
+               ORDER BY cnt DESC, headcount DESC"""
         ).fetchall()
 
         total_headcount = conn.execute(
@@ -413,13 +415,15 @@ def api_public_stats():
             "SELECT COUNT(*) AS n FROM event_registrations"
         ).fetchone()["n"]
 
+        # cnt = 登记笔数（人数）；headcount = 人次（各笔登记的到场人数之和）
         by_ref = conn.execute(
-            """SELECT r.ref_code, ef.name AS referrer_name, COUNT(*) AS cnt
+            """SELECT r.ref_code, ef.name AS referrer_name, COUNT(*) AS cnt,
+                      COALESCE(SUM(r.headcount), 0) AS headcount
                FROM event_registrations r
                LEFT JOIN event_referrers ef ON r.ref_code = ef.ref_code
                WHERE r.ref_code IS NOT NULL
                GROUP BY r.ref_code
-               ORDER BY cnt DESC"""
+               ORDER BY cnt DESC, headcount DESC"""
         ).fetchall()
 
         total_headcount = conn.execute(
