@@ -1,9 +1,10 @@
 {
   "name": "snailai-portal",
-  "version": "2.2.0",
-  "release_date": "2026-08-24",
-  "last_updated": "2026-08-24",
+  "version": "2.2.1",
+  "release_date": "2026-08-28",
+  "last_updated": "2026-08-28",
   "changelog": [
+    "2.2.1 (2026-08-28): 学员学堂 welcome.html 新增「活动报名总览」卡片 + /api/portal/event-registrations 接口；学员/助教/admin 按角色分级查看毕业展览日报名（admin 完整名单 / TA 手机号打码 / 学员仅总览数字）；推荐码 G26XX 个人归属可见",
     "2.2.0 (2026-08-24): P1+P2 网站改版 — 导航精简6项; 首页以企业AI为主; 去掉华人定位和绝对化声明; 企业页增第5服务(Legacy Software & Desktop Automation); 新增Case Studies/Privacy/Terms/AI Data Principles页面; footer加法律链接; FAQ增传统软件条目; 版本号V2.2.0",
     "2.0.3 (2026-08-19): 英文默认体验完善",
     "2.0.2 (2026-08-19): 全站默认语言改为英文",
