@@ -234,6 +234,9 @@
     </div>
   </div>
 
+  <!-- 活动报名总览（学员/助教/admin 登录后可见，按角色分级） -->
+  <div id="eventRegSection" class="section"></div>
+
   <!-- 动态内容 -->
   <div id="content"></div>
 
@@ -390,6 +393,7 @@
       renderContent();
       renderNeeds();
       renderDirectory();
+      renderEventReg();
     }
 
     // 初始化调用已移到脚本末尾（避免 applyLang 中 renderNeeds 在常量声明前执行）
@@ -620,6 +624,77 @@
       {key:"login_username",zh:"登录账号",en:"Login"}
     ];
 
+    // ===================== 活动报名总览 =====================
+    const ER_TITLE = {zh:"🎪 活动报名总览", en:"🎪 Event Registrations"};
+    const ER_SUB   = {zh:"毕业展览日实时报名情况与 CRM 同步状态",
+                      en:"Graduation showcase registrations & CRM sync status"};
+
+    async function renderEventReg(){
+      const sec = document.getElementById("eventRegSection");
+      if (!sec) return;
+      sec.innerHTML = `<h2 class="section-title">${t(ER_TITLE)}</h2>`
+        + `<p class="section-sub">${t(ER_SUB)}</p>`
+        + `<div id="erBox" class="dir-table-wrap" style="padding:16px;color:var(--ink3)">…</div>`;
+      const d = await api("/api/portal/event-registrations","GET");
+      const box = sec.querySelector("#erBox");
+      if (!box) return;
+      if (!d.ok){ box.textContent = d.error || (curLang==="en"?"Failed to load":"加载失败"); return; }
+
+      const o = d.overview;
+      const cards = [
+        ["👥", o.total_registrations,   {zh:"报名人数",   en:"Registrations"}],
+        ["🎟", o.total_headcount,       {zh:"登记人次",   en:"Headcount"}],
+        ["📈", o.estimated_attendance,  {zh:"预计到场",   en:"Est. Attendance"}],
+        ["🤝", o.total_referrers,       {zh:"推荐人",     en:"Referrers"}],
+        ["☁",  o.synced,               {zh:"已同步CRM",  en:"Synced to CRM"}],
+        ["⏳",  o.pending,              {zh:"待同步",     en:"Pending"}],
+      ].map(([ic,n,lb]) => `<div style="flex:1 1 120px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card,#fff)">
+          <div style="font-size:22px">${ic}</div>
+          <div style="font-size:24px;font-weight:900">${n}</div>
+          <div style="font-size:12px;color:var(--ink3)">${t(lb)}</div></div>`).join("");
+
+      // 推荐人归属排行（G26XX 推荐码 = 个人归属）
+      let refHtml = "";
+      if (d.by_referrer && d.by_referrer.length){
+        refHtml = `<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">`
+          + d.by_referrer.map(r => `<span class="dir-tag">${escapeHtml(r.ref_code||"")} · `
+              + `${escapeHtml(r.referrer_name||"—")} · ${r.cnt}${curLang==="en"?" pax":"人"}</span>`).join("")
+          + `</div>`;
+      }
+
+      let table = "";
+      if (d.can_see_list && d.registrations && d.registrations.length){
+        table = `<table class="dir-table" style="margin-top:14px"><thead><tr>`
+          + `<th>#</th><th>${curLang==="en"?"Name":"姓名"}</th>`
+          + `<th>${curLang==="en"?"Phone":"手机"}</th>`
+          + `<th>${curLang==="en"?"Pax":"人数"}</th>`
+          + `<th>${curLang==="en"?"Referrer":"推荐人"}</th>`
+          + `<th>${curLang==="en"?"CRM Sync":"同步状态"}</th></tr></thead><tbody>`
+          + d.registrations.map(r => `<tr>
+              <td>${r.id}</td>
+              <td>${escapeHtml(r.name||"")}</td>
+              <td>${escapeHtml(r.phone||"")}</td>
+              <td>${r.headcount||1}</td>
+              <td>${escapeHtml(r.referrer_name || r.ref_code || "—")}</td>
+              <td>${r.status === "synced"
+                    ? `<span class="dir-tag">✅ ${escapeHtml((r.crm_synced_at||"").replace("T"," ").slice(0,16))}</span>`
+                    : `<span style="color:var(--ink3)">⏳ ${curLang==="en"?"Pending":"待同步"}</span>`}</td>
+            </tr>`).join("")
+          + `</tbody></table>`;
+      }
+
+      box.innerHTML = `<div style="display:flex;gap:10px;flex-wrap:wrap">${cards}</div>`
+        + refHtml
+        + (table || `<p style="margin-top:12px;color:var(--ink3)">`
+            + (curLang==="en" ? "Full list is visible to TAs and admins." : "完整名单仅助教 / 管理员可见。")
+            + `</p>`)
+        + `<p style="margin-top:12px"><a href="grad-reg-board/" style="color:var(--accent);font-weight:700">`
+        + `📊 ${curLang==="en"?"Live leaderboard":"实时排行榜"} →</a>`
+        + (o.last_sync_at ? `<span style="margin-left:10px;color:var(--ink3);font-size:12px">`
+            + `${curLang==="en"?"Last sync ":"最近同步 "}${escapeHtml(String(o.last_sync_at).replace("T"," ").slice(0,16))}</span>` : "")
+        + `</p>`;
+    }
+
     async function renderDirectory(){
       const content = document.getElementById("content");
       if (!content) return;
@@ -659,6 +734,7 @@
     applyLang(curLang);
     renderPoints();
     renderDirectory();
+    renderEventReg();
 
     function doLogout() {
       sessionStorage.removeItem(S_KEY);
