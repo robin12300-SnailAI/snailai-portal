@@ -653,12 +653,42 @@
           <div style="font-size:24px;font-weight:900">${n}</div>
           <div style="font-size:12px;color:var(--ink3)">${t(lb)}</div></div>`).join("");
 
+      // ── 个人归因区块 ──
+      let myRefHtml = "";
+      if (d.my_ref_code) {
+        // 已认领推荐码
+        myRefHtml = `<div style="margin-top:16px;padding:14px;border:2px solid var(--accent,#f50);border-radius:12px;background:var(--card,#fff)">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px">🏷 ${curLang==="en"?"My Referral Code":"我的推荐码"}</div>
+          <div style="font-size:28px;font-weight:900;color:var(--accent,#f50)">${escapeHtml(d.my_ref_code)}</div>
+          <div style="font-size:13px;color:var(--ink3);margin-top:4px">${escapeHtml(d.my_ref_name||"")} · ${curLang==="en"?"brought":"带来"} <b>${d.my_count}</b> ${curLang==="en"?"registrations":"笔登记"} / <b>${d.my_headcount}</b> ${curLang==="en"?"pax":"人次"}</div>
+          ${d.my_registrations && d.my_registrations.length ? `<table class="dir-table" style="margin-top:8px;font-size:12px"><thead><tr>
+            <th>#</th><th>${curLang==="en"?"Name":"姓名"}</th><th>${curLang==="en"?"Pax":"人数"}</th><th>${curLang==="en"?"Status":"状态"}</th></tr></thead><tbody>`
+            + d.my_registrations.map(r => `<tr><td>${r.id}</td><td>${escapeHtml(r.name||"")}</td><td>${r.headcount||1}</td><td>${r.status==="synced"?"✅":"⏳"}</td></tr>`).join("")
+            + `</tbody></table>` : ""}
+        </div>`;
+      } else {
+        // 未认领 → 显示认领入口
+        myRefHtml = `<div style="margin-top:16px;padding:14px;border:1px dashed var(--line);border-radius:12px;background:var(--card,#fff)">
+          <div style="font-weight:700;font-size:14px;margin-bottom:8px">🏷 ${curLang==="en"?"Claim Your Referral Code":"认领你的推荐码"}</div>
+          <div style="font-size:12px;color:var(--ink3);margin-bottom:8px">${curLang==="en"?"Enter your G26XX code to track who you referred":"输入你的 G26XX 推荐码，查看你拉来了多少人"}</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="claimCode" type="text" placeholder="G26XX" maxlength="6" style="padding:6px 10px;border:1px solid var(--line);border-radius:6px;font-size:14px;width:100px;text-transform:uppercase">
+            <button id="claimBtn" onclick="doClaimRef()" style="padding:6px 16px;border-radius:6px;font-size:13px;font-weight:700;background:var(--accent,#f50);color:#fff;border:none;cursor:pointer">${curLang==="en"?"Claim":"认领"}</button>
+            <span id="claimMsg" style="font-size:12px"></span>
+          </div>
+        </div>`;
+      }
+
       // 推荐人归属排行（G26XX 推荐码 = 个人归属）
       let refHtml = "";
       if (d.by_referrer && d.by_referrer.length){
         refHtml = `<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">`
-          + d.by_referrer.map(r => `<span class="dir-tag">${escapeHtml(r.ref_code||"")} · `
-              + `${escapeHtml(r.referrer_name||"—")} · ${r.cnt}${curLang==="en"?" pax":"人"}</span>`).join("")
+          + d.by_referrer.map(r => {
+              const isMine = r.ref_code === d.my_ref_code;
+              const style = isMine ? 'background:var(--accent,#f50);color:#fff;font-weight:700;' : '';
+              return `<span class="dir-tag" style="${style}">${escapeHtml(r.ref_code||"")} · `
+                + `${escapeHtml(r.referrer_name||"—")} · ${r.cnt}${curLang==="en"?" pax":"人"}${isMine ? " ⭐" : ""}</span>`;
+            }).join("")
           + `</div>`;
       }
 
@@ -670,20 +700,24 @@
           + `<th>${curLang==="en"?"Pax":"人数"}</th>`
           + `<th>${curLang==="en"?"Referrer":"推荐人"}</th>`
           + `<th>${curLang==="en"?"CRM Sync":"同步状态"}</th></tr></thead><tbody>`
-          + d.registrations.map(r => `<tr>
+          + d.registrations.map(r => {
+              const isMine = d.my_ref_code && r.ref_code === d.my_ref_code;
+              const hl = isMine ? 'style="background:rgba(255,80,0,0.06)"' : '';
+              return `<tr ${hl}>
               <td>${r.id}</td>
               <td>${escapeHtml(r.name||"")}</td>
               <td>${escapeHtml(r.phone||"")}</td>
               <td>${r.headcount||1}</td>
-              <td>${escapeHtml(r.referrer_name || r.ref_code || "—")}</td>
+              <td>${escapeHtml(r.referrer_name || r.ref_code || "—")}${isMine ? " ⭐" : ""}</td>
               <td>${r.status === "synced"
                     ? `<span class="dir-tag">✅ ${escapeHtml((r.crm_synced_at||"").replace("T"," ").slice(0,16))}</span>`
                     : `<span style="color:var(--ink3)">⏳ ${curLang==="en"?"Pending":"待同步"}</span>`}</td>
-            </tr>`).join("")
+            </tr>`}).join("")
           + `</tbody></table>`;
       }
 
       box.innerHTML = `<div style="display:flex;gap:10px;flex-wrap:wrap">${cards}</div>`
+        + myRefHtml
         + refHtml
         + (table || `<p style="margin-top:12px;color:var(--ink3)">`
             + (curLang==="en" ? "Full list is visible to TAs and admins." : "完整名单仅助教 / 管理员可见。")
@@ -693,6 +727,33 @@
         + (o.last_sync_at ? `<span style="margin-left:10px;color:var(--ink3);font-size:12px">`
             + `${curLang==="en"?"Last sync ":"最近同步 "}${escapeHtml(String(o.last_sync_at).replace("T"," ").slice(0,16))}</span>` : "")
         + `</p>`;
+    }
+
+    async function doClaimRef(){
+      const code = (document.getElementById("claimCode").value||"").trim().toUpperCase();
+      const msg = document.getElementById("claimMsg");
+      if (!code || !/^G26\d{2}$/.test(code)){
+        msg.textContent = curLang==="en"?"Invalid code":"格式不对，应为 G26XX";
+        msg.style.color = "#e33";
+        return;
+      }
+      msg.textContent = curLang==="en"?"Claiming…":"认领中…";
+      msg.style.color = "var(--ink3)";
+      try {
+        const res = await api("/api/grad-registrations/claim-referrer","POST",{ref_code:code});
+        if (res.ok){
+          msg.textContent = res.message || "✅";
+          msg.style.color = "#080";
+          // 刷新整个区块
+          setTimeout(()=>renderEventReg(), 800);
+        } else {
+          msg.textContent = res.error || "❌";
+          msg.style.color = "#e33";
+        }
+      } catch(e){
+        msg.textContent = e.message || "❌";
+        msg.style.color = "#e33";
+      }
     }
 
     async function renderDirectory(){

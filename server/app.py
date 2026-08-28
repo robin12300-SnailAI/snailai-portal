@@ -1849,6 +1849,7 @@ def api_portal_event_registrations():
     if not user:
         return jsonify(ok=False, error="未登录"), 401
     role = user.get("role", "student")
+    username = user.get("username", "")
 
     conn = db_conn()
     try:
@@ -1879,6 +1880,25 @@ def api_portal_event_registrations():
                    LEFT JOIN event_referrers ef ON r.ref_code = ef.ref_code
                    ORDER BY r.id DESC"""
             ).fetchall()
+
+        # ── 个人归因：当前用户认领的推荐码 ──
+        my_ref = conn.execute(
+            "SELECT ref_code, name FROM event_referrers WHERE owner_username = ?",
+            (username,)).fetchone()
+        my_ref_code = my_ref["ref_code"] if my_ref else None
+        my_ref_name = my_ref["name"] if my_ref else None
+
+        my_regs = []
+        my_count = 0
+        my_headcount = 0
+        if my_ref_code:
+            mr = conn.execute(
+                """SELECT id, name, headcount, status, created_at
+                   FROM event_registrations WHERE ref_code = ? ORDER BY id DESC""",
+                (my_ref_code,)).fetchall()
+            my_regs = [dict(r) for r in mr]
+            my_count = len(my_regs)
+            my_headcount = sum(r["headcount"] or 1 for r in my_regs)
     finally:
         conn.close()
 
@@ -1912,6 +1932,12 @@ def api_portal_event_registrations():
         },
         by_referrer=[dict(r) for r in by_ref],
         registrations=[_shape(r) for r in rows],
+        # ── 个人归因 ──
+        my_ref_code=my_ref_code,
+        my_ref_name=my_ref_name,
+        my_registrations=my_regs,
+        my_count=my_count,
+        my_headcount=my_headcount,
     ), 200
 
 
@@ -3631,6 +3657,49 @@ register_scan_routes(app)
 from grad_reg import bp as grad_reg_bp, init_grad_reg_db
 app.register_blueprint(grad_reg_bp)
 init_grad_reg_db()
+
+# ── 自动预填 owner_username（高置信匹配）────────────────
+# 规则：推荐人 name 包含 Portal 用户 name 或 username（不区分大小写），且该推荐码尚未认领。
+# 仅在启动时跑一次，已有 owner_username 的不覆盖。
+def _auto_match_owners():
+    conn = db_conn()
+    try:
+        # 找所有未认领的推荐人
+        refs = conn.execute(
+            "SELECT id, ref_code, name, owner_username FROM event_referrers WHERE owner_username IS NULL OR owner_username = ''"
+        ).fetchall()
+        if not refs:
+            return
+        # 找所有 Portal 用户
+        users = conn.execute("SELECT username, name, role FROM users").fetchall()
+        matched = 0
+        for ref in refs:
+            rname = (ref["name"] or "").strip().lower()
+            for u in users:
+                uname = (u["name"] or "").strip().lower()
+                ulogin = u["username"].strip().lower()
+                # 高置信匹配：推荐人名字包含用户名 或 用户名包含推荐人名字
+                # 或推荐人名字与用户 username 完全匹配
+                if (uname and (uname in rname or rname in uname)) or rname == ulogin:
+                    # 检查该用户是否已认领其他推荐码
+                    existing = conn.execute(
+                        "SELECT id FROM event_referrers WHERE owner_username = ? AND id != ?",
+                        (u["username"], ref["id"])).fetchone()
+                    if not existing:
+                        conn.execute(
+                            "UPDATE event_referrers SET owner_username = ? WHERE id = ?",
+                            (u["username"], ref["id"]))
+                        matched += 1
+                    break
+        if matched:
+            conn.commit()
+            print(f"[蜗牛AI Portal] 自动预填 owner_username: {matched} 位推荐人已匹配")
+    except Exception as e:
+        print(f"[蜗牛AI Portal] 自动预填 owner_username 异常: {e}")
+    finally:
+        conn.close()
+
+_auto_match_owners()
 
 print(f"[蜗牛AI Portal] 数据库: {DB_PATH}")
 if not os.environ.get("WECHAT_WEBHOOK_URL"):

@@ -76,14 +76,23 @@ def init_grad_reg_db():
       wechat TEXT,
       crm_client_id TEXT,
       declared_count INTEGER DEFAULT 0,
+      owner_username TEXT,
       created_at TEXT DEFAULT (datetime('now'))
     );
     """)
+    # ── 轻量迁移：老库没有 owner_username 列（个人归属），启动时自动补 ──
+    # owner_username = 该推荐码归属的 Portal 账号（学员/助教/admin 都有推荐码）。
+    # 用于「TA/学员只看自己拉来的人」。为空表示尚未认领，由用户自助绑定。
+    cols = {r[1] for r in c.execute("PRAGMA table_info(event_referrers)")}
+    if "owner_username" not in cols:
+        c.execute("ALTER TABLE event_referrers ADD COLUMN owner_username TEXT")
+
     # 索引
     for sql in [
         "CREATE INDEX IF NOT EXISTS idx_ereg_status ON event_registrations(status)",
         "CREATE INDEX IF NOT EXISTS idx_ereg_ref_code ON event_registrations(ref_code)",
         "CREATE INDEX IF NOT EXISTS idx_eref_code ON event_referrers(ref_code)",
+        "CREATE INDEX IF NOT EXISTS idx_eref_owner ON event_referrers(owner_username)",
     ]:
         try:
             c.execute(sql)
@@ -401,6 +410,155 @@ def api_stats():
             "total_referrers": referrer_count,
             "by_status": {r["status"]: r["n"] for r in by_status},
             "by_referrer": [dict(r) for r in by_ref],
+        }), 200
+    finally:
+        conn.close()
+
+
+# ═══════════════════════════════════════════════════════════
+# 用户 API — 认领推荐码（Portal 登录用户）
+# ═══════════════════════════════════════════════════════════
+
+def _portal_user_from_req():
+    """从 Bearer token 或 session cookie 解析当前 Portal 用户。
+    返回 dict{username, role, name} 或 None。
+    """
+    # grad_reg.py 是 Blueprint，无法直接 import app.py 的 _current_user，
+    # 所以这里独立查 sessions 表。
+    token = (request.headers.get("Authorization") or "").replace("Bearer ", "").strip()
+    if not token:
+        # 尝试 cookie（SSO 场景）
+        from flask import session as flask_session
+        uname = flask_session.get("username")
+        if uname:
+            conn = _db()
+            try:
+                row = conn.execute(
+                    "SELECT username, role, name FROM users WHERE username = ?",
+                    (uname,)).fetchone()
+                return dict(row) if row else None
+            finally:
+                conn.close()
+        return None
+    conn = _db()
+    try:
+        import datetime
+        now = datetime.datetime.utcnow().isoformat()
+        s = conn.execute(
+            "SELECT username FROM sessions WHERE token = ? AND expires_at > ?",
+            (token, now)).fetchone()
+        if not s:
+            return None
+        row = conn.execute(
+            "SELECT username, role, name FROM users WHERE username = ?",
+            (s["username"],)).fetchone()
+        return dict(row) if row else None
+    finally:
+        conn.close()
+
+
+@bp.route("/claim-referrer", methods=["POST"])
+def api_claim_referrer():
+    """Portal 登录用户认领一个推荐码（owner_username 绑定）。
+
+    请求体：{"ref_code": "G2601"}
+    规则：
+    - 一个推荐码只能被一个用户认领
+    - 一个用户只能认领一个推荐码
+    - admin 可认领任意推荐码
+    - 已有 owner 的推荐码不可被他人认领（除非 admin 强制）
+    """
+    user = _portal_user_from_req()
+    if not user:
+        return jsonify({"error": "未登录"}), 401
+
+    data = request.get_json(silent=True) or {}
+    ref_code = (data.get("ref_code") or "").strip().upper()
+    if not ref_code:
+        return jsonify({"error": "ref_code 必填"}), 400
+
+    conn = _db()
+    try:
+        # 查推荐码
+        ref = conn.execute(
+            "SELECT id, ref_code, name, owner_username FROM event_referrers WHERE ref_code = ?",
+            (ref_code,)).fetchone()
+        if not ref:
+            return jsonify({"error": "推荐码不存在"}), 404
+
+        # 已被当前用户认领 → 幂等返回
+        if ref["owner_username"] == user["username"]:
+            return jsonify({"ok": True, "ref_code": ref_code, "message": "已认领"}), 200
+
+        # 已被他人认领
+        if ref["owner_username"]:
+            return jsonify({"error": f"该推荐码已被 {ref['owner_username']} 认领"}), 409
+
+        # 检查当前用户是否已认领其他推荐码
+        existing = conn.execute(
+            "SELECT ref_code, name FROM event_referrers WHERE owner_username = ?",
+            (user["username"],)).fetchone()
+        if existing:
+            return jsonify({
+                "error": f"你已认领推荐码 {existing['ref_code']}（{existing['name']}）",
+                "already_claimed": existing["ref_code"],
+            }), 409
+
+        # 执行认领
+        conn.execute(
+            "UPDATE event_referrers SET owner_username = ? WHERE ref_code = ? AND owner_username IS NULL",
+            (user["username"], ref_code))
+        conn.commit()
+
+        return jsonify({
+            "ok": True,
+            "ref_code": ref_code,
+            "referrer_name": ref["name"],
+            "message": f"认领成功：{ref_code} → {ref['name']}",
+        }), 200
+    finally:
+        conn.close()
+
+
+@bp.route("/my-referrer", methods=["GET"])
+def api_my_referrer():
+    """查看当前用户认领的推荐码及带来的登记数据。"""
+    user = _portal_user_from_req()
+    if not user:
+        return jsonify({"error": "未登录"}), 401
+
+    conn = _db()
+    try:
+        ref = conn.execute(
+            "SELECT ref_code, name, declared_count, owner_username FROM event_referrers WHERE owner_username = ?",
+            (user["username"],)).fetchone()
+
+        if not ref:
+            return jsonify({"ok": True, "claimed": False}), 200
+
+        # 该推荐码带来的登记
+        regs = conn.execute(
+            """SELECT id, name, phone, headcount, status, created_at
+               FROM event_registrations WHERE ref_code = ? ORDER BY id DESC""",
+            (ref["ref_code"],)).fetchall()
+
+        # 手机号脱敏
+        def _mask(p):
+            p = (p or "").strip()
+            return (p[:3] + "****" + p[-2:]) if len(p) >= 6 else ("***" if p else "")
+
+        return jsonify({
+            "ok": True,
+            "claimed": True,
+            "ref_code": ref["ref_code"],
+            "referrer_name": ref["name"],
+            "declared_count": ref["declared_count"],
+            "my_registrations": [
+                {**dict(r), "phone": _mask(r["phone"])}
+                for r in regs
+            ],
+            "my_count": len(regs),
+            "my_headcount": sum(r["headcount"] or 1 for r in regs),
         }), 200
     finally:
         conn.close()
