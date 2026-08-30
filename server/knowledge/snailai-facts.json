@@ -1,0 +1,93 @@
+[
+  {
+    "keywords_zh": ["学费", "价格", "多少钱", "费用", "收费"],
+    "keywords_en": ["price", "cost", "tuition", "fee", "how much"],
+    "answer_zh": "蜗牛AI线上课学费 AUD $599，线下AI财富课 AUD $1,999。支持无限期复训（条件：做助教+好位置让给新学员）。交学费即可随时入学，任何时间入学直接上手，特别适合零基础小白。",
+    "answer_en": "Snail AI Online Course: AUD $599. AI Wealth Offline Course: AUD $1,999. Unlimited re-training is included (condition: serve as TA and give prime seats to new students). Enroll anytime and start immediately — perfect for absolute beginners.",
+    "source": "官网 FAQ"
+  },
+  {
+    "keywords_zh": ["线上课", "在线课", "AI应用", "应用课", "线上班"],
+    "keywords_en": ["online course", "AI application", "online class"],
+    "answer_zh": "蜗牛AI应用线上班：12周12课时，6大模块，每周二晚8:30-10:00 (AEST)。第1期2026年7月7日开课，10月7日结课。第2期2026年10月20日开课。输出式教学，不需要从头学理论，任何时间入学直接上手。",
+    "answer_en": "Snail AI Online Course: 12 weeks, 12 lessons, 6 modules, every Tuesday 8:30-10:00 PM (AEST). Cohort 1 started July 7, 2026. Cohort 2 starts October 20, 2026. Output-based learning — start anytime, no theory prerequisites.",
+    "source": "官网课程表"
+  },
+  {
+    "keywords_zh": ["线下课", "财富课", "AI财富", "线下班", "面授课"],
+    "keywords_en": ["offline course", "wealth course", "in-person", "face to face"],
+    "answer_zh": "蜗牛AI财富线下班：13周24课时，6大模块，每周六下午1:00-4:30 (AEST)。第1期2026年7月11日开课，10月11日结课。第2期2026年10月24日开课。地点：Suite 404, 53 Walker Street, North Sydney。免费停车指引可联系客服。",
+    "answer_en": "Snail AI Wealth Offline Course: 13 weeks, 24 lessons, 6 modules, every Saturday 1:00-4:30 PM (AEST). Cohort 1 started July 11, 2026. Cohort 2 starts October 24, 2026. Location: Suite 404, 53 Walker Street, North Sydney.",
+    "source": "官网课程表"
+  },
+  {
+    "keywords_zh": ["报名", "注册", "如何加入", "怎么报名", "怎么注册", "入学"],
+    "keywords_en": ["enroll", "register", "sign up", "join", "how to apply"],
+    "answer_zh": "报名方式：1）访问 snailai.ai 首页在线报名；2）微信联系 luobinweixin8；3）发邮件至 robin12300@gmail.com。交学费即可随时入学，任何时间入学直接上手。支持无限期复训。",
+    "answer_en": "To enroll: 1) Visit snailai.ai and sign up online; 2) WeChat: luobinweixin8; 3) Email: robin12300@gmail.com. Pay and start immediately. Unlimited re-training included.",
+    "source": "官网 FAQ"
+  },
+  {
+    "keywords_zh": ["登录", "学员登录", "我的学堂", "密码"],
+    "keywords_en": ["login", "sign in", "password", "student portal", "my classroom"],
+    "answer_zh": "学员登录：访问 snailai.ai/login.html，使用讲师提供的账号密码登录。首次登录后会要求修改密码。登录后进入「我的学堂」面板查看课程内容。忘记密码请联系助教或微信 luobinweixin8。",
+    "answer_en": "Student login: Visit snailai.ai/login.html with credentials provided by the instructor. You'll be asked to change your password on first login. After logging in, access 'My Classroom' for course content. For password reset, contact the TA or WeChat: luobinweixin8.",
+    "source": "官网学员门户"
+  },
+  {
+    "keywords_zh": ["复训", "重修", "再学", "复习"],
+    "keywords_en": ["retrain", "retake", "review", "re-enroll"],
+    "answer_zh": "蜗牛AI支持无限期复训。条件：做助教，好位置让给新学员。交一次学费，终身可回来听课。",
+    "answer_en": "Snail AI offers unlimited re-training. Condition: serve as a TA and give prime seats to new students. Pay once, retake forever.",
+    "source": "官网 FAQ"
+  },
+  {
+    "keywords_zh": ["课件", "课程资料", "下载课件", "课程材料"],
+    "keywords_en": ["course materials", "download", "slides", "handouts"],
+    "answer_zh": "登录学员门户后，在「我的学堂」可下载对应课程的课件和资料。课件也存放在Google云端硬盘，登录后可见下载链接。",
+    "answer_en": "After logging into the student portal, download course materials from 'My Classroom'. Materials are also hosted on Google Drive with download links visible after login.",
+    "source": "官网学员门户"
+  },
+  {
+    "keywords_zh": ["回放", "录播", "录像", "上课视频", "直播回放"],
+    "keywords_en": ["replay", "recording", "video", "playback", "livestream"],
+    "answer_zh": "线上课有直播回放，登录学员门户后可在课程页面观看。线下课不提供录像。",
+    "answer_en": "Online classes have replay recordings available in the student portal after login. Offline classes are not recorded.",
+    "source": "官网 FAQ"
+  },
+  {
+    "keywords_zh": ["联系", "客服", "微信", "邮箱", "电话", "联系方式"],
+    "keywords_en": ["contact", "support", "wechat", "email", "phone"],
+    "answer_zh": "联系方式：微信 luobinweixin8，邮箱 robin12300@gmail.com，电话 0417 993 551。办公室地址：Suite 404, 53 Walker Street, North Sydney, NSW 2060。",
+    "answer_en": "Contact: WeChat luobinweixin8, Email robin12300@gmail.com, Phone 0417 993 551. Office: Suite 404, 53 Walker Street, North Sydney, NSW 2060.",
+    "source": "官网联系我们"
+  },
+  {
+    "keywords_zh": ["蜗牛AI", "蜗牛", "什么机构", "培训机构", "培训机构介绍"],
+    "keywords_en": ["snail ai", "about", "introduction", "who", "what is"],
+    "answer_zh": "蜗牛AI专注澳洲华人AI应用教育。首创输出式教学，是澳大利亚最优质的华人AI应用培训机构，专门针对澳洲工作、生活等应用场景。创始人Robin Luo，办公室在North Sydney。",
+    "answer_en": "Snail AI focuses on AI application education for Chinese Australians. We pioneered output-based learning and are Australia's top Chinese AI application training provider, tailored for Australian work and life scenarios. Founded by Robin Luo, based in North Sydney.",
+    "source": "官网首页"
+  },
+  {
+    "keywords_zh": ["零基础", "小白", "不会编程", "没有基础", "新手"],
+    "keywords_en": ["beginner", "no experience", "zero base", "newbie", "no coding"],
+    "answer_zh": "蜗牛AI应用课特别适合零基础小白。输出式教学不需要从头学理论，任何时间入学直接上手，边做边学。",
+    "answer_en": "Snail AI courses are perfect for absolute beginners. Our output-based learning requires no prior theory — start hands-on immediately, learn by doing.",
+    "source": "官网首页"
+  },
+  {
+    "keywords_zh": ["讲师", "老师", "谁教", "Robin", "罗斌"],
+    "keywords_en": ["instructor", "teacher", "who teaches", "Robin"],
+    "answer_zh": "蜗牛AI由Robin Luo（罗斌）主讲。Robin是蜗牛AI创始人，专注AI应用教育，在悉尼North Sydney授课。",
+    "answer_en": "Snail AI is taught by Robin Luo, the founder, specializing in AI application education, based in North Sydney, Australia.",
+    "source": "官网首页"
+  },
+  {
+    "keywords_zh": ["上课地点", "地址", "在哪里上课", "校区"],
+    "keywords_en": ["location", "address", "where", "campus", "classroom"],
+    "answer_zh": "线下课地址：Suite 404, 53 Walker Street, North Sydney, NSW 2060。有免费停车指引。线上课通过Zoom直播。",
+    "answer_en": "Offline class location: Suite 404, 53 Walker Street, North Sydney, NSW 2060. Free parking guide available. Online classes are live via Zoom.",
+    "source": "官网联系我们"
+  }
+]

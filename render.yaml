@@ -22,5 +22,15 @@ services:
         value: "3.13"
       - key: WECHAT_WEBHOOK_URL
         sync: false
+      - key: YUANQI_APPKEY
+        sync: false
+      - key: YUANQI_APPID
+        sync: false
+      - key: CHAT_DAILY_BUDGET
+        value: "400"
+      - key: CHAT_MAX_CONCURRENT
+        value: "8"
+      - key: AI_TIMEOUT_SECONDS
+        value: "25"
 
 # deployed on Starter plan with persistent disk

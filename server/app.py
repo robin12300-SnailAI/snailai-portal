@@ -3658,6 +3658,10 @@ from grad_reg import bp as grad_reg_bp, init_grad_reg_db
 app.register_blueprint(grad_reg_bp)
 init_grad_reg_db()
 
+# ── 注册 AI 助教 Chat Routes ────────────────────────────
+from chat_api import register_chat_routes
+register_chat_routes(app)
+
 # ── 自动预填 owner_username（高置信匹配）────────────────
 # 规则：推荐人 name 包含 Portal 用户 name 或 username（不区分大小写），且该推荐码尚未认领。
 # 仅在启动时跑一次，已有 owner_username 的不覆盖。
