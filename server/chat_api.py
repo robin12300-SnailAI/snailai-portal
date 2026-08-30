@@ -332,7 +332,8 @@ def _call_yuanqi(question, lang):
 
     headers = {
         "Authorization": f"Bearer {YUANQI_APPKEY}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "X-Source": "openapi"
     }
 
     with _llm_semaphore:
