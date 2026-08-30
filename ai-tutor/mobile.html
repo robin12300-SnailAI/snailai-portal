@@ -129,15 +129,15 @@
   /* FLOATING BOT - mobile */
   .bot-fab {
     position: fixed; bottom: 18px; right: 18px; z-index: 999;
-    width: 50px; height: 50px; border-radius: 50%; border: none;
+    width: 54px; height: 54px; border-radius: 50%; border: 3px solid white;
     background: linear-gradient(135deg, var(--accent) 0%, #FF8C42 100%);
-    color: white; cursor: pointer;
+    color: white; cursor: pointer; overflow: hidden;
     box-shadow: 0 3px 16px rgba(255,91,31,0.35);
     display: flex; align-items: center; justify-content: center;
     transition: transform .3s cubic-bezier(.34,1.56,.64,1);
   }
   .bot-fab:active { transform: scale(0.9); }
-  .bot-fab svg { width: 26px; height: 26px; }
+  .bot-fab img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
   .bot-fab .pulse {
     position: absolute; width: 100%; height: 100%; border-radius: 50%;
     background: var(--accent); opacity: 0;
@@ -192,15 +192,7 @@
 
 <button class="bot-fab" onclick="window.scrollTo({top:0,behavior:'smooth'});document.getElementById('qInput').focus();">
   <span class="pulse"></span>
-  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="24" cy="18" r="14" fill="white" fill-opacity="0.2"/>
-    <circle cx="18" cy="16" r="2.5" fill="white"/>
-    <circle cx="30" cy="16" r="2.5" fill="white"/>
-    <path d="M18 23 C20 26 28 26 30 23" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
-    <path d="M17 6 L15 1" stroke="white" stroke-width="2" stroke-linecap="round"/>
-    <path d="M31 6 L33 1" stroke="white" stroke-width="2" stroke-linecap="round"/>
-    <rect x="18" y="32" width="12" height="6" rx="3" fill="white" fill-opacity="0.25"/>
-  </svg>
+  <img src="/assets/ai-tutor-bot.jpg" alt="AI Tutor" />
 </button>
 
 <script>
