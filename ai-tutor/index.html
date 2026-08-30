@@ -21,6 +21,7 @@
     --line: rgba(26,26,46,0.08);
     --shadow-sm: 0 1px 3px rgba(26,26,46,0.04), 0 2px 8px rgba(26,26,46,0.04);
     --shadow-md: 0 4px 16px rgba(26,26,46,0.08);
+    --shadow-lg: 0 8px 32px rgba(26,26,46,0.12);
     --r-md: 10px;
     --r-lg: 16px;
     --maxw: 820px;
@@ -57,113 +58,37 @@
 
   /* ===== HERO ===== */
   .hero {
-    max-width: var(--maxw); margin: 0 auto; padding: 56px 24px 32px; text-align: center;
+    max-width: var(--maxw); margin: 0 auto; padding: 80px 24px 60px; text-align: center;
   }
   .hero-tag {
     display: inline-block; font-size: 13px; font-weight: 700; color: var(--accent);
     background: var(--accent-light); padding: 6px 14px; border-radius: 100px; margin-bottom: 20px;
   }
   .hero h1 {
-    font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15;
+    font-size: 2.4rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15;
   }
   .hero h1 .accent { color: var(--accent); }
   .hero p {
     max-width: 560px; margin: 16px auto 0; color: var(--ink-3); font-size: 1.02rem;
   }
-
-  /* ===== CHAT CONTAINER ===== */
-  .chat-wrap {
-    max-width: 720px; margin: 0 auto; padding: 0 24px 100px;
+  .hero-hint {
+    margin-top: 32px;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    color: var(--accent); font-weight: 700; font-size: 15px;
+    animation: hint-bounce 2s ease-in-out infinite;
   }
-  .chat-box {
-    background: white; border: 1px solid var(--line); border-radius: var(--r-lg);
-    box-shadow: var(--shadow-md); overflow: hidden;
+  .hero-hint img {
+    width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
+    border: 2px solid var(--accent);
   }
-
-  /* Messages area */
-  .chat-messages {
-    min-height: 320px; max-height: 520px; overflow-y: auto;
-    padding: 24px 22px; display: flex; flex-direction: column; gap: 16px;
-  }
-  .chat-messages::-webkit-scrollbar { width: 4px; }
-  .chat-messages::-webkit-scrollbar-thumb { background: var(--paper-3); border-radius: 4px; }
-
-  .msg { max-width: 85%; }
-  .msg.user { align-self: flex-end; }
-  .msg.bot { align-self: flex-start; }
-
-  .msg .bubble {
-    padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.65;
-    white-space: pre-wrap; word-break: break-word;
-  }
-  .msg.user .bubble {
-    background: var(--ink); color: white; border-bottom-right-radius: 4px;
-  }
-  .msg.bot .bubble {
-    background: var(--paper-2); color: var(--ink); border-bottom-left-radius: 4px;
-  }
-  .msg .meta {
-    font-size: 11px; color: var(--ink-3); margin-top: 4px;
-  }
-  .msg.user .meta { text-align: right; }
-  .msg .refs {
-    font-size: 12px; color: var(--accent); margin-top: 6px; padding-top: 6px;
-    border-top: 1px solid var(--line);
-  }
-
-  /* Typing indicator */
-  .typing { display: flex; gap: 4px; padding: 12px 16px; }
-  .typing span {
-    width: 7px; height: 7px; background: var(--ink-3); border-radius: 50%;
-    animation: blink 1.2s infinite;
-  }
-  .typing span:nth-child(2) { animation-delay: 0.2s; }
-  .typing span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes blink {
-    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
-    40% { opacity: 1; transform: scale(1); }
-  }
-
-  /* Input area */
-  .chat-input {
-    display: flex; align-items: flex-end; gap: 10px;
-    padding: 14px 18px; border-top: 1px solid var(--line); background: var(--paper);
-  }
-  .chat-input textarea {
-    flex: 1; resize: none; border: 1px solid var(--paper-3); border-radius: 12px;
-    padding: 10px 14px; font-size: 14px; font-family: var(--font);
-    line-height: 1.5; max-height: 120px; outline: none;
-    transition: border-color .2s;
-  }
-  .chat-input textarea:focus { border-color: var(--accent); }
-  .chat-input button {
-    width: 42px; height: 42px; border-radius: 12px; border: none;
-    background: var(--accent); color: white; cursor: pointer; font-size: 18px;
-    display: flex; align-items: center; justify-content: center;
-    transition: background .2s, transform .1s;
-  }
-  .chat-input button:hover { background: var(--accent-2); }
-  .chat-input button:active { transform: scale(0.95); }
-  .chat-input button:disabled { background: var(--paper-3); cursor: not-allowed; }
-
-  /* Disclaimer */
-  .disclaimer {
-    text-align: center; font-size: 11px; color: var(--ink-3); padding: 10px 24px 0;
-  }
-
-  /* Error / status */
-  .chat-error {
-    padding: 12px 16px; background: #FEF2F2; color: #991B1B;
-    border-radius: 8px; font-size: 13px; margin: 8px 0;
-  }
-  .chat-status {
-    padding: 8px 16px; background: var(--accent-warm); color: var(--accent);
-    border-radius: 8px; font-size: 13px; text-align: center;
+  @keyframes hint-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
   }
 
   /* ===== FLOATING BOT (right-bottom) ===== */
   .bot-fab {
-    position: fixed; bottom: 28px; right: 28px; z-index: 999;
+    position: fixed; bottom: 28px; right: 28px; z-index: 10000;
     width: 64px; height: 64px; border-radius: 50%; border: 3px solid white;
     background: linear-gradient(135deg, var(--accent) 0%, #FF8C42 100%);
     color: white; cursor: pointer; overflow: hidden;
@@ -184,15 +109,147 @@
     0% { transform: scale(1); opacity: 0.4; }
     100% { transform: scale(1.8); opacity: 0; }
   }
+  /* Tooltip on hover */
+  .bot-fab .fab-tip {
+    position: absolute; right: 72px; top: 50%; transform: translateY(-50%);
+    background: var(--ink); color: white; font-size: 13px; font-weight: 600;
+    padding: 8px 14px; border-radius: 8px; white-space: nowrap;
+    opacity: 0; pointer-events: none; transition: opacity .2s;
+    box-shadow: var(--shadow-md);
+  }
+  .bot-fab .fab-tip::after {
+    content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%);
+    border: 6px solid transparent; border-left-color: var(--ink); border-right: none;
+  }
+  .bot-fab:hover .fab-tip { opacity: 1; }
+  .bot-fab.open .fab-tip { display: none; }
+
+  /* ===== CHAT POPUP WINDOW (draggable) ===== */
+  .chat-popup {
+    position: fixed; z-index: 9999;
+    width: 400px; height: 560px;
+    border-radius: var(--r-lg);
+    background: white;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-lg);
+    display: none; flex-direction: column;
+    overflow: hidden;
+    transition: opacity .2s, transform .2s;
+  }
+  .chat-popup.visible {
+    display: flex;
+    animation: popup-in .25s ease-out;
+  }
+  .chat-popup.closing {
+    animation: popup-out .2s ease-in forwards;
+  }
+  @keyframes popup-in {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes popup-out {
+    from { opacity: 1; transform: scale(1) translateY(0); }
+    to { opacity: 0; transform: scale(0.9) translateY(20px); }
+  }
+
+  /* Title bar (draggable handle) */
+  .chat-titlebar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, var(--accent) 0%, #FF8C42 100%);
+    color: white; cursor: grab; user-select: none;
+    flex-shrink: 0;
+  }
+  .chat-titlebar:active { cursor: grabbing; }
+  .chat-titlebar img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.4); }
+  .chat-titlebar .title-text { flex: 1; font-weight: 700; font-size: 14px; }
+  .chat-titlebar .title-sub { font-size: 11px; opacity: 0.8; }
+  .chat-titlebar button {
+    background: rgba(255,255,255,0.2); border: none; color: white; cursor: pointer;
+    width: 28px; height: 28px; border-radius: 50%; font-size: 16px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .chat-titlebar button:hover { background: rgba(255,255,255,0.35); }
+
+  /* Messages area */
+  .chat-messages {
+    flex: 1; overflow-y: auto;
+    padding: 18px 16px; display: flex; flex-direction: column; gap: 14px;
+    background: var(--paper);
+  }
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--paper-3); border-radius: 4px; }
+
+  .msg { max-width: 88%; }
+  .msg.user { align-self: flex-end; }
+  .msg.bot { align-self: flex-start; }
+  .msg .bubble {
+    padding: 11px 15px; border-radius: 14px; font-size: 13.5px; line-height: 1.65;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .msg.user .bubble {
+    background: var(--ink); color: white; border-bottom-right-radius: 4px;
+  }
+  .msg.bot .bubble {
+    background: white; color: var(--ink); border-bottom-left-radius: 4px;
+    border: 1px solid var(--line);
+  }
+  .msg .meta {
+    font-size: 10px; color: var(--ink-3); margin-top: 3px;
+  }
+  .msg.user .meta { text-align: right; }
+  .msg .refs {
+    font-size: 11.5px; color: var(--accent); margin-top: 5px; padding-top: 5px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* Typing indicator */
+  .typing { display: flex; gap: 4px; padding: 11px 15px; }
+  .typing span {
+    width: 6px; height: 6px; background: var(--ink-3); border-radius: 50%;
+    animation: blink 1.2s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  /* Input area */
+  .chat-input {
+    display: flex; align-items: flex-end; gap: 8px;
+    padding: 12px 14px; border-top: 1px solid var(--line); background: white;
+    flex-shrink: 0;
+  }
+  .chat-input textarea {
+    flex: 1; resize: none; border: 1px solid var(--paper-3); border-radius: 12px;
+    padding: 9px 13px; font-size: 13.5px; font-family: var(--font);
+    line-height: 1.5; max-height: 100px; outline: none;
+    transition: border-color .2s;
+  }
+  .chat-input textarea:focus { border-color: var(--accent); }
+  .chat-input button {
+    width: 40px; height: 40px; border-radius: 12px; border: none;
+    background: var(--accent); color: white; cursor: pointer; font-size: 17px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s, transform .1s;
+  }
+  .chat-input button:hover { background: var(--accent-2); }
+  .chat-input button:active { transform: scale(0.95); }
+  .chat-input button:disabled { background: var(--paper-3); cursor: not-allowed; }
+
+  /* Disclaimer */
+  .chat-disclaimer {
+    padding: 6px 14px; font-size: 10px; color: var(--ink-3); text-align: center;
+    background: var(--paper-2); border-top: 1px solid var(--line); flex-shrink: 0;
+  }
 
   /* ===== RESPONSIVE ===== */
   @media (max-width: 640px) {
     .hero h1 { font-size: 1.6rem; }
-    .chat-wrap { padding: 0 12px 80px; }
-    .chat-messages { min-height: 260px; padding: 16px 14px; }
-    .msg .bubble { font-size: 13px; padding: 10px 13px; }
-    .bot-fab { bottom: 20px; right: 20px; width: 52px; height: 52px; }
-    .bot-fab svg { width: 26px; height: 26px; }
+    .bot-fab { bottom: 20px; right: 20px; width: 54px; height: 54px; }
   }
 </style>
 </head>
@@ -201,7 +258,7 @@
 <!-- NAV -->
 <nav class="nav">
   <a href="/" class="nav-logo">
-    <img src="/assets/snailai_logo_v2.png" alt="SnailAI" />
+    <img src="/assets/snailai_logo.png" alt="SnailAI" />
     <span>蜗牛AI</span>
   </a>
   <div class="nav-links">
@@ -216,46 +273,60 @@
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- HERO (landing content, chat is in popup) -->
 <div class="hero">
   <div class="hero-tag" data-zh="AI 助教" data-en="AI Tutor">AI 助教</div>
   <h1 data-zh="有问题？<span class='accent'>问助教</span>" data-en="Questions? <span class='accent'>Ask the tutor</span>">有问题？<span class="accent">问助教</span></h1>
   <p data-zh="基于蜗牛AI课程知识库的AI问答助手，随时为你解答课程、学费、报名等问题。" data-en="AI Q&A assistant based on Snail AI course knowledge base. Ask about courses, fees, enrollment, and more.">基于蜗牛AI课程知识库的AI问答助手，随时为你解答课程、学费、报名等问题。</p>
-</div>
-
-<!-- CHAT -->
-<div class="chat-wrap">
-  <div class="chat-box">
-    <div class="chat-messages" id="messages">
-      <!-- Welcome message -->
-      <div class="msg bot">
-        <div class="bubble" data-zh="你好！我是蜗牛AI助教，可以回答课程、学费、报名、登录等问题。有什么想问的？" data-en="Hello! I'm the Snail AI tutor. I can answer questions about courses, fees, enrollment, and login. What would you like to know?">你好！我是蜗牛AI助教，可以回答课程、学费、报名、登录等问题。有什么想问的？</div>
-      </div>
-    </div>
-    <div class="chat-input">
-      <textarea id="qInput" rows="1" placeholder="输入你的问题…" data-zh-placeholder="输入你的问题…" data-en-placeholder="Type your question…" oninput="autoGrow(this)"></textarea>
-      <button id="sendBtn" onclick="sendQuestion()" aria-label="Send">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
-      </button>
-    </div>
+  <div class="hero-hint" data-zh="点右下角蜗蜗头开始提问" data-en="Click the bot at bottom-right to start">
+    <img src="/assets/ai-tutor-bot.jpg" alt="" />
+    <span data-zh="点右下角蜗蜗头开始提问 ↓" data-en="Click the bot at bottom-right ↓">点右下角蜗蜗头开始提问 ↓</span>
   </div>
-  <div class="disclaimer" data-zh="AI 助教仅基于蜗牛AI课程知识库回答，可能不完整，请以官方信息为准。" data-en="AI Tutor answers are based on Snail AI course knowledge base and may not be complete. Please verify with official sources.">AI 助教仅基于蜗牛AI课程知识库回答，可能不完整，请以官方信息为准。</div>
 </div>
 
 <!-- FLOATING BOT BUTTON -->
-<button class="bot-fab" onclick="window.scrollTo({top:0,behavior:'smooth'});document.getElementById('qInput').focus();">
+<button class="bot-fab" id="botFab" onclick="toggleChat()">
   <span class="pulse"></span>
   <img src="/assets/ai-tutor-bot.jpg" alt="AI Tutor" />
+  <span class="fab-tip" data-zh="有问题？问我呀 👋" data-en="Questions? Ask me 👋">有问题？问我呀 👋</span>
 </button>
+
+<!-- CHAT POPUP WINDOW -->
+<div class="chat-popup" id="chatPopup">
+  <div class="chat-titlebar" id="chatTitlebar">
+    <img src="/assets/ai-tutor-bot.jpg" alt="" />
+    <div>
+      <div class="title-text" data-zh="蜗牛AI助教" data-en="Snail AI Tutor">蜗牛AI助教</div>
+      <div class="title-sub" data-zh="随时为你解答" data-en="Always here to help">随时为你解答</div>
+    </div>
+    <button onclick="minimizeChat()" title="Minimize" aria-label="Minimize">—</button>
+    <button onclick="closeChat()" title="Close" aria-label="Close">✕</button>
+  </div>
+  <div class="chat-messages" id="messages">
+    <div class="msg bot">
+      <div class="bubble" data-zh="你好！我是蜗牛AI助教，可以回答课程、学费、报名、登录等问题。有什么想问的？" data-en="Hello! I'm the Snail AI tutor. I can answer questions about courses, fees, enrollment, and login. What would you like to know?">你好！我是蜗牛AI助教，可以回答课程、学费、报名、登录等问题。有什么想问的？</div>
+    </div>
+  </div>
+  <div class="chat-input">
+    <textarea id="qInput" rows="1" placeholder="输入你的问题…" data-zh-placeholder="输入你的问题…" data-en-placeholder="Type your question…" oninput="autoGrow(this)"></textarea>
+    <button id="sendBtn" onclick="sendQuestion()" aria-label="Send">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+    </button>
+  </div>
+  <div class="chat-disclaimer" data-zh="AI 助教仅基于蜗牛AI课程知识库回答，可能不完整，请以官方信息为准。" data-en="AI Tutor answers based on course knowledge base. Verify with official sources.">AI 助教仅基于蜗牛AI课程知识库回答，可能不完整，请以官方信息为准。</div>
+</div>
 
 <script>
 (function() {
-  const savedLang = localStorage.getItem('snailai-lang') || 'zh';
-  const msgArea = document.getElementById('messages');
-  const qInput = document.getElementById('qInput');
-  const sendBtn = document.getElementById('sendBtn');
-  let sending = false;
+  var savedLang = localStorage.getItem('snailai-lang') || 'zh';
+  var popup = document.getElementById('chatPopup');
+  var fab = document.getElementById('botFab');
+  var msgArea = document.getElementById('messages');
+  var qInput = document.getElementById('qInput');
+  var sendBtn = document.getElementById('sendBtn');
+  var sending = false;
 
+  // ── Language ──
   function setLang(lang) {
     document.querySelectorAll('[data-zh]').forEach(function(el) {
       if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') return;
@@ -270,12 +341,124 @@
     });
     localStorage.setItem('snailai-lang', lang);
   }
-
   document.querySelectorAll('.lang-btn').forEach(function(b) {
     b.addEventListener('click', function() { setLang(b.dataset.lang); });
   });
   setLang(savedLang);
 
+  // ── Popup open/close ──
+  window.toggleChat = function() {
+    if (popup.classList.contains('visible')) {
+      closeChat();
+    } else {
+      openChat();
+    }
+  };
+
+  function openChat() {
+    // Restore position from localStorage
+    var pos = localStorage.getItem('snailai-chat-pos');
+    if (pos) {
+      try { var p = JSON.parse(pos); popup.style.left = p.x + 'px'; popup.style.top = p.y + 'px'; }
+      catch(e) { defaultPos(); }
+    } else {
+      defaultPos();
+    }
+    popup.classList.remove('closing');
+    popup.classList.add('visible');
+    fab.classList.add('open');
+    qInput.focus();
+  }
+
+  function defaultPos() {
+    var w = window.innerWidth, h = window.innerHeight;
+    popup.style.left = Math.max(10, w - 420) + 'px';
+    popup.style.top = Math.max(10, h - 600) + 'px';
+  }
+
+  window.closeChat = function() {
+    popup.classList.add('closing');
+    fab.classList.remove('open');
+    setTimeout(function() {
+      popup.classList.remove('visible', 'closing');
+    }, 200);
+  };
+
+  window.minimizeChat = function() {
+    popup.classList.add('closing');
+    fab.classList.remove('open');
+    setTimeout(function() {
+      popup.classList.remove('visible', 'closing');
+    }, 200);
+  };
+
+  // ── Dragging ──
+  var titlebar = document.getElementById('chatTitlebar');
+  var dragging = false, dragX = 0, dragY = 0;
+
+  titlebar.addEventListener('mousedown', function(e) {
+    if (e.target.tagName === 'BUTTON') return;
+    dragging = true;
+    var rect = popup.getBoundingClientRect();
+    dragX = e.clientX - rect.left;
+    dragY = e.clientY - rect.top;
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', function(e) {
+    if (!dragging) return;
+    var x = e.clientX - dragX;
+    var y = e.clientY - dragY;
+    // Keep within viewport
+    x = Math.max(0, Math.min(x, window.innerWidth - popup.offsetWidth));
+    y = Math.max(0, Math.min(y, window.innerHeight - popup.offsetHeight));
+    popup.style.left = x + 'px';
+    popup.style.top = y + 'px';
+  });
+
+  document.addEventListener('mouseup', function() {
+    if (dragging) {
+      dragging = false;
+      // Save position
+      localStorage.setItem('snailai-chat-pos', JSON.stringify({
+        x: parseInt(popup.style.left),
+        y: parseInt(popup.style.top)
+      }));
+    }
+  });
+
+  // Touch drag for mobile
+  titlebar.addEventListener('touchstart', function(e) {
+    if (e.target.tagName === 'BUTTON') return;
+    dragging = true;
+    var touch = e.touches[0];
+    var rect = popup.getBoundingClientRect();
+    dragX = touch.clientX - rect.left;
+    dragY = touch.clientY - rect.top;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function(e) {
+    if (!dragging) return;
+    var touch = e.touches[0];
+    var x = touch.clientX - dragX;
+    var y = touch.clientY - dragY;
+    x = Math.max(0, Math.min(x, window.innerWidth - popup.offsetWidth));
+    y = Math.max(0, Math.min(y, window.innerHeight - popup.offsetHeight));
+    popup.style.left = x + 'px';
+    popup.style.top = y + 'px';
+  }, { passive: true });
+
+  document.addEventListener('touchend', function() {
+    if (dragging) {
+      dragging = false;
+      localStorage.setItem('snailai-chat-pos', JSON.stringify({
+        x: parseInt(popup.style.left),
+        y: parseInt(popup.style.top)
+      }));
+    }
+  });
+
+  // ── Chat logic ──
   function esc(s) {
     var d = document.createElement('div');
     d.textContent = s;
@@ -315,7 +498,7 @@
 
   window.autoGrow = function(el) {
     el.style.height = 'auto';
-    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+    el.style.height = Math.min(el.scrollHeight, 100) + 'px';
   };
 
   window.sendQuestion = function() {
@@ -372,6 +555,12 @@
       sendQuestion();
     }
   });
+
+  // ── Auto-open on this page (first visit) ──
+  var autoOpened = sessionStorage.getItem('snailai-chat-auto');
+  if (!autoOpened) {
+    setTimeout(function() { openChat(); sessionStorage.setItem('snailai-chat-auto', '1'); }, 800);
+  }
 })();
 </script>
 
