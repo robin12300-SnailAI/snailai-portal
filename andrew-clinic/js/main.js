@@ -395,6 +395,27 @@
   }
 
   /* ====================================================
+   * V3.2 — Version badge
+   * Fetch version.json and populate #navVersion + footer pill
+   * ==================================================== */
+  function initVersionBadge() {
+    fetch('version.json')
+      .then(r => r.json())
+      .then(data => {
+        const v = 'V' + data.version;
+        const navPill = document.getElementById('navVersion');
+        if (navPill) navPill.textContent = v;
+        document.querySelectorAll('.footer-version-pill').forEach(el => {
+          el.textContent = v;
+        });
+      })
+      .catch(() => {
+        const navPill = document.getElementById('navVersion');
+        if (navPill) navPill.textContent = '';
+      });
+  }
+
+  /* ====================================================
    * Init
    * ==================================================== */
   function init() {
@@ -409,6 +430,7 @@
     initTestimonials();
     initInstagram();
     initServicesCarousel();
+    initVersionBadge();
   }
 
   if (document.readyState === 'loading') {

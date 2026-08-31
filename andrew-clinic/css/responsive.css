@@ -72,9 +72,10 @@
   .journey-grid { grid-template-columns: 1fr; gap: 32px; }
   .journey-image { aspect-ratio: 16 / 10; }
 
-  /* Nav: only logo + burger */
+  /* Nav: only logo + burger + version pill */
   .nav-left, .nav-right > .nav-link, .nav-right > .nav-lang, .nav-right > .nav-cta { display: none; }
   .nav-burger { display: flex; }
+  .nav-version-pill { margin-right: 0; font-size: 0.55rem; padding: 2px 7px; }
   .nav-container { height: 64px; }
   .nav-logo { margin: 0 auto; }
   .nav-right { justify-content: flex-end; }
