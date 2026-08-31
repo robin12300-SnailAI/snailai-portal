@@ -180,11 +180,17 @@
     items.forEach(item => {
       const btn = item.querySelector('.faq-question');
       if (!btn) return;
+      // Ensure initial aria-expanded matches DOM state
+      btn.setAttribute('aria-expanded', item.classList.contains('is-open') ? 'true' : 'false');
       btn.addEventListener('click', () => {
         const isOpen = item.classList.contains('is-open');
         // Close all others (single-open mode)
         items.forEach(other => {
-          if (other !== item) other.classList.remove('is-open');
+          if (other !== item) {
+            other.classList.remove('is-open');
+            const otherBtn = other.querySelector('.faq-question');
+            if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+          }
         });
         if (isOpen) {
           item.classList.remove('is-open');

@@ -11,8 +11,111 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- JSON-LD: MedicalClinic -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MedicalClinic",
+    "name": "SKIN CANCER LASER CENTRE",
+    "description": "Comprehensive skin cancer screening & advanced pico laser treatments in Sydney. Performed by licensed medical providers.",
+    "url": "https://andrew.snailai.ai",
+    "telephone": "+61 2 8000 0000",
+    "email": "contact@skincancerlasercentre.com.au",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Suite 12, 200 Pacific Highway",
+      "addressLocality": "Sydney",
+      "addressRegion": "NSW",
+      "postalCode": "2060",
+      "addressCountry": "AU"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -33.8397,
+      "longitude": 151.1867
+    },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "09:00", "closes": "18:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "15:00" }
+    ],
+    "medicalSpecialty": ["Dermatology","SkinCancerMedicine","LaserMedicine"],
+    "availableService": [
+      { "@type": "MedicalProcedure", "name": "Full Body Skin Check" },
+      { "@type": "MedicalProcedure", "name": "Pico Laser Treatment" },
+      { "@type": "MedicalProcedure", "name": "Photodynamic Therapy (PDT)" },
+      { "@type": "MedicalProcedure", "name": "VISIA Skin Analysis" }
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "200"
+    }
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Do I need a referral to see a doctor at SCLC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No referral is required. You can book directly online or call our clinic to schedule a skin check, pico laser consultation, or PDT treatment with our team."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What should I expect on my first visit?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Please arrive 10 minutes early to complete your patient registration form. Bring your Medicare card and any relevant medical records or referral letters."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long does a full body skin check take?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A full body skin check typically takes 20–30 minutes. Dr Li uses dermoscopy for high-accuracy assessment of moles and skin lesions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What payment methods do you accept?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We accept EFTPOS, Visa, Mastercard, AMEX, cash, and HICAPS for instant private health fund rebates on eligible services. Medicare rebates apply to certain skin cancer treatments."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are the Pico Laser treatments painful?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most patients describe Pico Laser as a mild snapping sensation. We use a cooling device and topical anaesthetic to ensure your comfort. Downtime is minimal."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I book an appointment?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Click the BOOK NOW button in the navigation, or call us directly. You can also walk in to book your next visit after any consultation."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
+
+<!-- Skip to main content (a11y) -->
+<a href="#main-content" class="skip-link" data-en="Skip to main content" data-zh="跳转到主要内容">Skip to main content</a>
 
 <!-- Page Loading -->
 <div class="page-loading" id="pageLoading">
@@ -23,7 +126,7 @@
 <div class="scroll-progress" id="scrollProgress"><span></span></div>
 
 <!-- ========== NAVBAR ========== -->
-<nav class="navbar" id="navbar">
+<nav class="navbar" id="navbar" aria-label="Main navigation">
   <div class="container nav-container">
     <!-- Version pill -->
     <span class="nav-version-pill" id="navVersion"></span>
@@ -61,7 +164,7 @@
   </div>
 </nav>
 
-<main>
+<main role="main" id="main-content">
 
 <!-- ========== HERO ========== -->
 <section class="hero" id="hero">
@@ -355,11 +458,11 @@
     <h2 class="section-title section-title--italic section-title--center section-title--on-dark" data-en="SKIN THAT GLOWS" data-zh="肌肤焕发新生">SKIN THAT GLOWS</h2>
     <a href="#schedule" class="btn btn-on-dark" data-en="VIEW BEFORE + AFTER PHOTOS" data-zh="查看治疗前后对比">VIEW BEFORE + AFTER PHOTOS</a>
     <div class="skin-glows-thumbs">
-      <div class="skin-glows-thumb reveal"><img src="images/case-pigmentation.jpg" alt="" loading="eager"></div>
-      <div class="skin-glows-thumb reveal" data-reveal-delay="100"><img src="images/case-melasma.jpg" alt="" loading="eager"></div>
-      <div class="skin-glows-thumb reveal" data-reveal-delay="200"><img src="images/case-actinic-keratosis.jpg" alt="" loading="eager"></div>
-      <div class="skin-glows-thumb reveal" data-reveal-delay="300"><img src="images/case-scar.jpg" alt="" loading="eager"></div>
-      <div class="skin-glows-thumb reveal" data-reveal-delay="400"><img src="images/case-melasma-hands.jpg" alt="" loading="eager"></div>
+      <div class="skin-glows-thumb reveal"><img src="images/case-pigmentation.jpg" alt="Pigmentation treatment before and after" loading="eager"></div>
+      <div class="skin-glows-thumb reveal" data-reveal-delay="100"><img src="images/case-melasma.jpg" alt="Melasma treatment before and after" loading="eager"></div>
+      <div class="skin-glows-thumb reveal" data-reveal-delay="200"><img src="images/case-actinic-keratosis.jpg" alt="Actinic keratosis treatment before and after" loading="eager"></div>
+      <div class="skin-glows-thumb reveal" data-reveal-delay="300"><img src="images/case-scar.jpg" alt="Scar revision before and after" loading="eager"></div>
+      <div class="skin-glows-thumb reveal" data-reveal-delay="400"><img src="images/case-melasma-hands.jpg" alt="Hand melasma treatment before and after" loading="eager"></div>
     </div>
   </div>
 </section>
@@ -458,7 +561,7 @@ Dr Li has also pursued further studies specific to Skin Cancer Medicine. He succ
         </div>
       </div>
       <div class="testimonial-image reveal" data-reveal-delay="200">
-        <img src="images/insta-reception.jpg" alt="" loading="eager">
+        <img src="images/insta-reception.jpg" alt="Clinic reception area" loading="eager">
       </div>
     </div>
   </div>
@@ -479,56 +582,56 @@ Dr Li has also pursued further studies specific to Skin Cancer Medicine. He succ
     <h2 class="section-title section-title--center reveal" data-en="Skin clinic questions, answered" data-zh="皮肤诊所常见问题解答">Skin clinic questions, answered</h2>
     <div class="faq-list reveal" data-reveal-delay="100">
       <div class="faq-item">
-        <button class="faq-question">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-a1">
           <span data-en="Do I need a referral to see a doctor at SCLC?" data-zh="我需要转诊才能到 SCLC 看医生吗？">Do I need a referral to see a doctor at SCLC?</span>
-          <span class="faq-icon">+</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
         </button>
-        <div class="faq-answer">
+        <div class="faq-answer" id="faq-a1" role="region">
           <p data-en="No referral is required. You can book directly online or call our clinic to schedule a skin check, pico laser consultation, or PDT treatment with our team." data-zh="不需要转诊。您可以直接在线预约或致电诊所，与我们的团队安排皮肤检查、皮秒激光咨询或 PDT 治疗。">No referral is required. You can book directly online or call our clinic to schedule a skin check, pico laser consultation, or PDT treatment with our team.</p>
         </div>
       </div>
       <div class="faq-item">
-        <button class="faq-question">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-a2">
           <span data-en="What should I expect on my first visit?" data-zh="第一次到访我应该准备什么？">What should I expect on my first visit?</span>
-          <span class="faq-icon">+</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
         </button>
-        <div class="faq-answer">
+        <div class="faq-answer" id="faq-a2" role="region">
           <p data-en="Please arrive 10 minutes early to complete your patient registration form. Bring your Medicare card and any relevant medical records or referral letters. Our doctor will perform a thorough assessment and discuss your treatment plan." data-zh="请提前 10 分钟到达以完成患者登记表。请携带您的 Medicare 卡和任何相关的医疗记录或转诊信。我们的医生将进行彻底评估并与您讨论治疗方案。">Please arrive 10 minutes early to complete your patient registration form. Bring your Medicare card and any relevant medical records or referral letters. Our doctor will perform a thorough assessment and discuss your treatment plan.</p>
         </div>
       </div>
       <div class="faq-item">
-        <button class="faq-question">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-a3">
           <span data-en="How long does a full body skin check take?" data-zh="全身皮肤检查需要多长时间？">How long does a full body skin check take?</span>
-          <span class="faq-icon">+</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
         </button>
-        <div class="faq-answer">
+        <div class="faq-answer" id="faq-a3" role="region">
           <p data-en="A full body skin check typically takes 20–30 minutes. Dr Li uses dermoscopy for high-accuracy assessment of moles and skin lesions. If any suspicious lesions are found, treatment options will be discussed on the same visit." data-zh="全身皮肤检查通常需要 20-30 分钟。李医生使用皮肤镜对痣和皮肤病变进行高精度评估。如果发现可疑病变，将在同次就诊中讨论治疗方案。">A full body skin check typically takes 20–30 minutes. Dr Li uses dermoscopy for high-accuracy assessment of moles and skin lesions. If any suspicious lesions are found, treatment options will be discussed on the same visit.</p>
         </div>
       </div>
       <div class="faq-item">
-        <button class="faq-question">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-a4">
           <span data-en="What payment methods do you accept?" data-zh="诊所接受哪些支付方式？">What payment methods do you accept?</span>
-          <span class="faq-icon">+</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
         </button>
-        <div class="faq-answer">
+        <div class="faq-answer" id="faq-a4" role="region">
           <p data-en="We accept EFTPOS, Visa, Mastercard, AMEX, cash, and HICAPS for instant private health fund rebates on eligible services. Medicare rebates apply to certain skin cancer treatments." data-zh="我们接受 EFTPOS、Visa、Mastercard、AMEX、现金，以及 HICAPS 即时私人健康基金报销（适用于合资格服务）。Medicare 报销适用于某些皮肤癌治疗。">We accept EFTPOS, Visa, Mastercard, AMEX, cash, and HICAPS for instant private health fund rebates on eligible services. Medicare rebates apply to certain skin cancer treatments.</p>
         </div>
       </div>
       <div class="faq-item">
-        <button class="faq-question">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-a5">
           <span data-en="Are the Pico Laser treatments painful?" data-zh="皮秒激光治疗痛吗？">Are the Pico Laser treatments painful?</span>
-          <span class="faq-icon">+</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
         </button>
-        <div class="faq-answer">
+        <div class="faq-answer" id="faq-a5" role="region">
           <p data-en="Most patients describe Pico Laser as a mild snapping sensation. We use a cooling device and topical anaesthetic to ensure your comfort. Downtime is minimal — most patients return to normal activities the same day." data-zh="大多数患者形容皮秒激光像轻微的弹击感。我们使用冷却设备和表面麻醉以确保您的舒适度。恢复期极短 — 大多数患者当天即可恢复正常活动。">Most patients describe Pico Laser as a mild snapping sensation. We use a cooling device and topical anaesthetic to ensure your comfort. Downtime is minimal — most patients return to normal activities the same day.</p>
         </div>
       </div>
       <div class="faq-item">
-        <button class="faq-question">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-a6">
           <span data-en="How do I book an appointment?" data-zh="我如何预约？">How do I book an appointment?</span>
-          <span class="faq-icon">+</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
         </button>
-        <div class="faq-answer">
+        <div class="faq-answer" id="faq-a6" role="region">
           <p data-en="Click the BOOK NOW button in the navigation, or call us directly. You can also walk in to book your next visit after any consultation." data-zh="点击导航栏的 BOOK NOW 按钮，或直接致电我们。您也可以在任何咨询后亲自到访预约下次复诊。">Click the BOOK NOW button in the navigation, or call us directly. You can also walk in to book your next visit after any consultation.</p>
         </div>
       </div>
@@ -616,7 +719,7 @@ Dr Li has also pursued further studies specific to Skin Cancer Medicine. He succ
 <!-- ========== FOOTER ========== -->
 <footer class="footer">
   <div class="container">
-    <nav class="footer-nav">
+    <nav class="footer-nav" aria-label="Footer navigation">
       <a href="#services" data-en="SERVICES" data-zh="服务">SERVICES</a>
       <a href="#team" data-en="DOCTORS" data-zh="医生">DOCTORS</a>
       <a href="#about" data-en="ABOUT" data-zh="关于">ABOUT</a>

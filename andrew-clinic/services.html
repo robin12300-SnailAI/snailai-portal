@@ -43,9 +43,203 @@
   </div>
 </section>
 
-<section class="section">
+<section class="section svc-list-section">
   <div class="container">
-    <div class="service-grid" id="servicesGrid"></div>
+    <!-- Category nav pills -->
+    <div class="svc-cat-nav" role="tablist" aria-label="Service categories">
+      <button class="svc-cat-pill is-active" data-cat="skin-cancer" role="tab" aria-selected="true" data-en="Skin Cancer" data-zh="皮肤癌">Skin Cancer</button>
+      <button class="svc-cat-pill" data-cat="pico-laser" role="tab" aria-selected="false" data-en="Pico Laser" data-zh="皮秒激光">Pico Laser</button>
+      <button class="svc-cat-pill" data-cat="pdt" role="tab" aria-selected="false" data-en="Light-Activated Therapy" data-zh="光激活疗法">Light-Activated Therapy</button>
+      <button class="svc-cat-pill" data-cat="skin-analysis" role="tab" aria-selected="false" data-en="Skin Analysis" data-zh="皮肤分析">Skin Analysis</button>
+    </div>
+
+    <!-- Category: Skin Cancer -->
+    <div class="svc-cat-group is-active" id="cat-skin-cancer" role="tabpanel" aria-label="Skin Cancer services">
+      <h2 class="svc-cat-title" data-en="Skin Cancer" data-zh="皮肤癌">Skin Cancer</h2>
+      <div class="svc-cat-grid">
+        <a href="service-detail.html?id=skc-check" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-sc-check.jpg');">
+            <span class="svc-card-pill" data-en="SKIN CANCER" data-zh="皮肤癌">SKIN CANCER</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Full Body Skin Check" data-zh="全身皮肤检查">Full Body Skin Check</h3>
+            <p data-en="Early detection saves lives. Comprehensive dermoscopy exam." data-zh="早发现拯救生命。全面的皮肤镜检查。">Early detection saves lives. Comprehensive dermoscopy exam.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+        <a href="service-detail.html?id=skc-treat" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-sc-treatment.jpg');">
+            <span class="svc-card-pill" data-en="SKIN CANCER" data-zh="皮肤癌">SKIN CANCER</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Skin Cancer Treatment" data-zh="皮肤癌治疗">Skin Cancer Treatment</h3>
+            <p data-en="Surgical and non-surgical options for all skin cancer types." data-zh="针对所有皮肤癌类型的手术与非手术治疗。">Surgical and non-surgical options for all skin cancer types.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+        <a href="service-detail.html?id=skc-mole" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-sc-mole.jpg');">
+            <span class="svc-card-pill" data-en="SKIN CANCER" data-zh="皮肤癌">SKIN CANCER</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Mole Mapping" data-zh="痣图谱检查">Mole Mapping</h3>
+            <p data-en="Track changes in moles over time with digital imaging." data-zh="通过数字成像追踪痣的变化。">Track changes in moles over time with digital imaging.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+        <a href="service-detail.html?id=skc-derm" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-sc-dermoscopy.jpg');">
+            <span class="svc-card-pill" data-en="SKIN CANCER" data-zh="皮肤癌">SKIN CANCER</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Dermoscopy" data-zh="皮肤镜检查">Dermoscopy</h3>
+            <p data-en="High-magnification analysis for accurate lesion assessment." data-zh="高倍放大分析，精准评估病变。">High-magnification analysis for accurate lesion assessment.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Category: Pico Laser -->
+    <div class="svc-cat-group" id="cat-pico-laser" role="tabpanel" aria-label="Pico Laser services">
+      <h2 class="svc-cat-title" data-en="Pico Laser" data-zh="皮秒激光">Pico Laser</h2>
+      <div class="svc-cat-grid">
+        <a href="service-detail.html?id=pico-pig" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-pico-pigment.jpg');">
+            <span class="svc-card-pill" data-en="PICO LASER" data-zh="皮秒激光">PICO LASER</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Pigmentation Removal" data-zh="色素沉着去除">Pigmentation Removal</h3>
+            <p data-en="Ultra-short pulses shatter pigment for faster clearance." data-zh="超短脉冲粉碎色素，更快清除。">Ultra-short pulses shatter pigment for faster clearance.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+        <a href="service-detail.html?id=pico-mel" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-pico-melasma.jpg');">
+            <span class="svc-card-pill" data-en="PICO LASER" data-zh="皮秒激光">PICO LASER</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Melasma Treatment" data-zh="黄褐斑治疗">Melasma Treatment</h3>
+            <p data-en="Targeted approach for hormonal and sun-induced melasma." data-zh="针对荷尔蒙和日晒引起的黄褐斑。">Targeted approach for hormonal and sun-induced melasma.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+        <a href="service-detail.html?id=pico-scar" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-pico-scar.jpg');">
+            <span class="svc-card-pill" data-en="PICO LASER" data-zh="皮秒激光">PICO LASER</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Scar Revision" data-zh="疤痕修复">Scar Revision</h3>
+            <p data-en="Stimulate collagen to improve acne and surgical scars." data-zh="刺激胶原蛋白改善痤疮和手术疤痕。">Stimulate collagen to improve acne and surgical scars.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+        <a href="service-detail.html?id=pico-rej" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-pico-rejuv.jpg');">
+            <span class="svc-card-pill" data-en="PICO LASER" data-zh="皮秒激光">PICO LASER</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Skin Rejuvenation" data-zh="皮肤年轻化">Skin Rejuvenation</h3>
+            <p data-en="Full-face revitalisation for smoother, brighter skin." data-zh="全面部焕新，打造更光滑、更明亮的肌肤。">Full-face revitalisation for smoother, brighter skin.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Category: Light-Activated Therapy -->
+    <div class="svc-cat-group" id="cat-pdt" role="tabpanel" aria-label="Light-Activated Therapy services">
+      <h2 class="svc-cat-title" data-en="Light-Activated Therapy" data-zh="光激活疗法">Light-Activated Therapy</h2>
+      <div class="svc-cat-grid">
+        <a href="service-detail.html?id=pdt-ak" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-pdt-ak.jpg');">
+            <span class="svc-card-pill" data-en="PDT THERAPY" data-zh="PDT 疗法">PDT THERAPY</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Actinic Keratosis PDT" data-zh="光化性角化病 PDT">Actinic Keratosis PDT</h3>
+            <p data-en="Non-surgical treatment for pre-cancerous lesions." data-zh="癌前病变的非手术治疗。">Non-surgical treatment for pre-cancerous lesions.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+        <a href="service-detail.html?id=pdt-rej" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-pdt-rejuv.jpg');">
+            <span class="svc-card-pill" data-en="PDT THERAPY" data-zh="PDT 疗法">PDT THERAPY</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Skin Rejuvenation PDT" data-zh="皮肤年轻化 PDT">Skin Rejuvenation PDT</h3>
+            <p data-en="Light-activated renewal for sun-damaged skin." data-zh="光激活焕新，修复日光损伤皮肤。">Light-activated renewal for sun-damaged skin.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+        <a href="service-detail.html?id=pdt-acne" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-pdt-acne.jpg');">
+            <span class="svc-card-pill" data-en="PDT THERAPY" data-zh="PDT 疗法">PDT THERAPY</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Acne PDT" data-zh="痤疮 PDT">Acne PDT</h3>
+            <p data-en="Effective for moderate to severe acne with minimal downtime." data-zh="对中重度痤疮有效，恢复期短。">Effective for moderate to severe acne with minimal downtime.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+        <a href="service-detail.html?id=pdt-sun" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-pdt-sun.jpg');">
+            <span class="svc-card-pill" data-en="PDT THERAPY" data-zh="PDT 疗法">PDT THERAPY</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Sun-Damage Repair" data-zh="日光损伤修复">Sun-Damage Repair</h3>
+            <p data-en="Reverse cumulative UV damage with photodynamic therapy." data-zh="用光动力疗法逆转累积性紫外线损伤。">Reverse cumulative UV damage with photodynamic therapy.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Category: Skin Analysis -->
+    <div class="svc-cat-group" id="cat-skin-analysis" role="tabpanel" aria-label="Skin Analysis services">
+      <h2 class="svc-cat-title" data-en="Skin Analysis" data-zh="皮肤分析">Skin Analysis</h2>
+      <div class="svc-cat-grid">
+        <a href="service-detail.html?id=visia" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-visia.jpg');">
+            <span class="svc-card-pill" data-en="VISIA CONSULT" data-zh="VISIA 咨询">VISIA CONSULT</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="VISIA Skin Analysis" data-zh="VISIA 皮肤分析">VISIA Skin Analysis</h3>
+            <p data-en="Multi-spectral digital assessment for personalised treatment." data-zh="多光谱数字评估，制定个性化方案。">Multi-spectral digital assessment for personalised treatment.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+        <a href="service-detail.html?id=fracrevive" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-fracrevive.jpg');">
+            <span class="svc-card-pill" data-en="DERMAL ENHANCEMENT" data-zh="皮肤增强">DERMAL ENHANCEMENT</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="FracRevive® Resurfacing" data-zh="FracRevive® 焕肤">FracRevive® Resurfacing</h3>
+            <p data-en="Fractional Nd:YAG laser for texture and firmness." data-zh="点阵 Nd:YAG 激光改善质地与紧致度。">Fractional Nd:YAG laser for texture and firmness.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+        <a href="service-detail.html?id=healite" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-healite.jpg');">
+            <span class="svc-card-pill" data-en="DERMAL ENHANCEMENT" data-zh="皮肤增强">DERMAL ENHANCEMENT</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Healite LED Therapy" data-zh="Healite LED 光疗">Healite LED Therapy</h3>
+            <p data-en="Painless LED phototherapy for healing and rejuvenation." data-zh="无痛 LED 光疗，促进愈合与焕新。">Painless LED phototherapy for healing and rejuvenation.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+        <a href="service-detail.html?id=wellness" class="svc-card">
+          <div class="svc-card-img" style="background-image:url('images/svc-wellness.jpg');">
+            <span class="svc-card-pill" data-en="WELLNESS" data-zh="健康保健">WELLNESS</span>
+          </div>
+          <div class="svc-card-body">
+            <h3 data-en="Skin Wellness Plan" data-zh="皮肤健康方案">Skin Wellness Plan</h3>
+            <p data-en="Ongoing personalised plan for long-term skin health." data-zh="持续个性化方案，维护长期皮肤健康。">Ongoing personalised plan for long-term skin health.</p>
+            <span class="svc-card-cta" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
+          </div>
+        </a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -91,27 +285,22 @@
   </div>
 </footer>
 
-<script src="js/services-data.js"></script>
 <script src="js/i18n.js"></script>
 <script>
-// Dynamically render all services
+// Category tab switching
 (function() {
-  const grid = document.getElementById('servicesGrid');
-  const order = ['skin-cancer-check','skin-analysis','pdt','dermal-enhancement','pico-laser','healite-ii','wrinkles-pores','uv-brown-spots','spots','acne'];
-  order.forEach(id => {
-    const s = SERVICES_DATA[id];
-    if (!s) return;
-    grid.innerHTML += `
-      <a href="service-detail.html?id=${id}" class="service-card">
-        <div class="service-card-img" style="background:linear-gradient(135deg,${s.color},#fff);display:flex;align-items:center;justify-content:center;">
-          ${s.icon}
-        </div>
-        <div class="service-card-body">
-          <h3 data-en="${s.title.en}" data-zh="${s.title.zh}">${s.title.en}</h3>
-          <p data-en="${s.subtitle.en}" data-zh="${s.subtitle.zh}">${s.subtitle.en}</p>
-          <span class="learn-more" data-en="Learn More →" data-zh="了解更多 →">Learn More →</span>
-        </div>
-      </a>`;
+  const pills = document.querySelectorAll('.svc-cat-pill');
+  const groups = document.querySelectorAll('.svc-cat-group');
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      const cat = pill.dataset.cat;
+      pills.forEach(p => { p.classList.remove('is-active'); p.setAttribute('aria-selected', 'false'); });
+      pill.classList.add('is-active');
+      pill.setAttribute('aria-selected', 'true');
+      groups.forEach(g => g.classList.remove('is-active'));
+      const target = document.getElementById('cat-' + cat);
+      if (target) target.classList.add('is-active');
+    });
   });
 })();
 </script>

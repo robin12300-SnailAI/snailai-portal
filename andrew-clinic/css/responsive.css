@@ -139,6 +139,11 @@
 
   /* Back to top */
   .back-to-top { right: 16px; bottom: 16px; width: 40px; height: 40px; }
+
+  /* Services list page */
+  .svc-cat-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .svc-cat-nav { gap: 6px; margin-bottom: 32px; }
+  .svc-cat-pill { padding: 8px 14px; font-size: 0.65rem; }
 }
 
 /* ============================================
@@ -153,4 +158,8 @@
   .italic-quote { font-size: 1.2rem; }
   .summary-text { font-size: 1.2rem; }
   .schedule-title { font-size: 1.5rem; }
+
+  /* Services list page — single column */
+  .svc-cat-grid { grid-template-columns: 1fr; gap: 14px; }
+  .svc-cat-pill { padding: 7px 10px; font-size: 0.6rem; letter-spacing: 0.1em; }
 }
