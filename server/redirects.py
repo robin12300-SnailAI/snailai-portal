@@ -84,7 +84,10 @@ REDIRECTS = [
     ("/corporate-training/mobile.html", "/services/corporate-ai-training/"),
     ("/industry/healthcare/", "/industries/medical-clinics/"),
     ("/industry/construction/", "/industries/construction-trades/"),
-    ("/industry/hospitality/", "/industries/professional-services/"),
+    # 注意：本站目前没有 hospitality（餐饮/酒店）行业页，全站也未提及 hospitality。
+    # 早前把它 301 到 professional-services 属语义错配 —— Google 会按 soft-404 处理，
+    # 且访客落地质问答非所问。改为落到行业总览页（诚实的父级，保留权重）。
+    ("/industry/hospitality/", "/industries/"),
     ("/industry/legal/", "/industries/professional-services/"),
     ("/ai-data-principles/", "/security-and-data-handling/"),
     ("/business-opportunity-scan/", "/business-ai-scan/"),

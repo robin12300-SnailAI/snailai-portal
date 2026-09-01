@@ -773,6 +773,82 @@ def _cors(resp):
     return resp
 
 
+# ------------------------------------------------ 敏感路径 noindex（纵深防御）
+# robots.txt 已 Disallow 这些路径，但 Disallow 只挡「爬取」、不挡「收录」：
+# URL 一旦被外链，Google 仍可能以「仅网址」形式把它放进结果页。
+# 签署链接带 token（/sign/<token>）、内部任务系统带业务数据，都不该进搜索结果，
+# 因此再补一层 HTTP 头彻底封死。头优于 meta 标签：对 PDF/附件等非 HTML 也生效。
+_NOINDEX_PREFIXES = ("/sign/", "/tasks/", "/portal/", "/admin/", "/quote-andrew/")
+
+
+@app.after_request
+def _noindex_sensitive(resp):
+    try:
+        p = request.path or ""
+        if any(p.startswith(x) for x in _NOINDEX_PREFIXES):
+            resp.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive"
+    except Exception:  # 加头失败绝不能影响页面本身
+        pass
+    return resp
+
+
+# ------------------------------------------------------ GA4 注入（brief §16.4）
+# 三站各用一个环境变量；未设置 = 完全不注入，行为与改动前一致（零风险）。
+#   GA_MEASUREMENT_ID         → snailai.ai（英文 B2B 主站）
+#   GA_MEASUREMENT_ID_ACADEMY → academy.snailai.ai（中文学院）
+#   GA_MEASUREMENT_ID_ANDREW  → andrew.snailai.ai（Andrew 诊所；属客户站点，
+#                               上线前须先取得客户书面同意，故默认留空）
+# 之所以走运行时注入而不是把代码写进每个 HTML：主站/学院/诊所都是静态文件，
+# 逐页硬编码 ID 无法按环境区分，将来换 ID 要改几十个文件。
+_GA_IDS = {
+    "snailai.ai": os.environ.get("GA_MEASUREMENT_ID", "").strip(),
+    "www.snailai.ai": os.environ.get("GA_MEASUREMENT_ID", "").strip(),
+    "academy.snailai.ai": os.environ.get("GA_MEASUREMENT_ID_ACADEMY", "").strip(),
+    "andrew.snailai.ai": os.environ.get("GA_MEASUREMENT_ID_ANDREW", "").strip(),
+}
+
+
+def _ga_snippet(gid):
+    """GA4 基础代码片段。anonymize_ip 按澳洲隐私惯例默认开启。"""
+    return (
+        '<script async src="https://www.googletagmanager.com/gtag/js?id=' + gid + '"></script>\n'
+        "<script>window.dataLayer=window.dataLayer||[];"
+        "function gtag(){dataLayer.push(arguments);}"
+        "gtag('js',new Date());"
+        "gtag('config','" + gid + "',{'anonymize_ip':true});</script>\n"
+    )
+
+
+@app.after_request
+def _ga4(resp):
+    """把 GA4 片段注入 </head> 前。全程吞异常 —— eSign 是命脉，
+    注入出错也必须照常把页面吐出去。"""
+    try:
+        gid = _GA_IDS.get(request.host.split(":")[0], "")
+        if not gid:
+            return resp
+        if resp.status_code != 200:
+            return resp
+        if not resp.headers.get("Content-Type", "").startswith("text/html"):
+            return resp
+        # 签署页 URL 含 token，页面路径会被写进 GA 报表 = 泄露签署链接，跳过
+        if (request.path or "").startswith("/sign/"):
+            return resp
+        # 顺序要紧：send_from_directory 返回的是 direct-passthrough 响应（WSGI
+        # 直接把文件句柄交给服务器流式发送），此时 get_data() 会抛 RuntimeError。
+        # 必须先关掉 passthrough，才能把响应体读进内存改写。代价是 HTML 不再流式
+        # 传输——仅在开启 GA 时发生，页面都是几十 KB，可接受。
+        resp.direct_passthrough = False
+        body = resp.get_data(as_text=True)
+        if "</head>" not in body:
+            return resp
+        resp.set_data(body.replace("</head>", _ga_snippet(gid) + "</head>", 1))
+        resp.headers["Content-Length"] = str(len(resp.get_data()))
+    except Exception:
+        pass
+    return resp
+
+
 @app.route("/api/options", methods=["OPTIONS"])
 @app.route("/api/<path:_>", methods=["OPTIONS"])
 def _options():
