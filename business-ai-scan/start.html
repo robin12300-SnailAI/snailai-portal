@@ -1219,6 +1219,8 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       if (result.scan_id) {
         document.getElementById('scanIdDisplay').textContent = 'Scan ID: ' + result.scan_id;
         localStorage.removeItem('bos_current_step');
+        try { fetch('/api/track/event', { method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ event: 'scan_completed', path: location.pathname, visitor_id: localStorage.getItem('snailai_vid') || '' }), keepalive: true }); } catch(e) {}
       }
     })
     .catch(err => {
@@ -1226,6 +1228,16 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       console.error('Submit error:', err);
     });
   });
+
+  // Track scan started (first Next click past step 1)
+  let scanStartTracked = false;
+  document.querySelectorAll('.btn-next').forEach(b => b.addEventListener('click', function() {
+    if (!scanStartTracked) {
+      scanStartTracked = true;
+      try { fetch('/api/track/event', { method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ event: 'scan_started', path: location.pathname, visitor_id: localStorage.getItem('snailai_vid') || '' }), keepalive: true }); } catch(e) {}
+    }
+  }));
 
   // Auto-save on input change
   document.querySelectorAll('input, select, textarea').forEach(el => {

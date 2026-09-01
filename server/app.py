@@ -335,6 +335,16 @@ def init_db():
       message TEXT NOT NULL,
       ip TEXT
     );
+    -- 转化事件跟踪（brief §18：scan_started / scan_completed / contact_form_submitted / phone_click 等）
+    CREATE TABLE IF NOT EXISTS conversion_events(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      created_at TEXT DEFAULT (datetime('now')),
+      visitor_id TEXT,
+      event TEXT NOT NULL,
+      path TEXT,
+      detail TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_conv_events_event ON conversion_events(event, created_at);
     """)
     conn.commit()
 
@@ -1815,6 +1825,36 @@ def _token_from_req():
     if ah.startswith("Bearer "):
         return ah[7:]
     return request.headers.get("X-Auth-Token") or (request.get_json(silent=True) or {}).get("token")
+
+
+_ALLOWED_EVENTS = {
+    "scan_started", "scan_completed", "contact_form_submitted", "phone_click",
+    "email_click", "consultation_requested", "case_study_viewed",
+    "academy_link_clicked", "proposal_requested",
+}
+
+
+@app.route("/api/track/event", methods=["POST"])
+def api_track_event():
+    """转化事件上报（匿名可用）。事件名白名单，防刷。"""
+    data = request.get_json(silent=True) or {}
+    event = (data.get("event") or "").strip()
+    if event not in _ALLOWED_EVENTS:
+        return jsonify(ok=False, error="unknown event"), 400
+    path = (data.get("path") or location_path_safely())[:300]
+    vid = (data.get("visitor_id") or "")[:128]
+    detail = (data.get("detail") or "")[:300]
+    conn = db_conn()
+    conn.execute(
+        "INSERT INTO conversion_events(visitor_id, event, path, detail) VALUES(?,?,?,?)",
+        (vid, event, path, detail))
+    conn.commit()
+    conn.close()
+    return jsonify(ok=True)
+
+
+def location_path_safely():
+    return request.headers.get("Referer", "")[:300]
 
 
 def _current_user():

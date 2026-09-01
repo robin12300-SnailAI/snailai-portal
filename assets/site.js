@@ -78,6 +78,7 @@
             status.textContent = 'Thank you — your message has been received. We will reply within two business days.';
             form.reset();
             if (window.turnstile) window.turnstile.reset();
+            trackEvent('contact_form_submitted', '');
           } else {
             status.className = 'form-status err';
             status.textContent = res.j.error || 'Something went wrong. Please try again or email us directly.';
@@ -99,10 +100,43 @@
     }).catch(function () {});
   }
 
+  /* ----- Conversion event tracking (brief §18) ----- */
+  function trackEvent(event, detail) {
+    try {
+      var vid = null;
+      try { vid = localStorage.getItem('snailai_vid'); } catch (e) {}
+      fetch('/api/track/event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: event,
+          path: location.pathname,
+          visitor_id: vid,
+          detail: detail || '',
+        }),
+        keepalive: true,
+      });
+    } catch (e) { /* tracking must never break the page */ }
+  }
+
+  function initTracking() {
+    // phone / email clicks (delegated)
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      if (href.indexOf('tel:') === 0) trackEvent('phone_click', href.slice(4));
+      else if (href.indexOf('mailto:') === 0) trackEvent('email_click', href.slice(7));
+      else if (a.hostname === 'academy.snailai.ai') trackEvent('academy_link_clicked', href);
+      else if (location.pathname.indexOf('/case-studies/') === 0) trackEvent('case_study_viewed', href);
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initNav();
     initFaq();
     initContactForm();
     initVersion();
+    initTracking();
   });
 })();
