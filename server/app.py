@@ -3590,7 +3590,9 @@ _stripe.api_key = _STRIPE_KEY
 
 _COURSE_PRICES = {
     "online":  {"name_zh": "AI 应用线上课", "name_en": "AI Application Online Course",  "amount_cents": 99900},
-    "wealth":   {"name_zh": "AI 财富管理线下课", "name_en": "AI Wealth Management Offline", "amount_cents": 199900},
+    "wealth":  {"name_zh": "AI 财富管理线下课", "name_en": "AI Wealth Management Offline", "amount_cents": 199900},
+    # 测试用：$1 AUD 极小金额支付（不走 API，运营/调试付款链路）。生产环境可移除。
+    "test":    {"name_zh": "Stripe 测试付款 $1 AUD", "name_en": "Stripe Test Payment $1 AUD", "amount_cents": 100},
 }
 
 @app.route("/api/create-checkout-session", methods=["POST"])
@@ -3641,6 +3643,40 @@ def api_verify_session():
         })
     except Exception:
         return jsonify({"paid": False})
+
+
+# GET 版「一键付款」入口：访问 /pay/<course> 直接 302 到 Stripe Checkout。
+# 仅允许 _COURSE_PRICES 里的课程码，方便运营/调试快速发起付款。
+# 必须在 catch-all `serve()` 之前注册；Flask 会按规则精确度优先匹配，无需担心顺序。
+@app.route("/pay/<course>")
+def pay_get(course):
+    course = (course or "").strip().lower()
+    if course not in _COURSE_PRICES:
+        return jsonify({"error": f"无效课程: {course}"}), 404
+    if not _STRIPE_KEY:
+        return jsonify({"error": "Stripe 未配置"}), 503
+    info = _COURSE_PRICES[course]
+    try:
+        sess = _stripe.checkout.Session.create(
+            mode="payment",
+            success_url=request.url_root + "payment/success.html?session_id={CHECKOUT_SESSION_ID}&course=" + course,
+            cancel_url=request.url_root + "?cancelled=1",
+            line_items=[{
+                "price_data": {
+                    "currency": "aud",
+                    "unit_amount": info["amount_cents"],
+                    "product_data": {
+                        "name": info["name_en"],
+                        "description": info["name_zh"],
+                    },
+                },
+                "quantity": 1,
+            }],
+            metadata={"course": course, "source": "snailai-portal"},
+        )
+        return redirect(sess.url, code=303)
+    except Exception as e:
+        return jsonify({"error": f"{type(e).__name__}: {str(e)}"}), 500
 
 
 # ---------------------------------------------------------------- 静态站点托管
