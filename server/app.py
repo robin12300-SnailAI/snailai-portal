@@ -3092,7 +3092,10 @@ def _grant_cap_points(conn, username, cap_id, granted_by):
 # ---------------------------------------------------------------- 总管理员：全表浏览 + 权限
 _ADMIN_TABLES = ["users", "capabilities", "checks", "ai_needs", "directory",
                  "points_log", "points_config", "assistant_assignments",
-                 "qa_threads", "qa_replies"]
+                 "qa_threads", "qa_replies",
+                 # 官网 B2B 线索 / 转化 / 课程付款（2026-09-02 补入，此前后台完全看不到）
+                 "contact_submissions", "conversion_events", "course_payments",
+                 "scan_submissions"]
 # 助教/讲师只读浏览白名单（不含 users，避免暴露密码哈希与会话）
 _TA_BROWSE = ["capabilities", "checks", "ai_needs", "directory",
              "points_log", "points_config"]
@@ -3129,6 +3132,78 @@ def api_admin_table(name):
     conn.close()
     return jsonify(ok=True, name=name, total=total,
                    rows=[dict(r) for r in rows])
+
+
+@app.route("/api/admin/site/overview", methods=["GET"])
+def api_admin_site_overview():
+    """官网 B2B 线索与转化总览（仅 admin）。
+
+    背景：contact_submissions / conversion_events / course_payments 三张表
+    一直只写不读——除了企微瞬时推送，后台没有任何地方能查看，推送失败即静默丢线索。
+    这里把散落的数据聚合成一份可直接看的概览。
+    """
+    user = _current_user()
+    if not _is_admin(user):
+        return jsonify(ok=False, error="无权限"), 403
+
+    try:
+        days = min(max(int(request.args.get("days", 30)), 1), 365)
+        limit = min(max(int(request.args.get("limit", 50)), 1), 200)
+    except ValueError:
+        days, limit = 30, 50
+
+    since = f"-{days} days"
+    conn = db_conn()
+
+    def _rows(sql, args=()):
+        """单块查询失败只降级为空，不拖垮整页（例如 course_payments 尚未建表）。"""
+        try:
+            return [dict(r) for r in conn.execute(sql, args).fetchall()]
+        except sqlite3.OperationalError:
+            return []
+
+    def _one(sql, args=(), keys=("n",)):
+        try:
+            r = conn.execute(sql, args).fetchone()
+        except sqlite3.OperationalError:
+            r = None
+        if r is None:
+            return {k: 0 for k in keys}
+        return {k: (r[k] or 0) for k in keys}
+
+    leads = _rows(
+        "SELECT id, created_at, name, email, company, phone, message "
+        "FROM contact_submissions ORDER BY id DESC LIMIT ?", (limit,))
+    leads_total = _one("SELECT COUNT(*) n FROM contact_submissions")["n"]
+    leads_recent = _one(
+        "SELECT COUNT(*) n FROM contact_submissions WHERE created_at >= datetime('now', ?)",
+        (since,))["n"]
+
+    by_event = _rows(
+        "SELECT event, COUNT(*) n FROM conversion_events "
+        "WHERE created_at >= datetime('now', ?) GROUP BY event ORDER BY n DESC", (since,))
+    daily = _rows(
+        "SELECT DATE(created_at) d, COUNT(*) n FROM conversion_events "
+        "WHERE created_at >= datetime('now', ?) GROUP BY d ORDER BY d", (since,))
+    top_paths = _rows(
+        "SELECT path, COUNT(*) n FROM conversion_events "
+        "WHERE created_at >= datetime('now', ?) AND path IS NOT NULL AND path != '' "
+        "GROUP BY path ORDER BY n DESC LIMIT 10", (since,))
+
+    payments = _rows(
+        "SELECT id, paid_at, course, amount_cents, currency, customer_email "
+        "FROM course_payments ORDER BY id DESC LIMIT ?", (limit,))
+    pay = _one("SELECT COUNT(*) n, COALESCE(SUM(amount_cents),0) cents FROM course_payments",
+               keys=("n", "cents"))
+    conn.close()
+
+    return jsonify(
+        ok=True,
+        days=days,
+        leads={"total": leads_total, "recent": leads_recent, "rows": leads},
+        conversions={"by_event": by_event, "daily": daily, "top_paths": top_paths},
+        payments={"count": pay["n"], "total_cents": pay["cents"], "rows": payments},
+    )
 
 
 @app.route("/api/admin/assistant-assignments", methods=["GET"])
@@ -3597,10 +3672,15 @@ def api_contact_submit():
 
 
 # ---------------------------------------------------------------- Stripe 支付（蜗牛AI课程报名）
-import stripe as _stripe
+# 可选依赖：包缺失时不拖垮整站（含 eSign），支付路由会降级返回 503。
+try:
+    import stripe as _stripe
+except Exception:  # ImportError / 版本异常都只影响支付，不影响全站
+    _stripe = None
 
 _STRIPE_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
-_stripe.api_key = _STRIPE_KEY
+if _stripe is not None:
+    _stripe.api_key = _STRIPE_KEY
 
 _COURSE_PRICES = {
     "online":  {"name_zh": "AI 应用线上课", "name_en": "AI Application Online Course",  "amount_cents": 99900},
@@ -3612,7 +3692,7 @@ _COURSE_PRICES = {
 @app.route("/api/create-checkout-session", methods=["POST"])
 def api_create_checkout_session():
     """创建 Stripe Checkout Session，返回跳转 URL"""
-    if not _STRIPE_KEY:
+    if not _STRIPE_KEY or _stripe is None:
         return jsonify({"error": "Stripe 未配置"}), 503
     data = request.get_json(silent=True) or {}
     course = (data.get("course") or "").strip().lower()
@@ -3646,7 +3726,7 @@ def api_create_checkout_session():
 def api_verify_session():
     """验证 Checkout Session 付款状态"""
     sid = request.args.get("session_id", "")
-    if not sid or not _STRIPE_KEY:
+    if not sid or not _STRIPE_KEY or _stripe is None:
         return jsonify({"paid": False})
     try:
         sess = _stripe.checkout.Session.retrieve(sid)
@@ -3667,7 +3747,7 @@ def pay_get(course):
     course = (course or "").strip().lower()
     if course not in _COURSE_PRICES:
         return jsonify({"error": f"无效课程: {course}"}), 404
-    if not _STRIPE_KEY:
+    if not _STRIPE_KEY or _stripe is None:
         return jsonify({"error": "Stripe 未配置"}), 503
     info = _COURSE_PRICES[course]
     try:
@@ -3704,7 +3784,7 @@ def api_stripe_webhook():
     """Stripe webhook 接收端：验签 → 落库 → 邮件通知。
     所有失败都不抛异常给 Stripe：要么 200（事件被丢弃/记录）要么 4xx（让 Stripe 重试）。
     """
-    if not _STRIPE_KEY:
+    if not _STRIPE_KEY or _stripe is None:
         return jsonify({"error": "Stripe 未配置"}), 503
     wh_secret = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
     payload = request.get_data()
@@ -3715,7 +3795,7 @@ def api_stripe_webhook():
         return jsonify({"received": True, "warning": "webhook secret not configured"}), 200
     try:
         event = _stripe.Webhook.construct_event(payload, sig, wh_secret)
-    except _stripe.error.SignatureVerificationError:
+    except ValueError:  # stripe.error.SignatureVerificationError 的父类；不依赖 stripe 是否已安装
         return jsonify({"error": "invalid signature"}), 400
     except Exception as e:
         return jsonify({"error": f"{type(e).__name__}: {e}"}), 400
@@ -3801,7 +3881,10 @@ def wecom_domain_verify(suffix):
 import base64 as _b64
 import hashlib as _hashlib
 import struct as _struct
-from Crypto.Cipher import AES as _AES
+try:
+    from Crypto.Cipher import AES as _AES  # pycryptodome；缺失时企微回调降级，不影响全站
+except Exception:
+    _AES = None
 
 
 class _WxBizMsgCrypt:
@@ -3831,6 +3914,8 @@ class _WxBizMsgCrypt:
 
 @app.route("/wecom_callback", methods=["GET"])
 def wecom_callback():
+    if _AES is None:
+        return "crypto unavailable", 503
     token = os.environ.get("WECOM_CALLBACK_TOKEN", "snailai_wecom_cb_2026")
     aes_key = os.environ.get("WECOM_CALLBACK_AESKEY",
                              "fATZdQgpClb8HD0/esLdoktglFQFURrAoh0drKGd7VY")
