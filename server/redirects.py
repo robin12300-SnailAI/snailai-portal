@@ -38,6 +38,7 @@ REDIRECTS = [
     ("/register/students.html", ACADEMY + "/register/students.html"),
     ("/login.html", ACADEMY + "/login.html"),
     ("/welcome.html", ACADEMY + "/welcome.html"),
+    ("/payment/success.html", ACADEMY + "/payment/success.html"),  # Stripe 回跳页（checkout 在 academy 域发起时 url_root 已指向 academy；此条覆盖旧链接直接访问主站的场景）
     ("/dashboard.html", ACADEMY + "/dashboard.html"),
     ("/lesson.html", ACADEMY + "/lesson.html"),
     ("/change-password.html", ACADEMY + "/change-password.html"),
