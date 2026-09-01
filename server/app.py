@@ -4061,23 +4061,31 @@ def serve(path):
         abort(404)
 
     # Andrew Clinic 域名路由：andrew.snailai.ai → andrew-clinic/ 目录
+    # 注意：所有 "找不到" 的分支必须返回真 404 + 404.html，不能再 200 兜底回 index.html。
+    # 之前的 SPA fallback 会让任意探测路径（甚至目录穿越）都拿到 200 主页，
+    # 是软 404 —— Google 会把不存在的 URL 继续当有效页索引，污染搜索结果。
     if host == "andrew.snailai.ai":
         andrew_base = BASE / "andrew-clinic"
+        not_found = lambda: (send_from_directory(andrew_base, "404.html"), 404)
         if not path:
             return send_from_directory(andrew_base, "index.html")
+        # /sign/* 转发回主站（eSign 链接在 snailai.ai 域名下，跨 host 共享同一链路；
+        # 与 academy 分支同款，确保 /sign/ 与 /sign/<token> 在三域都能用）
+        if path.startswith("sign"):
+            return redirect("https://snailai.ai/" + path, code=303)
         target = (andrew_base / path).resolve()
         if andrew_base not in target.parents and target != andrew_base:
-            return send_from_directory(andrew_base, "index.html")
+            return not_found()  # 目录穿越探测
         if target.is_dir():
             idx = target / "index.html"
             if idx.is_file():
                 return send_from_directory(andrew_base, path.rstrip("/") + "/index.html")
-            return send_from_directory(andrew_base, "index.html")
+            return not_found()  # 空目录
         if not target.exists() and target.with_suffix(".html").is_file():
             return send_from_directory(andrew_base, path + ".html")
         if target.is_file():
             return send_from_directory(andrew_base, path)
-        return send_from_directory(andrew_base, "index.html")
+        return not_found()  # 文件不存在
 
     # ── Academy 域名路由：academy.snailai.ai → academy/ 目录（中文学院） ──
     if host == "academy.snailai.ai":
