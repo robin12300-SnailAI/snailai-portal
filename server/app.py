@@ -30,7 +30,7 @@ import hashlib
 import secrets
 import datetime
 from pathlib import Path
-from flask import Flask, request, jsonify, send_from_directory, redirect
+from flask import Flask, request, jsonify, send_from_directory, redirect, abort
 import re
 import fcntl
 import requests
@@ -3851,10 +3851,51 @@ def wecom_callback():
     return reply
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 静态服务黑名单：源码 / 配置 / 凭证 / 内部文档 / 学员数据 一律不对外暴露。
+# 背景：catch-all 会把整个仓库当静态目录服务，导致 server/app.py（含全部业务逻辑）、
+# server/docs-student-accounts.md（学员账号清单）、根目录学员表格 xlsx 等
+# 可被公网直接下载。此处统一拦截，返回 404 而非 403，避免泄露文件是否存在。
+# ─────────────────────────────────────────────────────────────────────────────
+_BLOCKED_PREFIXES = (
+    "server/", ".git/", ".github/", "scripts/", "logs/", "__pycache__/",
+    "venv/", ".venv/", "node_modules/", ".workbuddy/", "academy-migration/",
+)
+_BLOCKED_NAMES = frozenset({
+    "render.yaml", "procfile", "requirements.txt", "requirements-dev.txt",
+    "dockerfile", "docker-compose.yml", "docker-compose.yaml",
+    "pytest.ini", "makefile", "agents.md", "current-state.md", "readme.md",
+})
+_BLOCKED_SUFFIXES = (
+    ".py", ".pyc", ".pyo", ".pyd", ".so", ".dylib",
+    ".sqlite", ".sqlite3", ".db", ".log",
+    ".cfg", ".ini", ".env", ".pem", ".key", ".crt", ".whl", ".tar.gz",
+    ".md", ".xlsx", ".xls", ".csv", ".docx", ".pdf.tmp",
+)
+
+
+def _is_blocked(path):
+    """判断静态路径是否命中黑名单（目录前缀 / 文件名 / 扩展名三道检查）。"""
+    p = (path or "").lstrip("/").replace("\\", "/")
+    if not p:
+        return False
+    low = p.lower()
+    for pre in _BLOCKED_PREFIXES:
+        if low.startswith(pre) or ("/" + pre) in ("/" + low):
+            return True
+    if low.rsplit("/", 1)[-1] in _BLOCKED_NAMES:
+        return True
+    return low.endswith(_BLOCKED_SUFFIXES)
+
+
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve(path):
     host = request.host.split(":")[0]  # andrew.snailai.ai or snailai.ai
+
+    # 黑名单拦截（全 host 生效），命中即 404，不区分域名
+    if _is_blocked(path):
+        abort(404)
 
     # Andrew Clinic 域名路由：andrew.snailai.ai → andrew-clinic/ 目录
     if host == "andrew.snailai.ai":
