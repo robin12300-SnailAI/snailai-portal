@@ -120,15 +120,24 @@
   }
 
   function initTracking() {
-    // phone / email clicks (delegated)
+    // 页面级事件：进入具体案例页时记录一次（原来挂在点击分支里，语义是错的）
+    if (/^\/case-studies\/.+/.test(location.pathname)) {
+      trackEvent('case_study_viewed', location.pathname);
+    }
+
+    // phone / email / academy / consultation clicks（委托）
     document.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('a[href]');
       if (!a) return;
       var href = a.getAttribute('href') || '';
+      var path = a.pathname || '';
       if (href.indexOf('tel:') === 0) trackEvent('phone_click', href.slice(4));
       else if (href.indexOf('mailto:') === 0) trackEvent('email_click', href.slice(7));
       else if (a.hostname === 'academy.snailai.ai') trackEvent('academy_link_clicked', href);
-      else if (location.pathname.indexOf('/case-studies/') === 0) trackEvent('case_study_viewed', href);
+      // 「Book a Consultation」等指向 /contact/ 的 CTA
+      else if (a.hostname === location.hostname && /^\/contact\/?$/.test(path)) {
+        trackEvent('consultation_requested', location.pathname);
+      }
     });
   }
 

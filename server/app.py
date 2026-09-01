@@ -1845,6 +1845,8 @@ _ALLOWED_EVENTS = {
     "scan_started", "scan_completed", "contact_form_submitted", "phone_click",
     "email_click", "consultation_requested", "case_study_viewed",
     "academy_link_clicked", "proposal_requested",
+    # brief §18 漏斗后段：报告被打开、客户主动申请确认电话
+    "report_viewed", "qualified_call_booked",
 }
 
 

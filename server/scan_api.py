@@ -843,8 +843,13 @@ def _process_submission(scan_id: str):
             conn.close()
 
 
-def _send_report_email(scan_id: str):
-    """发送报告就绪邮件给客户"""
+def _send_report_email(scan_id: str, public_token: str = None):
+    """发送报告就绪邮件给客户。
+
+    public_token：报告生成流程里刚创建的明文 token（只在这一刻可用，库里只存 hash）。
+    若为 None（例如管理员手动重发），则轮换一个新 token 再发——旧链接随之失效，
+    避免为"能重发"而把明文 token 落库，从而不削弱原有的哈希存储安全模型。
+    """
     conn = _scan_db()
     try:
         sub = conn.execute("SELECT * FROM scan_submissions WHERE id=?", (scan_id,)).fetchone()
@@ -853,13 +858,27 @@ def _send_report_email(scan_id: str):
             log.error(f"[scan] Cannot send email: submission or report not found for {scan_id[:8]}")
             return
 
+        # 邮件通道未配置：直接跳过，不轮换 token（否则会白白作废客户手上仍有效的链接）
         if not GMAIL_APP_PASSWORD:
             log.info(f"[scan] GMAIL_APP_PASSWORD not set; skipping report email for {scan_id[:8]}")
             return
 
-        # 生成报告链接（需要 public_token，但数据库只存 hash）
-        # 解决：在报告创建时保存 public_token 到 scan_activities
-        report_url = f"https://snailai.ai/business-ai-scan/report"  # 通用页面，前端用 JS 解析 token
+        if not public_token:
+            # 重发场景：轮换 token（旧链接失效），不落库明文
+            public_token = generate_public_token()
+            now_iso = datetime.datetime.utcnow().isoformat() + "Z"
+            expires_at = (datetime.datetime.utcnow() + datetime.timedelta(days=30)).isoformat() + "Z"
+            conn.execute(
+                "UPDATE scan_reports SET secure_token_hash=?, expires_at=?, updated_at=? WHERE scan_id=?",
+                (hash_token(public_token), expires_at, now_iso, scan_id))
+            conn.execute("""
+                INSERT INTO scan_activities (scan_id, event_type, actor, safe_metadata, created_at)
+                VALUES (?, 'TOKEN_ROTATED', 'system', ?, ?)
+            """, (scan_id, json.dumps({"reason": "email_resend"}), now_iso))
+
+        # 报告链接：友好的前台路径（/api/scan/report/<token> 仍保留为兼容别名）
+        report_url = f"https://snailai.ai/business-ai-scan/report/{public_token}"
+        pdf_url = f"https://snailai.ai/api/scan/report/{public_token}/pdf"
 
         to_email = sub["work_email"]
         company = sub["company_name"]
@@ -891,7 +910,9 @@ def _send_report_email(scan_id: str):
   <a href="{report_url}" style="display:inline-block;background:#FF5B1F;color:white;padding:14px 32px;border-radius:100px;font-weight:700;text-decoration:none;font-size:16px;">View Your Report</a>
 </div>
 
-<p style="color:#6A6A85;font-size:14px;">This link will expire in 30 days. You can also download a PDF version from the report page.</p>
+<p style="color:#6A6A85;font-size:14px;">This link is unique to you and expires in 30 days. Prefer a copy? <a href="{pdf_url}" style="color:#FF5B1F;">Download the PDF</a>.</p>
+
+<p style="color:#6A6A85;font-size:14px;">If you would like to talk it through, you can request a short 10-minute call directly from the report page.</p>
 
 <p style="color:#6A6A85;font-size:14px;">If you did not request this report, you can safely ignore this email.</p>
 
@@ -1008,6 +1029,11 @@ def register_scan_routes(app):
     app.add_url_rule("/api/scan/report/<public_token>/pdf", "scan_report_pdf", api_scan_report_pdf, methods=["GET"])
     app.add_url_rule("/api/scan/report/<public_token>/call-request", "scan_call_request", api_scan_call_request, methods=["POST"])
     app.add_url_rule("/api/scan/report/<public_token>/onsite-application", "scan_onsite_application", api_scan_onsite_application, methods=["POST"])
+
+    # 友好报告页（邮件里的链接用这个；/api/scan/report/<token> 保留为兼容别名）
+    # 必须比 catch-all `serve()` 更具体：静态段更多，Werkzeug 排序优先，不会被静态托管吃掉。
+    app.add_url_rule("/business-ai-scan/report/<public_token>", "scan_report_page",
+                     api_scan_report, methods=["GET"])
 
     # Admin API
     app.add_url_rule("/api/admin/scan/list", "admin_scan_list", api_admin_scan_list, methods=["GET"])

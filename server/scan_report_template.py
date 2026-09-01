@@ -146,6 +146,82 @@ def render_report_html(analysis: dict, norm: dict, scoring: dict, submission: di
     for q in analysis.get("questions_for_onsite", []):
         questions += f"<li>{_e(q)}</li>"
 
+    # ---- 报告页 CTA：申请 10 分钟确认电话（brief §11）----
+    # 这两段是普通字符串（非 f-string），所以内部大括号不需要转义；
+    # 令牌从当前 URL 末段取，这样 /business-ai-scan/report/<t> 与 /api/scan/report/<t> 都能用。
+    call_cta_css = """
+  /* Call request widget */
+  .call-cta { margin-top: 22px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.18); }
+  .call-cta h4 { font-size: 16px; margin-bottom: 6px; }
+  .call-cta .hint { font-size: 13.5px; opacity: .8; margin-bottom: 14px; }
+  .call-cta select { font: inherit; font-size: 15px; padding: 10px 12px; border-radius: 10px;
+                      border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.10);
+                      color: #fff; margin: 0 8px 12px 0; max-width: 100%; }
+  .call-cta select option { color: #1A1A2E; }
+  .call-cta button { font: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
+                      background: var(--accent); color: #fff; border: none; border-radius: 100px;
+                      padding: 12px 30px; }
+  .call-cta button[disabled] { opacity: .55; cursor: default; }
+  .call-cta .msg { font-size: 14px; margin-top: 14px; display: none; }
+  .call-cta .msg.ok { display: block; color: #86efac; }
+  .call-cta .msg.err { display: block; color: #fca5a5; }
+"""
+
+    call_cta_js = """
+  (function () {
+    var box = document.getElementById('call-cta');
+    if (!box) return;
+    var btn = document.getElementById('call-cta-btn');
+    var sel = document.getElementById('call-cta-time');
+    var msg = document.getElementById('call-cta-msg');
+    // 令牌 = URL 末段（兼容 /business-ai-scan/report/<t> 与 /api/scan/report/<t>）
+    var token = (location.pathname.split('/').filter(Boolean).pop() || '');
+
+    function track(event) {
+      try {
+        fetch('/api/track/event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ event: event, path: location.pathname, detail: token.slice(0, 8) }),
+          keepalive: true
+        });
+      } catch (e) {}
+    }
+    track('report_viewed');
+
+    btn.addEventListener('click', function () {
+      if (!token) { msg.className = 'msg err'; msg.textContent = 'Link error. Please email robin@snailai.ai.'; return; }
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      fetch('/api/scan/report/' + encodeURIComponent(token) + '/call-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preferred_time: sel.value })
+      })
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (res) {
+          if (res.ok) {
+            box.innerHTML = '<h4>Request received</h4>' +
+              '<p class="hint">Thank you. Robin will email you to confirm a time. ' +
+              'If it is urgent, call 0417 993 551 or email robin@snailai.ai.</p>';
+            track('qualified_call_booked');
+          } else {
+            btn.disabled = false;
+            btn.textContent = 'Request a 10-minute call';
+            msg.className = 'msg err';
+            msg.textContent = (res.j && res.j.error) || 'Something went wrong. Please email robin@snailai.ai.';
+          }
+        })
+        .catch(function () {
+          btn.disabled = false;
+          btn.textContent = 'Request a 10-minute call';
+          msg.className = 'msg err';
+          msg.textContent = 'Network error. Please email robin@snailai.ai.';
+        });
+    });
+  })();
+"""
+
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -231,6 +307,8 @@ def render_report_html(analysis: dict, norm: dict, scoring: dict, submission: di
   .cta-section p {{ opacity: 0.85; margin-bottom: 16px; }}
   .cta-button {{ display: inline-block; background: var(--accent); color: white; padding: 12px 32px; border-radius: 100px; font-weight: 700; text-decoration: none; font-size: 16px; }}
 
+  /* Call request widget — injected below (plain string, no f-string escaping) */
+{call_cta_css}
   /* On-site eligibility */
   .onsite-eligibility {{ background: #f0fdf4; border: 1px solid var(--green); border-radius: 8px; padding: 16px; margin: 16px 0; }}
   .onsite-eligibility h3 {{ color: var(--green); }}
@@ -353,7 +431,20 @@ def render_report_html(analysis: dict, norm: dict, scoring: dict, submission: di
   <div class="cta-section">
     <h3>{next_cta}</h3>
     <p>{next_desc}</p>
-    <p style="font-size:13px;opacity:0.7;margin-top:16px;">Robin visits your workplace, listens to your team, and identifies where time is really being lost.</p>
+
+    <div class="call-cta" id="call-cta">
+      <h4>Prefer to talk it through?</h4>
+      <p class="hint">Request a short 10-minute call. We only confirm a few points before deciding whether an on-site assessment would be useful — no preparation needed.</p>
+      <label for="call-cta-time" style="font-size:13.5px;opacity:.8;">Best time to reach you:</label>
+      <select id="call-cta-time">
+        <option value="Morning (9am – 12pm)">Morning (9am – 12pm)</option>
+        <option value="Afternoon (12pm – 3pm)">Afternoon (12pm – 3pm)</option>
+        <option value="Late afternoon (3pm – 5pm)">Late afternoon (3pm – 5pm)</option>
+        <option value="Email me instead">Email me instead</option>
+      </select>
+      <div><button type="button" id="call-cta-btn">Request a 10-minute call</button></div>
+      <p class="msg" id="call-cta-msg"></p>
+    </div>
   </div>
 
   <!-- Questions for On-site -->
@@ -367,6 +458,10 @@ def render_report_html(analysis: dict, norm: dict, scoring: dict, submission: di
   </div>
 
 </div>
+
+<script>
+{call_cta_js}
+</script>
 </body>
 </html>"""
 

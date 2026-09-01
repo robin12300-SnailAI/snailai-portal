@@ -938,9 +938,9 @@ def process_scan(scan_id: str):
                 sub_dict.get("onsite_assessment_interest", ""),
             )
 
-        # 发送报告邮件
+        # 发送报告邮件（把刚生成的明文 token 传过去；库里只存 hash，重发时需轮换）
         from scan_api import _send_report_email
-        _send_report_email(scan_id)
+        _send_report_email(scan_id, public_token=public_token)
 
         log.info(f"[scan] Processing complete: {scan_id[:8]} lead_fit={scoring['lead_fit_score']} band={scoring['lead_fit_band']}")
 
