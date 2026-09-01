@@ -855,7 +855,7 @@ def _send_report_email(scan_id: str):
 
         # 生成报告链接（需要 public_token，但数据库只存 hash）
         # 解决：在报告创建时保存 public_token 到 scan_activities
-        report_url = f"https://snailai.ai/business-opportunity-scan/report"  # 通用页面，前端用 JS 解析 token
+        report_url = f"https://snailai.ai/business-ai-scan/report"  # 通用页面，前端用 JS 解析 token
 
         to_email = sub["work_email"]
         company = sub["company_name"]

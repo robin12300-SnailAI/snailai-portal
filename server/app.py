@@ -324,6 +324,17 @@ def init_db():
       ip TEXT,
       created_at TEXT DEFAULT (datetime('now'))
     );
+    -- 英文主站 contact 表单
+    CREATE TABLE IF NOT EXISTS contact_submissions(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      created_at TEXT DEFAULT (datetime('now')),
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      company TEXT,
+      phone TEXT,
+      message TEXT NOT NULL,
+      ip TEXT
+    );
     """)
     conn.commit()
 
@@ -3458,6 +3469,77 @@ def _start_scheduler():
     _sched.add_job(_send_daily_leaderboard,
                    "cron", hour=11, minute=59, id="daily_leaderboard")
     _sched.start()
+
+
+# ---------------------------------------------------------------- Contact form（英文主站 /contact）
+_TURNSTILE_SECRET_KEY = os.environ.get("TURNSTILE_SECRET_KEY", "")
+_TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
+
+
+def _contact_verify_turnstile(token: str, remote_ip: str) -> bool:
+    """验证 Cloudflare Turnstile token（主站 contact 表单）。"""
+    if os.environ.get("TURNSTILE_BYPASS") == "1":
+        return True  # 仅本地开发
+    if not _TURNSTILE_SECRET_KEY:
+        return True  # 未配置时跳过（与 scan_api 行为一致）
+    try:
+        import requests as http
+        resp = http.post(_TURNSTILE_VERIFY_URL, data={
+            "secret": _TURNSTILE_SECRET_KEY,
+            "response": token,
+            "remoteip": remote_ip,
+        }, timeout=10)
+        return resp.json().get("success", False)
+    except Exception as e:
+        print(f"[contact] Turnstile verification failed: {e}")
+        return False
+
+
+def _contact_wechat_notify(text: str):
+    url = os.environ.get("WECHAT_WEBHOOK_URL")
+    if not url:
+        print("[contact] WECHAT_WEBHOOK_URL 未配置，跳过通知")
+        return
+    try:
+        import requests as http
+        http.post(url, json={"msgtype": "text", "text": {"content": text}}, timeout=10)
+    except Exception as e:
+        print(f"[contact] WeChat notify failed: {e}")
+
+
+@app.route("/api/contact", methods=["POST"])
+def api_contact_submit():
+    """英文主站 /contact/ 表单提交：Turnstile + 限流 + 落库 + 企微通知。"""
+    remote_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+    if not _rate_check("ip:" + remote_ip + ":/api/contact", 5, 3600):
+        return jsonify(ok=False, error="Too many submissions. Please try again later."), 429
+
+    data = request.get_json(silent=True) or {}
+    if not _contact_verify_turnstile(data.get("turnstile_token", ""), remote_ip):
+        return jsonify(ok=False, error="CAPTCHA verification failed. Please retry."), 400
+
+    name = (data.get("name") or "").strip()[:120]
+    email = (data.get("email") or "").strip()[:200]
+    company = (data.get("company") or "").strip()[:200]
+    phone = (data.get("phone") or "").strip()[:60]
+    message = (data.get("message") or "").strip()[:3000]
+    if not name or not message or "@" not in email:
+        return jsonify(ok=False, error="Please provide name, valid email and message."), 400
+
+    conn = db_conn()
+    try:
+        conn.execute(
+            "INSERT INTO contact_submissions(name, email, company, phone, message, ip) VALUES(?,?,?,?,?,?)",
+            (name, email, company, phone, message, remote_ip))
+        conn.commit()
+    finally:
+        conn.close()
+
+    _contact_wechat_notify(
+        f"📬 [Main site contact] {name} <{email}>\n"
+        f"Company: {company or '-'} | Phone: {phone or '-'}\n"
+        f"{message[:300]}")
+    return jsonify(ok=True)
 
 
 # ---------------------------------------------------------------- Stripe 支付（蜗牛AI课程报名）

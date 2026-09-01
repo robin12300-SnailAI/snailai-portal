@@ -1,1617 +1,385 @@
 <!DOCTYPE html>
-<html lang="en" data-title-zh="蜗牛 AI · 企业AI服务 + 企业培训 & 学院 | 悉尼" data-title-en="Snail AI · Business AI Services + Corporate Training & Academy | Sydney">
+<html lang="en">
 <head>
-<style>body{opacity:0;transition:opacity .12s ease}html.lang-ready body{opacity:1}</style><noscript><style>body{opacity:1!important}</style></noscript><script>window.addEventListener("load",function(){document.documentElement.classList.add("lang-ready");});</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Snail AI · Business AI Services + Corporate Training & Academy | Sydney</title>
-<meta name="description" content="Snail AI delivers business AI services for Sydney SMEs — AI workflow automation, AI-enabled software, desktop automation, end-to-end delivery — plus corporate AI training and individual courses. Our CEO personally visits free for 2 hours.">
-<link rel="icon" type="image/png" href="assets/snailai_logo.png">
+<title>AI Workflow Automation &amp; System Integration Sydney | Snail AI</title>
+<meta name="description" content="Snail AI helps Sydney businesses improve websites, integrate existing systems and automate practical workflows. Start with a Business AI Scan.">
+<link rel="icon" type="image/png" href="/assets/snailai_logo.png">
 <link rel="canonical" href="https://snailai.ai/">
-<link rel="alternate" hreflang="zh-CN" href="https://snailai.ai/">
-<link rel="alternate" hreflang="en" href="https://snailai.ai/">
-<link rel="alternate" hreflang="x-default" href="https://snailai.ai/">
-<meta property="og:title" content="Snail AI · Enterprise AI Services + Corporate Education | Sydney">
-<meta property="og:description" content="Snail AI brings enterprise AI to Sydney SMEs and trains teams to use it. CEO-led free 2-hour on-site visit, from diagnosis to delivery.">
+<meta property="og:title" content="AI Workflow Automation &amp; System Integration Sydney | Snail AI">
+<meta property="og:description" content="We identify the workflows worth improving, build the solution, and train your team to use it. Sydney-based, founder-led.">
 <meta property="og:image" content="https://snailai.ai/assets/snailai_logo.png">
 <meta property="og:url" content="https://snailai.ai/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_AU">
-<meta property="og:locale:alternate" content="zh_CN">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Snail AI · Enterprise AI Services + Corporate Education | Sydney">
-<meta name="twitter:description" content="Snail AI brings enterprise AI to Sydney SMEs and trains teams to use it. CEO-led free 2-hour on-site visit, from diagnosis to delivery.">
-<meta name="twitter:image" content="https://snailai.ai/assets/snailai_logo.png">
-<style>
-  :root {
-    --ink: #1A1A2E;
-    --ink-2: #2A2A40;
-    --ink-3: #6A6A85;
-    --paper: #FCFCFA;
-    --paper-2: #F5F4EE;
-    --paper-3: #E8E7E0;
-    --accent: #FF5B1F;
-    --accent-2: #E84A0F;
-    --accent-light: rgba(255,91,31,0.08);
-    --accent-warm: #FFF5EE;
-    --gold: #D4A547;
-    --line: rgba(26,26,46,0.08);
-    --shadow-sm: 0 1px 3px rgba(26,26,46,0.04), 0 2px 8px rgba(26,26,46,0.04);
-    --shadow-md: 0 4px 16px rgba(26,26,46,0.08);
-    --shadow-lg: 0 12px 36px rgba(26,26,46,0.12);
-    --r-sm: 6px;
-    --r-md: 10px;
-    --r-lg: 16px;
-    --r-xl: 24px;
-    --sans: 'Inter','Helvetica Neue','Helvetica','Arial','PingFang SC','Microsoft YaHei UI','Noto Sans SC',sans-serif;
-    --mono: 'JetBrains Mono','SF Mono','Menlo','Consolas',monospace;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: var(--sans);
-    background: var(--paper);
-    color: var(--ink);
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* ===== Nav ===== */
-  .nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 16px 40px;
-    background: linear-gradient(180deg, rgba(252,252,250,.96) 0%, rgba(252,252,250,.85) 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--line);
-  }
-  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
-  .nav-logo img { height: 32px; width: auto; }
-  .nav-logo span { font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
-  .nav-links { display: flex; gap: 28px; align-items: center; }
-  .nav-links a {
-    font-size: 13px; font-weight: 600; color: var(--ink-3);
-    text-decoration: none; letter-spacing: 0.02em;
-    transition: color .2s;
-  }
-  .nav-links a:hover { color: var(--accent); }
-  .lang-switch {
-    display: inline-flex; gap: 4px;
-    border: 1px solid var(--line); border-radius: 100px; padding: 3px;
-    background: white;
-  }
-  .lang-btn {
-    background: none; border: none; cursor: pointer;
-    padding: 5px 12px; border-radius: 100px;
-    font-size: 12px; font-weight: 700; color: var(--ink-3);
-    transition: all .2s;
-  }
-  .lang-btn.active { background: var(--ink); color: white; }
-
-  /* ===== Hero ===== */
-  .hero {
-    position: relative;
-    padding: 140px 40px 100px;
-    max-width: 1280px; margin: 0 auto;
-    text-align: center;
-  }
-  .hero-bg-blob {
-    position: absolute; top: -10%; left: 50%; transform: translateX(-50%);
-    width: 800px; height: 800px;
-    background: radial-gradient(circle, rgba(255,91,31,0.06) 0%, transparent 60%);
-    z-index: -1; pointer-events: none;
-  }
-  .hero-logo {
-    width: 120px; height: auto;
-    margin-bottom: 24px;
-    filter: drop-shadow(0 8px 24px rgba(255,91,31,0.18));
-    animation: float 4s ease-in-out infinite;
-  }
-  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-
-  .hero-tag {
-    display: inline-block;
-    padding: 6px 16px;
-    background: var(--accent-light);
-    border: 1px solid rgba(255,91,31,0.18);
-    color: var(--accent);
-    border-radius: 100px;
-    font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
-    margin-bottom: 28px;
-  }
-  .hero h1 {
-    font-size: clamp(2.4rem, 5vw, 4rem);
-    font-weight: 900;
-    line-height: 1.15;
-    letter-spacing: -0.025em;
-    margin-bottom: 20px;
-  }
-  .hero h1 .accent { color: var(--accent); }
-  .hero .subtitle {
-    font-size: clamp(1rem, 1.6vw, 1.2rem);
-    color: var(--ink-3);
-    max-width: 720px;
-    margin: 0 auto 40px;
-    line-height: 1.65;
-  }
-  .hero-lobster {
-    display: inline-flex; align-items: center;
-    max-width: 760px; margin: 0 auto 34px; padding: 14px 22px;
-    border-radius: 16px; text-align: left;
-    background: linear-gradient(135deg, var(--accent-light), #ffffff);
-    border: 1.5px solid rgba(255,91,31,0.22);
-    box-shadow: 0 6px 20px rgba(255,91,31,0.10);
-    font-size: clamp(0.95rem, 1.4vw, 1.08rem); font-weight: 600; line-height: 1.5;
-    color: var(--ink);
-    animation: float 4s ease-in-out infinite;
-  }
-  .hero-badge-row {
-    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
-    margin: 28px auto 40px; max-width: 820px;
-  }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 18px; border-radius: 100px;
-    font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
-    white-space: nowrap;
-  }
-  .hero-badge--orange {
-    background: var(--accent); color: white;
-    box-shadow: 0 4px 16px rgba(255,91,31,0.28);
-  }
-  .hero-badge--ink {
-    background: var(--ink); color: white;
-    box-shadow: 0 4px 16px rgba(26,26,46,0.18);
-  }
-  .hero-badge--outline {
-    background: white; color: var(--ink);
-    border: 1.5px solid var(--ink);
-  }
-  .hero-badge--warm {
-    background: var(--accent-warm); color: var(--accent);
-    border: 1.5px solid rgba(255,91,31,0.2);
-  }
-
-  .hero-cta {
-    display: inline-flex; gap: 14px; flex-wrap: wrap; justify-content: center;
-  }
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 14px 28px; border-radius: 100px;
-    font-size: 14px; font-weight: 700;
-    text-decoration: none; transition: all .25s ease;
-    border: 1px solid transparent;
-    cursor: pointer;
-  }
-  .btn-primary {
-    background: var(--accent); color: white;
-    box-shadow: 0 4px 16px rgba(255,91,31,0.24);
-  }
-  .btn-primary:hover { background: var(--accent-2); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,91,31,0.36); }
-  .btn-secondary {
-    background: white; color: var(--ink); border-color: var(--line);
-  }
-  .btn-secondary:hover { border-color: var(--ink); transform: translateY(-2px); }
-
-  .hero-quote {
-    max-width: 720px; margin: 56px auto 0;
-    padding: 28px 32px;
-    background: var(--accent-warm);
-    border: 1px solid rgba(255,91,31,0.2);
-    border-radius: var(--r-md);
-    text-align: left;
-    position: relative;
-  }
-  .hero-quote::before {
-    content: '\201C';
-    position: absolute;
-    top: -10px; left: 18px;
-    font-size: 3.5rem;
-    color: var(--accent);
-    font-family: Georgia, serif;
-    line-height: 1;
-    opacity: 0.5;
-  }
-  .hero-quote .quote-main {
-    font-size: 1.05rem; font-weight: 600; color: var(--ink);
-    line-height: 1.65; margin-bottom: 12px;
-  }
-  .hero-quote .quote-sub {
-    font-size: 0.9rem; color: var(--ink-3);
-    line-height: 1.7; font-weight: 400; margin-bottom: 14px;
-  }
-  .hero-quote .quote-cta {
-    display: inline-block;
-    font-size: 0.95rem; font-weight: 700;
-    color: var(--accent);
-  }
-
-  /* ===== Hero Split Gate ===== */
-  .hero.hero--split {
-    min-height: 90vh;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 140px 40px 80px;
-    max-width: 1320px; margin: 0 auto;
-    text-align: center;
-  }
-  .hero-gate-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 900; letter-spacing: -0.03em;
-    margin-bottom: 8px;
-  }
-  .hero-gate-sub {
-    font-size: clamp(1rem, 1.5vw, 1.2rem);
-    color: var(--ink-3);
-    margin-bottom: 44px;
-    max-width: 640px;
-  }
-  .hero-choice-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    width: 100%;
-  }
-  .hero-choice-card {
-    position: relative;
-    display: flex; flex-direction: column;
-    align-items: flex-start; text-align: left;
-    padding: 44px 40px;
-    border-radius: var(--r-lg);
-    border: 1px solid var(--line);
-    background: white;
-    text-decoration: none;
-    overflow: hidden;
-    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
-  }
-  .hero-choice-card:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-lg);
-    border-color: rgba(255,91,31,0.25);
-  }
-  .hero-choice-card .gate-icon {
-    font-size: 3rem; line-height: 1; margin-bottom: 18px;
-  }
-  .hero-choice-card h2 {
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 900; letter-spacing: -0.02em;
-    margin-bottom: 10px;
-    color: var(--ink);
-  }
-  .hero-choice-card p {
-    font-size: clamp(0.95rem, 1.25vw, 1.05rem);
-    line-height: 1.65;
-    color: var(--ink-3);
-    margin-bottom: 24px;
-    flex: 1;
-  }
-  .hero-choice-card .gate-cta {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 22px; border-radius: 100px;
-    font-size: 14px; font-weight: 800;
-    transition: transform .2s ease;
-  }
-  .hero-choice-card:hover .gate-cta { transform: translateX(4px); }
-  .gate-enterprise .gate-cta { background: var(--accent); color: white; }
-  .gate-education .gate-cta { background: var(--ink); color: white; }
-  .gate-scan .gate-cta { background: linear-gradient(135deg, var(--accent) 0%, var(--gold) 100%); color: white; }
-  .gate-enterprise .pill { background: var(--accent-light); color: var(--accent); }
-  .gate-education .pill { background: var(--paper-2); color: var(--ink); }
-  .gate-scan .pill { background: rgba(212,165,71,0.12); color: var(--gold); }
-  .gate-scan { border-color: rgba(212,165,71,0.25); }
-  .gate-scan:hover { border-color: rgba(212,165,71,0.5); }
-  .scan-badge {
-    display: inline-block; padding: 4px 14px; border-radius: 100px;
-    background: var(--accent); color: white;
-    font-size: 11px; font-weight: 800; letter-spacing: 0.04em;
-    margin-bottom: 14px; text-transform: uppercase;
-  }
-  .gate-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-  .gate-pills .pill {
-    padding: 5px 12px; border-radius: 100px;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
-  }
-  @media (max-width: 820px) {
-    .hero.hero--split { padding: 120px 20px 60px; min-height: auto; }
-    .hero-choice-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ===== Section base ===== */
-  section { padding: 100px 40px; }
-  .section-inner { max-width: 1280px; margin: 0 auto; }
-  .section-tag {
-    display: inline-block;
-    padding: 5px 14px;
-    background: var(--accent-light);
-    color: var(--accent);
-    border-radius: 100px;
-    font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-  }
-  .section-title {
-    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-    font-weight: 900; letter-spacing: -0.02em;
-    line-height: 1.2; margin-bottom: 16px;
-  }
-  .section-desc {
-    font-size: 1.05rem; color: var(--ink-3);
-    max-width: 640px; margin-bottom: 56px;
-  }
-
-  /* ===== Team ===== */
-  .team-grid {
-    display: grid; grid-template-columns: repeat(5, 1fr);
-    gap: 24px;
-  }
-  .team-card {
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: 24px 20px;
-    text-align: center;
-    transition: all .3s ease;
-  }
-  .team-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: rgba(255,91,31,0.3); }
-  .team-card .qr {
-    width: 100%; max-width: 160px; height: auto;
-    aspect-ratio: 1/1;
-    border-radius: var(--r-md);
-    background: #fff; border: 1px solid var(--line);
-    margin: 0 auto 16px;
-    object-fit: cover;
-  }
-  .team-card .avatar {
-    width: 100%; max-width: 160px; height: 160px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: 0 auto 16px;
-    border: 3px solid var(--paper-2);
-  }
-  .team-card h3 {
-    font-size: 1.05rem; font-weight: 800; margin-bottom: 4px;
-  }
-  .team-card .role {
-    font-size: 11px; color: var(--ink-3);
-    font-family: var(--mono); letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-  .team-card .bio {
-    font-size: 0.86rem; color: var(--ink-3); line-height: 1.55;
-    min-height: 80px;
-  }
-  .team-card.founder {
-    background: linear-gradient(135deg, var(--accent-warm) 0%, white 100%);
-    border-color: rgba(255,91,31,0.2);
-  }
-  .team-card.founder .role { color: var(--accent); font-weight: 700; }
-
-  /* ===== Services ===== */
-  .services-section { background: var(--paper-2); }
-  .services-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-  .service-card {
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: 32px 28px;
-    transition: all .3s ease;
-    display: flex; flex-direction: column;
-  }
-  .service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--accent); }
-  .service-icon {
-    width: 48px; height: 48px;
-    border-radius: 12px;
-    background: var(--accent-light);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px; margin-bottom: 20px;
-  }
-  .service-card h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 10px; }
-  .service-card p { font-size: 0.92rem; color: var(--ink-3); line-height: 1.6; flex: 1; }
-  .service-card .price {
-    display: inline-block; margin-top: 16px;
-    font-family: var(--mono); font-weight: 700; color: var(--accent);
-    font-size: 0.9rem;
-  }
-  .service-card .link {
-    display: inline-block; margin-top: 14px;
-    color: var(--accent); font-size: 0.88rem; font-weight: 700;
-    text-decoration: none;
-  }
-  .service-card .link:hover { color: var(--accent-2); }
-
-  /* ===== Course Actions (syllabus link + pay button) ===== */
-  .course-actions {
-    display: flex; align-items: center; gap: 12px; margin-top: 14px;
-    flex-wrap: wrap;
-  }
-  .btn-pay {
-    display: inline-block;
-    padding: 8px 20px;
-    background: var(--accent); color: #fff;
-    border: none; border-radius: 100px;
-    font-size: 0.85rem; font-weight: 800;
-    cursor: pointer; transition: all 0.2s ease;
-    letter-spacing: 0.02em;
-  }
-  .btn-pay:hover { background: var(--accent-2); transform: translateY(-1px); }
-  .btn-pay:active { transform: translateY(0); }
-  .btn-pay.loading { opacity: 0.6; pointer-events: none; }
-
-  /* ===== Wealth Highlights (inside service card) ===== */
-  .wealth-highlights { margin-top: 8px; flex: 1; }
-  .wh-item {
-    display: flex; align-items: flex-start; gap: 8px;
-    font-size: 0.85rem; color: var(--ink-3); line-height: 1.55;
-    padding: 5px 0;
-  }
-  .wh-icon { flex-shrink: 0; font-size: 0.95rem; margin-top: 1px; }
-
-  .online-highlights { margin-top: 8px; flex: 1; }
-  .ol-item {
-    display: flex; align-items: flex-start; gap: 8px;
-    font-size: 0.85rem; color: var(--ink-3); line-height: 1.55;
-    padding: 5px 0;
-  }
-  .ol-icon { flex-shrink: 0; font-size: 0.95rem; margin-top: 1px; }
-
-  /* ===== Contact Info (inside service card) ===== */
-  .contact-info {
-    margin-top: 14px;
-    display: flex; flex-direction: column; gap: 8px;
-    padding: 14px 16px;
-    background: var(--paper-2);
-    border-radius: var(--r-md);
-    border: 1px solid var(--line);
-  }
-  .contact-row {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 0.84rem; color: var(--ink-2); font-weight: 500;
-  }
-  .contact-row .contact-label { font-size: 1rem; line-height: 1; }
-  .contact-row a { color: var(--ink-2); text-decoration: none; font-weight: 500; }
-  .contact-row a:hover { color: var(--accent); }
-
-  /* ===== Schedule ===== */
-  .schedule-section { background: var(--paper); }
-  .schedule-timeline {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 28px;
-    margin-bottom: 48px;
-  }
-  .schedule-cohort {
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    overflow: visible;
-    transition: all .3s ease;
-    position: relative;
-  }
-  .schedule-cohort:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-  .cohort-qr-footer {
-    position: absolute; right: 12px; bottom: 10px;
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
-    z-index: 2;
-  }
-  .cohort-qr-footer img {
-    width: 80px; height: 80px; border-radius: 8px;
-    border: 1.5px solid var(--line);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  }
-  .cohort-qr-footer span {
-    font-size: 11px; font-weight: 700; color: var(--accent);
-    white-space: nowrap;
-  }
-  .cohort-header {
-    padding: 24px 28px 16px;
-    border-bottom: 1px solid var(--line);
-    display: flex; align-items: center; gap: 14px;
-  }
-  .cohort-badge {
-    flex-shrink: 0;
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem;
-  }
-  .cohort-badge.apply { background: var(--accent-light); color: var(--accent); }
-  .cohort-badge.wealth { background: rgba(212,165,71,0.12); color: var(--gold); }
-  .cohort-title {
-    font-size: 1.1rem; font-weight: 800; line-height: 1.3;
-  }
-  .cohort-subtitle {
-    font-size: 0.78rem; color: var(--ink-3); font-weight: 500;
-  }
-  .cohort-body { padding: 20px 28px 24px; }
-  .cohort-row {
-    display: flex; align-items: baseline; gap: 14px;
-    margin-bottom: 14px;
-  }
-  .cohort-row:last-child { margin-bottom: 0; }
-  .cohort-label {
-    flex-shrink: 0;
-    width: 56px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--ink-3);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-family: var(--mono);
-  }
-  .cohort-value {
-    font-size: 0.95rem; font-weight: 600; color: var(--ink);
-  }
-  .cohort-value .date-accent { color: var(--accent); }
-  .cohort-value .date-gold { color: var(--gold); }
-
-  .retake-policy {
-    background: var(--accent-warm);
-    border: 2px solid rgba(255,91,31,0.15);
-    border-radius: var(--r-xl);
-    padding: 36px 40px;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 28px;
-    align-items: start;
-  }
-  .retake-icon {
-    font-size: 2.4rem;
-    line-height: 1;
-  }
-  .retake-content h3 {
-    font-size: 1.25rem; font-weight: 800; margin-bottom: 10px;
-  }
-  .retake-content p {
-    font-size: 0.95rem; color: var(--ink-2); margin-bottom: 10px; line-height: 1.7;
-  }
-  .retake-conditions {
-    list-style: none; padding: 0; margin: 14px 0 0;
-  }
-  .retake-conditions li {
-    position: relative; padding-left: 22px; margin-bottom: 10px;
-    font-size: 0.92rem; color: var(--ink-2); line-height: 1.6;
-  }
-  .retake-conditions li::before {
-    content: '✓'; position: absolute; left: 0;
-    color: var(--accent); font-weight: 800; font-size: 1rem;
-  }
-
-  /* ===== Videos ===== */
-  .videos-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr);
-    gap: 28px;
-  }
-  .video-card {
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    overflow: hidden;
-    transition: all .3s ease;
-  }
-  .video-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-  .video-frame {
-    position: relative;
-    aspect-ratio: 16/9;
-    background: var(--ink);
-    overflow: hidden;
-  }
-  .video-frame iframe {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%; border: 0;
-  }
-  .video-frame .play {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    pointer-events: none;
-  }
-  .video-info { padding: 20px 22px; }
-  .video-info h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 6px; }
-  .video-info p { font-size: 0.88rem; color: var(--ink-3); }
-  .video-info .meta {
-    display: inline-block; margin-top: 10px;
-    font-family: var(--mono); font-size: 0.72rem;
-    color: var(--accent); font-weight: 700; letter-spacing: 0.05em;
-  }
-
-  /* ===== Channels ===== */
-  .channels-section { background: var(--ink); color: white; }
-  .channels-section .section-tag { background: rgba(255,91,31,0.18); color: var(--accent); }
-  .channels-section .section-title { color: white; }
-  .channels-section .section-desc { color: rgba(255,255,255,0.55); }
-  .channels-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
-  }
-  .channel-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: var(--r-lg);
-    padding: 28px;
-    text-align: center;
-    transition: all .3s ease;
-  }
-  .channel-card:hover { background: rgba(255,255,255,0.08); border-color: var(--accent); }
-  .channel-card .qr {
-    width: 160px; height: 160px;
-    border-radius: var(--r-md);
-    background: white;
-    margin: 0 auto 18px;
-    object-fit: contain;
-    padding: 8px;
-  }
-  .channel-card h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 6px; }
-  .channel-card p { font-size: 0.86rem; color: rgba(255,255,255,0.55); }
-
-  /* ===== Contact Us ===== */
-  .contact-section {
-    background: var(--paper-2);
-    border-top: 1px solid var(--line);
-  }
-  .contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-    margin-top: 36px;
-  }
-  .contact-person {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: 28px 32px;
-    transition: box-shadow .3s, transform .3s;
-  }
-  .contact-person:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-  }
-  .contact-person-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-  .contact-person-header img.avatar {
-    width: 64px; height: 64px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--line);
-  }
-  .contact-person-header img.qr-badge {
-    width: 64px; height: 64px;
-    border-radius: 8px;
-    margin-left: auto;
-    border: 1px solid var(--line);
-  }
-  .contact-person-header .name-block h3 {
-    font-size: 1.15rem; font-weight: 800; margin-bottom: 2px;
-  }
-  .contact-person-header .name-block .role {
-    font-size: 0.78rem; color: var(--ink-3); font-weight: 500;
-  }
-  .contact-detail {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 10px; font-size: 0.9rem;
-  }
-  .contact-detail .icon { font-size: 1.05rem; line-height: 1; flex-shrink: 0; }
-  .contact-detail a { color: var(--ink-2); text-decoration: none; font-weight: 500; }
-  .contact-detail a:hover { color: var(--accent); }
-  .contact-detail span { color: var(--ink-2); font-weight: 500; }
-  .contact-office {
-    margin-top: 32px;
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: 24px 32px;
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-  }
-  .contact-office .office-icon { font-size: 1.5rem; line-height: 1.4; }
-  .contact-office .office-info h3 {
-    font-size: 1.05rem; font-weight: 800; margin-bottom: 6px;
-  }
-  .contact-office .office-info p {
-    font-size: 0.88rem; color: var(--ink-2); line-height: 1.6;
-  }
-  .parking-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(16,185,129,0.08);
-    color: #059669; font-size: 0.78rem; font-weight: 700;
-    padding: 4px 10px; border-radius: 20px; margin-top: 8px;
-    border: 1px solid rgba(16,185,129,0.2);
-  }
-  .parking-badge a { color: #059669; text-decoration: underline; font-weight: 700; }
-
-  /* ===== FAQ Entry ===== */
-  .faq-entry {
-    background: var(--accent-warm);
-    border-radius: var(--r-xl);
-    padding: 48px 56px;
-    text-align: center;
-    border: 2px solid rgba(255,91,31,0.15);
-  }
-  .faq-entry h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 12px; }
-  .faq-entry p { color: var(--ink-3); margin-bottom: 24px; font-size: 1.02rem; }
-
-  /* ===== ALL LINKS DIRECTORY ===== */
-  .all-links {
-    background: var(--paper-2);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-  .links-master-card {
-    background: white;
-    border-radius: var(--r-xl);
-    border: 2px solid rgba(255,91,31,0.18);
-    padding: 36px;
-    box-shadow: 0 8px 32px rgba(26, 26, 46, 0.04);
-  }
-  .links-master-domain {
-    background: linear-gradient(135deg, var(--paper-2) 0%, var(--paper-3) 100%);
-    border-radius: var(--r-md);
-    padding: 18px 22px;
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    flex-wrap: wrap;
-  }
-  .links-master-label {
-    display: inline-block;
-    background: var(--accent);
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 5px 12px;
-    border-radius: 100px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    flex-shrink: 0;
-  }
-  .links-master-url {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--ink);
-    text-decoration: none;
-    word-break: break-all;
-  }
-  .links-master-url:hover { color: var(--accent); }
-  .links-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 14px;
-    margin-bottom: 22px;
-  }
-  .link-card {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 16px 18px;
-    background: var(--paper);
-    border: 1.5px solid var(--line);
-    border-radius: var(--r-md);
-    text-decoration: none;
-    color: var(--ink);
-    transition: all 0.2s ease;
-  }
-  .link-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(255, 91, 31, 0.12);
-  }
-  .link-icon {
-    font-size: 1.5rem;
-    flex-shrink: 0;
-  }
-  .link-info { flex: 1; min-width: 0; }
-  .link-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 3px;
-  }
-  .link-url {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
-    color: var(--ink-3);
-    word-break: break-all;
-  }
-  .link-card:hover .link-url { color: var(--accent); }
-  .links-master-footer {
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--ink-3);
-    padding-top: 16px;
-    border-top: 1px dashed var(--line);
-  }
-
-  /* ===== Footer ===== */
-  .footer {
-    background: var(--paper-2);
-    border-top: 1px solid var(--line);
-    padding: 36px 40px;
-    text-align: center;
-  }
-  .footer .brand-logo { height: 36px; margin-bottom: 12px; }
-  .footer p { font-size: 0.78rem; color: var(--ink-3); letter-spacing: 0.04em; }
-  .footer .links { margin-top: 12px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-  .footer .links a { color: var(--ink-3); text-decoration: none; font-size: 0.78rem; }
-  .footer .links a:hover { color: var(--accent); }
-  .footer .version {
-    margin-top: 16px;
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    color: var(--ink-3);
-    letter-spacing: 0.08em;
-  }
-
-  @media (max-width: 900px) {
-    .nav { padding: 12px 20px; }
-    .nav-links a:not(.btn) { display: none; }
-    section { padding: 64px 20px; }
-    .hero { padding: 110px 20px 70px; }
-    .team-grid { grid-template-columns: repeat(2, 1fr); }
-    .services-grid { grid-template-columns: 1fr; }
-    .schedule-timeline { grid-template-columns: 1fr; }
-    .videos-grid { grid-template-columns: 1fr; }
-    .channels-grid { grid-template-columns: 1fr; }
-    .faq-entry { padding: 36px 28px; }
-    .links-master-card { padding: 24px 20px; }
-    .links-master-domain { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px 16px; }
-    .links-master-url { font-size: 0.85rem; }
-    .links-grid { grid-template-columns: 1fr; }
-    .retake-policy { grid-template-columns: 1fr; gap: 16px; padding: 28px 24px; }
-    .contact-grid { grid-template-columns: 1fr; }
-    .contact-person { padding: 20px 24px; }
-    .contact-person-header img.qr-badge { width: 56px; height: 56px; }
-  }
-
-  /* ===== MOBILE BOTTOM NAV (homepage root, mobile-only) ===== */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    z-index: 100;
-    display: none; /* hidden on desktop, shown on mobile via media query below */
-    grid-template-columns: repeat(4, 1fr);
-    background: rgba(255,255,255,.92);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border-top: 1px solid var(--line);
-    padding: 6px 0 8px;
-  }
-  .bottom-nav a {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 7px 2px;
-    text-decoration: none; color: var(--ink-3);
-    font-size: 11px; font-weight: 500;
-    transition: color .2s;
-  }
-  .bottom-nav a:active,
-  .bottom-nav a:hover { color: var(--accent); }
-  .bottom-nav a .bnav-icon { font-size: 19px; margin-bottom: 3px; line-height: 1; }
-  .bottom-nav a .bnav-label { letter-spacing: .02em; white-space: nowrap; }
-  /* Bottom nav disabled — removed 2026-08-19 */
-  .bottom-nav { display: none !important; }
-  @media (max-width: 768px) {
-    .bottom-nav { display: none !important; }
-    body { padding-bottom: 0; }
-  }
-</style>
-<!-- SEO: JSON-LD Structured Data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": "https://snailai.ai/#organization",
-      "name": "蜗牛AI Snail AI",
-      "alternateName": "Snail AI",
-      "url": "https://snailai.ai",
-      "logo": "https://snailai.ai/assets/snailai_logo.png",
-      "description": "蜗牛AI 是面向悉尼中小企业的 AI 落地服务和企业培训提供商",
-      "email": "robin@snailai.ai",
-      "telephone": "+61417993551",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Suite 404, 53 Walker Street",
-        "addressLocality": "North Sydney",
-        "addressRegion": "NSW",
-        "postalCode": "2060",
-        "addressCountry": "AU"
-      },
-      "sameAs": [
-        "https://www.youtube.com/playlist?list=PLrAXtmRdnEQy6nuLMfO9tV4rnQ5w8e6yA"
-      ]
-    },
-    {
-      "@type": "LocalBusiness",
-      "@id": "https://snailai.ai/#localbusiness",
-      "name": "蜗牛AI Snail AI",
-      "url": "https://snailai.ai",
-      "telephone": "+61417993551",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Suite 404, 53 Walker Street",
-        "addressLocality": "North Sydney",
-        "addressRegion": "NSW",
-        "postalCode": "2060",
-        "addressCountry": "AU"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": -33.8392,
-        "longitude": 151.2067
-      },
-      "openingHoursSpecification": [
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "09:00", "closes": "18:00" },
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "13:00", "closes": "16:30" }
-      ],
-      "category": "Computer Training Institute",
-      "priceRange": "$$"
-    },
-    {
-      "@type": "EducationalOrganization",
-      "@id": "https://snailai.ai/#educationalorg",
-      "name": "蜗牛AI Snail AI",
-      "url": "https://snailai.ai",
-      "description": "AI 落地服务和企业培训，专注悉尼中小企业 AI 实战应用",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Suite 404, 53 Walker Street",
-        "addressLocality": "North Sydney",
-        "addressRegion": "NSW",
-        "postalCode": "2060",
-        "addressCountry": "AU"
-      }
-    },
-    {
-      "@type": "Course",
-      "name": "AI 应用线上课",
-      "description": "12 周线上课程，教你用 AI 提升澳洲工作和生活效率",
-      "provider": { "@id": "https://snailai.ai/#educationalorg" },
-      "courseMode": "online",
-      "offers": {
-        "@type": "Offer",
-        "category": "Paid",
-        "priceCurrency": "AUD"
-      }
-    },
-    {
-      "@type": "Course",
-      "name": "AI 财富线下课",
-      "description": "13 周线下课程，周六下午面授，悉尼 North Sydney",
-      "provider": { "@id": "https://snailai.ai/#educationalorg" },
-      "courseMode": "onsite",
-      "location": {
-        "@type": "Place",
-        "name": "Suite 404, 53 Walker Street, North Sydney",
-        "address": { "@type": "PostalAddress", "addressLocality": "North Sydney", "addressRegion": "NSW", "addressCountry": "AU" }
-      },
-      "offers": {
-        "@type": "Offer",
-        "category": "Paid",
-        "priceCurrency": "AUD"
-      }
-    },
-    {
-      "@type": "WebSite",
-      "@id": "https://snailai.ai/#website",
-      "url": "https://snailai.ai",
-      "name": "蜗牛AI Snail AI",
-      "publisher": { "@id": "https://snailai.ai/#organization" },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://snailai.ai/?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
-  ]
+  "@type": "ProfessionalService",
+  "name": "Snail AI",
+  "description": "Practical AI systems for Sydney businesses — website and system integration, AI workflow automation, business AI assessment and corporate training.",
+  "url": "https://snailai.ai/",
+  "logo": "https://snailai.ai/assets/snailai_logo.png",
+  "telephone": "+61417993551",
+  "email": "robin@snailai.ai",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Suite 404, 53 Walker Street",
+    "addressLocality": "North Sydney",
+    "addressRegion": "NSW",
+    "postalCode": "2060",
+    "addressCountry": "AU"
+  },
+  "areaServed": [
+    {"@type": "City", "name": "Sydney"},
+    {"@type": "AdministrativeArea", "name": "New South Wales"}
+  ],
+  "founder": {"@type": "Person", "name": "Robin Luo", "jobTitle": "Founder and Business AI Implementation Lead"},
+  "knowsAbout": ["AI workflow automation", "website system integration", "business AI assessment", "corporate AI training"]
 }
 </script>
-
-<!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4LTKPNMS3Y"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-4LTKPNMS3Y');
-</script>
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+/* ===== Homepage-specific ===== */
+.hero {
+  padding: 170px 0 90px;
+  background:
+    radial-gradient(ellipse 70% 55% at 80% -10%, rgba(255,91,31,0.07), transparent),
+    radial-gradient(ellipse 50% 40% at 10% 110%, rgba(26,26,46,0.04), transparent),
+    var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+.hero h1 {
+  font-size: 56px; line-height: 1.08; font-weight: 800;
+  letter-spacing: -0.03em; max-width: 820px; margin-bottom: 22px;
+}
+.hero h1 .accent { color: var(--accent); }
+.hero .lede {
+  font-size: 19px; color: var(--ink-3); max-width: 680px; margin-bottom: 34px;
+}
+.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 30px; }
+.hero-trust {
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+.hero-trust span {
+  font-size: 12.5px; font-weight: 700; color: var(--ink-2);
+  background: #fff; border: 1px solid var(--line); border-radius: 999px;
+  padding: 6px 14px;
+}
+.problem-list { list-style: none; display: grid; gap: 14px; margin-top: 28px; }
+.problem-list li {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
+  padding: 16px 20px; font-size: 15px; color: var(--ink-2);
+}
+.problem-list li::before {
+  content: "→"; color: var(--accent-2); font-weight: 800; flex-shrink: 0; margin-top: 1px;
+}
+.industry-card { position: relative; }
+.industry-card .card-link { position: static; }
+.assessment-box {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r-xl);
+  padding: 44px; box-shadow: var(--shadow-md);
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center;
+}
+.assessment-box h2 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 14px; }
+.assessment-box p { font-size: 15px; color: var(--ink-3); margin-bottom: 10px; }
+.assessment-cta { text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.assessment-cta .big {
+  font-size: 40px; font-weight: 800; color: var(--accent); letter-spacing: -0.02em;
+}
+.why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.why-item { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 26px; }
+.why-item h3 { font-size: 16.5px; font-weight: 800; margin-bottom: 8px; }
+.why-item p { font-size: 14px; color: var(--ink-3); }
+@media (max-width: 1024px) {
+  .hero h1 { font-size: 44px; }
+  .assessment-box { grid-template-columns: 1fr; padding: 32px; }
+  .why-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .hero { padding: 120px 0 60px; }
+  .hero h1 { font-size: 34px; }
+  .hero .lede { font-size: 16.5px; }
+  .why-grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
 
-<!-- ===== NAV ===== -->
 <nav class="nav">
-  <a href="#" class="nav-logo">
-    <img src="assets/snailai_logo.png" alt="蜗牛 AI Logo">
-    <span data-zh="蜗牛 AI" data-en="SnailAI.AI">蜗牛 AI</span>
+  <a href="/" class="nav-logo">
+    <img src="/assets/snailai_logo.png" alt="Snail AI logo">
+    <span>Snail AI</span>
   </a>
   <div class="nav-links">
-    <a href="/enterprise/" data-zh="企业 AI" data-en="Business AI">企业 AI</a>
-    <a href="/business-opportunity-scan/" data-zh="AI 扫描" data-en="AI Scan">AI 扫描</a>
-    <a href="/corporate-training/" data-zh="企业培训" data-en="Corporate Training">企业培训</a>
-    <a href="/case-studies/" data-zh="案例" data-en="Case Studies">案例</a>
-    <a href="#team" data-zh="关于" data-en="About">关于</a>
-    <a href="#contact" data-zh="联系" data-en="Contact">联系</a>
-    <a href="#services" data-zh="学院" data-en="Academy">学院</a>
-    <a href="/ai-tutor/" data-zh="AI 助教" data-en="AI Tutor">AI 助教</a>
-    <div class="lang-switch">
-      <button class="lang-btn active" data-lang="zh">中文</button>
-      <button class="lang-btn" data-lang="en">EN</button>
-    </div>
+    <a href="/services/">Services</a>
+    <a href="/industries/">Industries</a>
+    <a href="/case-studies/">Case Studies</a>
+    <a href="/insights/">Insights</a>
+    <a href="/about/">About</a>
+    <a href="/contact/" class="nav-secondary">Book a Consultation</a>
+    <a href="/business-ai-scan/" class="nav-cta">Run the Business AI Scan</a>
   </div>
+  <button class="nav-burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </nav>
 
-<!-- ===== HERO SPLIT GATE ===== -->
-<section class="hero hero--split">
-  <div class="hero-bg-blob"></div>
-  <img src="assets/snailai_logo.png" alt="蜗牛 AI Logo" class="hero-logo" style="margin-bottom:18px; width:90px">
-  <div class="hero-tag" data-zh="悉尼中小企业 AI 落地 + 企业培训" data-en="AI for Sydney SMEs + Corporate Training">悉尼中小企业 AI 落地 + 企业培训</div>
-  <h1 class="hero-gate-title" data-zh="AI 落地，从这里开始" data-en="AI Starts Here">AI 落地，从这里开始</h1>
-  <p class="hero-gate-sub" data-zh="蜗牛 AI：为企业落地 AI，也教团队真正会用 AI。个人学习请进入学院。" data-en="Snail AI: We bring AI into businesses, and train teams to master it. Individual learners — visit our Academy.">蜗牛 AI：为企业落地 AI，也教团队真正会用 AI。个人学习请进入学院。</p>
+<!-- ===== Hero ===== -->
+<header class="hero">
+  <div class="container">
+    <h1>Practical AI systems for <span class="accent">Sydney businesses</span>.</h1>
+    <p class="lede">We identify the workflows worth improving, build the solution, and train your team to use it. From websites and system integration to practical AI automation, Snail AI delivers solutions designed around how your business actually works.</p>
+    <div class="hero-ctas">
+      <a href="/business-ai-scan/" class="btn btn-primary btn-lg">Run the Business AI Scan</a>
+      <a href="/services/" class="btn btn-outline btn-lg">View Our Services</a>
+    </div>
+    <div class="hero-trust">
+      <span>Sydney-based</span>
+      <span>Founder-led discovery</span>
+      <span>Local communication</span>
+      <span>Practical implementation</span>
+    </div>
+  </div>
+</header>
 
-  <div class="hero-choice-grid">
-    <a href="/enterprise/" class="hero-choice-card gate-enterprise">
-      <div class="gate-icon">🏢</div>
-      <div class="gate-pills">
-        <span class="pill" data-zh="AI Project cost from $2500" data-en="AI Project cost from $2500">AI Project cost from $2500</span>
-        <span class="pill" data-zh="CEO 免费上门 2 小时" data-en="Free 2-Hour CEO Visit">CEO 免费上门 2 小时</span>
-      </div>
-      <h2 data-zh="企业 AI 服务" data-en="Business AI Services">企业 AI 服务</h2>
-      <p data-zh="为悉尼 5–200 人中小企业提供 AI 流程化、软件加 AI、桌面自动化、端到端交付。从诊断到上线，CEO Robin 亲自带队。" data-en="For Sydney SMEs with 5–200 staff: AI workflow automation, AI-enabled software, desktop automation, end-to-end delivery. CEO Robin leads from discovery to go-live.">为悉尼 5–200 人中小企业提供 AI 流程化、软件加 AI、桌面自动化、端到端交付。从诊断到上线，CEO Robin 亲自带队。</p>
-      <div class="gate-cta" data-zh="进入企业服务 →" data-en="Business AI →">进入企业服务 →</div>
-    </a>
-
-    <a href="/corporate-training/" class="hero-choice-card gate-education">
-      <div class="gate-icon">🎓</div>
-      <div class="gate-pills">
-        <span class="pill" data-zh="企业内训" data-en="Corporate Training">企业内训</span>
-        <span class="pill" data-zh="个人课程" data-en="Individual Courses">个人课程</span>
-      </div>
-      <h2 data-zh="企业培训 & 学院" data-en="Corporate Training & Academy">企业培训 & 学院</h2>
-      <p data-zh="企业内训：系统使用培训、AI 平台搭建、团队工作坊。个人课程：AI 应用线上课、AI 财富线下课。让团队和个人真正驾驭 AI。" data-en="Corporate training: system adoption, AI platform setup, team workshops. Individual courses: AI Application online, AI Wealth offline. We train people to own AI, not rent it.">企业内训：系统使用培训、AI 平台搭建、团队工作坊。个人课程：AI 应用线上课、AI 财富线下课。让团队和个人真正驾驭 AI。</p>
-      <div class="gate-cta" data-zh="进入培训 & 学院 →" data-en="Training & Academy →">进入培训 & 学院 →</div>
-    </a>
-
-    <a href="/business-opportunity-scan/start.html" class="hero-choice-card gate-scan">
-      <div class="gate-icon">🔍</div>
-      <span class="scan-badge" data-zh="免费" data-en="FREE">免费</span>
-      <div class="gate-pills">
-        <span class="pill" data-zh="4–6 分钟在线评估" data-en="4–6 min online assessment">4–6 分钟在线评估</span>
-        <span class="pill" data-zh="AI 机会报告" data-en="AI Opportunity Report">AI 机会报告</span>
-      </div>
-      <h2 data-zh="AI 商机扫描" data-en="AI Business Scan">AI 商机扫描</h2>
-      <p data-zh="免费在线评估，4–6 分钟即可获得专属 AI 机会报告：优先级排序 + 风险评估 + 首个试点建议。适合悉尼 5–200 人企业，无需准备任何资料。" data-en="Free online assessment. Get a tailored AI Opportunity Report in minutes: prioritised opportunities + risk assessment + recommended first pilot. For Sydney businesses with 5–200 staff. No preparation needed.">免费在线评估，4–6 分钟即可获得专属 AI 机会报告：优先级排序 + 风险评估 + 首个试点建议。适合悉尼 5–200 人企业，无需准备任何资料。</p>
-      <div class="gate-cta" data-zh="开始免费扫描 →" data-en="Start Free Scan →">开始免费扫描 →</div>
-    </a>
+<!-- ===== Problem ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>AI is useful only when it improves real work.</h2>
+      <p>Most businesses don't need more AI tools — they need the systems they already run to work better together. If any of these sound familiar, that's where we start.</p>
+    </div>
+    <ul class="problem-list">
+      <li>Disconnected websites, booking tools, CRM and internal systems that don't talk to each other</li>
+      <li>Repetitive emails, documents and customer follow-up eating your team's week</li>
+      <li>Manual reporting and information retrieval that could be largely automated</li>
+      <li>Teams experimenting with AI without a safe, structured implementation plan</li>
+      <li>Technology projects that never move beyond a demonstration</li>
+    </ul>
   </div>
 </section>
 
-<!-- ===== TEAM ===== -->
-<section id="team">
-  <div class="section-inner">
-    <div class="section-tag" data-zh="Team" data-en="Team">Team</div>
-    <h2 class="section-title" data-zh="我们的团队" data-en="Our Team">我们的团队</h2>
-    <p class="section-desc" data-zh="Robin 联合 Michael、James、Jason、Sean，五位悉尼 AI 实践者，专注把 AI 真正用到澳洲企业的日常。" data-en="Robin, Michael, James, Jason and Sean — five Sydney-based AI practitioners focused on real-world AI for Australian businesses.">Robin 联合 Michael、James、Jason、Sean，五位悉尼 AI 实践者，专注把 AI 真正用到澳洲企业的日常。</p>
-
-    <div class="team-grid">
-      <div class="team-card founder">
-        <img src="assets/team/robin_photo.jpg" alt="Robin" class="avatar">
-        <h3>Robin</h3>
-        <div class="role" data-zh="Founder · Lead Instructor" data-en="Founder · Lead Instructor">Founder · Lead Instructor</div>
-        <div class="bio" data-zh="蜗牛 AI 创始人 · KSI 悉尼土地投资 CEO · AI 应用系统实践者 · 悉尼企业 AI 服务传播者" data-en="Snail AI Founder · KSI Sydney Land Investment CEO · AI systems practitioner · Sydney enterprise AI evangelist">蜗牛 AI 创始人 · KSI 悉尼土地投资 CEO · AI 应用系统实践者 · 悉尼企业 AI 服务传播者</div>
+<!-- ===== Core services ===== -->
+<section class="section section-alt" id="services">
+  <div class="container">
+    <div class="section-head">
+      <h2>Three core services. One accountable delivery team.</h2>
+      <p>Every engagement starts with your business problem — not a list of AI tools.</p>
+    </div>
+    <div class="card-grid cols-3">
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <h3>Website &amp; System Integration</h3>
+        <p>Modern business websites connected to booking, payments, CRM and the systems your team already uses.</p>
+        <a class="card-link" href="/services/website-system-integration/">Learn more →</a>
       </div>
-
-      <div class="team-card founder">
-        <img src="assets/team/michael_guo.jpg" alt="Michael Guo" class="avatar">
-        <h3>Michael Guo</h3>
-        <div class="role" data-zh="Co-Founder · Wealth Instructor" data-en="Co-Founder · Wealth Instructor">Co-Founder · Wealth Instructor</div>
-        <div class="bio" data-zh="讲师 · 澳大利亚悉尼 · KSI 悉尼土地投资 · SMSF 财富升级方案 · 澳洲投资专家" data-en="Instructor · Sydney Australia · KSI Sydney Land Investment · SMSF wealth strategies · Australian investment expert">讲师 · 澳大利亚悉尼 · KSI 悉尼土地投资 · SMSF 财富升级方案 · 澳洲投资专家</div>
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <h3>AI Workflow Automation</h3>
+        <p>Practical automation for emails, documents, customer follow-up, reporting and internal knowledge workflows.</p>
+        <a class="card-link" href="/services/ai-workflow-automation/">Learn more →</a>
       </div>
-
-      <div class="team-card">
-        <img src="assets/team/qr_jiangpei.png" alt="James 蒋培 QR" class="qr">
-        <h3>James 蒋培</h3>
-        <div class="role" data-zh="Enterprise WeChat · AI Tools" data-en="Enterprise WeChat · AI Tools">Enterprise WeChat · AI Tools</div>
-        <div class="bio" data-zh="企业微信 · AI 工具支持 · 全程帮你解决 WorkBuddy 装不上、跑不动的问题" data-en="Enterprise WeChat · AI tools support · Helps you troubleshoot WorkBuddy installation and usage">企业微信 · AI 工具支持 · 全程帮你解决 WorkBuddy 装不上、跑不动的问题</div>
-      </div>
-
-      <div class="team-card">
-        <img src="assets/team/qr_xiejin.png" alt="Jason 谢锦 QR" class="qr">
-        <h3>Jason 谢锦</h3>
-        <div class="role" data-zh="Remote Support · Snail AI" data-en="Remote Support · Snail AI">Remote Support · Snail AI</div>
-        <div class="bio" data-zh="蜗牛 AI · 远程支持 · 课后作业批改、实战演练跟进" data-en="Snail AI · Remote support · Homework review and hands-on follow-up">蜗牛 AI · 远程支持 · 课后作业批改、实战演练跟进</div>
-      </div>
-
-      <div class="team-card">
-        <img src="assets/team/qr_wuqing.png" alt="Sean 吴清 QR" class="qr">
-        <h3>Sean 吴清</h3>
-        <div class="role" data-zh="Enterprise WeChat · Quota Q&A" data-en="Enterprise WeChat · Quota Q&A">Enterprise WeChat · Quota Q&A</div>
-        <div class="bio" data-zh="企业微信 · 算力答疑 · 帮你选最划算的腾讯 AI 算力方案" data-en="Enterprise WeChat · Token quota Q&A · Helps you choose the most cost-effective Tencent AI plan">企业微信 · 算力答疑 · 帮你选最划算的腾讯 AI 算力方案</div>
+      <div class="card">
+        <div class="card-icon">🚀</div>
+        <h3>Business AI Implementation</h3>
+        <p>Opportunity assessment, solution design, implementation, team training and ongoing support — end to end.</p>
+        <a class="card-link" href="/services/business-ai-assessment/">Learn more →</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== SERVICES ===== -->
-<section id="services" class="services-section">
-  <div class="section-inner">
-    <div class="section-tag" data-zh="Services" data-en="Services">Services</div>
-    <h2 class="section-title" data-zh="我们提供的服务" data-en="What We Offer">我们提供的服务</h2>
-    <p class="section-desc" data-zh="从企业 AI 落地到个人 AI 学习，蜗牛 AI 全程陪伴。" data-en="From business AI implementation to individual AI learning — Snail AI is with you all the way.">从企业 AI 落地到个人 AI 学习，蜗牛 AI 全程陪伴。</p>
-
-    <div class="services-grid">
-      <div class="service-card">
-        <div class="service-icon">💻</div>
-        <h3 data-zh="AI 应用线上课 · 2 个月 9 节课 每周二晚 8:30pm 开课" data-en="AI Application Online Course · 9 Lessons · 2 Months · Tue 8:30pm">AI 应用线上课 · 2 个月 9 节课 每周二晚 8:30pm 开课</h3>
-        <div class="online-highlights">
-          <div class="ol-item"><span class="ol-icon">🎓</span><span data-zh="输出式教学法：AI 思维和 AI 提示词语言学" data-en="Output-based Learning: AI Thinking & Prompt Engineering Linguistics">输出式教学法：AI 思维和 AI 提示词语言学</span></div>
-          <div class="ol-item"><span class="ol-icon">🚀</span><span data-zh="进化 3 阶段：个人 AI 化 → 家庭 AI 化 → 公司 AI 化" data-en="Evolution: Personal AI → Family AI → Business AI">进化 3 阶段：个人 AI 化 → 家庭 AI 化 → 公司 AI 化</span></div>
-          <div class="ol-item"><span class="ol-icon">🇦🇺</span><span data-zh="全方位澳洲本地场景落地应用：职场学业、家庭教育、商业金融法律财务、澳洲专属" data-en="Full Australian local scenarios: workplace, education, business, finance, law, accounting & investing">全方位澳洲本地场景落地应用：职场学业、家庭教育、商业金融法律财务、澳洲专属</span></div>
-          <div class="ol-item"><span class="ol-icon">🦞</span><span data-zh="龙虾自由：手把手协助你安装 AI 终极武器-龙虾🦞，而且教会你熟练使用龙虾🦞，从此你多了一个 24 小时的超级 AI 龙虾🦞助手" data-en="Lobster Freedom: Hands-on help installing AND mastering your ultimate AI weapon — Lobster🦞, your 24/7 super AI assistant">龙虾自由：手把手协助你安装 AI 终极武器-龙虾🦞，而且教会你熟练使用龙虾🦞，从此你多了一个 24 小时的超级 AI 龙虾🦞助手</span></div>
-          <div class="ol-item"><span class="ol-icon">💡</span><span data-zh="终极目标：2 个月结束前实现 AI 顿悟" data-en="Ultimate Goal: Achieve AI Enlightenment in 2 months">终极目标：2 个月结束前实现 AI 顿悟</span></div>
-        </div>
-        <span class="price" data-zh="AUD $999 / 2 个月" data-en="AUD $999 / 2 months">AUD $999 / 2 个月</span>
-        <div class="course-actions">
-          <a href="/online-course/" target="_blank" class="link" data-zh="查看课程大纲 →" data-en="View Syllabus →">查看课程大纲 →</a>
-          <button class="btn-pay" data-course="online" data-zh="立即报名缴费" data-en="Enroll & Pay">立即报名缴费</button>
-        </div>
+<!-- ===== Industries ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Built for the industries we know.</h2>
+      <p>We focus on Sydney businesses where we can point to real, delivered work.</p>
+    </div>
+    <div class="card-grid cols-3">
+      <div class="card industry-card">
+        <div class="card-icon">🩺</div>
+        <h3>Medical &amp; Specialist Clinics</h3>
+        <p>Professional clinic websites, booking and payment integration, patient enquiry workflows and local SEO — with strict boundaries between public systems and clinical data.</p>
+        <a class="card-link" href="/industries/medical-clinics/">See how we work with clinics →</a>
       </div>
-
-      <div class="service-card">
-        <div class="service-icon">💰</div>
-        <h3 data-zh="AI 财富管理线下课 · 2 个月 18 节课，线下每周六 1pm" data-en="AI Wealth Management Offline · 2 months 18 lessons, offline every Sat 1pm">AI 财富管理线下课 · 2 个月 18 节课，线下每周六 1pm</h3>
-        <div class="wealth-highlights">
-          <div class="wh-item"><span class="wh-icon">📊</span><span data-zh="AI CFO 个人财富管理系统：协助管理财务、家庭预算、投资记录、资产配置、现金流分析与年度财富目标" data-en="AI CFO Personal Wealth System: manage finances, budgeting, investment tracking, asset allocation, cash flow analysis & annual wealth goals">AI CFO 个人财富管理系统：协助管理财务、家庭预算、投资记录、资产配置、现金流分析与年度财富目标</span></div>
-          <div class="wh-item"><span class="wh-icon">🦞</span><span data-zh="龙虾 AI 财富管理系统：搭建专属于您的系统，整合资产、分析投资、记录决策和长期复盘" data-en="Snail AI Wealth System: build your own system, integrate assets, analyze investments, track decisions & review long-term performance">龙虾 AI 财富管理系统：搭建专属于您的系统，整合资产、分析投资、记录决策和长期复盘</span></div>
-          <div class="wh-item"><span class="wh-icon">🏠</span><span data-zh="AI 澳洲房产深度分析：秒读合同文件（如 Section 32），全方位分析 suburb、人口、租金、回报与投资决策" data-en="AI Australian Property Analysis: read contracts instantly (e.g. Section 32), analyze suburb demographics, rents, ROI & investment decisions">AI 澳洲房产深度分析：秒读合同文件（如 Section 32），全方位分析 suburb、人口、租金、回报与投资决策</span></div>
-          <div class="wh-item"><span class="wh-icon">📈</span><span data-zh="AI 股票与资产配置风控：AI 读财报，深度研究股票与板块强度指数，实现长期使用复盘流程" data-en="AI Stocks & Asset Allocation: AI reads financial reports, deep research on stocks & sector strength indices, long-term review process">AI 股票与资产配置风控：AI 读财报，深度研究股票与板块强度指数，实现长期使用复盘流程</span></div>
-        </div>
-        <span class="price" data-zh="AUD $1,999 / 高级" data-en="AUD $1,999 / Advanced">AUD $1,999 / 高级</span>
-        <div class="course-actions">
-          <a href="/offline-course/" target="_blank" class="link" data-zh="查看财富课 →" data-en="View Wealth →">查看财富课 →</a>
-          <button class="btn-pay" data-course="wealth" data-zh="立即报名缴费" data-en="Enroll & Pay">立即报名缴费</button>
-        </div>
+      <div class="card industry-card">
+        <div class="card-icon">🏗️</div>
+        <h3>Construction, Trades &amp; Property</h3>
+        <p>Lead capture, quote preparation support, project document intake, site photo organisation and evidence-based follow-up for busy trade and property businesses.</p>
+        <a class="card-link" href="/industries/construction-trades/">See how we work with trades →</a>
       </div>
-
-      <div class="service-card">
-        <div class="service-icon">👥</div>
-        <h3 data-zh="企业微信社群" data-en="WeCom Community">企业微信社群</h3>
-        <p data-zh="免费加入蜗牛 AI 学习社群 — 课程咨询、课前通知、作业批改、同学互助，全程陪跑。" data-en="Free to join — course consultation, pre-class notifications, homework review, peer support throughout.">免费加入蜗牛 AI 学习社群 — 课程咨询、课前通知、作业批改、同学互助，全程陪跑。</p>
-        <span class="price" data-zh="FREE" data-en="FREE">FREE</span>
-        <div style="text-align:center;margin-top:12px;"><img src="assets/team/qr_community_permanent.jpg" alt="蜗牛AI学习社群二维码" style="width:140px;height:auto;border-radius:8px;border:1px solid var(--line);margin:0 auto;display:block;"><div style="font-size:0.72rem;color:var(--ink-3);margin-top:6px;" data-zh="扫码加入社群" data-en="Scan to join community">扫码加入社群</div></div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-icon">🎬</div>
-        <h3 data-zh="免费公开视频" data-en="Free Public Videos">免费公开视频</h3>
-        <p data-zh="YouTube / 视频号 / 公众号持续更新，路演、直播、答疑、干货应有尽有。" data-en="YouTube / Video Channel / WeChat Official Account — roadshow, livestream, Q&A, tutorials.">YouTube / 视频号 / 公众号持续更新，路演、直播、答疑、干货应有尽有。</p>
-        <span class="price" data-zh="FREE" data-en="FREE">FREE</span>
-        <a href="#videos" class="link" data-zh="观看视频 →" data-en="Watch Now →">观看视频 →</a>
-      </div>
-
-      <div class="service-card">
-        <div class="service-icon">💬</div>
-        <h3 data-zh="1 对 1 咨询" data-en="1-on-1 Consultation">1 对 1 咨询</h3>
-        <p data-zh="针对企业主 / 高净值客户的 AI 落地咨询，含业务流程改造、AI 工具选型、团队培训。" data-en="For business owners / HNW clients — AI implementation, tool selection, team training.">针对企业主 / 高净值客户的 AI 落地咨询，含业务流程改造、AI 工具选型、团队培训。</p>
-        <span class="price" data-zh="AUD $299 / 小时" data-en="AUD $299 / hour">AUD $299 / 小时</span>
-        <div class="contact-info">
-          <div class="contact-row"><span class="contact-label">📞</span><a href="tel:+61417993551" data-zh="0417 993 551" data-en="0417 993 551">0417 993 551</a></div>
-          <div class="contact-row"><span class="contact-label">✉️</span><a href="mailto:robin@snailai.ai" data-zh="robin@snailai.ai" data-en="robin@snailai.ai">robin@snailai.ai</a></div>
-          <div class="contact-row"><span class="contact-label">💬</span><span data-zh="微信 luobinweixin8" data-en="WeChat luobinweixin8">微信 luobinweixin8</span></div>
-          <div style="text-align:center;margin-top:12px;"><img src="assets/team/qr_robin_wechat.JPG" alt="Robin 微信二维码" style="width:120px;height:120px;border-radius:8px;border:1px solid var(--line);margin:0 auto;display:block;"><div style="font-size:0.72rem;color:var(--ink-3);margin-top:6px;" data-zh="扫码添加 Robin 微信" data-en="Scan to add Robin on WeChat">扫码添加 Robin 微信</div></div>
-        </div>
+      <div class="card industry-card">
+        <div class="card-icon">💼</div>
+        <h3>Professional Services</h3>
+        <p>Client onboarding, document and email workflows, proposal drafting, CRM follow-up and knowledge management for accounting, lending, agency and consulting firms.</p>
+        <a class="card-link" href="/industries/professional-services/">See how we work with firms →</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== SCHEDULE ===== -->
-<section id="schedule" class="schedule-section">
-  <div class="section-inner">
-    <div class="section-tag" data-zh="Schedule" data-en="Schedule">Schedule</div>
-    <h2 class="section-title" data-zh="开班时间表" data-en="Course Schedule">开班时间表</h2>
-    <p class="section-desc" data-zh="两条学习路径，灵活入学，随时开始你的 AI 之旅。" data-en="Two learning tracks, flexible enrollment — start your AI journey anytime.">两条学习路径，灵活入学，随时开始你的 AI 之旅。</p>
-
-    <div class="schedule-timeline">
-      <!-- 第一期 -->
-      <div class="schedule-cohort">
-        <div class="cohort-header">
-          <div class="cohort-badge apply">💻</div>
-          <div>
-            <div class="cohort-title" data-zh="AI 应用 第1期" data-en="AI Application · Cohort 1">AI 应用 第1期</div>
-            <div class="cohort-subtitle" data-zh="线上课 · 12 周 · 12 课时" data-en="Online · 12 Weeks · 12 Lessons">线上课 · 12 周 · 12 课时</div>
-          </div>
-        </div>
-        <div class="cohort-body">
-          <div class="cohort-row">
-            <span class="cohort-label" data-zh="开课" data-en="START">开课</span>
-            <span class="cohort-value"><span class="date-accent">2026 年 7 月 7 日</span></span>
-          </div>
-          <div class="cohort-row">
-            <span class="cohort-label" data-zh="结课" data-en="END">结课</span>
-            <span class="cohort-value"><span class="date-accent">2026 年 10 月 7 日</span></span>
-          </div>
-          <div class="cohort-row">
-            <span class="cohort-label" data-zh="时间" data-en="TIME">时间</span>
-            <span class="cohort-value" data-zh="每周二晚 8:30 - 10:00 (AEST)" data-en="Every Tue 8:30 - 10:00 PM (AEST)">每周二晚 8:30 - 10:00 (AEST)</span>
-          </div>
-        </div>
-        <div class="cohort-qr-footer">
-          <img src="assets/team/qr_cohort_signup.png" alt="扫码入群报名">
-          <span data-zh="扫码入群报名" data-en="Scan to Join">扫码入群报名</span>
-        </div>
+<!-- ===== How we work ===== -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>How we work.</h2>
+      <p>A clear, low-risk path from first conversation to delivered system.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Complete the Business AI Scan</h4>
+        <p>A structured 10-minute intake that captures your goals, systems and repetitive workflows.</p>
       </div>
-
-      <div class="schedule-cohort">
-        <div class="cohort-header">
-          <div class="cohort-badge wealth">💰</div>
-          <div>
-            <div class="cohort-title" data-zh="AI 财富 第1期" data-en="AI Wealth · Cohort 1">AI 财富 第1期</div>
-            <div class="cohort-subtitle" data-zh="线下课 · 13 周 · 24 课时" data-en="In-Person · 13 Weeks · 24 Lessons">线下课 · 13 周 · 24 课时</div>
-          </div>
-        </div>
-        <div class="cohort-body">
-          <div class="cohort-row">
-            <span class="cohort-label" data-zh="开课" data-en="START">开课</span>
-            <span class="cohort-value"><span class="date-gold">2026 年 7 月 11 日</span></span>
-          </div>
-          <div class="cohort-row">
-            <span class="cohort-label" data-zh="结课" data-en="END">结课</span>
-            <span class="cohort-value"><span class="date-gold">2026 年 10 月 11 日</span></span>
-          </div>
-          <div class="cohort-row">
-            <span class="cohort-label" data-zh="时间" data-en="TIME">时间</span>
-            <span class="cohort-value" data-zh="每周六下午 1:00 - 4:30 (AEST)" data-en="Every Sat 1:00 - 4:30 PM (AEST)">每周六下午 1:00 - 4:30 (AEST)</span>
-          </div>
-        </div>
-        <div class="cohort-qr-footer">
-          <img src="assets/team/qr_cohort_signup.png" alt="扫码入群报名">
-          <span data-zh="扫码入群报名" data-en="Scan to Join">扫码入群报名</span>
-        </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Confirm the opportunity</h4>
+        <p>A short 5–10 minute call to verify the key facts and check mutual fit.</p>
       </div>
-
-      <!-- 第二期 -->
-      <div class="schedule-cohort">
-        <div class="cohort-header">
-          <div class="cohort-badge apply">💻</div>
-          <div>
-            <div class="cohort-title" data-zh="AI 应用 第2期" data-en="AI Application · Cohort 2">AI 应用 第2期</div>
-            <div class="cohort-subtitle" data-zh="线上课 · 12 周 · 12 课时" data-en="Online · 12 Weeks · 12 Lessons">线上课 · 12 周 · 12 课时</div>
-          </div>
-        </div>
-        <div class="cohort-body">
-          <div class="cohort-row">
-            <span class="cohort-label" data-zh="开课" data-en="START">开课</span>
-            <span class="cohort-value"><span class="date-accent">2026 年 10 月 20 日</span></span>
-          </div>
-          <div class="cohort-row">
-            <span class="cohort-label" data-zh="结课" data-en="END">结课</span>
-            <span class="cohort-value"><span class="date-accent">2027 年 1 月 20 日</span></span>
-          </div>
-          <div class="cohort-row">
-            <span class="cohort-label" data-zh="时间" data-en="TIME">时间</span>
-            <span class="cohort-value" data-zh="每周二晚 8:30 - 10:00 (AEDT)" data-en="Every Tue 8:30 - 10:00 PM (AEDT)">每周二晚 8:30 - 10:00 (AEDT)</span>
-          </div>
-        </div>
-        <div class="cohort-qr-footer">
-          <img src="assets/team/qr_cohort_signup.png" alt="扫码入群报名">
-          <span data-zh="扫码入群报名" data-en="Scan to Join">扫码入群报名</span>
-        </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>On-site assessment</h4>
+        <p>Qualified Sydney businesses receive a complimentary two-hour on-site assessment led by our founder.</p>
       </div>
-
-      <div class="schedule-cohort">
-        <div class="cohort-header">
-          <div class="cohort-badge wealth">💰</div>
-          <div>
-            <div class="cohort-title" data-zh="AI 财富 第2期" data-en="AI Wealth · Cohort 2">AI 财富 第2期</div>
-            <div class="cohort-subtitle" data-zh="线下课 · 13 周 · 24 课时" data-en="In-Person · 13 Weeks · 24 Lessons">线下课 · 13 周 · 24 课时</div>
-          </div>
-        </div>
-        <div class="cohort-body">
-          <div class="cohort-row">
-            <span class="cohort-label" data-zh="开课" data-en="START">开课</span>
-            <span class="cohort-value"><span class="date-gold">2026 年 10 月 24 日</span></span>
-          </div>
-          <div class="cohort-row">
-            <span class="cohort-label" data-zh="结课" data-en="END">结课</span>
-            <span class="cohort-value"><span class="date-gold">2027 年 1 月 24 日</span></span>
-          </div>
-          <div class="cohort-row">
-            <span class="cohort-label" data-zh="时间" data-en="TIME">时间</span>
-            <span class="cohort-value" data-zh="每周六下午 1:00 - 4:30 (AEDT)" data-en="Every Sat 1:00 - 4:30 PM (AEDT)">每周六下午 1:00 - 4:30 (AEDT)</span>
-          </div>
-        </div>
-        <div class="cohort-qr-footer">
-          <img src="assets/team/qr_cohort_signup.png" alt="扫码入群报名">
-          <span data-zh="扫码入群报名" data-en="Scan to Join">扫码入群报名</span>
-        </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Proposal, implementation &amp; training</h4>
+        <p>A clear proposal with scope and pricing, then delivery and team training — with human approval points throughout.</p>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- 复训政策 -->
-    <div class="retake-policy">
-      <div class="retake-icon">🔄</div>
-      <div class="retake-content">
-        <h3 data-zh="无限期复训政策" data-en="Lifetime Retake Policy">无限期复训政策</h3>
-        <p data-zh="只要交了学费，就可以随时入学。蜗牛AI应用学习是输出式学习，不需要从头到尾学习所谓的理论，任何时间入学直接上手，特别适合零基础小白。所有学员拥有无限期复训的权利，条件如下：" data-en="Once you've paid tuition, you can enroll anytime. Snail AI's approach is output-driven learning — no need to study theory from start to finish. Jump right in at any point, perfect for complete beginners. All students have lifetime retake privileges, subject to the following conditions:">只要交了学费，就可以随时入学。蜗牛AI应用学习是输出式学习，不需要从头到尾学习所谓的理论，任何时间入学直接上手，特别适合零基础小白。所有学员拥有无限期复训的权利，条件如下：</p>
-        <ul class="retake-conditions">
-          <li data-zh="做课堂助教 —— 协助新学员尽快上手，教学相长" data-en="Serve as a classroom TA — help new students get up to speed, teach and learn together">做课堂助教 —— 协助新学员尽快上手，教学相长</li>
-          <li data-zh="好位置让给新学员 —— 把前排座位留给第一次来的新手" data-en="Give prime seats to new students — save front-row seats for first-timers">好位置让给新学员 —— 把前排座位留给第一次来的新手</li>
-          <li data-zh="如果课堂位置有限，请先把位置留给新朋友，安排你下次复训（除非提前再次购买学习席位 FIFS）" data-en="If classroom seating is limited, please yield your seat to new friends first — you'll be scheduled for the next retake session (unless you purchase an additional seat in advance, FIFS)">如果课堂位置有限，请先把位置留给新朋友，安排你下次复训（除非提前再次购买学习席位 FIFS）</li>
+<!-- ===== On-site assessment ===== -->
+<section class="section">
+  <div class="container">
+    <div class="assessment-box">
+      <div>
+        <h2>Complimentary on-site AI opportunity assessment</h2>
+        <p>Qualified Sydney businesses may receive a complimentary two-hour on-site assessment led by Snail AI founder Robin. Complete the Business AI Scan first so we can review your goals, systems and current workflows before arranging a visit.</p>
+        <ul class="check-list">
+          <li>Available to qualifying Sydney businesses — a decision-maker or key process owner must attend</li>
+          <li>Scan completed first, followed by a 5–10 minute confirmation call</li>
+          <li>Structured discovery of your real workflows, people and systems — not a sales visit</li>
+          <li>The assessment is not free detailed system design, and not every applicant will receive an on-site visit</li>
+        </ul>
+      </div>
+      <div class="assessment-cta">
+        <div class="big">2 hrs</div>
+        <p style="font-size:13.5px;color:var(--ink-3);margin:0;">on-site, founder-led,<br>no obligation</p>
+        <a href="/business-ai-scan/" class="btn btn-primary">Start with the Scan</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Case study ===== -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <h2>Delivered work, not concepts.</h2>
+    </div>
+    <div class="card-grid cols-2">
+      <div class="card">
+        <span class="card-tag">Case Study · Medical</span>
+        <h3>Specialist Medical Clinic Website &amp; Workflow Modernisation</h3>
+        <p>A Sydney specialist clinic's entire web presence rebuilt — professional website, structured service information, doctor profiles and an e-signature agreement workflow — replacing manual, paper-based processes.</p>
+        <a class="card-link" href="/case-studies/specialist-medical-clinic-modernisation/">Read the case study →</a>
+      </div>
+      <div class="card">
+        <span class="card-tag">Case Study · B2B</span>
+        <h3>Trade Workwear B2B E-commerce Platform</h3>
+        <p>An end-to-end B2B ordering platform for a Sydney workwear business — customer portal, product catalogue, quoting and order workflows designed around how trade customers actually buy.</p>
+        <a class="card-link" href="/case-studies/">All case studies →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Why Snail AI ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Why Snail AI</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-item"><h3>Founder-led discovery</h3><p>Robin personally leads business discovery in Sydney — your project is understood by the person accountable for it.</p></div>
+      <div class="why-item"><h3>Local communication</h3><p>Supported by Australian team members. No timezone gymnastics, no offshore hand-offs.</p></div>
+      <div class="why-item"><h3>Practical delivery</h3><p>We deliver working systems, not generic AI advice or slideware.</p></div>
+      <div class="why-item"><h3>Existing-system-first</h3><p>We integrate with what you already run rather than forcing a rip-and-replace.</p></div>
+      <div class="why-item"><h3>Human approval &amp; risk controls</h3><p>High-risk actions keep a human in the loop. Boundaries are documented, not assumed.</p></div>
+      <div class="why-item"><h3>Training included</h3><p>Your team is trained to actually use the solution — adoption is part of delivery, not an afterthought.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Final CTA ===== -->
+<section class="cta-band">
+  <div class="container">
+    <h2>Start with your business, not with a list of AI tools.</h2>
+    <p>The Business AI Scan takes about 10 minutes and tells us everything we need to start a meaningful conversation.</p>
+    <a href="/business-ai-scan/" class="btn btn-primary btn-lg">Run the Business AI Scan</a>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="/assets/snailai_logo.png" alt="Snail AI logo" style="background:#fff;border-radius:6px;padding:4px;">
+        <p>Practical AI systems for Sydney businesses. Website and system integration, AI workflow automation, and corporate AI training.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="/services/ai-workflow-automation/">AI Workflow Automation</a></li>
+          <li><a href="/services/website-system-integration/">Website &amp; System Integration</a></li>
+          <li><a href="/services/business-ai-assessment/">Business AI Assessment</a></li>
+          <li><a href="/services/corporate-ai-training/">Corporate AI Training</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Industries</h4>
+        <ul>
+          <li><a href="/industries/medical-clinics/">Medical &amp; Specialist Clinics</a></li>
+          <li><a href="/industries/construction-trades/">Construction &amp; Trades</a></li>
+          <li><a href="/industries/property-management/">Property Management</a></li>
+          <li><a href="/industries/professional-services/">Professional Services</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/case-studies/">Case Studies</a></li>
+          <li><a href="/insights/">Insights</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          <li><a href="/business-ai-scan/">Business AI Scan</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/terms/">Terms</a></li>
+          <li><a href="/security-and-data-handling/">Security &amp; Data Handling</a></li>
+          <li><a href="https://academy.snailai.ai/">Chinese Academy 中文学院</a></li>
         </ul>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ===== VIDEOS ===== -->
-<section id="videos">
-  <div class="section-inner">
-    <div class="section-tag" data-zh="Videos" data-en="Videos">Videos</div>
-    <h2 class="section-title" data-zh="之前各种视频 / 直播" data-en="Past Videos & Livestreams">之前各种视频 / 直播</h2>
-
-    <div class="videos-grid">
-      <!-- 蜗牛AI直播开头介绍 7/4 -->
-      <div class="video-card">
-        <div class="video-frame">
-          <iframe src="https://www.youtube.com/embed/IICmzeDRGT4" title="蜗牛AI直播开头介绍 7/4" loading="lazy" allowfullscreen></iframe>
-        </div>
-        <div class="video-info">
-          <h3 data-zh="天降福利🎉：9/26 Killara Golf Club 毕业展，免费装龙虾🦞" data-en="Free Gift 🎉: 9/26 Killara Golf Club Graduation Expo, Free Lobster 🦞 Install">天降福利🎉：9/26 Killara Golf Club 毕业展，免费装龙虾🦞</h3>
-          <p data-zh="悉尼华人朋友们，免费给你的手提电脑安装龙虾🦞，9月26日13:30pm，到Killara Golf Club参加蜗牛AI第一期AI项目毕业展，同时给你的手提电脑免费安装龙虾🦞，你从此就有了给你24小时打工的AI助手[呲牙][强]，尽快点击报名留位 https://snailai.ai/register?ref_code=G2621 位置有限，先到先得！免费停车，免费茶点水果。[呲牙][强]我们不见不散[呲牙][强][抱拳] #蜗牛AI #澳洲AI应用" data-en="Free lobster 🦞 install for Sydney Chinese friends! Join us 9/26 13:30 at Killara Golf Club for Snail AI's first AI Project Graduation Expo. Get a 24/7 AI assistant on your laptop. Limited seats, free parking & refreshments. Register: https://snailai.ai/register?ref_code=G2621">悉尼华人朋友们，免费给你的手提电脑安装龙虾🦞，9月26日13:30pm，到Killara Golf Club参加蜗牛AI第一期AI项目毕业展，同时给你的手提电脑免费安装龙虾🦞，你从此就有了给你24小时打工的AI助手[呲牙][强]，尽快点击报名留位 https://snailai.ai/register?ref_code=G2621 位置有限，先到先得！免费停车，免费茶点水果。[呲牙][强]我们不见不散[呲牙][强][抱拳] #蜗牛AI #澳洲AI应用</p>
-          <span class="meta">YOUTUBE · LIVESTREAM</span>
-        </div>
-      </div>
-
-      <!-- Robin 财富直播 7/4 -->
-      <div class="video-card">
-        <div class="video-frame">
-          <iframe src="https://www.youtube.com/embed/qIZp8pTQA3M" title="Robin 财富直播 7/4" loading="lazy" allowfullscreen></iframe>
-        </div>
-        <div class="video-info">
-          <h3 data-zh="Robin 财富直播 · 7/4" data-en="Robin Wealth Livestream · 7/4">Robin 财富直播 · 7/4</h3>
-          <p data-zh="Robin 深度分享 KSI 悉尼土地投资 + Bradfield 西悉尼国际机场 + SMSF 财富升级。" data-en="Robin's deep dive on KSI Sydney land investment + Bradfield Western Sydney Airport + SMSF wealth.">Robin 深度分享 KSI 悉尼土地投资 + Bradfield 西悉尼国际机场 + SMSF 财富升级。</p>
-          <span class="meta">YOUTUBE · LIVESTREAM</span>
-        </div>
-      </div>
-
-      <!-- 7/4 财富直播 -->
-      <div class="video-card">
-        <div class="video-frame">
-          <iframe src="https://www.youtube.com/embed/Ry4CN9_rvj8" title="蜗牛AI财富投资技术应用直播回放 7/4" loading="lazy" allowfullscreen></iframe>
-        </div>
-        <div class="video-info">
-          <h3 data-zh="蜗牛AI财富投资技术应用直播回放 · 7/4" data-en="Snail AI Wealth & AI Livestream Replay · 7/4">蜗牛AI财富投资技术应用直播回放 · 7/4</h3>
-          <p data-zh="蜗牛AI首次财富投资直播回放，深度覆盖 AI 技术在财富投资中的应用。" data-en="First Snail AI wealth & AI livestream replay, deep dive on AI applications in wealth investment.">蜗牛AI首次财富投资直播回放，深度覆盖 AI 技术在财富投资中的应用。</p>
-          <span class="meta">YOUTUBE · LIVESTREAM</span>
-        </div>
-      </div>
-
-      <!-- 6/23 首次直播 -->
-      <div class="video-card">
-        <div class="video-frame">
-          <iframe src="https://www.youtube.com/embed/ZuVCVkTgHug" title="蜗牛AI首次直播 6/23" loading="lazy" allowfullscreen></iframe>
-        </div>
-        <div class="video-info">
-          <h3 data-zh="蜗牛AI首次直播 · 6/23" data-en="Snail AI First Livestream · 6/23">蜗牛AI首次直播 · 6/23</h3>
-          <p data-zh="2026年6月23日蜗牛AI首次直播回放，分享 AI 应用理念与课程介绍。" data-en="June 23, 2026 — Snail AI's very first livestream replay, sharing AI application philosophy and course introduction.">2026年6月23日蜗牛AI首次直播回放，分享 AI 应用理念与课程介绍。</p>
-          <span class="meta">YOUTUBE · LIVESTREAM</span>
-        </div>
-      </div>
-
-      <!-- 什么是 AI 刚需 -->
-      <div class="video-card">
-        <div class="video-frame">
-          <iframe src="https://www.youtube.com/embed/NZag6CZ0PHA" title="什么是 AI 刚需" loading="lazy" allowfullscreen></iframe>
-        </div>
-        <div class="video-info">
-          <h3 data-zh="什么是 AI 刚需？ · 6 个挖掘维度" data-en="What is an AI Need? · 6 Dimensions">什么是 AI 刚需？ · 6 个挖掘维度</h3>
-          <p data-zh="深度讲解 AI 刚需的定义，提供 6 个挖掘维度，帮你系统性地找到自己的真实需求。" data-en="Deep dive on AI needs and 6 discovery dimensions to systematically identify your real needs.">深度讲解 AI 刚需的定义，提供 6 个挖掘维度，帮你系统性地找到自己的真实需求。</p>
-          <span class="meta">YOUTUBE · TUTORIAL</span>
-        </div>
-      </div>
-
+    <div class="footer-bottom">
+      <div>© <span id="year">2026</span> Snail AI · Ausrealt International Pty Ltd · ABN 72 142 901 013 · Suite 404, 53 Walker Street, North Sydney NSW 2060 · <a href="tel:+61417993551">0417 993 551</a></div>
+      <div><span data-site-version>V3.0.0</span></div>
     </div>
-  </div>
-</section>
-
-<!-- ===== CONTACT US ===== -->
-<section id="contact" class="contact-section">
-  <div class="section-inner">
-    <div class="section-tag" data-zh="Contact Us" data-en="Contact Us">Contact Us</div>
-    <h2 class="section-title" data-zh="联系我们" data-en="Contact Us">联系我们</h2>
-    <p class="section-desc" data-zh="有问题随时联系，我们随时在线。" data-en="Have questions? We're always reachable.">有问题随时联系，我们随时在线。</p>
-
-    <div class="contact-grid">
-      <!-- Robin -->
-      <div class="contact-person">
-        <div class="contact-person-header">
-          <img src="assets/team/robin_photo.jpg" alt="Robin" class="avatar">
-          <div class="name-block">
-            <h3>Robin</h3>
-            <div class="role" data-zh="Founder · Lead Instructor" data-en="Founder · Lead Instructor">Founder · Lead Instructor</div>
-          </div>
-          <img src="assets/team/qr_robin_wechat.JPG" alt="Robin 微信二维码" class="qr-badge">
-        </div>
-        <div class="contact-detail">
-          <span class="icon">📱</span>
-          <a href="tel:+61417993551" data-zh="0417 993 551" data-en="0417 993 551">0417 993 551</a>
-        </div>
-        <div class="contact-detail">
-          <span class="icon">✉️</span>
-          <a href="mailto:robin@snailai.ai" data-zh="robin@snailai.ai" data-en="robin@snailai.ai">robin@snailai.ai</a>
-        </div>
-        <div class="contact-detail">
-          <span class="icon">💬</span>
-          <span data-zh="微信 luobinweixin8" data-en="WeChat luobinweixin8">微信 luobinweixin8</span>
-        </div>
-      </div>
-
-      <!-- Michael -->
-      <div class="contact-person">
-        <div class="contact-person-header">
-          <img src="assets/team/michael_guo.jpg" alt="Michael Guo" class="avatar">
-          <div class="name-block">
-            <h3>Michael Guo</h3>
-            <div class="role" data-zh="Co-Founder · Wealth Instructor" data-en="Co-Founder · Wealth Instructor">Co-Founder · Wealth Instructor</div>
-          </div>
-          <img src="assets/team/qr_michael.jpg" alt="Michael 微信二维码" class="qr-badge">
-        </div>
-        <div class="contact-detail">
-          <span class="icon">📱</span>
-          <a href="tel:+61430680555" data-zh="0430 680 555" data-en="0430 680 555">0430 680 555</a>
-        </div>
-        <div class="contact-detail">
-          <span class="icon">✉️</span>
-          <a href="mailto:admin@snailai.ai" data-zh="admin@snailai.ai" data-en="admin@snailai.ai">admin@snailai.ai</a>
-        </div>
-        <div class="contact-detail">
-          <span class="icon">💬</span>
-          <span data-zh="微信 michael_303" data-en="WeChat michael_303">微信 michael_303</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Office Address -->
-    <div class="contact-office">
-      <div class="office-icon">🏢</div>
-      <div class="office-info">
-        <h3 data-zh="蜗牛 AI 办公室" data-en="Snail AI Office">蜗牛 AI 办公室</h3>
-        <p data-zh="Suite 404, 53 Walker Street, North Sydney, NSW 2060" data-en="Suite 404, 53 Walker Street, North Sydney, NSW 2060">Suite 404, 53 Walker Street, North Sydney, NSW 2060</p>
-        <div class="parking-badge">
-          <span>🅿️</span>
-          <span data-zh="免费停车" data-en="Free Parking">免费停车</span>
-          <span>·</span>
-          <a href="https://mp.weixin.qq.com/s/RlT2T4ynOeeJYkJnu1RKUA" target="_blank" data-zh="停车指引 →" data-en="Parking Guide →">停车指引 →</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== FAQ ENTRY ===== -->
-<section>
-  <div class="section-inner">
-    <div class="faq-entry">
-      <h2 data-zh="FAQ 常见问题" data-en="FAQ Frequently Asked Questions">FAQ 常见问题</h2>
-      <p data-zh="电脑配置、课程内容、退款政策、讲师资质、12 个你最关心的问题。" data-en="Computer specs, course content, refund policy, instructor credentials — 12 most-asked questions.">电脑配置、课程内容、退款政策、讲师资质、12 个你最关心的问题。</p>
-      <a href="/faq/" class="btn btn-primary" data-zh="查看 FAQ →" data-en="View FAQ →">查看 FAQ →</a>
-    </div>
-  </div>
-</section>
-
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-  <img src="assets/snailai_logo.png" alt="蜗牛 AI Logo" class="brand-logo">
-  <p data-zh="© 2026 蜗牛 AI · 企业AI服务 + 企业培训 & 学院 · 悉尼" data-en="© 2026 SnailAI.AI · Business AI Services + Corporate Training & Academy · Sydney">© 2026 蜗牛 AI · 企业AI服务 + 企业培训 & 学院 · 悉尼</p>
-  <div class="links">
-    <a href="/enterprise/" data-zh="企业 AI" data-en="Business AI">企业 AI</a>
-    <a href="/business-opportunity-scan/" data-zh="AI 扫描" data-en="AI Scan">AI 扫描</a>
-    <a href="/corporate-training/" data-zh="企业培训" data-en="Corporate Training">企业培训</a>
-    <a href="/case-studies/" data-zh="案例" data-en="Case Studies">案例</a>
-    <a href="/faq/" data-zh="FAQ" data-en="FAQ">FAQ</a>
-    <a href="/login.html" target="_blank" rel="noopener" data-zh="学员登录" data-en="Login">学员登录</a>
-    <a href="#contact" data-zh="联系我们" data-en="Contact">联系我们</a>
-    <a href="/privacy/" data-zh="隐私政策" data-en="Privacy">隐私政策</a>
-    <a href="/terms/" data-zh="服务条款" data-en="Terms">服务条款</a>
-  </div>
-  <div class="version" id="version-tag">V2.2.0 · 2026-08-24 · SnailAI Website</div>
-  <div class="company-info" style="margin-top:20px;font-size:0.72rem;color:var(--ink-3);line-height:1.7;">
-    <p data-zh="Ausrealt International Pty Ltd · ABN 72 142 901 013" data-en="Ausrealt International Pty Ltd · ABN 72 142 901 013">Ausrealt International Pty Ltd · ABN 72 142 901 013</p>
-    <p data-zh="Suite 404, 53 Walker Street, North Sydney, NSW 2060" data-en="Suite 404, 53 Walker Street, North Sydney, NSW 2060">Suite 404, 53 Walker Street, North Sydney, NSW 2060</p>
   </div>
 </footer>
 
-<script>
-  // ===== Language switcher =====
-  const LANG_KEY = 'snailai-lang';
-  function applyLang(lang) {
-    document.querySelectorAll('[data-zh]').forEach(el => {
-      el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
-    });
-    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.lang === lang);
-    });
-    const _t = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
-    if (_t) document.title = _t;
-    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
-  }
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
-  });
-  // Init
-  let savedLang = 'en';
-  try { savedLang = localStorage.getItem(LANG_KEY) || 'en'; } catch(e) {}
-  applyLang(savedLang);
-
-  // ===== Version tag (read from version.json) =====
-  fetch('version.json').then(r => r.json()).then(d => {
-    const el = document.getElementById('version-tag');
-    if (el && d) {
-      el.textContent = `V${d.version} · ${d.release_date} · SnailAI Website`;
-    }
-  }).catch(() => {});
-
-  // ===== Stripe Pay Button Handler =====
-  document.querySelectorAll('.btn-pay').forEach(btn => {
-    btn.addEventListener('click', async function () {
-      const course = this.dataset.course;
-      if (!course) return;
-      this.classList.add('loading');
-      this.textContent = this.dataset.lang === 'en' ? 'Processing...' : '处理中...';
-      try {
-        const res = await fetch('/api/create-checkout-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ course: course }),
-        });
-        const data = await res.json();
-        if (data.url) {
-          window.location.href = data.url;
-        } else {
-          alert((data.error || 'Payment error') + '\n' + (this.dataset.lang === 'en' ? 'Please try again or contact us.' : '请稍后重试或联系我们。'));
-          this.classList.remove('loading');
-          this.textContent = this.getAttribute('data-zh');
-        }
-      } catch (e) {
-        alert(this.dataset.lang === 'en' ? 'Network error. Please try again.' : '网络错误，请重试。');
-        this.classList.remove('loading');
-        this.textContent = this.getAttribute('data-zh');
-      }
-    });
-  });
-
-  // Check URL for cancelled payment
-  if (window.location.search.includes('cancelled=1')) {
-    history.replaceState(null, '', window.location.pathname);
-  }
-</script>
-
-<!-- Mobile Bottom Nav (homepage root) — disabled 2026-08-19 -->
-<!--
-<nav class="bottom-nav">
-  <a href="#services"><span class="bnav-icon">🛎️</span><span class="bnav-label">服务</span></a>
-  <a href="#schedule"><span class="bnav-icon">🗓️</span><span class="bnav-label">课程表</span></a>
-  <a href="#videos"><span class="bnav-icon">🎬</span><span class="bnav-label">视频</span></a>
-  <a href="/faq/mobile"><span class="bnav-icon">📋</span><span class="bnav-label">FAQ</span></a>
-  <a href="/login.html" target="_blank" rel="noopener"><span class="bnav-icon">🔑</span><span class="bnav-label">学员登录</span></a>
-  <a href="/qa/mobile.html"><span class="bnav-icon">💬</span><span class="bnav-label">蜗牛问答</span></a>
-  <a href="#contact"><span class="bnav-icon">📞</span><span class="bnav-label">联系我们</span></a>
-  <a href="#all-links"><span class="bnav-icon">🔗</span><span class="bnav-label">链接大全</span></a>
-</nav>
--->
-<script src="/assets/ai-tutor-widget.js"></script>
-
+<script src="/assets/site.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security &amp; Data Handling | Snail AI</title>
+<meta name="description" content="How Snail AI handles client data and system security: access boundaries, storage locations, approval rules, encryption and retention — stated plainly.">
+<link rel="icon" type="image/png" href="/assets/snailai_logo.png">
+<link rel="canonical" href="https://snailai.ai/security-and-data-handling/">
+<meta property="og:title" content="Security &amp; Data Handling | Snail AI">
+<meta property="og:description" content="Our data boundaries and security practices, stated plainly.">
+<meta property="og:image" content="https://snailai.ai/assets/snailai_logo.png">
+<meta property="og:url" content="https://snailai.ai/security-and-data-handling/">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo"><img src="/assets/snailai_logo.png" alt="Snail AI logo"><span>Snail AI</span></a>
+  <div class="nav-links">
+    <a href="/services/">Services</a>
+    <a href="/industries/">Industries</a>
+    <a href="/case-studies/">Case Studies</a>
+    <a href="/insights/">Insights</a>
+    <a href="/about/">About</a>
+    <a href="/contact/" class="nav-secondary">Book a Consultation</a>
+    <a href="/business-ai-scan/" class="nav-cta">Run the Business AI Scan</a>
+  </div>
+  <button class="nav-burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+
+<header class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="/">Home</a> / Security &amp; Data Handling</div>
+    <span class="eyebrow">Policy</span>
+    <h1>Security &amp; data handling, stated plainly.</h1>
+    <p class="lede">This page describes how we actually handle client data and access client systems — written to match our real practices, not a template.</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+    <div class="cs-section" style="margin-bottom:44px;">
+      <h2 style="font-size:24px;font-weight:800;margin-bottom:16px;">Core principles</h2>
+      <ul class="check-list" style="max-width:780px;">
+        <li><strong>Least access.</strong> We request access only to the systems and data a specific workflow requires — scoped, documented and approved by you before use.</li>
+        <li><strong>Official interfaces only.</strong> We integrate through vendor-supplied APIs, widgets and hosted pages — not direct database connections or scraped workarounds.</li>
+        <li><strong>Human approval on high-risk actions.</strong> Customer-facing communications, payments and anything compliance-sensitive keep a human in the loop by design.</li>
+        <li><strong>Your data stays yours.</strong> We don't retain client data after an engagement ends beyond what's needed for invoicing and legal obligations.</li>
+        <li><strong>No secrets in code.</strong> API keys and credentials live in server-side environment variables and secret managers — never in client-side code, repositories or logs.</li>
+      </ul>
+    </div>
+
+    <div class="cs-section" style="margin-bottom:44px;">
+      <h2 style="font-size:24px;font-weight:800;margin-bottom:16px;">Data handling in practice</h2>
+      <div class="card-grid cols-2">
+        <div class="card"><div class="card-icon">🗄️</div><h3>What we collect</h3><p>Forms on this site collect only what's needed to respond to you: name, work email, company, phone and your message. We never ask for patient records, ID documents or financial account details through web forms.</p></div>
+        <div class="card"><div class="card-icon">🔐</div><h3>Storage &amp; transport</h3><p>All traffic to our services is HTTPS-encrypted. Submission data is stored with minimal-privency access controls on managed infrastructure. Form submissions are rate-limited and bot-protected.</p></div>
+        <div class="card"><div class="card-icon">✍️</div><h3>E-signature documents</h3><p>Agreement PDFs and signature images are stored on encrypted persistent storage. Each signer receives a unique access token; every view, share and signature is event-logged for audit. Documents are only accessible to their signers and authorised administrators.</p></div>
+        <div class="card"><div class="card-icon">💳</div><h3>Payments</h3><p>Payments run through Stripe's hosted checkout. Card data never touches our servers — we only ever see a payment status and a session identifier.</p></div>
+      </div>
+    </div>
+
+    <div class="cs-section" style="margin-bottom:44px;">
+      <h2 style="font-size:24px;font-weight:800;margin-bottom:16px;">AI-specific boundaries</h2>
+      <ul class="check-list" style="max-width:780px;">
+        <li>Client documents are processed within workflows we build <em>for the client</em> — not pasted into third-party AI tools for our own convenience</li>
+        <li>Where AI services are used in a workflow, the data flow (what goes where, retained how long) is documented in the project proposal</li>
+        <li>Sensitive categories — patient clinical data, legal privilege, regulated financial data — are identified during discovery and receive a dedicated data-risk review</li>
+        <li>We will decline workflows that require unauthorised handling of sensitive personal data, even if technically straightforward</li>
+      </ul>
+    </div>
+
+    <div class="cs-section">
+      <h2 style="font-size:24px;font-weight:800;margin-bottom:16px;">Retention &amp; your rights</h2>
+      <p style="max-width:780px;font-size:15.5px;color:var(--ink-2);">Form submissions are retained only as long as needed to handle your enquiry. You can request access to, correction of, or deletion of your personal information at any time by emailing <a href="mailto:robin@snailai.ai">robin@snailai.ai</a>. See our <a href="/privacy/">Privacy Policy</a> for the full statement.</p>
+      <p style="max-width:780px;font-size:13px;color:var(--ink-3);margin-top:20px;">Last reviewed: September 2026 · Maintained by Snail AI · This page is reviewed whenever our practices change — not on a schedule for its own sake.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="/assets/snailai_logo.png" alt="Snail AI logo" style="background:#fff;border-radius:6px;padding:4px;">
+        <p>Practical AI systems for Sydney businesses.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="/services/ai-workflow-automation/">AI Workflow Automation</a></li>
+          <li><a href="/services/website-system-integration/">Website &amp; System Integration</a></li>
+          <li><a href="/services/business-ai-assessment/">Business AI Assessment</a></li>
+          <li><a href="/services/corporate-ai-training/">Corporate AI Training</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Industries</h4>
+        <ul>
+          <li><a href="/industries/medical-clinics/">Medical Clinics</a></li>
+          <li><a href="/industries/construction-trades/">Construction &amp; Trades</a></li>
+          <li><a href="/industries/property-management/">Property Management</a></li>
+          <li><a href="/industries/professional-services/">Professional Services</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/case-studies/">Case Studies</a></li>
+          <li><a href="/insights/">Insights</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/terms/">Terms</a></li>
+          <li><a href="/security-and-data-handling/">Security &amp; Data Handling</a></li>
+          <li><a href="https://academy.snailai.ai/">Chinese Academy 中文学院</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© <span class="fyear">2026</span> Snail AI · Ausrealt International Pty Ltd · ABN 72 142 901 013 · North Sydney NSW · <a href="tel:+61417993551">0417 993 551</a></div>
+      <div><span data-site-version></span></div>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/site.js"></script>
+<script>document.querySelectorAll('.fyear').forEach(function(e){e.textContent=new Date().getFullYear();});</script>
+</body>
+</html>

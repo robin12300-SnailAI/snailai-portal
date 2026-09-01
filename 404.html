@@ -1,30 +1,37 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>页面未找到 - 蜗牛 AI</title>
+<title>Page not found | Snail AI</title>
+<meta name="robots" content="noindex">
 <style>
+  :root { --ink:#1A1A2E; --accent:#FF5B1F; --paper:#FCFCFA; --line:rgba(26,26,46,.1); }
   body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-       background:#0f1115;color:#e8e8ea;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
-  .box{text-align:center;padding:40px}
-  .logo{width:72px;margin-bottom:16px}
-  h1{color:#d4a23a;font-size:22px;margin:0 0 8px}
-  p{color:#9aa0a6;font-size:15px;margin:0 0 24px}
-  a{display:inline-block;margin:6px;text-decoration:none;background:#d4a23a;color:#0f1115;
-    padding:10px 18px;border-radius:8px;font-weight:600;font-size:14px}
-  a.alt{background:#1a1d24;color:#e8e8ea;border:1px solid #2a2e37}
+       background:var(--paper);color:var(--ink);font-family:'Inter','Helvetica Neue',Arial,sans-serif}
+  .box{text-align:center;padding:40px;max-width:520px}
+  .logo{height:44px;margin:0 auto 20px;display:block}
+  .code{font-size:64px;font-weight:800;letter-spacing:-.03em;color:var(--accent);line-height:1}
+  h1{font-size:20px;margin:14px 0 8px;font-weight:700}
+  p{color:#6A6A85;font-size:15px;margin:0 0 26px}
+  a{display:inline-block;margin:5px;text-decoration:none;background:var(--accent);color:#fff;
+    padding:11px 20px;border-radius:999px;font-weight:700;font-size:14px}
+  a.alt{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .links{margin-top:26px;font-size:13.5px;color:#6A6A85}
+  .links a{background:none;padding:0;color:var(--accent);font-weight:600}
 </style>
 </head>
 <body>
   <div class="box">
-    <img class="logo" src="assets/snailai_logo.png" alt="蜗牛AI logo">
-    <h1>404 · 页面走丢了</h1>
-    <p>你访问的页面不存在或已移动。回到主页继续探索 AI 学习之旅。</p>
-    <a href="/">返回首页</a>
-    <a class="alt" href="/online-course/">线上课程</a>
-    <a class="alt" href="/offline-course/">线下工作坊</a>
-    <a class="alt" href="/faq/">常见问题</a>
+    <img class="logo" src="/assets/snailai_logo.png" alt="Snail AI">
+    <div class="code">404</div>
+    <h1>That page doesn't exist.</h1>
+    <p>It may have moved as part of our site rebuild. Here are the places you're most likely looking for:</p>
+    <a href="/">Home</a>
+    <a href="/services/" class="alt">Services</a>
+    <a href="/business-ai-scan/" class="alt">Business AI Scan</a>
+    <a href="/contact/" class="alt">Contact</a>
+    <div class="links">Looking for the Chinese academy? <a href="https://academy.snailai.ai/">academy.snailai.ai</a></div>
   </div>
 </body>
 </html>

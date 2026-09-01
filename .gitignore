@@ -32,3 +32,4 @@ server/portal.log
 路演直播 PPT/**/*.avi
 路演直播 PPT/**/*.pdf
 # png / jpg / jpeg / mp3 入库（GitHub Pages 持久托管需要这些静态资源）
+server/.venv/
