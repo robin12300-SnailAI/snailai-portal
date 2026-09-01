@@ -29,6 +29,12 @@ HREF_RE = re.compile(r'<a\s[^>]*href=["\']([^"\'#]+)["\']', re.I)
 SKIP_EXT = (".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".ico", ".mp4",
             ".webm", ".woff", ".woff2", ".ttf", ".css", ".js")
 
+# 误报过滤器
+SKIP_PATTERNS = (
+    "${",           # JS 模板字符串里的占位符（如 href="${c.href}"），不是真实链接
+    "/cdn-cgi/",    # Cloudflare 邮件混淆 / 内部端点，需特定上下文才能返回 200
+)
+
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     """Capture redirect target without following, so we can record the chain."""
@@ -43,8 +49,17 @@ def build_opener(follow: bool):
     return urllib.request.build_opener(NoRedirect)
 
 
+def norm(url: str) -> str:
+    """百分号编码非 ASCII 路径——否则 urllib 直接抛错，浏览器却会自动编码。
+
+    不修的话中文路径（如 /AI 应用线上班）会被误报成死链。
+    """
+    return urllib.parse.quote(url, safe=":/?#[]@!$&'()*+,;=%~")
+
+
 def get(url: str, follow: bool = True):
     """Return (status, final_url, body)."""
+    url = norm(url)
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     try:
         with build_opener(follow).open(req, timeout=25) as r:
@@ -104,6 +119,8 @@ def main() -> int:
         for href in HREF_RE.findall(body):
             href = href.strip()
             if not href or href.startswith(("mailto:", "tel:", "javascript:", "data:")):
+                continue
+            if any(bad in href for bad in SKIP_PATTERNS):
                 continue
             if href.lower().split("?")[0].endswith(SKIP_EXT):
                 continue
