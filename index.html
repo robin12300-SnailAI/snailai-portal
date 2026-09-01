@@ -18,6 +18,7 @@
 {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
+  "@id": "https://snailai.ai/#organization",
   "name": "Snail AI",
   "description": "Practical AI systems for Sydney businesses — website and system integration, AI workflow automation, business AI assessment and corporate training.",
   "url": "https://snailai.ai/",
@@ -39,6 +40,30 @@
   ],
   "founder": {"@type": "Person", "name": "Robin Luo", "jobTitle": "Founder and Business AI Implementation Lead"},
   "knowsAbout": ["AI workflow automation", "website system integration", "business AI assessment", "corporate AI training"]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://snailai.ai/#website",
+      "url": "https://snailai.ai/",
+      "name": "Snail AI",
+      "publisher": {"@id": "https://snailai.ai/#organization"},
+      "inLanguage": "en-AU"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://snailai.ai/#webpage",
+      "url": "https://snailai.ai/",
+      "name": "AI Workflow Automation and System Integration Sydney",
+      "isPartOf": {"@id": "https://snailai.ai/#website"},
+      "about": {"@id": "https://snailai.ai/#organization"},
+      "primaryImageOfPage": {"@type": "ImageObject", "url": "https://snailai.ai/assets/snailai_logo.png"}
+    }
+  ]
 }
 </script>
 <link rel="stylesheet" href="/assets/site.css">
