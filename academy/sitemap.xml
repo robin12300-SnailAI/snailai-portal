@@ -8,5 +8,11 @@
   <url><loc>https://academy.snailai.ai/ai-tutor/</loc><priority>0.6</priority></url>
   <url><loc>https://academy.snailai.ai/qa/</loc><priority>0.6</priority></url>
   <url><loc>https://academy.snailai.ai/blog/</loc><priority>0.6</priority></url>
+  <url><loc>https://academy.snailai.ai/blog/chatgpt-basics/</loc><priority>0.6</priority></url>
+  <url><loc>https://academy.snailai.ai/blog/prompt-engineering/</loc><priority>0.6</priority></url>
+  <url><loc>https://academy.snailai.ai/blog/ai-sme/</loc><priority>0.6</priority></url>
+  <url><loc>https://academy.snailai.ai/blog/ai-image-video/</loc><priority>0.6</priority></url>
+  <url><loc>https://academy.snailai.ai/blog/ai-wealth/</loc><priority>0.6</priority></url>
+  <url><loc>https://academy.snailai.ai/blog/sydney-workshop/</loc><priority>0.6</priority></url>
   <url><loc>https://academy.snailai.ai/login.html</loc><priority>0.5</priority></url>
 </urlset>

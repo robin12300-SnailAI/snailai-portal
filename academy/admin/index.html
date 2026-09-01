@@ -203,7 +203,7 @@
       </div>
       <div class="field">
         <label data-zh="Portal 网址" data-en="Portal URL">Portal 网址</label>
-        <input type="text" id="peUrl" value="https://snailai.ai/login.html">
+        <input type="text" id="peUrl" value="https://academy.snailai.ai/login.html">
       </div>
       <button class="btn primary" onclick="sendPortalEmail()" data-zh="预览并发送" data-en="Preview & Send">预览并发送</button>
     </div>
@@ -469,7 +469,7 @@
     const email = document.getElementById("peEmail").value.trim();
     const username = document.getElementById("peUser").value.trim();
     const password = document.getElementById("pePw").value.trim();
-    const portalUrl = document.getElementById("peUrl").value.trim() || "https://snailai.ai/login.html";
+    const portalUrl = document.getElementById("peUrl").value.trim() || "https://academy.snailai.ai/login.html";
     err.className = "err"; err.textContent = "";
     if (!email || !username || !password){
       err.textContent = t({zh:"客户邮箱、账号、密码都不能为空",en:"Email, username and password are all required"});
