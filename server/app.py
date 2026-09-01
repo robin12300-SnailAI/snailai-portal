@@ -345,6 +345,20 @@ def init_db():
       detail TEXT
     );
     CREATE INDEX IF NOT EXISTS idx_conv_events_event ON conversion_events(event, created_at);
+    -- 蜗牛AI 课程 Stripe 付款记录（webhook 落地，避免学员付款无人收货）
+    CREATE TABLE IF NOT EXISTS course_payments(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      session_id TEXT UNIQUE NOT NULL,
+      customer_email TEXT,
+      course TEXT,
+      amount_cents INTEGER,
+      currency TEXT,
+      paid_at TEXT,
+      metadata_json TEXT,
+      processed_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_course_payments_paid_at ON course_payments(paid_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_course_payments_email ON course_payments(customer_email);
     """)
     conn.commit()
 
@@ -3677,6 +3691,100 @@ def pay_get(course):
         return redirect(sess.url, code=303)
     except Exception as e:
         return jsonify({"error": f"{type(e).__name__}: {str(e)}"}), 500
+
+
+# ---------------------------------------------------------------- Stripe Webhook
+# 用途：Stripe 付款成功（checkout.session.completed）落库 + 通知 admin/助教
+# 用户门：Stripe Dashboard → Developers → Webhooks → Add endpoint
+#   URL:    https://snailai.ai/api/stripe/webhook
+#   Events: checkout.session.completed
+#   创建后把 Signing secret 贴到 Render env: STRIPE_WEBHOOK_SECRET
+@app.route("/api/stripe/webhook", methods=["POST"])
+def api_stripe_webhook():
+    """Stripe webhook 接收端：验签 → 落库 → 邮件通知。
+    所有失败都不抛异常给 Stripe：要么 200（事件被丢弃/记录）要么 4xx（让 Stripe 重试）。
+    """
+    if not _STRIPE_KEY:
+        return jsonify({"error": "Stripe 未配置"}), 503
+    wh_secret = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+    payload = request.get_data()
+    sig = request.headers.get("Stripe-Signature", "")
+    if not wh_secret:
+        # 未配置时静默接收 + 记录，避免 Stripe 重试轰炸
+        print(f"[stripe-webhook] STRIPE_WEBHOOK_SECRET 未配置；事件丢弃。sig={sig[:20]}... payload_size={len(payload)}")
+        return jsonify({"received": True, "warning": "webhook secret not configured"}), 200
+    try:
+        event = _stripe.Webhook.construct_event(payload, sig, wh_secret)
+    except _stripe.error.SignatureVerificationError:
+        return jsonify({"error": "invalid signature"}), 400
+    except Exception as e:
+        return jsonify({"error": f"{type(e).__name__}: {e}"}), 400
+
+    etype = event.get("type", "")
+    if etype == "checkout.session.completed":
+        sess = event["data"]["object"]
+        sid = sess.get("id", "")
+        email = (sess.get("customer_details") or {}).get("email", "") if sess.get("customer_details") else ""
+        meta = sess.get("metadata") or {}
+        course = meta.get("course", "")
+        amount_total = sess.get("amount_total", 0)
+        currency = sess.get("currency", "aud")
+        paid_ts = sess.get("created", 0)
+        import datetime as _dt
+        paid_at = _dt.datetime.utcfromtimestamp(paid_ts).isoformat() + "Z" if paid_ts else ""
+
+        try:
+            conn = db_conn()
+            conn.execute(
+                "INSERT OR IGNORE INTO course_payments"
+                "(session_id, customer_email, course, amount_cents, currency, paid_at, metadata_json)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (sid, email, course, amount_total, currency, paid_at, json.dumps(dict(sess))),
+            )
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            print(f"[stripe-webhook] DB insert fail: {e}")
+            return jsonify({"error": "db error"}), 500
+
+        # 邮件通知 admin（不阻塞 200 返回：邮件失败也允许后续手动查 DB）
+        try:
+            info = _COURSE_PRICES.get(course, {})
+            course_name = info.get("name_zh", course) or course
+            amount_str = f"{currency.upper()} {amount_total/100:.2f}"
+            html = (
+                f"<h3>💰 蜗牛AI 课程新付款</h3>"
+                f"<table style='border-collapse:collapse;font-family:system-ui'>"
+                f"<tr><td style='padding:4px 12px;color:#666'>客户邮箱</td><td><b>{email}</b></td></tr>"
+                f"<tr><td style='padding:4px 12px;color:#666'>课程</td><td><b>{course_name}</b> ({course})</td></tr>"
+                f"<tr><td style='padding:4px 12px;color:#666'>金额</td><td><b>{amount_str}</b></td></tr>"
+                f"<tr><td style='padding:4px 12px;color:#666'>Session</td><td><code style='font-size:11px'>{sid}</code></td></tr>"
+                f"<tr><td style='padding:4px 12px;color:#666'>付款时间</td><td>{paid_at}</td></tr>"
+                f"</table>"
+                f"<p style='margin-top:16px;color:#444'>下一步：<b>登录 admin → 学员管理 → 为该邮箱手动开账号</b>。</p>"
+            )
+            text = (
+                f"💰 新付款\n"
+                f"课程：{course_name} ({course})\n"
+                f"邮箱：{email}\n"
+                f"金额：{amount_str}\n"
+                f"Session：{sid}\n"
+                f"时间：{paid_at}\n"
+            )
+            _send_sign_email(
+                "robin@snailai.ai",
+                f"[SnailAI] 新付款 {course_name} — {amount_str}",
+                html,
+                from_addr=FROM_ADMIN,
+                text_body=text,
+            )
+        except Exception as e:
+            print(f"[stripe-webhook] admin email fail: {e}")
+    else:
+        # 其他事件类型暂不处理，只 ack
+        pass
+
+    return jsonify({"received": True}), 200
 
 
 # ---------------------------------------------------------------- 静态站点托管
