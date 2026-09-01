@@ -6,6 +6,7 @@
 """
 import json
 import os
+import re
 import uuid
 import time
 import logging
@@ -187,6 +188,7 @@ def api_scan_submit():
                 industry_workflows_json, top_workflow_priority,
                 process_documented, process_owner_exists, pilot_willingness, automation_level,
                 data_sensitivity, desired_start_time, indicative_budget, onsite_assessment_interest,
+                preferred_contact_method,
                 website_review_consent,
                 consent_report, consent_no_sensitive, consent_privacy, consent_email_delivery,
                 marketing_opt_in,
@@ -203,7 +205,7 @@ def api_scan_submit():
                 ?, ?,
                 ?, ?, ?, ?,
                 ?, ?, ?, ?,
-                ?,
+                ?, ?,
                 ?, ?, ?, ?,
                 ?,
                 ?, ?, ?, ?, ?, ?,
@@ -229,6 +231,7 @@ def api_scan_submit():
             clean.get("pilot_willingness", ""), clean.get("automation_level", ""),
             clean.get("data_sensitivity", ""), clean.get("desired_start_time", ""),
             clean.get("indicative_budget", ""), clean.get("onsite_assessment_interest", ""),
+            clean.get("preferred_contact_method", ""),
             1 if clean.get("website_review_consent") else 0,
             1 if clean.get("consent_report") else 0,
             1 if clean.get("consent_no_sensitive") else 0,
@@ -771,6 +774,7 @@ def _clean_submission(data: dict) -> dict:
         "success_looks_like", "top_workflow_priority",
         "process_documented", "process_owner_exists", "pilot_willingness", "automation_level",
         "data_sensitivity", "desired_start_time", "indicative_budget", "onsite_assessment_interest",
+        "preferred_contact_method",
         "source", "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term",
     ]:
         clean[key] = sanitize_input(str(data.get(key, "")), 300) if key not in ("main_pain_process", "success_looks_like") else data.get(key, "")

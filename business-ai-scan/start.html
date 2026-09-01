@@ -738,6 +738,16 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </select>
     </div>
 
+    <div class="field">
+      <label for="f_contact">Preferred contact method <span class="req">*</span></label>
+      <select id="f_contact" required>
+        <option value="">Select...</option>
+        <option>Phone</option>
+        <option>Email</option>
+        <option>Video meeting</option>
+      </select>
+    </div>
+
     <div class="nav-row">
       <button class="btn btn-back" onclick="goStep(-1)">Back</button>
       <button class="btn btn-next" onclick="validateStep(5)">Next</button>
@@ -1079,7 +1089,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     }
 
     if (step === 5) {
-      const fields = ['f_documented','f_champion','f_pilot','f_auto_level','f_sensitivity','f_start_time','f_budget','f_onsite'];
+      const fields = ['f_documented','f_champion','f_pilot','f_auto_level','f_sensitivity','f_start_time','f_budget','f_onsite','f_contact'];
       fields.forEach(id => {
         const el = document.getElementById(id);
         if (!el.value) { addError(el.closest('.field')); valid = false; }
@@ -1146,6 +1156,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         data_sensitivity: document.getElementById('f_sensitivity').value,
         desired_start: document.getElementById('f_start_time').value,
         budget: document.getElementById('f_budget').value,
+        preferred_contact_method: document.getElementById('f_contact').value,
         onsite_assessment: document.getElementById('f_onsite').value
       },
       step6: {

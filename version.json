@@ -1,9 +1,10 @@
 {
   "name": "snailai-portal",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "release_date": "2026-09-02",
   "last_updated": "2026-09-02",
   "changelog": [
+    "3.1.1 (2026-09-02): Business AI Scan 增字段（Phase 3）— 新增 preferred_contact_method（建表+迁移+清洗+INSERT+前端 select+校验）；修复 scan_api.py 既有 NameError（re 未导入）",
     "3.1.0 (2026-09-02): academy 子域名迁移 + 301 重定向地图（Phase 2）— 全部中文课程页/学员系统/活动归档 git mv 至 academy/；academy.snailai.ai Host 分流路由（独立 robots/sitemap/404、共享 assets、/sign/ 不被 shadow）；server/redirects.py 上线 A+B 组 45+ 条 301；mobile.html 退役；学员登录账号列表.md 移出 web 根（安全修复）；eSign 全链路未动",
     "3.0.0 (2026-09-02): 英文 B2B 主站重构 Phase 1 — 纯英文首页(brief §7 全规格)、services×5、industries×5、about、contact(含 /api/contact)、insights、security-and-data-handling、case-studies 重写+医疗诊所案例(匿名版)、新 404/robots/sitemap、新增 assets/site.css+site.js；旧中文页面暂未迁移(Phase 2)",
     "2.3.0 (2026-08-29): 个人归因系统 — 推荐码认领(claim-referrer API) + 我的归属(my-referrer API) + 启动时自动预填高置信匹配 + welcome.html 认领入口与⭐高亮",
