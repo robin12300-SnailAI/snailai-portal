@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蜗牛AI · 学员AI项目毕业展示会 · 登记看板</title>
+<style>
+  :root, [data-theme="light"] {
+    --green-dark: #0D4F3C;
+    --green-mid: #1A7B5C;
+    --green-light: #E8F5EE;
+    --green-pale: #F2FAF6;
+    --gold: #D4A843;
+    --gold-light: #FFF8E7;
+    --ink: #1A2E28;
+    --ink-light: #2D4A40;
+    --muted: #5A7268;
+    --border: #C8DDD2;
+    --bg: var(--green-pale);
+    --surface: #FFFFFF;
+    --surface2: #EDF4EF;
+    --card-shadow: 0 2px 16px rgba(13,79,60,0.08);
+    --rank1: linear-gradient(135deg, #FFD700, #FFA500);
+    --rank2: linear-gradient(135deg, #C0C0C9, #9CA3AF);
+    --rank3: linear-gradient(135deg, #CD7F32, #B8860B);
+  }
+  [data-theme="dark"] {
+    --bg: #0A1612;
+    --surface: #13221C;
+    --surface2: #1A3028;
+    --border: #243D33;
+    --text: #E8F0EC;
+    --text2: #8BA89D;
+    --green-mid: #2AA87A;
+    --gold: #E8BC55;
+    --gold-light: #2E2610;
+    --green-light: #163829;
+    --green-pale: #0D201A;
+    --card-shadow: 0 2px 20px rgba(0,0,0,.4);
+    --rank1: linear-gradient(135deg, #E6BE00, #CC8800);
+    --rank2: linear-gradient(135deg, #90909A, #70757D);
+    --rank3: linear-gradient(135deg, #B86918, #996015);
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body { font-family:'Inter','Noto Sans SC',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; font-feature-settings:'kern' 1,'liga' 1; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+
+  /* ── Header ── */
+  .header {
+    width:100%;
+    background:linear-gradient(160deg,var(--green-dark) 0%,var(--green-mid) 50%,#2A9D70 100%);
+    color:white;
+    padding:28px 20px 22px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .header::before {
+    content:''; position:absolute; top:-50%; right:-25%;
+    width:350px; height:350px;
+    background:radial-gradient(circle,rgba(255,255,255,.06) 0%,transparent 70%);
+    border-radius:50%;
+  }
+  .header-inner { position:relative; z-index:1; }
+  .logo { font-family:'Inter',sans-serif; font-size:22px; font-weight:700; letter-spacing:2px; opacity:.95; }
+  .logo .ai { color:var(--gold); }
+  .event-title { font-family:'Noto Serif SC','Inter',serif; font-size:19px; font-weight:900; margin-top:10px; line-height:1.35; }
+  .event-sub { font-size:11px; letter-spacing:2px; text-transform:uppercase; opacity:.7; margin-top:4px; }
+  .event-date { font-size:14px; margin-top:12px; opacity:.92; font-weight:500; }
+  .event-time { font-size:12px; margin-top:2px; opacity:.75; }
+
+  /* ── Stats Grid ── */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:18px 16px 0; max-width:600px; margin:0 auto; }
+  @media(max-width:480px){ .stats { grid-template-columns:repeat(2,1fr); } }
+  .stat-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:18px 12px; text-align:center; box-shadow:var(--card-shadow);
+  }
+  .stat-card .num { font-family:'Inter',sans-serif; font-size:34px; font-weight:800; line-height:1.1; color:var(--green-mid); }
+  .stat-card .lbl { font-size:11px; color:var(--muted); margin-top:5px; font-weight:600; letter-spacing:.3px; }
+
+  /* ── Ranking Section ── */
+  .section { padding:18px 16px 32px; max-width:600px; margin:0 auto; }
+  .section-header {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .section-title { font-family:'Noto Serif SC','Inter',serif; font-size:17px; font-weight:700; color:var(--green-dark); display:flex; align-items:center; gap:8px; }
+  .refresh-hint { font-size:11px; color:var(--muted); }
+
+  /* ── Ranking Cards ── */
+  .ranking-list { display:flex; flex-direction:column; gap:10px; }
+  .rank-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:16px 18px; display:flex; align-items:center; gap:14px;
+    box-shadow:var(--card-shadow); transition:transform .2s,box-shadow .2s;
+  }
+  .rank-card:hover { transform:translateY(-1px); box-shadow:0 4px 24px rgba(13,79,60,.14); }
+
+  .rank-badge {
+    flex-shrink:0; width:38px; height:38px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; font-weight:800; color:#fff;
+    background:var(--surface2); border:2px solid var(--border); color:var(--muted);
+  }
+  .rank-badge.r1 { background:var(--rank1); border:none; color:#fff; width:42px; height:42px; font-size:18px; }
+  .rank-badge.r2 { background:var(--rank2); border:none; color:#fff; }
+  .rank-badge.r3 { background:var(--rank3); border:none; color:#fff; }
+
+  .rank-info { flex:1; min-width:0; }
+  .rank-name { font-family:'Noto Sans SC','Inter',sans-serif; font-size:15px; font-weight:700; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .rank-code { font-size:11px; color:var(--muted); font-family:monospace; margin-top:2px; }
+
+  .rank-stats { text-align:right; flex-shrink:0; }
+  .rank-count { font-family:'Inter',sans-serif; font-size:26px; font-weight:800; color:var(--green-mid); line-height:1; }
+  .rank-label { font-size:11px; color:var(--muted); margin-top:3px; }
+
+  .rank-bar-wrap {
+    position:absolute; bottom:0; left:0; right:0; height:3px;
+    border-radius:0 0 14px 14px; overflow:hidden;
+  }
+  .rank-bar-fill { height:100%; background:linear-gradient(90deg,var(--green-mid),var(--gold)); transition:width .6s ease; }
+
+  /* Empty state */
+  .empty-state {
+    text-align:center; padding:48px 20px; color:var(--muted);
+  }
+  .empty-state .icon { font-size:48px; margin-bottom:12px; }
+  .empty-state p { font-size:14px; }
+
+  /* Footer */
+  .footer { text-align:center; padding:16px; font-size:11px; color:var(--muted); border-top:1px solid var(--border); }
+  .refresh-info { text-align:center; font-size:11px; color:var(--muted); padding:0 16px 8px; }
+
+  /* Theme toggle */
+  .theme-btn {
+    position:fixed; top:12px; right:12px; z-index:100;
+    background:rgba(255,255,255,.15); backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.2); border-radius:10px;
+    padding:8px 12px; cursor:pointer; font-size:16px; color:#fff;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">snail<span class="ai">AI.ai</span></div>
+    <div class="event-title">蜗牛AI应用教育学院<br>第一期学员AI项目毕业展示会</div>
+    <div class="event-sub">SnailAI Academy · 1st Student AI Project Showcase</div>
+    <div class="event-date">📍 9月26日（周六）· Killara Golf Club</div>
+    <div class="event-time">⏰ 1:30 PM – 5:30 PM</div>
+  </div>
+</div>
+
+<button class="theme-btn" onclick="toggleTheme()" title="切换亮/暗色">🌓</button>
+
+<div class="stats">
+  <div class="stat-card"><div class="num" id="s-total">-</div><div class="lbl">登记人数</div></div>
+  <div class="stat-card"><div class="num" id="s-headcount">-</div><div class="lbl">预计到场</div></div>
+  <div class="stat-card"><div class="num" id="s-referrers">-</div><div class="lbl">推荐人</div></div>
+  <div class="stat-card"><div class="num" id="s-organic">-</div><div class="lbl">自然流量</div></div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">🏆 推荐人排行榜</div>
+    <span class="refresh-hint" id="last-update"></span>
+  </div>
+  <div class="ranking-list" id="ranking-list">
+    <div class="empty-state"><div class="icon">📊</div><p>暂无登记数据<br>等待第一位访客...</p></div>
+  </div>
+</div>
+
+<div class="refresh-info">自动刷新 · 每60秒</div>
+<div class="footer">&copy; 2026 SnailAI.AI · 蜗牛AI应用教育学院</footer>
+
+<script>
+const API = '/api/grad-registrations/public-stats';
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('grad-board-theme', next);
+}
+(function(){ const s=localStorage.getItem('grad-board-theme'); if(s) document.documentElement.setAttribute('data-theme',s); })();
+
+async function refresh() {
+  try {
+    const r = await fetch(API);
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+
+    document.getElementById('s-total').textContent = d.total_registrations;
+    document.getElementById('s-headcount').textContent = d.total_headcount;
+    document.getElementById('s-referrers').textContent = d.total_referrers;
+    document.getElementById('s-organic').textContent = d.organic_registrations;
+
+    // Sort by count descending
+    const list = (d.by_referrer || []).sort((a,b) => b.cnt - a.cnt);
+    const maxCnt = list.length ? list[0].cnt : 1;
+
+    const container = document.getElementById('ranking-list');
+    if (!list.length) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">📊</div><p>暂无登记数据<br>等待第一位访客...</p></div>';
+      return;
+    }
+
+    container.innerHTML = list.map((r, i) => {
+      const rank = i + 1;
+      const rankClass = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : '';
+      const barW = Math.round(r.cnt / maxCnt * 100);
+      return `<div class="rank-card" style="position:relative;overflow:hidden">
+        <div class="rank-badge ${rankClass}">${rank}</div>
+        <div class="rank-info">
+          <div class="rank-name">${r.referrer_name || '-'}</div>
+          <div class="rank-code">${r.ref_code}</div>
+        </div>
+        <div class="rank-stats">
+          <div class="rank-count">${r.cnt}</div>
+          <div class="rank-label">人登记</div>
+        </div>
+        <div class="rank-bar-wrap"><div class="rank-bar-fill" style="width:${barW}%"></div></div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('last-update').textContent = new Date().toLocaleTimeString('zh-CN');
+  } catch(e) { console.error('Failed:', e); }
+}
+
+refresh();
+setInterval(refresh, 60000);
+</script>
+</body>
+</html>

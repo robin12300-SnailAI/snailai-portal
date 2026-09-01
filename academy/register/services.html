@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>蜗牛AI服务 — 蜗牛AI应用教育学院</title>
+<link rel="icon" href="/assets/snailai_logo.png" type="image/png">
+<style>
+  :root {
+    --green-dark: #0D4F3C;
+    --green-mid: #1A7B5C;
+    --green-light: #E8F5EE;
+    --green-pale: #F2FAF6;
+    --gold: #D4A843;
+    --gold-light: #FFF8E7;
+    --ink: #1A2E28;
+    --ink-light: #2D4A40;
+    --muted: #5A7268;
+    --bg: var(--green-pale);
+    --card: #FFFFFF;
+    --border: #C8DDD2;
+    --radius: 14px;
+    --shadow: 0 4px 24px rgba(13,79,60,0.10);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+  body {
+    font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== Header ===== */
+  .header {
+    width: 100%;
+    background: linear-gradient(160deg, var(--green-dark) 0%, var(--green-mid) 50%, #2A9D70 100%);
+    padding: 20px 20px 16px;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60%; right: -30%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header .logo-wrap { display: flex; justify-content: center; margin-bottom: 8px; }
+  .header .logo-img { height: 40px; width: auto; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2)); }
+  .header .page-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  .header .page-subtitle {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-top: 4px;
+  }
+
+  /* ===== Nav Tabs ===== */
+  .nav-tabs {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    background: white;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .nav-tabs a {
+    flex: 1;
+    text-align: center;
+    padding: 12px 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.25s;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+  }
+  .nav-tabs a:hover { color: var(--green-dark); }
+  .nav-tabs a.active {
+    color: var(--green-dark);
+    border-bottom-color: var(--gold);
+  }
+  .nav-tabs a .tab-icon { font-size: 15px; display: block; margin-bottom: 2px; }
+
+  /* ===== Container ===== */
+  .container {
+    width: 100%;
+    max-width: 480px;
+    padding: 20px 18px 48px;
+    flex: 1;
+  }
+
+  .section-intro {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .section-intro h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 6px;
+  }
+  .section-intro p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ===== Service Cards ===== */
+  .service-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px 20px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(13,79,60,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card.featured {
+    border: 2px solid var(--gold);
+    box-shadow: 0 4px 20px rgba(212,168,67,0.15);
+  }
+  .service-card .badge {
+    position: absolute;
+    top: 12px;
+    right: -28px;
+    background: var(--gold);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 32px;
+    transform: rotate(35deg);
+    letter-spacing: 0.5px;
+  }
+  .service-card .service-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  .service-card h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-bottom: 4px;
+  }
+  .service-card .service-en {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .service-card .service-desc {
+    font-size: 13px;
+    color: var(--ink-light);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .service-card .price {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .service-card .price .amount {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--green-dark);
+  }
+  .service-card .price .currency {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green-mid);
+  }
+  .service-card .price .period {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .service-card .price .original {
+    font-size: 14px;
+    color: #9CA3AF;
+    text-decoration: line-through;
+    margin-left: 6px;
+  }
+  .service-card .features {
+    list-style: none;
+    margin-bottom: 16px;
+  }
+  .service-card .features li {
+    font-size: 12.5px;
+    color: var(--ink-light);
+    padding: 4px 0;
+    padding-left: 20px;
+    position: relative;
+  }
+  .service-card .features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green-mid);
+    font-weight: 700;
+  }
+  .btn-pay {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .btn-pay-primary {
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    color: white;
+    box-shadow: 0 4px 16px rgba(13,79,60,0.25);
+  }
+  .btn-pay-primary:hover {
+    box-shadow: 0 6px 24px rgba(13,79,60,0.35);
+    transform: translateY(-1px);
+  }
+  .btn-pay-gold {
+    background: linear-gradient(135deg, var(--gold), #C49B35);
+    color: white;
+    box-shadow: 0 4px 16px rgba(212,168,67,0.3);
+  }
+  .btn-pay-gold:hover {
+    box-shadow: 0 6px 24px rgba(212,168,67,0.4);
+    transform: translateY(-1px);
+  }
+  .btn-pay:active { transform: scale(0.98); }
+  .start-date { text-align:center; margin:10px 0 6px; font-size:14px; font-weight:600; color:var(--dark); }
+  .enterprise-card { border:2px solid #1a365d; background:linear-gradient(135deg,#f0f4ff 0%,#e8edf5 100%); }
+  .btn-pay-enterprise {
+    display:block; width:100%; padding:14px 0; border:none; border-radius:10px;
+    background:linear-gradient(135deg,#1a365d 0%,#2b4c7e 100%); color:#fff;
+    font-size:16px; font-weight:700; cursor:pointer; text-decoration:none; text-align:center;
+    transition:transform .15s,box-shadow .15s;
+  }
+  .btn-pay-enterprise:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(26,54,93,.35); }
+
+  /* ===== Free Setup Card ===== */
+  .free-card {
+    background: linear-gradient(135deg, #DC2626, #B91C1C);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(220,38,38,0.3);
+  }
+  .free-card .free-icon { font-size: 36px; margin-bottom: 8px; }
+  .free-card h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+  .free-card p {
+    font-size: 13px;
+    line-height: 1.55;
+    opacity: 0.95;
+  }
+  .free-card .free-highlight {
+    display: inline;
+    background: rgba(255,255,255,0.25);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 380px) {
+    .container { padding: 16px 14px 40px; }
+    .service-card { padding: 18px 16px; }
+    .service-card .price .amount { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <img src="/assets/snailai_logo.png" alt="SnailAI Logo" class="logo-img" onerror="this.style.display='none'">
+    </div>
+    <div class="page-title">💡 蜗牛AI服务</div>
+    <div class="page-subtitle">SnailAI Services</div>
+  </div>
+</div>
+
+<nav class="nav-tabs">
+  <a href="/register/"><span class="tab-icon">📝</span>报名登记</a>
+  <a href="/register/students.html"><span class="tab-icon">🎓</span>学员风采</a>
+  <a href="/register/services.html" class="active"><span class="tab-icon">💡</span>蜗牛AI服务</a>
+</nav>
+
+<div class="container">
+
+  <div class="section-intro">
+    <h2>开启您的AI之旅</h2>
+    <p>从体验到精通，蜗牛AI陪您每一步<br>From experience to mastery, SnailAI is with you every step</p>
+  </div>
+
+  <!-- Free Setup Card -->
+  <div class="free-card">
+    <div class="free-icon">🦞</div>
+    <h3>免费安装龙虾！</h3>
+    <p>展示会现场免费安装 <span class="free-highlight">龙虾 (SnailAI 桌面版)</span><br>
+    一键拥有您的AI私人助理<br>
+    Bring your laptop — we'll set it up for FREE!</p>
+  </div>
+
+  <!-- Online Course -->
+  <div class="service-card">
+    <div class="service-icon">💻</div>
+    <h3>AI应用线上班</h3>
+    <div class="service-en">AI Application Online Course</div>
+    <div class="service-desc">
+      2个月9节课系统化课程，从零基础到独立完成AI实战项目。含作业点评+助教辅导+项目实战。
+    </div>
+    <div class="price">
+      <span class="currency">AUD</span>
+      <span class="amount">$999</span>
+      <span class="period">/ 全部课程</span>
+    </div>
+    <div class="start-date">📅 预计开课：2026年10月20日<br><span style="font-size:11px;color:var(--muted)">Estimated start: Oct 20, 2026</span></div>
+    <ul class="features">
+      <li>2个月9节系统化AI课程</li>
+      <li>作业点评 + 助教辅导</li>
+      <li>结业完成1个AI实战项目</li>
+      <li>终身学员社区权益</li>
+    </ul>
+    <button class="btn-pay btn-pay-primary" onclick="handlePay('online')">报名线上班 / Enroll Online</button>
+  </div>
+
+  <!-- Offline Course -->
+  <div class="service-card featured">
+    <div class="badge">推荐 / TOP PICK</div>
+    <div class="service-icon">🎓</div>
+    <h3>AI财富线下班</h3>
+    <div class="service-en">AI Wealth Offline Course</div>
+    <div class="service-desc">
+      2个月18节沉浸式线下教学，小班制（≤8人），涵盖AI+投资理财、AI+商业运营、AI+个人品牌。含1对1项目辅导和商业落地指导。
+    </div>
+    <div class="price">
+      <span class="currency">AUD</span>
+      <span class="amount">$1,999</span>
+      <span class="period">/ 全部课程</span>
+      <span class="original">$3,999</span>
+    </div>
+    <div class="start-date">📅 预计开课：2026年10月20日<br><span style="font-size:11px;color:var(--muted)">Estimated start: Oct 20, 2026</span></div>
+    <ul class="features">
+      <li>2个月18节沉浸式线下教学</li>
+      <li>小班制（≤8人）</li>
+      <li>AI+投资/商业/品牌三大模块</li>
+      <li>1对1项目辅导</li>
+      <li>商业落地指导</li>
+      <li>终身VIP社区权益</li>
+    </ul>
+    <button class="btn-pay btn-pay-gold" onclick="handlePay('wealth')">报名线下班 / Enroll Offline</button>
+  </div>
+
+  <!-- Enterprise Service -->
+  <div class="service-card enterprise-card">
+    <div class="service-icon">🏢</div>
+    <h3>企业服务</h3>
+    <div class="service-en">Enterprise AI Services</div>
+    <div class="service-desc">
+      为澳洲企业量身定制AI解决方案——AI流程自动化、智能客服、数据洞察、员工AI培训。帮助企业降本增效，拥抱AI时代。
+    </div>
+    <ul class="features">
+      <li>AI流程自动化 & 智能客服</li>
+      <li>数据洞察 & 商业分析</li>
+      <li>企业定制AI培训方案</li>
+      <li>1对1咨询 + 落地实施</li>
+    </ul>
+    <a href="https://snailai.ai/services/" class="btn-pay btn-pay-enterprise">了解企业服务 →<br><span style="font-size:11px">Learn More About Enterprise AI</span></a>
+  </div>
+
+</div>
+
+<footer>&copy; 2026 SnailAI.AI &middot; 蜗牛AI应用教育学院</footer>
+
+<script>
+function handlePay(tier) {
+  // Use the existing /api/create-checkout-session endpoint
+  // Must send {course: tier} to match backend's data.get("course")
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '处理中... / Processing...';
+  fetch('/api/create-checkout-session', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      course: tier
+    })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('支付链接生成失败: ' + (data.error || '未知错误') + '\n请联系客服 / Payment error, please contact us');
+      btn.disabled = false;
+      btn.textContent = tier === 'online' ? '报名线上班 / Enroll Online' : '报名线下班 / Enroll Offline';
+    }
+  })
+  .catch(() => {
+    alert('网络错误，请重试 / Network error, please retry');
+    btn.disabled = false;
+    btn.textContent = tier === 'online' ? '报名线上班 / Enroll Online' : '报名线下班 / Enroll Offline';
+  });
+}
+</script>
+</body>
+</html>

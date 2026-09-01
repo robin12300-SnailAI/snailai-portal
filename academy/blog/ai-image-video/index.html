@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 绘画与短视频生成：Midjourney / 即梦 / 可灵对比与工作流 | 蜗牛 AI</title>
+<meta name="description" content="AI 绘画与短视频怎么入门？Midjourney、即梦、可灵对比，提示词结构，图生视频/文生视频工作流。澳洲华人做社媒内容、产品图最快的路径。">
+<link rel="icon" type="image/png" href="/assets/snailai_logo.png">
+<link rel="canonical" href="https://snailai.ai/blog/ai-image-video/">
+<link rel="alternate" hreflang="zh-CN" href="https://snailai.ai/blog/ai-image-video/">
+<link rel="alternate" hreflang="en" href="https://snailai.ai/blog/ai-image-video/">
+<link rel="alternate" hreflang="x-default" href="https://snailai.ai/blog/ai-image-video/">
+<meta property="og:title" content="AI 绘画与短视频生成：Midjourney / 即梦 / 可灵对比与工作流 | 蜗牛 AI">
+<meta property="og:description" content="Midjourney、即梦、可灵对比 + 短视频工作流。">
+<meta property="og:image" content="https://snailai.ai/assets/snailai_logo.png">
+<meta property="og:url" content="https://snailai.ai/blog/ai-image-video/">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI 绘画与短视频生成 | 蜗牛 AI">
+<meta name="twitter:description" content="Midjourney、即梦、可灵对比 + 短视频工作流。">
+<meta name="twitter:image" content="https://snailai.ai/assets/snailai_logo.png">
+<link rel="stylesheet" href="/assets/guide.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org", "@type": "Article",
+  "headline": "AI 绘画与短视频生成：Midjourney / 即梦 / 可灵对比与工作流",
+  "description": "AI 绘画与短视频怎么入门？Midjourney、即梦、可灵对比，提示词结构，图生视频工作流。",
+  "author": {"@type": "Organization", "name": "蜗牛 AI Snail AI", "url": "https://snailai.ai/"},
+  "publisher": {"@type": "Organization", "name": "蜗牛 AI Snail AI", "logo": {"@type": "ImageObject", "url": "https://snailai.ai/assets/snailai_logo.png"}},
+  "datePublished": "2026-08-17", "dateModified": "2026-08-17",
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://snailai.ai/blog/ai-image-video/"}, "inLanguage": "zh-CN"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org", "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "首页", "item": "https://snailai.ai/"},
+    {"@type": "ListItem", "position": 2, "name": "AI 指南", "item": "https://snailai.ai/guide/"},
+    {"@type": "ListItem", "position": 3, "name": "AI 绘画与短视频", "item": "https://snailai.ai/blog/ai-image-video/"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org", "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "AI 绘画免费吗？", "acceptedAnswer": {"@type": "Answer", "text": "国内即梦、可灵都有免费额度，适合新手练手；Midjourney 需要订阅。先拿免费工具打底，再决定是否付费。"}},
+    {"@type": "Question", "name": "没有设计基础能做短视频吗？", "acceptedAnswer": {"@type": "Answer", "text": "能。用「图片生成 → 图生视频 → 配音剪辑」的流水线，普通人也能做出像样的短视频，适合微信/小红书/抖音宣传。"}},
+    {"@type": "Question", "name": "提示词要英文还是中文？", "acceptedAnswer": {"@type": "Answer", "text": "Midjourney 用英文效果更好；即梦/可灵对中文提示词支持很好。本文给了中英双语提示词结构。"}}
+  ]
+}
+</script>
+</head>
+<body>
+<nav class="g-nav">
+  <a href="https://snailai.ai/" class="logo"><img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo"><span>蜗牛 AI</span></a>
+  <div class="links">
+    <a href="https://snailai.ai/#services">服务</a>
+    <a href="https://snailai.ai/#schedule">课程表</a>
+    <a href="https://snailai.ai/faq/">FAQ</a>
+    <a href="https://snailai.ai/qa/">蜗牛问答</a>
+    <a href="https://snailai.ai/guide/">AI 指南</a>
+  </div>
+  <a href="https://snailai.ai/online-course/" class="g-btn">免费试听 →</a>
+</nav>
+
+<header class="g-header">
+  <div class="g-breadcrumb">
+    <a href="https://snailai.ai/">首页</a><span class="sep">/</span>
+    <a href="https://snailai.ai/guide/">AI 指南</a><span class="sep">/</span><span>AI 绘画与短视频</span>
+  </div>
+  <h1>AI 绘画与短视频生成</h1>
+  <p class="lead">不会 PS、不会剪映，也能做产品图、海报和宣传短视频——给社媒和小生意加内容燃料。</p>
+  <div class="meta"><span>📅 2026-08-17</span><span>⏱ 阅读约 6 分钟</span></div>
+</header>
+
+<main class="g-wrap">
+  <div class="g-answer">
+    <div class="lbl">一句话答案</div>
+    <p>AI 绘画用 Midjourney（英文提示词、质感强）、即梦 / 可灵（中文友好、免费额度）生成图；短视频走「图片 → 图生视频 → 配音剪辑」流水线，普通人也能做出可用于微信 / 小红书的宣传片。</p>
+  </div>
+
+  <h2>一、三大工具对比</h2>
+  <table>
+    <tr><th>工具</th><th>强项</th><th>语言</th><th>费用</th></tr>
+    <tr><td>Midjourney</td><td>艺术质感、光影最强</td><td>英文最佳</td><td>订阅制</td></tr>
+    <tr><td>即梦（字节）</td><td>中文友好、图/视频一体</td><td>中英均可</td><td>有免费额度</td></tr>
+    <tr><td>可灵（快手）</td><td>图生视频流畅、运镜自然</td><td>中英均可</td><td>有免费额度</td></tr>
+  </table>
+
+  <h2>二、绘画提示词结构</h2>
+  <p><code>[主体] + [环境/场景] + [风格] + [光线] + [镜头/画幅] + [质量词]</code></p>
+  <p>例（中英）：<em>「一杯奶茶，悉尼街头咖啡馆，暖光，电影感，浅景深，8k —— a bubble tea on Sydney street, cinematic warm light, 8k」</em></p>
+
+  <h2>三、短视频工作流（4 步）</h2>
+  <ol>
+    <li><strong>出图</strong>：用即梦生成 3-5 张关键帧；</li>
+    <li><strong>动起来</strong>：把图丢进可灵做「图生视频」，加运镜；</li>
+    <li><strong>配音</strong>：用 AI 配音（如 MiniMax / Edge TTS）生成旁白；</li>
+    <li><strong>剪辑</strong>：剪映 / CapCut 拼合，加字幕与 BGM。</li>
+  </ol>
+
+  <div class="g-callout tip">
+    <div class="ttl">💡 小生意用法</div>
+    <p>奶茶店、地产中介、补习班：每周用这套流水线产 3 条短视频，发微信视频号 + 小红书，内容成本几乎为零。</p>
+  </div>
+
+  <h2>四、进阶关联</h2>
+  <p>想把这些内容批量用于生意，看 <a href="https://snailai.ai/blog/ai-sme/">中小企业 AI 提效</a>；图像提示词也复用 <a href="https://snailai.ai/blog/prompt-engineering/">提示词工程</a> 的思路。</p>
+
+  <div class="g-faq">
+    <details open>
+      <summary>AI 绘画免费吗？</summary>
+      <div class="ans">即梦、可灵都有免费额度，适合新手；Midjourney 需订阅。先免费打底再决定付费。</div>
+    </details>
+    <details>
+      <summary>没有设计基础能做短视频吗？</summary>
+      <div class="ans">能。走「图片生成 → 图生视频 → 配音剪辑」流水线，普通人也能做宣传短视频。</div>
+    </details>
+    <details>
+      <summary>提示词要英文还是中文？</summary>
+      <div class="ans">Midjourney 英文更好；即梦/可灵中文支持好。本文给了中英双语结构。</div>
+    </details>
+  </div>
+
+  <div class="g-cta">
+    <h3>线下工作坊现场做视频</h3>
+    <p>悉尼 North Sydney 工作坊带你用自己生意练 AI 短视频。</p>
+    <a href="https://snailai.ai/offline-course/" class="g-btn">查看工作坊 →</a>
+  </div>
+
+  <section class="g-related">
+    <h2>相关阅读</h2>
+    <div class="g-grid">
+      <a class="g-card" href="https://snailai.ai/blog/ai-sme/"><div class="emo">🏢</div><h3>中小企业提效</h3><p>内容批量生产。</p><div class="go">阅读 →</div></a>
+      <a class="g-card" href="https://snailai.ai/blog/prompt-engineering/"><div class="emo">🎯</div><h3>提示词工程</h3><p>提示词通用法。</p><div class="go">阅读 →</div></a>
+      <a class="g-card" href="https://snailai.ai/guide/"><div class="emo">🐌</div><h3>返回指南首页</h3><p>完整路线图。</p><div class="go">返回 →</div></a>
+    </div>
+  </section>
+</main>
+
+<footer class="g-foot">
+  <p>蜗牛 AI Snail AI · 澳洲华人 AI 应用教育学院 · <a href="https://snailai.ai/">snailai.ai</a></p>
+</footer>
+</body>
+</html>

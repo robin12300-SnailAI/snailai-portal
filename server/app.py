@@ -30,7 +30,7 @@ import hashlib
 import secrets
 import datetime
 from pathlib import Path
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, redirect
 import re
 import fcntl
 import requests
@@ -3691,6 +3691,40 @@ def serve(path):
             return send_from_directory(andrew_base, path)
         return send_from_directory(andrew_base, "index.html")
 
+    # ── Academy 域名路由：academy.snailai.ai → academy/ 目录（中文学院） ──
+    if host == "academy.snailai.ai":
+        ac_base = BASE / "academy"
+        # robots/sitemap 特判：academy host 必须拿到学院自己的版本
+        if path == "robots.txt":
+            return send_from_directory(ac_base, "robots.txt")
+        if path == "sitemap.xml":
+            return send_from_directory(ac_base, "sitemap.xml")
+        # /sign/ 不被 academy shadow：转发回主站（eSign 链接终身有效）
+        if path.startswith("sign/"):
+            return redirect("https://snailai.ai/" + path, code=303)
+        # 共享品牌资源：academy 页面引用的 /assets/* 回退到仓库根 assets/
+        if path.startswith("assets/"):
+            root_target = (BASE / path).resolve()
+            if BASE in root_target.parents and root_target.is_file():
+                return send_from_directory(BASE, path)
+            return send_from_directory(ac_base, "404.html"), 404
+        if not path:
+            return send_from_directory(ac_base, "index.html")
+        target = (ac_base / path).resolve()
+        if ac_base not in target.parents and target != ac_base:
+            return send_from_directory(ac_base, "404.html"), 404
+        if target.is_dir():
+            idx = target / "index.html"
+            if idx.is_file():
+                return send_from_directory(ac_base, path.rstrip("/") + "/index.html")
+            return send_from_directory(ac_base, "404.html"), 404
+        if not target.exists() and target.with_suffix(".html").is_file():
+            return send_from_directory(ac_base, path + ".html")
+        if target.is_file():
+            return send_from_directory(ac_base, path)
+        # 真 404（学院目录需要正确的 404 给搜索引擎，与 andrew 的 SPA fallback 不同）
+        return send_from_directory(ac_base, "404.html"), 404
+
     # 根路径 -> 官网首页（已合并为 repo 根 index.html）
     if not path:
         return send_from_directory(BASE, "index.html")
@@ -3723,6 +3757,10 @@ _start_scheduler()
 from portal import bp as portal_bp, init_portal_db
 app.register_blueprint(portal_bp)
 init_portal_db()
+
+# ── 注册 URL 迁移重定向（redirects.py，显式路由优先于 catch-all） ──
+from redirects import register_redirects
+register_redirects(app)
 
 # ── 注册 Internal Tasks Blueprint ────────────────────────
 from internal_tasks import bp as itask_bp, init_internal_tasks_db

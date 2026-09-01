@@ -1,0 +1,11 @@
+# academy.snailai.ai robots.txt — 蜗牛AI 学院（中文课程）
+# English B2B main site: https://snailai.ai/robots.txt
+
+User-agent: *
+Allow: /
+
+# 归档活动页不索引
+Disallow: /archive/
+
+# Sitemap
+Sitemap: https://academy.snailai.ai/sitemap.xml

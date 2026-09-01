@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-title-zh="蜗牛 AI · 助教天地" data-title-en="SnailAI · Teacher Portal">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蜗牛 AI · 助教天地</title>
+<meta name="description" content="蜗牛 AI 助教天地：教学资料库与学员通讯录，供助教查询与维护。">
+<link rel="icon" type="image/png" href="/assets/snailai_logo.png">
+<style>
+  :root {
+    --ink: #1A1A2E;
+    --ink-2: #2A2A40;
+    --ink-3: #6A6A85;
+    --paper: #FCFCFA;
+    --paper-2: #F5F4EE;
+    --paper-3: #E8E7E0;
+    --accent: #FF5B1F;
+    --accent-2: #E84A0F;
+    --accent-light: rgba(255,91,31,0.08);
+    --accent-warm: #FFF5EE;
+    --gold: #D4A547;
+    --line: rgba(26,26,46,0.08);
+    --shadow-sm: 0 1px 3px rgba(26,26,46,0.04), 0 2px 8px rgba(26,26,46,0.04);
+    --shadow-md: 0 4px 16px rgba(26,26,46,0.08);
+    --shadow-lg: 0 12px 36px rgba(26,26,46,0.12);
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+    --sans: 'Inter','Helvetica Neue','Helvetica','Arial','PingFang SC','Microsoft YaHei UI','Noto Sans SC',sans-serif;
+    --mono: 'JetBrains Mono','SF Mono','Menlo','Consolas',monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ===== Nav ===== */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 40px;
+    background: linear-gradient(180deg, rgba(252,252,250,.96) 0%, rgba(252,252,250,.85) 100%);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .nav-logo img { height: 32px; width: auto; }
+  .nav-logo span { font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
+  .nav-links { display: flex; gap: 24px; align-items: center; }
+  .nav-links a { font-size: 13px; font-weight: 600; color: var(--ink-3); text-decoration: none; letter-spacing: 0.02em; transition: color .2s; }
+  .nav-links a:hover { color: var(--accent); }
+  .lang-switch { display: inline-flex; gap: 4px; border: 1px solid var(--line); border-radius: 100px; padding: 3px; }
+  .lang-btn { border: none; background: transparent; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--ink-3); padding: 4px 10px; border-radius: 100px; transition: all .2s; }
+  .lang-btn.active { background: var(--ink); color: #fff; }
+
+  /* ===== Login Gate ===== */
+  .login-gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 100px 20px 40px; }
+  .login-card {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-xl);
+    padding: 48px 40px; max-width: 420px; width: 100%; box-shadow: var(--shadow-md); text-align: center;
+  }
+  .login-icon { font-size: 52px; }
+  .login-card h1 { font-size: 24px; margin: 14px 0 6px; letter-spacing: -0.01em; }
+  .login-card > p { color: var(--ink-3); font-size: 14px; margin-bottom: 26px; }
+  .login-card input {
+    width: 100%; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-md);
+    font-size: 15px; margin-bottom: 12px; font-family: var(--sans); background: var(--paper); color: var(--ink);
+  }
+  .login-card input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+  .login-card button {
+    width: 100%; padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: var(--r-md);
+    font-size: 15px; font-weight: 700; cursor: pointer; transition: background .2s;
+  }
+  .login-card button:hover { background: var(--accent-2); }
+  .login-hint { font-size: 13px; min-height: 18px; margin-top: 10px; color: var(--accent); }
+  .login-default { font-size: 12px; color: var(--ink-3); margin-top: 16px; }
+
+  /* ===== Teacher World ===== */
+  .teacher-world { max-width: 980px; margin: 0 auto; padding: 120px 24px 80px; }
+  .tw-head { text-align: center; margin-bottom: 48px; }
+  .tw-head .tw-badge { display: inline-block; background: var(--accent-light); color: var(--accent); font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: 100px; margin-bottom: 16px; }
+  .tw-head h1 { font-size: 38px; letter-spacing: -0.02em; }
+  .tw-head p { color: var(--ink-3); margin-top: 10px; font-size: 15px; }
+  .tw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .tw-card {
+    display: block; text-decoration: none; color: var(--ink); background: var(--paper);
+    border: 1px solid var(--line); border-radius: var(--r-lg); padding: 32px; transition: all .25s; box-shadow: var(--shadow-sm);
+  }
+  .tw-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+  .tw-icon { font-size: 42px; margin-bottom: 16px; }
+  .tw-card h3 { font-size: 20px; margin-bottom: 8px; }
+  .tw-card p { color: var(--ink-3); font-size: 14px; }
+
+  /* ===== Legend (AI 能力清单 项目说明) ===== */
+  .tw-legend { margin-top: 36px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 28px 32px; box-shadow: var(--shadow-sm); }
+  .tw-legend .lg-head { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .tw-legend .lg-head .lg-ico { font-size: 20px; }
+  .tw-legend .lg-head h2 { font-size: 18px; letter-spacing: -0.01em; }
+  .tw-legend .lg-head .lg-sub { font-size: 12px; color: var(--ink-3); font-weight: 500; margin-left: auto; }
+  .tw-legend ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; counter-reset: none; }
+  .tw-legend li { display: flex; gap: 14px; align-items: flex-start; font-size: 14px; line-height: 1.65; color: var(--ink-2); }
+  .tw-legend li .badge {
+    flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-weight: 700; font-size: 14px;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(255,91,31,.25);
+  }
+  .tw-legend li .lg-text { padding-top: 2px; }
+  .tw-legend .lg-note { margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line); font-size: 13px; color: var(--ink-3); }
+  .tw-legend .lg-note b { color: var(--accent); }
+  .tw-go { display: inline-block; margin-top: 18px; color: var(--accent); font-weight: 700; font-size: 14px; }
+  .tw-placeholder {
+    display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+    border: 1px dashed var(--line); background: var(--paper-2);
+  }
+  .tw-placeholder h3 { color: var(--ink-3); }
+  .tw-placeholder p { color: var(--ink-3); }
+
+  /* ===== Modal ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(26,26,46,.5); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--paper); border-radius: var(--r-xl); max-width: 520px; width: 100%;
+    padding: 40px; box-shadow: var(--shadow-lg); position: relative;
+  }
+  .modal-box h2 { font-size: 22px; margin-bottom: 6px; letter-spacing: -0.01em; }
+  .modal-box > p { color: var(--ink-3); font-size: 14px; margin-bottom: 24px; }
+  .modal-close {
+    position: absolute; top: 16px; right: 20px; border: none; background: none;
+    font-size: 24px; cursor: pointer; color: var(--ink-3); line-height: 1;
+  }
+  .modal-close:hover { color: var(--ink); }
+  .modal-form label { display: block; font-size: 13px; font-weight: 700; color: var(--ink-2); margin-bottom: 4px; margin-top: 16px; }
+  .modal-form label:first-child { margin-top: 0; }
+  .modal-form input, .modal-form textarea {
+    width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r-md);
+    font-size: 15px; font-family: var(--sans); background: var(--paper); color: var(--ink);
+    transition: border-color .2s;
+  }
+  .modal-form input:focus, .modal-form textarea:focus {
+    outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light);
+  }
+  .modal-form textarea { min-height: 80px; resize: vertical; }
+  .modal-form .modal-submit {
+    width: 100%; margin-top: 24px; padding: 14px; background: var(--accent); color: #fff;
+    border: none; border-radius: var(--r-md); font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: background .2s;
+  }
+  .modal-form .modal-submit:hover { background: var(--accent-2); }
+  .modal-form .modal-submit:disabled { opacity: .5; cursor: not-allowed; }
+  .modal-status { font-size: 13px; margin-top: 12px; min-height: 20px; }
+  .modal-status.success { color: #2e7d32; }
+  .modal-status.error { color: #c62828; }
+
+  /* ===== Footer ===== */
+  .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
+  .footer img { height: 28px; margin-bottom: 12px; }
+  .footer .links { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 14px 0; }
+  .footer .links a { color: var(--ink-3); text-decoration: none; font-size: 13px; }
+  .footer .links a:hover { color: var(--accent); }
+
+  @media (max-width: 768px) {
+    .nav { padding: 14px 20px; }
+    .nav-links a:not(.lang-switch) { display: none; }
+    .teacher-world { padding: 100px 18px 60px; }
+    .tw-head h1 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo">
+    <span data-zh="蜗牛 AI" data-en="Snail AI">蜗牛 AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="/online-course/" data-zh="线上课" data-en="Online">线上课</a>
+    <a href="/offline-course/" data-zh="线下课" data-en="Offline">线下课</a>
+    <a href="/faq/" data-zh="FAQ" data-en="FAQ">FAQ</a>
+    <a href="/qa/" data-zh="蜗牛问答" data-en="Q&A">蜗牛问答</a>
+    <a href="/ai-tutor/" data-zh="AI 助教" data-en="AI Tutor">AI 助教</a>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== Login Gate ===== -->
+<section class="login-gate" id="loginGate">
+  <div class="login-card">
+    <div class="login-icon">🦞</div>
+    <h1 data-zh="助教天地" data-en="Teacher Hub">助教天地</h1>
+    <p data-zh="请先登录学员账号，再进入助教看板" data-en="Log in with your staff account first">请先登录学员账号，再进入助教看板</p>
+    <a href="/login.html" style="display:inline-block;width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-md);font-size:15px;font-weight:700;text-decoration:none" data-zh="去登录 →" data-en="Log in →">去登录 →</a>
+    <p class="login-hint" id="loginHint"></p>
+  </div>
+</section>
+
+<!-- ===== Teacher World (hidden until login) ===== -->
+<section class="teacher-world" id="teacherWorld" style="display:none">
+  <div class="tw-head">
+    <span class="tw-badge" data-zh="助教专属" data-en="Teacher Only">助教专属</span>
+    <h1 data-zh="助教天地" data-en="Teacher Hub">助教天地</h1>
+    <p data-zh="教学资料与学员通讯录，一站直达" data-en="Teaching materials & student contacts, all in one place">教学资料与学员通讯录，一站直达</p>
+  </div>
+  <div class="tw-grid">
+    <a class="tw-card" href="dashboard.html">
+      <div class="tw-icon">📇</div>
+      <h3 data-zh="蜗牛AI通讯录" data-en="SnailAI Contacts">蜗牛AI通讯录</h3>
+      <p data-zh="蜗牛AI 云端数据库 · 增删改查、浏览教学数据" data-en="SnailAI cloud DB · CRUD & browse teaching data">蜗牛AI 云端数据库 · 增删改查、浏览教学数据</p>
+      <span class="tw-go" data-zh="打开看板 →" data-en="Open board →">打开看板 →</span>
+    </a>
+    <a class="tw-card" href="/AI%20能力清单/" target="_blank" rel="noopener">
+      <div class="tw-icon">📋</div>
+      <h3 data-zh="AI 能力清单" data-en="AI Skill Checklist">AI 能力清单</h3>
+      <p data-zh="蜗牛AI 云端数据库 · 学员自查 / 助教审核" data-en="SnailAI cloud DB · self-check / TA review">蜗牛AI 云端数据库 · 学员自查 / 助教审核</p>
+      <span class="tw-go" data-zh="打开能力清单 →" data-en="Open checklist →">打开能力清单 →</span>
+    </a>
+    <a class="tw-card" href="ai-needs.html">
+      <div class="tw-icon">🧠</div>
+      <h3 data-zh="AI 刚需看板" data-en="AI Needs Board">AI 刚需看板</h3>
+      <p data-zh="查看所有学员的 AI 刚需 · 助教/管理员可帮学员新建" data-en="View all students' AI needs · TA/Admin can create needs">查看所有学员的 AI 刚需 · 助教/管理员可帮学员新建</p>
+      <span class="tw-go" data-zh="打开看板 →" data-en="Open board →">打开看板 →</span>
+    </a>
+    <div class="tw-card" id="addCapCard" style="cursor:pointer">
+      <div class="tw-icon">📋</div>
+      <h3 data-zh="添加 AI 能力" data-en="Add AI Skill">添加 AI 能力</h3>
+      <p data-zh="向能力清单新增一项（标题、描述、分类、点数）" data-en="Add a new item to the skill checklist">向能力清单新增一项（标题、描述、分类、点数）</p>
+      <span class="tw-go" data-zh="打开表单 →" data-en="Open form →">打开表单 →</span>
+    </div>
+  </div>
+
+  <div class="tw-legend">
+    <div class="lg-head">
+      <span class="lg-ico">📋</span>
+      <h2 data-zh="AI 能力清单 · 项目说明" data-en="AI Skill Checklist · Key">AI 能力清单 · 项目说明</h2>
+      <span class="lg-sub" data-zh="表格列头 ①~⑨ 对应如下" data-en="Columns ①~⑨ map to:">表格列头 ①~⑨ 对应如下</span>
+    </div>
+    <ol>
+      <li><span class="badge">①</span><span class="lg-text">前往腾讯云下载 WorkBuddy 客户端</span></li>
+      <li><span class="badge">②</span><span class="lg-text">使用微信账号登录并完成激活</span></li>
+      <li><span class="badge">③</span><span class="lg-text">确认能正常对话，安装技能，并且调用技能和专家进行简单对话，例如怎么使用你？</span></li>
+      <li><span class="badge">④</span><span class="lg-text">参加 WorkBuddy 成长计划，赢取越多越好积分（赢积分的同时熟悉功能）</span></li>
+      <li><span class="badge">⑤</span><span class="lg-text">给龙虾介绍做自我介绍：姓名，性别，年龄，职业，兴趣爱好，以及做事风格等</span></li>
+      <li><span class="badge">⑥</span><span class="lg-text">龙虾助理设置：企业微信和微信都要设置好</span></li>
+      <li><span class="badge">⑦</span><span class="lg-text">在电脑里面创建一个文件夹，起名《龙虾文件夹》</span></li>
+      <li><span class="badge">⑧</span><span class="lg-text">安装微信输入法：手机和电脑同时安装，然后设置右边 Shift 按键为 AI 录音转文字</span></li>
+      <li><span class="badge">⑨</span><span class="lg-text">调试电脑 Zoom 语音和共享成功使用，方便直播课堂分享</span></li>
+    </ol>
+    <p class="lg-note" data-zh="每列可分别勾选 学员自查 / 助教审核（绿、蓝两色标签）。" data-en="Each column can be checked for self-check / TA review (green, blue tags).">每列可分别勾选 学员自查 / 助教审核（绿、蓝两色标签）。</p>
+  </div>
+</section>
+
+<!-- ===== Add Capability Modal ===== -->
+<div class="modal-overlay" id="addCapModal">
+  <div class="modal-box">
+    <button class="modal-close" id="addCapClose">&times;</button>
+    <h2 data-zh="添加 AI 能力" data-en="Add AI Skill">添加 AI 能力</h2>
+    <p data-zh="新增一项到 AI 能力清单，提交后学员即可在清单中看到。" data-en="Add a new item to the AI Skill Checklist. Students will see it immediately.">新增一项到 AI 能力清单，提交后学员即可在清单中看到。</p>
+    <form class="modal-form" id="addCapForm">
+      <label data-zh="能力标题 *" data-en="Skill title *">能力标题 *</label>
+      <input type="text" id="capTitle" required data-zh-ph="例如：使用 WorkBuddy 生成报告" data-en-ph="e.g. Generate reports with WorkBuddy" placeholder="例如：使用 WorkBuddy 生成报告">
+
+      <label data-zh="具体内容 / 描述" data-en="Description">具体内容 / 描述</label>
+      <textarea id="capDesc" data-zh-ph="描述该能力的具体要求或操作步骤" data-en-ph="Describe the skill requirements or steps"></textarea>
+
+      <label data-zh="分类 *" data-en="Category *">分类 *</label>
+      <input type="text" id="capCat" required data-zh-ph="例如：课前准备、进阶技能" data-en-ph="e.g. Pre-class, Advanced">
+
+      <label data-zh="点数" data-en="Points">点数</label>
+      <input type="number" id="capPts" value="10" min="0" max="999">
+
+      <button type="submit" class="modal-submit" data-zh="提交新增" data-en="Add Skill">提交新增</button>
+      <p class="modal-status" id="addCapStatus"></p>
+    </form>
+  </div>
+</div>
+
+<footer class="footer">
+  <img src="/assets/snailai_logo.png" alt="蜗牛 AI Logo">
+  <p data-zh="© 2026 蜗牛 AI · 澳洲华人AI 应用教育学院" data-en="© 2026 Snail AI · Australian Chinese AI Education Institute">© 2026 蜗牛 AI · 澳洲华人AI 应用教育学院</p>
+  <div class="links">
+    <a href="/online-course/" data-zh="线上课" data-en="Online">线上课</a>
+    <a href="/offline-course/" data-zh="线下课" data-en="Offline">线下课</a>
+    <a href="/faq/" data-zh="FAQ" data-en="FAQ">FAQ</a>
+    <a href="/qa/" data-zh="蜗牛问答" data-en="Q&A">蜗牛问答</a>
+  </div>
+</footer>
+
+<script>
+  // ===== Language switcher =====
+  const LANG_KEY = 'snailai-lang';
+  function applyLang(lang) {
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-zh');
+    });
+    document.querySelectorAll('[data-zh-ph]').forEach(el => {
+      el.placeholder = el.getAttribute('data-' + lang + '-ph') || el.getAttribute('data-zh-ph');
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    const _tt = lang === 'en' ? document.documentElement.getAttribute('data-title-en') : document.documentElement.getAttribute('data-title-zh');
+    if (_tt) document.title = _tt;
+    try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+  });
+  let savedLang = 'zh';
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'zh'; } catch(e) {}
+  applyLang(savedLang);
+
+  // ===== 后端账号守卫（复用学员门户 token） =====
+  const S_KEY = 'snailai_api_token';
+  const gate = document.getElementById('loginGate');
+  const world = document.getElementById('teacherWorld');
+  const hint = document.getElementById('loginHint');
+
+  (async function taGuard() {
+    const token = sessionStorage.getItem(S_KEY);
+    if (!token) { gate.style.display = 'flex'; world.style.display = 'none'; return; }
+    try {
+      const r = await fetch('/api/me', { headers: { 'Authorization': 'Bearer ' + token } });
+      const d = await r.json();
+      if (d.ok && ['ta', 'instructor', 'admin'].includes(d.user.role)) {
+        gate.style.display = 'none'; world.style.display = 'block';
+      } else {
+        hint.textContent = (document.documentElement.lang === 'zh') ? '该账号无助教权限' : 'No TA permission';
+        gate.style.display = 'flex'; world.style.display = 'none';
+      }
+    } catch (e) {
+      gate.style.display = 'flex'; world.style.display = 'none';
+    }
+  })();
+
+  // ===== Add Capability Modal =====
+  const addCapCard = document.getElementById('addCapCard');
+  const addCapModal = document.getElementById('addCapModal');
+  const addCapClose = document.getElementById('addCapClose');
+  const addCapForm = document.getElementById('addCapForm');
+  const addCapStatus = document.getElementById('addCapStatus');
+
+  function openAddCapModal() {
+    addCapStatus.textContent = '';
+    addCapStatus.className = 'modal-status';
+    addCapForm.reset();
+    document.getElementById('capPts').value = 10;
+    addCapModal.classList.add('open');
+  }
+  function closeAddCapModal() {
+    addCapModal.classList.remove('open');
+  }
+  addCapCard.addEventListener('click', openAddCapModal);
+  addCapClose.addEventListener('click', closeAddCapModal);
+  addCapModal.addEventListener('click', (e) => {
+    if (e.target === addCapModal) closeAddCapModal();
+  });
+
+  addCapForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const lang = localStorage.getItem('snailai-lang') || 'zh';
+    const token = sessionStorage.getItem(S_KEY);
+    if (!token) {
+      addCapStatus.textContent = lang === 'en' ? 'Please log in first' : '请先登录';
+      addCapStatus.className = 'modal-status error';
+      return;
+    }
+    const title = document.getElementById('capTitle').value.trim();
+    const description = document.getElementById('capDesc').value.trim();
+    const category = document.getElementById('capCat').value.trim();
+    const points = parseInt(document.getElementById('capPts').value) || 10;
+
+    if (!title || !category) {
+      addCapStatus.textContent = lang === 'en' ? 'Title and category are required' : '标题和分类为必填项';
+      addCapStatus.className = 'modal-status error';
+      return;
+    }
+
+    const btn = addCapForm.querySelector('.modal-submit');
+    btn.disabled = true;
+    btn.textContent = lang === 'en' ? 'Submitting...' : '提交中...';
+
+    try {
+      const r = await fetch('/api/capabilities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token,
+        },
+        body: JSON.stringify({ title, description, category, points }),
+      });
+      const d = await r.json();
+      if (d.ok) {
+        addCapStatus.textContent = lang === 'en'
+          ? 'Skill added successfully! ID: ' + d.id
+          : '新增成功！能力 ID：' + d.id;
+        addCapStatus.className = 'modal-status success';
+        setTimeout(closeAddCapModal, 1500);
+      } else {
+        addCapStatus.textContent = lang === 'en' ? (d.error || 'Failed') : (d.error || '提交失败');
+        addCapStatus.className = 'modal-status error';
+      }
+    } catch (err) {
+      addCapStatus.textContent = lang === 'en' ? 'Network error, please try again' : '网络错误，请重试';
+      addCapStatus.className = 'modal-status error';
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = lang === 'en'
+        ? '<span data-zh="提交新增" data-en="Add Skill">Add Skill</span>'
+        : '<span data-zh="提交新增" data-en="Add Skill">提交新增</span>';
+    }
+  });
+</script>
+
+<script src="/assets/analytics.js"></script>
+</body>
+</html>
