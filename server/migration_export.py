@@ -8,9 +8,14 @@
 """
 from flask import Blueprint, request, jsonify
 
-from app import db_conn, QUOTE_ADMIN_TOKEN
-
 bp = Blueprint("migration_export", __name__)
+
+
+def _deps():
+    """延迟导入：app.py 尾部 import 本模块时避免循环导入。
+    db_conn / QUOTE_ADMIN_TOKEN 在请求期必然已可用。"""
+    from app import db_conn, QUOTE_ADMIN_TOKEN
+    return db_conn, QUOTE_ADMIN_TOKEN
 
 # 学院站需要的表（企业站专属表 quote_confirmations/contact_submissions 等不导出）
 EXPORT_TABLES = [
@@ -27,6 +32,7 @@ EXPORT_TABLES = [
 
 @bp.route("/api/admin/db-export", methods=["GET"])
 def db_export():
+    db_conn, QUOTE_ADMIN_TOKEN = _deps()
     if not QUOTE_ADMIN_TOKEN or request.headers.get("X-Admin-Token") != QUOTE_ADMIN_TOKEN:
         return jsonify(ok=False, error="unauthorized"), 401
     conn = db_conn()

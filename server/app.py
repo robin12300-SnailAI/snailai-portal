@@ -1746,6 +1746,9 @@ def sign_page(signer_token):
     前端单页（sign/index.html）自行从 URL 提取 token 并调用 /api/sign/info/{token}。
     注意：必须注册在 catch-all serve() 之前，否则 /sign/{token} 会被静态文件
     处理器当作不存在的文件路径而 404。"""
+    # 2026-09-02 学院迁移后：academy 域名上的签署链接转 snailai.au（数据已在新服务）
+    if request.host.split(":")[0] == "academy.snailai.ai":
+        return redirect("https://snailai.au/sign/" + signer_token, code=301)
     return send_from_directory(BASE, "sign/index.html")
 
 
@@ -4087,39 +4090,12 @@ def serve(path):
             return send_from_directory(andrew_base, path)
         return not_found()  # 文件不存在
 
-    # ── Academy 域名路由：academy.snailai.ai → academy/ 目录（中文学院） ──
+    # ── Academy 域名：2026-09-02 起全站 301 到 snailai.au（学院已整体迁移） ──
+    # 学院现由独立服务 snailai-school（srv-dabpe6f40ujc739vlki0）承载，
+    # 本服务不再提供学院内容。旧 URL 单跳 301 到对应新地址，至少保留 12 个月。
     if host == "academy.snailai.ai":
-        ac_base = BASE / "academy"
-        # robots/sitemap 特判：academy host 必须拿到学院自己的版本
-        if path == "robots.txt":
-            return send_from_directory(ac_base, "robots.txt")
-        if path == "sitemap.xml":
-            return send_from_directory(ac_base, "sitemap.xml")
-        # /sign/ 不被 academy shadow：转发回主站（eSign 链接终身有效）
-        if path.startswith("sign/"):
-            return redirect("https://snailai.ai/" + path, code=303)
-        # 共享品牌资源：academy 页面引用的 /assets/* 回退到仓库根 assets/
-        if path.startswith("assets/"):
-            root_target = (BASE / path).resolve()
-            if BASE in root_target.parents and root_target.is_file():
-                return send_from_directory(BASE, path)
-            return send_from_directory(ac_base, "404.html"), 404
-        if not path:
-            return send_from_directory(ac_base, "index.html")
-        target = (ac_base / path).resolve()
-        if ac_base not in target.parents and target != ac_base:
-            return send_from_directory(ac_base, "404.html"), 404
-        if target.is_dir():
-            idx = target / "index.html"
-            if idx.is_file():
-                return send_from_directory(ac_base, path.rstrip("/") + "/index.html")
-            return send_from_directory(ac_base, "404.html"), 404
-        if not target.exists() and target.with_suffix(".html").is_file():
-            return send_from_directory(ac_base, path + ".html")
-        if target.is_file():
-            return send_from_directory(ac_base, path)
-        # 真 404（学院目录需要正确的 404 给搜索引擎，与 andrew 的 SPA fallback 不同）
-        return send_from_directory(ac_base, "404.html"), 404
+        # /sign/ 的 eSign 链接必须仍可用：转发到 snailai.au（新服务已具备完整 eSign）
+        return redirect("https://snailai.au/" + path, code=301)
 
     # 根路径 -> 官网首页（已合并为 repo 根 index.html）
     if not path:

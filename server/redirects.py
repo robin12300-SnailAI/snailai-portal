@@ -13,7 +13,9 @@ from flask import redirect, request, send_from_directory, abort
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent.parent
-ACADEMY = "https://academy.snailai.ai"
+# 2026-09-02：学院整体迁往 snailai.au（独立服务 snailai-school）。
+# 主站旧课程 URL 直跳 snailai.au，避免 snailai.ai → academy.snailai.ai → snailai.au 两跳链。
+ACADEMY = "https://snailai.au"
 
 _MAIN_HOSTS = {"snailai.ai", "www.snailai.ai"}
 
@@ -96,44 +98,16 @@ REDIRECTS = [
 ]
 
 
-def _serve_academy(path):
-    """academy host 上：路径已物理迁回 academy/ 目录，直接静态服务（不重定向）。
-    与 app.py catch-all 的 academy 分支逻辑一致，防止 301 循环。
-    注意：path 可能带前导斜杠（来自 REDIRECTS 表），须先剥掉，否则 pathlib
-    会把绝对路径当根、导致目录穿越检查失败而 404。"""
-    ac_base = BASE / "academy"
-    path = path.lstrip("/")
-    if not path:
-        return send_from_directory(ac_base, "index.html")
-    target = (ac_base / path).resolve()
-    if ac_base not in target.parents and target != ac_base:
-        abort(404)
-    if target.is_dir():
-        idx = target / "index.html"
-        if idx.is_file():
-            return send_from_directory(ac_base, path.rstrip("/") + "/index.html")
-        abort(404)
-    if target.is_file():
-        return send_from_directory(ac_base, path)
-    if not target.exists() and target.with_suffix(".html").is_file():
-        return send_from_directory(ac_base, path + ".html")
-    abort(404)
-
 
 def register_redirects(app):
     """批量注册 301 显式路由（显式路由天然优先于 catch-all）。
 
-    host 判定：
-    - snailai.ai / www.snailai.ai → 301 重定向（迁移语义）
-    - academy.snailai.ai → 该路径现属学院，直接静态服务（避免无限循环）
-    - 其他 host（本地调试 127.0.0.1 等）→ 视同主站执行 301
+    2026-09-02 起 academy.snailai.ai 全量 301 到 snailai.au（学院独立部署），
+    本表目标也已改为 snailai.au 直跳——所有 host 统一 301，不再有本地 academy 静态服务分支。
     """
     for i, (old, new) in enumerate(REDIRECTS):
         def _make(old_path, target):
             def _view():
-                host = request.host.split(":")[0]
-                if host == "academy.snailai.ai":
-                    return _serve_academy(old_path)
                 return redirect(target, code=301)
             return _view
         app.add_url_rule(old, endpoint=f"r301_{i}", view_func=_make(old, new))
