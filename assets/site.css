@@ -1,24 +1,32 @@
 /* ============================================================
-   Snail AI — Main Site Shared Styles (V3.0.0 English B2B)
-   Design system: Swiss / coral-ink / paper
+   Snail AI — Main Site Shared Styles (V4.1.0 VentraIP-inspired reskin)
+   Design system: bold-contrast SaaS / warm-black + deep snail orange
+   + amber highlight / paper. V3.0 swiss coral-ink palette retired.
+   Palette rule: 教育 snailai.au = 蜗牛橙 #FF5B1F；企业 snailai.ai =
+   深阶橙 #C2410C（同宗不同调）+ 暖黑 #16110E + 琥珀黄 #FDB022。
    ============================================================ */
 :root {
-  --ink: #1A1A2E;
-  --ink-2: #2A2A40;
-  --ink-3: #6A6A85;
-  --paper: #FCFCFA;
-  --paper-2: #F5F4EE;
-  --paper-3: #E8E7E0;
-  --accent: #FF5B1F;
-  --accent-2: #E84A0F;
-  --accent-light: rgba(255,91,31,0.08);
-  --accent-warm: #FFF5EE;
+  --ink: #1C1613;
+  --ink-2: #3A2E27;
+  --ink-3: #7A6E66;
+  --paper: #FCFBF9;
+  --paper-2: #F7F3EF;
+  --paper-3: #ECE6E0;
+  --accent: #C2410C;
+  --accent-2: #9A3412;
+  --accent-bright: #FF7A3D;          /* 深色背景上的高亮橙（对比度） */
+  --accent-light: rgba(194,65,12,0.09);
+  --accent-warm: #FBF0E8;
+  --highlight: #FDB022;              /* VentraIP 式琥珀黄高光 */
+  --hero-dark: #16110E;              /* 暖黑英雄区 */
+  --grad-primary: linear-gradient(135deg, #D14E0F 0%, #B23A0A 100%);
+  --grad-amber: linear-gradient(135deg, #FDB022 0%, #F59E0B 100%);
   --gold: #D4A547;
-  --line: rgba(26,26,46,0.08);
-  --line-2: rgba(26,26,46,0.14);
-  --shadow-sm: 0 1px 3px rgba(26,26,46,0.04), 0 2px 8px rgba(26,26,46,0.04);
-  --shadow-md: 0 4px 16px rgba(26,26,46,0.08);
-  --shadow-lg: 0 12px 36px rgba(26,26,46,0.12);
+  --line: rgba(28,22,19,0.08);
+  --line-2: rgba(28,22,19,0.14);
+  --shadow-sm: 0 1px 3px rgba(28,22,19,0.04), 0 2px 8px rgba(28,22,19,0.04);
+  --shadow-md: 0 4px 16px rgba(28,22,19,0.08);
+  --shadow-lg: 0 12px 36px rgba(28,22,19,0.12);
   --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-xl: 24px;
   --sans: 'Inter','Helvetica Neue','Helvetica','Arial',sans-serif;
   --mono: 'JetBrains Mono','SF Mono','Menlo','Consolas',monospace;
@@ -62,12 +70,14 @@ a { color: var(--accent-2); }
 .nav-links > a.nav-cta,
 .nav-links > a.nav-cta:visited {
   color: #fff;
-  background: var(--accent);
+  background: var(--grad-primary);
+  box-shadow: 0 2px 10px rgba(194,65,12,0.28);
 }
 .nav-links > a.nav-cta:hover,
 .nav-links > a.nav-cta:focus-visible {
   color: #fff;
-  background: var(--accent-2);
+  background: var(--grad-primary);
+  filter: brightness(1.08);
 }
 .nav-cta {
   display: inline-flex; align-items: center; gap: 6px;
@@ -96,8 +106,8 @@ a { color: var(--accent-2); }
   padding: 14px 28px; border-radius: 999px;
   transition: background .15s ease, transform .15s ease, box-shadow .15s ease;
 }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: var(--accent-2); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-primary { background: var(--grad-primary); color: #fff; box-shadow: 0 4px 14px rgba(194,65,12,0.30); }
+.btn-primary:hover { background: var(--grad-primary); filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(194,65,12,0.42); }
 .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--line-2); }
 .btn-outline:hover { background: var(--paper-2); }
 .btn-ghost { background: var(--paper-2); color: var(--ink); }
@@ -260,10 +270,59 @@ a { color: var(--accent-2); }
 .mt-24 { margin-top: 24px; }
 .mt-40 { margin-top: 40px; }
 .note-box {
-  background: var(--accent-warm); border: 1px solid rgba(255,91,31,0.2);
+  background: var(--accent-warm); border: 1px solid rgba(194,65,12,0.22);
   border-radius: var(--r-md); padding: 18px 22px; font-size: 14px; color: var(--ink-2);
 }
 .note-box strong { color: var(--ink); }
+
+/* ============================================================
+   V4.1.0 VentraIP-inspired reskin — new components
+   ============================================================ */
+
+/* 次级 CTA：琥珀黄渐变（对应 VentraIP 亮黄按钮） */
+.btn-amber {
+  background: var(--grad-amber); color: #3A2A05;
+  box-shadow: 0 4px 14px rgba(253,176,34,0.35);
+}
+.btn-amber:hover { background: var(--grad-amber); filter: brightness(1.06); transform: translateY(-1px); }
+
+/* 深色区幽灵 CTA */
+.btn-ghost-dark {
+  background: transparent; color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.35);
+}
+.btn-ghost-dark:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); }
+
+/* 琥珀黄手绘下划线（VentraIP 招牌动作） */
+.hl { position: relative; display: inline-block; padding-bottom: 6px; }
+.hl::after {
+  content: ""; position: absolute; left: 2%; right: 2%; bottom: -4px; height: 9px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M3 8 Q 50 2 100 6 T 197 5' fill='none' stroke='%23FDB022' stroke-width='4.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+  pointer-events: none;
+}
+
+/* 深色信任区（英雄区之后 / 页脚之前的深色段落） */
+.section-dark { background: var(--hero-dark); color: #fff; }
+.section-dark h2, .section-dark h3, .section-dark h4 { color: #fff; }
+.section-dark p { color: rgba(255,255,255,0.72); }
+.section-dark .section-head p { color: rgba(255,255,255,0.65); }
+.section-dark .why-item {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.section-dark .why-item p { color: rgba(255,255,255,0.62); }
+.section-dark .card-tag { color: var(--highlight); background: rgba(253,176,34,0.10); }
+.section-dark .card-link { color: var(--accent-bright); }
+.section-dark .eyebrow {
+  color: var(--highlight); background: rgba(253,176,34,0.10);
+}
+
+/* CTA band：暖黑 + 橙色辉光（比纯色多一点层次） */
+.cta-band {
+  background:
+    radial-gradient(ellipse 55% 80% at 50% 120%, rgba(194,65,12,0.22), transparent),
+    var(--ink);
+}
 
 /* ===== Responsive ===== */
 @media (max-width: 1024px) {

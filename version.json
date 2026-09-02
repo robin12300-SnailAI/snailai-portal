@@ -1,9 +1,10 @@
 {
   "name": "snailai-portal",
-  "version": "3.2.1",
+  "version": "4.1.0",
   "release_date": "2026-09-02",
   "last_updated": "2026-09-02",
   "changelog": [
+    "4.1.0 (2026-09-02): V4.1.0 VentraIP-inspired reskin — 企业站视觉换肤（Gate C）：色板换血（暖黑 #16110E 英雄区/页脚 + 深阶蜗牛橙 #C2410C 主色 + 琥珀黄 #FDB022 高光，与教育站蜗牛橙 #FF5B1F 同宗不同调）；CTA 全站升级 45° 胶囊渐变；新增琥珀黄手绘下划线 .hl、深色信任区 .section-dark、黄渐变 .btn-amber、深色幽灵 .btn-ghost-dark 组件；首页英雄区深色化 + Why Snail AI 信任区深色化；20 个公共页经 CSS token 自动继承；portal/tasks 内部工具与 eSign/Stripe/学员数据零接触",
     "3.2.1 (2026-09-02): payment/success.html 迁移补漏 — Phase 2 遗漏的 Stripe 回跳页迁至 academy/ + 301；academy.snailai.ai DNS 上线（Cloudflare CNAME proxied）",
     "3.2.0 (2026-09-02): SEO 与分析基础（Phase 4）— conversion_events 表 + /api/track/event（白名单 9 事件）；site.js 事件埋点（phone/email click、academy link、case study、contact form）；scan start.html 埋 scan_started/scan_completed；全页面 canonical/OG 已就位",
     "3.1.1 (2026-09-02): Business AI Scan 增字段（Phase 3）— 新增 preferred_contact_method（建表+迁移+清洗+INSERT+前端 select+校验）；修复 scan_api.py 既有 NameError（re 未导入）",
