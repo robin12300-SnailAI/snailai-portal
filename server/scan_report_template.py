@@ -372,9 +372,9 @@ def render_report_html(analysis: dict, norm: dict, scoring: dict, submission: di
 
   {onsite_note}
 
-  <!-- 5. Recommended First Pilot -->
+  <!-- 4. Recommended First Pilot -->
   <div class="section">
-    <h2>5. Recommended First Pilot</h2>
+    <h2>4. Recommended First Pilot</h2>
     <div class="pilot-box">
       <h3>Objective</h3>
       <p>{_e(pilot.get('objective', ''))}</p>
@@ -392,15 +392,15 @@ def render_report_html(analysis: dict, norm: dict, scoring: dict, submission: di
     </div>
   </div>
 
-  <!-- 6. What Not to Automate Yet -->
+  <!-- 5. What Not to Automate Yet -->
   <div class="section">
-    <h2>6. What Not to Automate Yet</h2>
+    <h2>5. What Not to Automate Yet</h2>
     {not_recommended if not_recommended else '<p>Based on this assessment, no workflows have been flagged as unsuitable for future consideration.</p>'}
   </div>
 
-  <!-- 7. Risks and Guardrails -->
+  <!-- 6. Risks and Guardrails -->
   <div class="section">
-    <h2>7. Risks and Guardrails</h2>
+    <h2>6. Risks and Guardrails</h2>
     <div class="risk-level-banner" style="background:{'#fef2f2' if scoring['risk_level']=='high' else '#fffbeb' if scoring['risk_level']=='medium' else '#f0fdf4'};padding:12px 16px;border-radius:8px;margin-bottom:16px;">
       <strong>Overall Risk Level: {scoring['risk_level'].upper()}</strong>
       {'— Medical/healthcare workflows require strict human oversight, data de-identification and professional compliance review.' if norm['is_medical'] else ''}
@@ -408,9 +408,9 @@ def render_report_html(analysis: dict, norm: dict, scoring: dict, submission: di
     {risk_controls if risk_controls else '<p>No specific risks identified beyond standard implementation considerations.</p>'}
   </div>
 
-  <!-- 8. Suggested 30/60/90-Day Path -->
+  <!-- 7. Suggested 30/60/90-Day Path -->
   <div class="section">
-    <h2>8. Suggested 30/60/90-Day Path</h2>
+    <h2>7. Suggested 30/60/90-Day Path</h2>
     <div class="path-grid">
       <div class="path-card">
         <h4>Days 0–30</h4>
