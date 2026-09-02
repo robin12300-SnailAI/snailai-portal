@@ -4148,6 +4148,10 @@ def serve(path):
 init_db()
 _start_scheduler()
 
+# ── 数据搬迁临时导出端点（Phase 2 迁移期；完成后删除 migration_export.py 与此段）──
+from migration_export import bp as migration_export_bp
+app.register_blueprint(migration_export_bp)
+
 # ── 注册 Client Portal Blueprint ─────────────────────────
 # 注意：Render 以 rootDir=server 启动 gunicorn（app:app），此处模块名为 portal 而非 server.portal
 from portal import bp as portal_bp, init_portal_db
