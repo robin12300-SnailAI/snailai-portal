@@ -237,19 +237,19 @@
     var shape = PROM_SHAPES[Math.floor(Math.random() * PROM_SHAPES.length)];
     var colors = PROM_COLORS[Math.floor(Math.random() * PROM_COLORS.length)];
     el.className = 'prominence ' + shape;
-    /* 随机参数 — V4.6.1: 高度 ×4（原来 120~300 → 480~1200） */
+    /* 随机参数 — V4.6.3: curve 替代 sway，单向持续弯曲 */
     var px = 6 + Math.random() * 88;          /* 水平位置 6%~94% */
     var pw = 80 + Math.random() * 200;         /* 宽度 80~280px */
     var ph = 480 + Math.random() * 720;        /* 高度 480~1200px */
     var pr = (Math.random() - 0.5) * 32;      /* 旋转 -16°~+16° */
-    var sway = (Math.random() - 0.5) * 12;    /* 摆动 ±6° */
+    var curve = (Math.random() - 0.5) * 50;    /* 单向弯曲 -25°~+25°，正=右弯 负=左弯 */
     var pb = 12 + Math.random() * 16;         /* blur 12~28px */
     var pd = 2.4 + Math.random() * 1.4;        /* 持续 2.4~3.8s */
     el.style.setProperty('--px', px + '%');
     el.style.setProperty('--pw', pw + 'px');
     el.style.setProperty('--ph', ph + 'px');
     el.style.setProperty('--pr', pr + 'deg');
-    el.style.setProperty('--sway', sway + 'deg');
+    el.style.setProperty('--curve', curve + 'deg');
     el.style.setProperty('--pb', pb + 'px');
     el.style.setProperty('--pd', pd + 's');
     el.style.setProperty('--pc', colors[0]);
