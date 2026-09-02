@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
 /* ============================================================
    Snail AI — Main Site Shared Styles (V4.2.0 Aussie-colour layering)
    Design system: bold-contrast SaaS / warm-black + deep snail orange
@@ -38,11 +39,13 @@
   --shadow-lg: 0 12px 36px rgba(28,22,19,0.12);
   --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-xl: 24px;
   --sans: 'Inter','Helvetica Neue','Helvetica','Arial',sans-serif;
+  --font-display: 'Space Grotesk','Inter','Helvetica Neue',sans-serif;  /* 标题展示字体：几何怪诞，高级感 */
   --mono: 'JetBrains Mono','SF Mono','Menlo','Consolas',monospace;
   --container: 1160px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+h1, h2, h3, h4 { font-family: var(--font-display); }
 body {
   font-family: var(--sans);
   /* 极光渐变底：四角柔光斑（深蓝/酒红/橙/琥珀）+ 纵向微渐变，fixed 使滚动时色彩均匀流动 */
@@ -73,7 +76,7 @@ a { color: var(--accent-2); }
 }
 .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
 .nav-logo img { height: 32px; width: auto; }
-.nav-logo span { font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
+.nav-logo span { font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
 .nav-links { display: flex; gap: 26px; align-items: center; }
 .nav-links > a {
   font-size: 13px; font-weight: 600; color: var(--ink-3);
@@ -139,13 +142,13 @@ a { color: var(--accent-2); }
   border-bottom: 1px solid var(--line);
 }
 .eyebrow {
-  display: inline-block; font-size: 12px; font-weight: 800;
+  display: inline-block; font-size: 12px; font-weight: 700;
   letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--accent-2); background: var(--accent-light);
   padding: 6px 14px; border-radius: 999px; margin-bottom: 18px;
 }
 .page-hero h1 {
-  font-size: 44px; line-height: 1.15; font-weight: 800;
+  font-size: 44px; line-height: 1.12; font-weight: 700; letter-spacing: -0.03em;
   letter-spacing: -0.02em; max-width: 760px; margin-bottom: 18px;
 }
 .page-hero .lede { font-size: 18px; color: var(--ink-3); max-width: 640px; margin-bottom: 28px; }
@@ -167,7 +170,7 @@ a { color: var(--accent-2); }
   border-bottom: 1px solid var(--line);
 }
 .section-head { max-width: 720px; margin-bottom: 44px; }
-.section-head h2 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 12px; }
+.section-head h2 { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 12px; }
 .section-head p { font-size: 16px; color: var(--ink-3); }
 
 /* ===== Cards ===== */
@@ -188,7 +191,7 @@ a { color: var(--accent-2); }
 .card-grid > .card:nth-child(4n+4) { background: linear-gradient(165deg, #EFF8F3 0%, #E4F1EA 100%); }
 /* 紧跟 grid 之后的整宽孤卡：淡紫，凑成第五色 */
 .card-grid + .card { background: linear-gradient(165deg, #F5F3FC 0%, #EEEAF8 100%); }
-.card h3 { font-size: 19px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.01em; }
+.card h3 { font-size: 19px; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.01em; }
 .card p { font-size: 14.5px; color: var(--ink-3); flex: 1; }
 .card .card-link {
   margin-top: 16px; font-size: 13.5px; font-weight: 700;
@@ -202,7 +205,7 @@ a { color: var(--accent-2); }
   font-size: 21px; margin-bottom: 16px;
 }
 .card-tag {
-  display: inline-block; font-size: 11px; font-weight: 800;
+  display: inline-block; font-size: 11px; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--burgundy); background: var(--burgundy-light);
   padding: 4px 10px; border-radius: 999px; margin-bottom: 12px; align-self: flex-start;
@@ -233,16 +236,16 @@ a { color: var(--accent-2); }
   width: 34px; height: 34px; border-radius: 50%;
   background: var(--navy); color: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 15px; margin-bottom: 14px;
+  font-weight: 600; font-size: 15px; margin-bottom: 14px;
 }
-.step h4 { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+.step h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
 .step p { font-size: 13.5px; color: var(--ink-3); }
 
 /* ===== FAQ ===== */
 .faq-item { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); margin-bottom: 12px; overflow: hidden; }
 .faq-q {
   width: 100%; text-align: left; background: none; border: none; cursor: pointer;
-  padding: 18px 22px; font-family: var(--sans); font-size: 15.5px; font-weight: 700; color: var(--ink);
+  padding: 18px 22px; font-family: var(--sans); font-size: 15.5px; font-weight: 600; color: var(--ink);
   display: flex; justify-content: space-between; align-items: center; gap: 16px;
 }
 .faq-q::after { content: "+"; font-size: 20px; font-weight: 400; color: var(--accent-2); transition: transform .2s; }
@@ -255,7 +258,7 @@ a { color: var(--accent-2); }
   background: var(--grad-burgundy); color: #fff;
   padding: 64px 0; text-align: center;
 }
-.cta-band h2 { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 14px; }
+.cta-band h2 { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 14px; }
 .cta-band p { color: rgba(255,255,255,0.72); font-size: 16px; margin-bottom: 28px; max-width: 560px; margin-left: auto; margin-right: auto; }
 
 /* ===== Forms ===== */
@@ -283,7 +286,7 @@ a { color: var(--accent-2); }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 36px; margin-bottom: 40px; }
 .footer-brand img { height: 30px; margin-bottom: 14px; }
 .footer-brand p { font-size: 13.5px; line-height: 1.8; max-width: 300px; }
-.footer h4 { color: #fff; font-size: 12.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+.footer h4 { color: #fff; font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
 .footer ul { list-style: none; }
 .footer ul li { margin-bottom: 10px; }
 .footer ul a { color: rgba(255,255,255,0.78); text-decoration: none; font-size: 13.5px; }
