@@ -74,7 +74,8 @@
 <style>
 /* ===== Homepage-specific (V4.1 dark hero — VentraIP rhythm) ===== */
 .hero {
-  padding: 170px 0 90px;
+  position: relative; overflow: hidden;
+  padding: 170px 0 170px;
   background:
     radial-gradient(ellipse 60% 50% at 85% -10%, rgba(255,122,61,0.16), transparent),
     radial-gradient(ellipse 45% 40% at 5% 115%, rgba(253,176,34,0.07), transparent),
@@ -99,6 +100,41 @@
   font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,0.85);
   background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.16); border-radius: 999px;
   padding: 6px 14px;
+}
+
+/* ===== Aurora ribbon（蜗牛版彩虹带：细带/反向/暖色系，双层错速交织） ===== */
+.ribbon-band {
+  position: absolute; left: -6%; right: -6%; bottom: -54px;
+  height: 165px; transform: rotate(1.9deg);
+  pointer-events: none; z-index: 0;
+}
+.ribbon-band .ribbon-layer {
+  position: absolute; inset: 0; border-radius: 999px;
+  filter: blur(13px) saturate(1.35);
+  will-change: background-position;
+}
+.ribbon-band .ribbon-layer:nth-child(1) {
+  background: linear-gradient(96deg,
+    #1C9E8F 0%, #2B4BD8 15%, #7B5CFF 32%, #C4407E 50%,
+    #E85D2F 68%, #FF7A3D 82%, #FDB022 100%);
+  background-size: 195% 100%;
+  animation: ribbon-drift 26s ease-in-out infinite alternate;
+}
+.ribbon-band .ribbon-layer:nth-child(2) {
+  background: linear-gradient(276deg,
+    rgba(253,176,34,0.95) 0%, rgba(255,122,61,0.9) 18%, rgba(196,64,126,0.85) 38%,
+    rgba(123,92,255,0.8) 58%, rgba(43,75,216,0.85) 78%, rgba(28,158,143,0.9) 100%);
+  background-size: 175% 100%;
+  transform: skewX(-4deg) scale(1.08);
+  opacity: 0.6; mix-blend-mode: screen;
+  animation: ribbon-drift 34s ease-in-out infinite alternate-reverse;
+}
+@keyframes ribbon-drift {
+  from { background-position: 0% 50%; }
+  to   { background-position: 100% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ribbon-band .ribbon-layer { animation: none; }
 }
 .problem-list { list-style: none; display: grid; gap: 14px; margin-top: 28px; }
 .problem-list li {
@@ -175,6 +211,10 @@
       <span>Local communication</span>
       <span>Practical implementation</span>
     </div>
+  </div>
+  <div class="ribbon-band" aria-hidden="true">
+    <div class="ribbon-layer"></div>
+    <div class="ribbon-layer"></div>
   </div>
 </header>
 

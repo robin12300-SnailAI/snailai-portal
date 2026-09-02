@@ -1,9 +1,10 @@
 {
   "name": "snailai-portal",
-  "version": "4.3.1",
+  "version": "4.4.0",
   "release_date": "2026-09-02",
   "last_updated": "2026-09-02",
   "changelog": [
+    "4.4.0 (2026-09-02): 主页英雄区底部加蜗牛版彩虹带（双层渐变错速流动，青绿→靛蓝→紫→玫红→橙→琥珀，细带反向，致敬 Stripe Aurora）",
     "4.3.1 (2026-09-02): 标题字体 Space Grotesk + 全站字重节奏重排（700/600/400 粗细对比，替代全 800 单调）",
     "4.3.0 (2026-09-02): 极光渐变站底 + 区块不规则光斑 + 卡片四色轮换（用户反馈 V4.2.0 浅色单调）",
     "4.2.0 (2026-09-02): Aussie-colour layering — 破解中部单调：新增深国旗蓝 #14265C（服务区 .section-navy 深蓝层次区）与酒红 #7A1E33（案例区 .section-tint-burgundy 浅调 + CTA 带酒红渐变 + .card-tag 酒红胶囊 + .step-num 深蓝）；全站浅底由暖米转冷蓝调 #F1F4FA；Logo 中文「蜗牛AI」换英文 snail AI（插画原封不动，Arial Rounded Bold 金色 #B08030）；内页经 token 自动继承",
