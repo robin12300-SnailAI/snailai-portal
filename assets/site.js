@@ -237,31 +237,19 @@
     var shape = PROM_SHAPES[Math.floor(Math.random() * PROM_SHAPES.length)];
     var colors = PROM_COLORS[Math.floor(Math.random() * PROM_COLORS.length)];
     el.className = 'prominence ' + shape;
-    /* 随机参数 — V4.6.4: 5 个递增角度全部随机，最多卷到 360° */
+    /* 随机参数 — V4.6.3: curve 替代 sway，单向持续弯曲 */
     var px = 6 + Math.random() * 88;          /* 水平位置 6%~94% */
     var pw = 80 + Math.random() * 200;         /* 宽度 80~280px */
     var ph = 480 + Math.random() * 720;        /* 高度 480~1200px */
-    var pr = (Math.random() - 0.5) * 32;      /* 初始旋转 -16°~+16° */
+    var pr = (Math.random() - 0.5) * 32;      /* 旋转 -16°~+16° */
+    var curve = (Math.random() - 0.5) * 50;    /* 单向弯曲 -25°~+25°，正=右弯 负=左弯 */
     var pb = 12 + Math.random() * 16;         /* blur 12~28px */
     var pd = 2.4 + Math.random() * 1.4;        /* 持续 2.4~3.8s */
-    /* 弯曲方向：正=右卷 负=左卷；最终角度随机 30°~360° */
-    var dir = Math.random() < 0.5 ? -1 : 1;
-    var final = (30 + Math.random() * 330) * dir;  /* ±30°~±360° */
-    /* 5 个递增关键帧角度，全部随机但严格递增到 final */
-    var c1 = final * (0.15 + Math.random() * 0.12);   /* ~15-27% */
-    var c2 = final * (0.42 + Math.random() * 0.12);   /* ~42-54% */
-    var c3 = final * (0.72 + Math.random() * 0.10);   /* ~72-82% */
-    var c4 = final * (0.92 + Math.random() * 0.06);   /* ~92-98% */
-    /* c5 = final (100%) */
     el.style.setProperty('--px', px + '%');
     el.style.setProperty('--pw', pw + 'px');
     el.style.setProperty('--ph', ph + 'px');
     el.style.setProperty('--pr', pr + 'deg');
-    el.style.setProperty('--c1', c1 + 'deg');
-    el.style.setProperty('--c2', c2 + 'deg');
-    el.style.setProperty('--c3', c3 + 'deg');
-    el.style.setProperty('--c4', c4 + 'deg');
-    el.style.setProperty('--c5', final + 'deg');
+    el.style.setProperty('--curve', curve + 'deg');
     el.style.setProperty('--pb', pb + 'px');
     el.style.setProperty('--pd', pd + 's');
     el.style.setProperty('--pc', colors[0]);
