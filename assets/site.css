@@ -1,16 +1,17 @@
 /* ============================================================
-   Snail AI — Main Site Shared Styles (V4.1.0 VentraIP-inspired reskin)
+   Snail AI — Main Site Shared Styles (V4.2.0 Aussie-colour layering)
    Design system: bold-contrast SaaS / warm-black + deep snail orange
-   + amber highlight / paper. V3.0 swiss coral-ink palette retired.
+   + amber highlight + Aussie accents (navy / burgundy) on paper.
    Palette rule: 教育 snailai.au = 蜗牛橙 #FF5B1F；企业 snailai.ai =
-   深阶橙 #C2410C（同宗不同调）+ 暖黑 #16110E + 琥珀黄 #FDB022。
+   深阶橙 #C2410C（同宗不同调）+ 暖黑 #16110E + 琥珀黄 #FDB022
+   + 深国旗蓝 #14265C（层次区）+ 酒红 #7A1E33（点缀/CTA）。
    ============================================================ */
 :root {
   --ink: #1C1613;
   --ink-2: #3A2E27;
   --ink-3: #7A6E66;
   --paper: #FCFBF9;
-  --paper-2: #F7F3EF;
+  --paper-2: #F1F4FA;                /* 冷蓝调浅底（原暖米 #F7F3EF 泛黄，换冷调出层次） */
   --paper-3: #ECE6E0;
   --accent: #C2410C;
   --accent-2: #9A3412;
@@ -19,8 +20,16 @@
   --accent-warm: #FBF0E8;
   --highlight: #FDB022;              /* VentraIP 式琥珀黄高光 */
   --hero-dark: #16110E;              /* 暖黑英雄区 */
+  --navy: #14265C;                   /* 澳洲国旗深蓝（层次主区） */
+  --navy-2: #0D1A40;
+  --navy-light: #F1F4FA;
+  --burgundy: #7A1E33;               /* 酒红（澳洲人偏爱的经典色，点缀 + CTA） */
+  --burgundy-2: #5C1220;
+  --burgundy-light: #F9F0F3;
   --grad-primary: linear-gradient(135deg, #D14E0F 0%, #B23A0A 100%);
   --grad-amber: linear-gradient(135deg, #FDB022 0%, #F59E0B 100%);
+  --grad-navy: linear-gradient(150deg, #1A2F6E 0%, #14265C 55%, #0D1A40 100%);
+  --grad-burgundy: linear-gradient(135deg, #7A1E33 0%, #5C1220 55%, #3D0C16 100%);
   --gold: #D4A547;
   --line: rgba(28,22,19,0.08);
   --line-2: rgba(28,22,19,0.14);
@@ -173,7 +182,7 @@ a { color: var(--accent-2); }
 .card-tag {
   display: inline-block; font-size: 11px; font-weight: 800;
   letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--ink-3); background: var(--paper-2);
+  color: var(--burgundy); background: var(--burgundy-light);
   padding: 4px 10px; border-radius: 999px; margin-bottom: 12px; align-self: flex-start;
 }
 
@@ -200,7 +209,7 @@ a { color: var(--accent-2); }
 .step { position: relative; padding: 26px 22px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); }
 .step-num {
   width: 34px; height: 34px; border-radius: 50%;
-  background: var(--ink); color: #fff;
+  background: var(--navy); color: #fff;
   display: flex; align-items: center; justify-content: center;
   font-weight: 800; font-size: 15px; margin-bottom: 14px;
 }
@@ -221,7 +230,7 @@ a { color: var(--accent-2); }
 
 /* ===== CTA band ===== */
 .cta-band {
-  background: var(--ink); color: #fff;
+  background: var(--grad-burgundy); color: #fff;
   padding: 64px 0; text-align: center;
 }
 .cta-band h2 { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 14px; }
@@ -317,11 +326,35 @@ a { color: var(--accent-2); }
   color: var(--highlight); background: rgba(253,176,34,0.10);
 }
 
-/* CTA band：暖黑 + 橙色辉光（比纯色多一点层次） */
+/* CTA band：酒红渐变 + 琥珀黄微光（呼应高光色，避免纯色单调） */
 .cta-band {
   background:
-    radial-gradient(ellipse 55% 80% at 50% 120%, rgba(194,65,12,0.22), transparent),
-    var(--ink);
+    radial-gradient(ellipse 55% 80% at 50% 125%, rgba(253,176,34,0.16), transparent),
+    var(--grad-burgundy);
+}
+
+/* ===== 深国旗蓝层次区（services 等核心区块用） ===== */
+.section-navy {
+  background: var(--grad-navy); color: #fff;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.section-navy h2, .section-navy h3, .section-navy h4 { color: #fff; }
+.section-navy .card h3, .section-navy .card h4 { color: var(--ink); }  /* 白卡内标题保持深色 */
+.section-navy .section-head p { color: rgba(255,255,255,0.68); }
+.section-navy .card {
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 10px 30px rgba(5,10,30,0.35);
+}
+.section-navy .card-tag { color: var(--highlight); background: rgba(253,176,34,0.12); }
+.section-navy .card-link { color: var(--accent-bright); }
+.section-navy .eyebrow { color: var(--highlight); background: rgba(253,176,34,0.12); }
+
+/* ===== 酒红浅调层次区（案例/信任类区块用） ===== */
+.section-tint-burgundy {
+  background: var(--burgundy-light);
+  border-top: 1px solid rgba(122,30,51,0.10);
+  border-bottom: 1px solid rgba(122,30,51,0.10);
 }
 
 /* ===== Responsive ===== */
