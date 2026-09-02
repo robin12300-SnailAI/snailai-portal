@@ -45,7 +45,14 @@
 html { scroll-behavior: smooth; }
 body {
   font-family: var(--sans);
-  background: var(--paper);
+  /* 极光渐变底：四角柔光斑（深蓝/酒红/橙/琥珀）+ 纵向微渐变，fixed 使滚动时色彩均匀流动 */
+  background:
+    radial-gradient(ellipse 55% 42% at 10% 6%, rgba(20,38,92,0.055), transparent 62%),
+    radial-gradient(ellipse 48% 38% at 92% 18%, rgba(122,30,51,0.05), transparent 60%),
+    radial-gradient(ellipse 52% 45% at 78% 88%, rgba(194,65,12,0.045), transparent 62%),
+    radial-gradient(ellipse 45% 36% at 16% 94%, rgba(253,176,34,0.055), transparent 60%),
+    linear-gradient(165deg, #FCFBF9 0%, #F7F5F8 45%, #F3F5FA 100%);
+  background-attachment: fixed;
   color: var(--ink);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
@@ -150,7 +157,15 @@ a { color: var(--accent-2); }
 
 /* ===== Sections ===== */
 .section { padding: 76px 0; }
-.section-alt { background: var(--paper-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.section-alt {
+  /* 不规则有机底：双光斑错位（左下蓝晕 + 右上酒红晕）叠在冷调浅底上 */
+  background:
+    radial-gradient(ellipse 46% 64% at 8% 92%, rgba(20,38,92,0.06), transparent 62%),
+    radial-gradient(ellipse 42% 55% at 94% 8%, rgba(122,30,51,0.05), transparent 58%),
+    var(--paper-2);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
 .section-head { max-width: 720px; margin-bottom: 44px; }
 .section-head h2 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 12px; }
 .section-head p { font-size: 16px; color: var(--ink-3); }
@@ -166,6 +181,13 @@ a { color: var(--accent-2); }
   display: flex; flex-direction: column;
 }
 .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+/* 卡片四色轮换：极浅彩底打破清一色白（蓝/玫红/琥珀/薄荷，grid 内自动按序循环） */
+.card-grid > .card:nth-child(4n+1) { background: linear-gradient(165deg, #F0F5FF 0%, #E7EEFB 100%); }
+.card-grid > .card:nth-child(4n+2) { background: linear-gradient(165deg, #FDF1F4 0%, #F9E7ED 100%); }
+.card-grid > .card:nth-child(4n+3) { background: linear-gradient(165deg, #FEF6E7 0%, #FBEDD4 100%); }
+.card-grid > .card:nth-child(4n+4) { background: linear-gradient(165deg, #EFF8F3 0%, #E4F1EA 100%); }
+/* 紧跟 grid 之后的整宽孤卡：淡紫，凑成第五色 */
+.card-grid + .card { background: linear-gradient(165deg, #F5F3FC 0%, #EEEAF8 100%); }
 .card h3 { font-size: 19px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.01em; }
 .card p { font-size: 14.5px; color: var(--ink-3); flex: 1; }
 .card .card-link {
@@ -335,7 +357,12 @@ a { color: var(--accent-2); }
 
 /* ===== 深国旗蓝层次区（services 等核心区块用） ===== */
 .section-navy {
-  background: var(--grad-navy); color: #fff;
+  /* 不规则深底：琥珀微光右上 + 酒红深晕左下，叠在 150° 蓝渐变上 */
+  background:
+    radial-gradient(ellipse 50% 70% at 85% 6%, rgba(253,176,34,0.10), transparent 60%),
+    radial-gradient(ellipse 55% 65% at 6% 100%, rgba(122,30,51,0.35), transparent 62%),
+    var(--grad-navy);
+  color: #fff;
   border-top: 1px solid rgba(255,255,255,0.06);
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
@@ -352,7 +379,11 @@ a { color: var(--accent-2); }
 
 /* ===== 酒红浅调层次区（案例/信任类区块用） ===== */
 .section-tint-burgundy {
-  background: var(--burgundy-light);
+  /* 不规则酒红浅调底：深酒红晕右下 + 蓝晕左上，错位打破平板 */
+  background:
+    radial-gradient(ellipse 48% 60% at 92% 95%, rgba(122,30,51,0.07), transparent 60%),
+    radial-gradient(ellipse 40% 50% at 6% 10%, rgba(20,38,92,0.05), transparent 58%),
+    var(--burgundy-light);
   border-top: 1px solid rgba(122,30,51,0.10);
   border-bottom: 1px solid rgba(122,30,51,0.10);
 }

@@ -1,9 +1,10 @@
 {
   "name": "snailai-portal",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "release_date": "2026-09-02",
   "last_updated": "2026-09-02",
   "changelog": [
+    "4.3.0 (2026-09-02): 极光渐变站底 + 区块不规则光斑 + 卡片四色轮换（用户反馈 V4.2.0 浅色单调）",
     "4.2.0 (2026-09-02): Aussie-colour layering — 破解中部单调：新增深国旗蓝 #14265C（服务区 .section-navy 深蓝层次区）与酒红 #7A1E33（案例区 .section-tint-burgundy 浅调 + CTA 带酒红渐变 + .card-tag 酒红胶囊 + .step-num 深蓝）；全站浅底由暖米转冷蓝调 #F1F4FA；Logo 中文「蜗牛AI」换英文 snail AI（插画原封不动，Arial Rounded Bold 金色 #B08030）；内页经 token 自动继承",
     "4.1.0 (2026-09-02): V4.1.0 VentraIP-inspired reskin — 企业站视觉换肤（Gate C）：色板换血（暖黑 #16110E 英雄区/页脚 + 深阶蜗牛橙 #C2410C 主色 + 琥珀黄 #FDB022 高光，与教育站蜗牛橙 #FF5B1F 同宗不同调）；CTA 全站升级 45° 胶囊渐变；新增琥珀黄手绘下划线 .hl、深色信任区 .section-dark、黄渐变 .btn-amber、深色幽灵 .btn-ghost-dark 组件；首页英雄区深色化 + Why Snail AI 信任区深色化；20 个公共页经 CSS token 自动继承；portal/tasks 内部工具与 eSign/Stripe/学员数据零接触",
     "3.2.1 (2026-09-02): payment/success.html 迁移补漏 — Phase 2 遗漏的 Stripe 回跳页迁至 academy/ + 301；academy.snailai.ai DNS 上线（Cloudflare CNAME proxied）",
