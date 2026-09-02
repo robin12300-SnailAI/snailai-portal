@@ -140,38 +140,38 @@
 /* ===== 太阳日珥喷射（从彩带周期性喷出绚烂光弧，每次形状/颜色/方向随机） ===== */
 .prominence-container {
   position: absolute; left: 0; right: 0; top: 0; bottom: 0;
-  pointer-events: none; overflow: visible; z-index: 2;
+  pointer-events: none; overflow: visible; z-index: 3;
 }
 .prominence {
-  position: absolute; bottom: 20px;
+  position: absolute; bottom: 0;
   left: var(--px, 50%);
-  width: var(--pw, 100px); height: var(--ph, 160px);
+  width: var(--pw, 100px); height: var(--ph, 640px);
   transform-origin: 50% 100%;
   transform: translateX(-50%) rotate(var(--pr, 0deg)) scaleY(0);
   opacity: 0;
-  filter: blur(var(--pb, 16px)) saturate(1.4);
+  filter: blur(var(--pb, 16px)) saturate(1.5) brightness(1.1);
   animation: prominence-burst var(--pd, 3s) ease-out forwards;
   will-change: transform, opacity;
 }
 .prominence::before {
   content: ""; position: absolute; inset: 0;
   border-radius: inherit; clip-path: inherit;
-  background: radial-gradient(ellipse 60% 100% at 50% 100%,
-    var(--pc, #FDB022) 0%, var(--pc2, #FF7A3D) 35%, transparent 72%);
+  background: radial-gradient(ellipse 50% 100% at 50% 100%,
+    var(--pc, #FDB022) 0%, var(--pc2, #FF7A3D) 40%, transparent 80%);
 }
 .prominence::after {
   content: ""; position: absolute; inset: 0;
   border-radius: inherit; clip-path: inherit;
-  background: radial-gradient(ellipse 30% 80% at 50% 100%,
-    rgba(255,255,255,.7) 0%, transparent 55%);
+  background: radial-gradient(ellipse 25% 70% at 50% 100%,
+    rgba(255,255,200,.85) 0%, transparent 60%);
   mix-blend-mode: screen;
 }
 @keyframes prominence-burst {
   0%   { transform: translateX(-50%) rotate(var(--pr,0deg)) scaleY(0) scaleX(.3); opacity: 0; }
-  10%  { opacity: 1; }
-  45%  { transform: translateX(-50%) rotate(var(--pr,0deg)) scaleY(1) scaleX(1); opacity: .95; }
-  70%  { transform: translateX(-50%) rotate(calc(var(--pr,0deg) + var(--sway,3deg))) scaleY(1.12) scaleX(.85); opacity: .6; }
-  100% { transform: translateX(-50%) rotate(calc(var(--pr,0deg) + var(--sway,3deg) * 1.5)) scaleY(1.3) scaleX(.5); opacity: 0; }
+  8%   { opacity: 1; }
+  40%  { transform: translateX(-50%) rotate(var(--pr,0deg)) scaleY(1) scaleX(1); opacity: .95; }
+  65%  { transform: translateX(-50%) rotate(calc(var(--pr,0deg) + var(--sway,3deg))) scaleY(1.15) scaleX(.8); opacity: .55; }
+  100% { transform: translateX(-50%) rotate(calc(var(--pr,0deg) + var(--sway,3deg) * 1.8)) scaleY(1.4) scaleX(.4); opacity: 0; }
 }
 /* 四种随机形状 */
 .prominence-flame { border-radius: 50% 50% 8% 8% / 80% 80% 5% 5%; clip-path: polygon(50% 0%, 72% 35%, 88% 70%, 100% 100%, 0% 100%, 12% 70%, 28% 35%); }
@@ -261,6 +261,7 @@
     <div class="ribbon-layer"></div>
     <div class="ribbon-layer"></div>
   </div>
+  <div class="prominence-container" aria-hidden="true"></div>
 </header>
 
 <!-- ===== Problem ===== -->
