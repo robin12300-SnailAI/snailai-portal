@@ -52,7 +52,8 @@ DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 PORT = int(os.environ.get("PORT", "5000"))
 HOST = os.environ.get("HOST", "0.0.0.0")
 # 允许跨域的来源（GitHub Pages 主站等）。生产可改为你的域名。
-CORS_ORIGIN = os.environ.get("CORS_ORIGIN", "*")
+# 默认同源（空 = 不发 CORS 头）；确有跨域需求时用环境变量指定精确 origin（禁 *）
+CORS_ORIGIN = os.environ.get("CORS_ORIGIN", "").strip()
 SESSION_TTL_HOURS = 24 * 7  # 会话有效期 7 天
 
 app = Flask(__name__, static_folder=None)
@@ -765,11 +766,29 @@ def _can_edit(user, column, target_username):
 
 
 # ---------------------------------------------------------------- 中间件 CORS
+# V4 Gate A：默认同源（不回 wildcard *）；确有跨域需求的 API 再按需放开。
+# 之前的 CORS_ORIGIN 是 "*" —— 对所有资源（含 HTML/CSS/JS）全放开，方案 §19.7 明确不允许。
 @app.after_request
 def _cors(resp):
-    resp.headers["Access-Control-Allow-Origin"] = CORS_ORIGIN
-    resp.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-    resp.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    if CORS_ORIGIN:
+        resp.headers["Access-Control-Allow-Origin"] = CORS_ORIGIN
+        resp.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        resp.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    return resp
+
+
+# ------------------------------------------------ 安全响应头（V4 Gate A / 方案 §19.7）
+@app.after_request
+def _security_headers(resp):
+    try:
+        resp.headers.setdefault("X-Content-Type-Options", "nosniff")
+        resp.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        resp.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+        resp.headers.setdefault("X-Frame-Options", "DENY")
+        # HSTS：确认 snailai.ai 及所有子域 HTTPS 完整后启用（方案建议先不 preload）
+        resp.headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+    except Exception:  # 加头失败绝不能影响页面本身
+        pass
     return resp
 
 
@@ -3719,12 +3738,16 @@ def _contact_wechat_notify(text: str):
 
 @app.route("/api/contact", methods=["POST"])
 def api_contact_submit():
-    """英文主站 /contact/ 表单提交：Turnstile + 限流 + 落库 + 企微通知。"""
+    """英文主站 /contact/ 表单提交：Turnstile + 限流 + 落库 + 企微通知。
+    同时接受 JSON（JS 正常）与 form-encoded（JS 失效时 <form method=post> 的原生提交）。"""
     remote_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
     if not _rate_check("ip:" + remote_ip + ":/api/contact", 5, 3600):
         return jsonify(ok=False, error="Too many submissions. Please try again later."), 429
 
     data = request.get_json(silent=True) or {}
+    if not data:
+        # form-encoded fallback：浏览器原生 POST（JS 被禁/加载失败时）
+        data = {k: v for k, v in request.form.items()}
     if not _contact_verify_turnstile(data.get("turnstile_token", ""), remote_ip):
         return jsonify(ok=False, error="CAPTCHA verification failed. Please retry."), 400
 

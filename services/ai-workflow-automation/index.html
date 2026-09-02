@@ -78,6 +78,7 @@
 </script>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
 <nav class="nav">
   <a href="/" class="nav-logo"><img src="/assets/snailai_logo.png" alt="Snail AI logo"><span>Snail AI</span></a>
@@ -92,6 +93,7 @@
   </div>
   <button class="nav-burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </nav>
+<main id="main-content">
 
 <header class="page-hero">
   <div class="container">
@@ -166,10 +168,10 @@
 <section class="section section-alt">
   <div class="container">
     <div class="section-head"><h2>Common questions</h2></div>
-    <div class="faq-item"><button class="faq-q">Will AI send emails to my customers without me seeing them?</button><div class="faq-a"><div>No — not unless you explicitly design a workflow that way for low-risk messages. By default, customer-facing communications are drafted and queued for human approval. The approval rules are documented before anything goes live.</div></div></div>
-    <div class="faq-item"><button class="faq-q">Do you need access to our customer database?</button><div class="faq-a"><div>Only if the workflow requires it, and only after we've documented exactly which fields are needed, where the data lives and who has access. We prefer reading from official APIs rather than direct database access, and we never copy more data than the workflow needs.</div></div></div>
-    <div class="faq-item"><button class="faq-q">We're in a regulated industry — is this safe for us?</button><div class="faq-a"><div>Regulated clients (medical, legal, financial) get a dedicated data-risk review during discovery. Boundaries between public systems and your systems of record are documented in the proposal, and high-risk workflows keep human approval by design.</div></div></div>
-    <div class="faq-item"><button class="faq-q">How long does a typical automation project take?</button><div class="faq-a"><div>A focused first workflow typically goes from assessment to production in 3–6 weeks. Larger multi-workflow programs are phased so you see value early rather than waiting for one big delivery.</div></div></div>
+    <div class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="faq-a-1" id="faq-q-1">Will AI send emails to my customers without me seeing them?</button><div class="faq-a" id="faq-a-1" role="region" aria-labelledby="faq-q-1"><div>No — not unless you explicitly design a workflow that way for low-risk messages. By default, customer-facing communications are drafted and queued for human approval. The approval rules are documented before anything goes live.</div></div></div>
+    <div class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="faq-a-2" id="faq-q-2">Do you need access to our customer database?</button><div class="faq-a" id="faq-a-2" role="region" aria-labelledby="faq-q-2"><div>Only if the workflow requires it, and only after we've documented exactly which fields are needed, where the data lives and who has access. We prefer reading from official APIs rather than direct database access, and we never copy more data than the workflow needs.</div></div></div>
+    <div class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="faq-a-3" id="faq-q-3">We're in a regulated industry — is this safe for us?</button><div class="faq-a" id="faq-a-3" role="region" aria-labelledby="faq-q-3"><div>Regulated clients (medical, legal, financial) get a dedicated data-risk review during discovery. Boundaries between public systems and your systems of record are documented in the proposal, and high-risk workflows keep human approval by design.</div></div></div>
+    <div class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="faq-a-4" id="faq-q-4">How long does a typical automation project take?</button><div class="faq-a" id="faq-a-4" role="region" aria-labelledby="faq-q-4"><div>A focused first workflow typically goes from assessment to production in 3–6 weeks. Larger multi-workflow programs are phased so you see value early rather than waiting for one big delivery.</div></div></div>
   </div>
 </section>
 
@@ -181,6 +183,7 @@
   </div>
 </section>
 
+</main>
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">

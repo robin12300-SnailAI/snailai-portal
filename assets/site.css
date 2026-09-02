@@ -57,6 +57,18 @@ a { color: var(--accent-2); }
   transition: color .15s ease;
 }
 .nav-links > a:hover { color: var(--ink); }
+/* Gate A 修复：.nav-links > a 的 color 会级联覆盖 .nav-cta 的 #fff，
+   橙底出现灰字（对比度 bug）。更高优先级选择器显式夺回。 */
+.nav-links > a.nav-cta,
+.nav-links > a.nav-cta:visited {
+  color: #fff;
+  background: var(--accent);
+}
+.nav-links > a.nav-cta:hover,
+.nav-links > a.nav-cta:focus-visible {
+  color: #fff;
+  background: var(--accent-2);
+}
 .nav-cta {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 13px; font-weight: 700; color: #fff;
@@ -283,3 +295,22 @@ a { color: var(--accent-2); }
   .footer-grid { grid-template-columns: 1fr; }
   .page-hero h1 { font-size: 28px; }
 }
+
+
+/* ----- Skip link（Gate A 无障碍）----- */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+  padding: 10px 14px;
+  color: var(--ink, #1A1A2E);
+  background: #ffffff;
+  border: 2px solid var(--ink, #1A1A2E);
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  transform: translateY(-160%);
+}
+.skip-link:focus { transform: translateY(0); }

@@ -135,6 +135,8 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content">
 <div class="app">
   <div class="header">
     <div class="logo">Snail <span>AI</span></div>
@@ -1226,7 +1228,10 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     .then(result => {
       if (result.scan_id) {
         document.getElementById('scanIdDisplay').textContent = 'Scan ID: ' + result.scan_id;
+        // 提交成功后清空全部本地草稿（含表单数据，隐私要求）
         localStorage.removeItem('bos_current_step');
+        localStorage.removeItem('bos_form_data');
+        localStorage.removeItem('bos_saved_at');
         try { fetch('/api/track/event', { method: 'POST', headers: {'Content-Type':'application/json'},
           body: JSON.stringify({ event: 'scan_completed', path: location.pathname, visitor_id: localStorage.getItem('snailai_vid') || '' }), keepalive: true }); } catch(e) {}
       }
@@ -1247,17 +1252,29 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     }
   }));
 
-  // Auto-save on input change
+  // Auto-save on input change（带时间戳，用于 24h 草稿过期）
   document.querySelectorAll('input, select, textarea').forEach(el => {
     el.addEventListener('change', () => {
       localStorage.setItem('bos_form_data', JSON.stringify(collectData()));
+      localStorage.setItem('bos_saved_at', String(Date.now()));
     });
   });
+
+  // 草稿 24 小时过期（隐私要求：本地缓存不无限期保留）
+  try {
+    var _savedAt = parseInt(localStorage.getItem('bos_saved_at') || '0', 10);
+    if (_savedAt && (Date.now() - _savedAt) > 24 * 60 * 60 * 1000) {
+      localStorage.removeItem('bos_current_step');
+      localStorage.removeItem('bos_form_data');
+      localStorage.removeItem('bos_saved_at');
+    }
+  } catch (e) {}
 
   // Init
   showStep(currentStep);
   updateDynamicSections();
 })();
 </script>
+</main>
 </body>
 </html>

@@ -14,13 +14,22 @@
       links.classList.toggle('open');
       burger.setAttribute('aria-expanded', links.classList.contains('open') ? 'true' : 'false');
     });
-    // close menu when a link is tapped
+    // close menu when a link is tapped（并复位 aria-expanded）
     links.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A') links.classList.remove('open');
+      if (e.target.tagName === 'A') {
+        links.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      }
+    });
+    // 当前页导航高亮（Gate A 无障碍：aria-current="page"）
+    var path = location.pathname.replace(/\/$/, '') || '/';
+    links.querySelectorAll('a').forEach(function (a) {
+      var href = (a.getAttribute('href') || '').replace(/\/$/, '') || '/';
+      if (href === path) a.setAttribute('aria-current', 'page');
     });
   }
 
-  /* ----- FAQ accordion ----- */
+  /* ----- FAQ accordion（Gate A：同步 aria-expanded）----- */
   function initFaq() {
     document.querySelectorAll('.faq-q').forEach(function (q) {
       q.addEventListener('click', function () {
@@ -30,11 +39,15 @@
         // close siblings (single-open pattern)
         item.parentElement.querySelectorAll('.faq-item.open').forEach(function (o) {
           o.classList.remove('open');
-          o.querySelector('.faq-a').style.maxHeight = null;
+          var oa = o.querySelector('.faq-a');
+          if (oa) oa.style.maxHeight = null;
+          var oq = o.querySelector('.faq-q');
+          if (oq) oq.setAttribute('aria-expanded', 'false');
         });
         if (!wasOpen) {
           item.classList.add('open');
           ans.style.maxHeight = ans.scrollHeight + 'px';
+          q.setAttribute('aria-expanded', 'true');
         }
       });
     });

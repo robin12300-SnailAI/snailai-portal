@@ -1,19 +1,9 @@
-# snailai.ai robots.txt — English B2B main site
-# Chinese academy: https://academy.snailai.ai/robots.txt (served separately)
-
 User-agent: *
 Allow: /
-
-# Internal / non-indexable areas
 Disallow: /portal/
 Disallow: /sign/
 Disallow: /tasks/
 Disallow: /admin/
+Disallow: /quote-andrew/
 
-# Sitemap
 Sitemap: https://snailai.ai/sitemap.xml
-
-# Content signals (EU DSMS compliance)
-# search: yes
-# ai-input: yes
-# ai-train: no
