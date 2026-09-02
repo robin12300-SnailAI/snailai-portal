@@ -882,6 +882,17 @@
 </head>
 <body>
 
+<script>
+(function(){
+  var k = new URLSearchParams(location.search).get('k');
+  if (k !== 'skin2026') {
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:Inter,sans-serif;color:#666;"><div style="text-align:center"><h1 style="font-size:48px;color:#ccc;margin:0">403</h1><p>Access denied. A valid access key is required.</p></div></div>';
+    document.title = '403 — Access Denied';
+  }
+})();
+</script>
+
+
 <!-- ===== LOGIN VIEW ===== -->
 <div id="login-view">
   <div class="login-card">

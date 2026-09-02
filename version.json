@@ -1,9 +1,10 @@
 {
   "name": "snailai-portal",
-  "version": "4.7.2",
+  "version": "4.7.3",
   "release_date": "2026-09-02",
   "last_updated": "2026-09-02",
   "changelog": [
+    "4.7.3 (2026-09-02): 全站升级批次4 — Quote-Andrew 2页加访问令牌保护(?k=skin2026)，已有 noindex,nofollow；留企业站不注入 site.css（独立风格保留）",
     "4.7.2 (2026-09-02): 全站升级批次3 — Portal(10页)+Tasks(6页)+Sign(1页) 共17页注入 site.css/site.js",
     "4.7.1 (2026-09-02): 全站升级批次2 — Andrew Clinic 皮肤科诊所 7 页注入 site.css/site.js（保留诊所独立 CSS 优先级，site.css 作为基础层）",
     "4.7.0 (2026-09-02): 全站升级批次1 — 6个独立页面注入 site.css/site.js：404.html、privacy/、terms/、business-ai-scan/(3页)；privacy 和 terms 加企业站统一导航栏+页脚",
