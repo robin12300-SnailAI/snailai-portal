@@ -363,10 +363,11 @@ a { color: var(--accent-2); }
 
 /* ===== 深国旗蓝层次区（services 等核心区块用） ===== */
 .section-navy {
-  /* 不规则深底：琥珀微光右上 + 酒红深晕左下，叠在 150° 蓝渐变上 */
+  /* 不规则深底：琥珀光右上 + 月光蓝左上 + 酒红深晕左下，叠在 150° 蓝渐变上（V4.5.1 加浓） */
   background:
-    radial-gradient(ellipse 50% 70% at 85% 6%, rgba(253,176,34,0.10), transparent 60%),
-    radial-gradient(ellipse 55% 65% at 6% 100%, rgba(122,30,51,0.35), transparent 62%),
+    radial-gradient(ellipse 50% 70% at 85% 6%, rgba(253,176,34,0.17), transparent 60%),
+    radial-gradient(ellipse 45% 60% at 12% 12%, rgba(96,138,255,0.20), transparent 62%),
+    radial-gradient(ellipse 55% 65% at 6% 100%, rgba(122,30,51,0.42), transparent 62%),
     var(--grad-navy);
   color: #fff;
   border-top: 1px solid rgba(255,255,255,0.06);
@@ -515,8 +516,45 @@ a { color: var(--accent-2); }
   0%, 55% { left: -90px; }
   90%, 100% { left: calc(100% + 50px); }
 }
+/* ----- V4.5.1: 全站 CTA 流光 —— 导航按钮 + 所有指向 Business AI Scan 的按钮（含次级/描边样式） ----- */
+.nav-cta,
+a.btn[href^="/business-ai-scan"] {
+  position: relative; overflow: hidden;
+}
+.nav-cta::after,
+a.btn[href^="/business-ai-scan"]::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -90px; width: 64px;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,.5), transparent);
+  transform: skewX(-20deg);
+  animation: btn-shine 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ----- V4.5.1: 深蓝区氛围光斑（与酒红 CTA 区同款待遇，冷色系变体） ----- */
+.section-navy { position: relative; overflow: hidden; }
+.section-navy .container { position: relative; z-index: 1; }
+.section-navy::before,
+.section-navy::after {
+  content: ""; position: absolute; border-radius: 50%;
+  filter: blur(70px); pointer-events: none;
+}
+.section-navy::before {
+  width: 480px; height: 480px; top: -200px; right: -140px;
+  background: rgba(253,176,34,.16);
+  animation: navy-orb-a 15s ease-in-out infinite alternate;
+}
+.section-navy::after {
+  width: 560px; height: 560px; bottom: -260px; left: -170px;
+  background: rgba(88,128,255,.22);
+  animation: navy-orb-b 19s ease-in-out infinite alternate;
+}
+@keyframes navy-orb-a { to { transform: translate(-120px, 90px) scale(1.15); } }
+@keyframes navy-orb-b { to { transform: translate(140px, -70px) scale(1.12); } }
+
 @media (prefers-reduced-motion: reduce) {
   .cta-band::before, .cta-band::after, .cta-band .btn::after { animation: none; }
+  .nav-cta::after, a.btn[href^="/business-ai-scan"]::after,
+  .section-navy::before, .section-navy::after { animation: none; }
 }
 
 /* ----- 页脚彩虹带：与英雄区错开（冷色主导 / 近垂直渐变 / 更薄 / 慢速反向） ----- */
