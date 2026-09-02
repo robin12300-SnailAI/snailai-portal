@@ -218,6 +218,63 @@
     footer.insertBefore(band, footer.firstChild);
   }
 
+  /* ----- V4.6.0: 太阳日珥喷射（从英雄区彩带周期性喷出绚烂光弧） ----- */
+  var PROM_COLORS = [
+    ['#FDB022', '#FF7A3D'], // 金→橙
+    ['#7B5CFF', '#C4407E'], // 紫→玫红
+    ['#1C9E8F', '#2B4BD8'], // 青绿→靛蓝
+    ['#FF7A3D', '#C4407E'], // 橙→玫红
+    ['#2B4BD8', '#7B5CFF'], // 靛蓝→紫
+    ['#FDB022', '#1C9E8F'], // 金→青绿
+    ['#C4407E', '#7B5CFF']  // 玫红→紫
+  ];
+  var PROM_SHAPES = ['prominence-flame', 'prominence-arc', 'prominence-jet', 'prominence-spray'];
+
+  function spawnProminence() {
+    var container = document.querySelector('.prominence-container');
+    if (!container) return;
+    var el = document.createElement('div');
+    var shape = PROM_SHAPES[Math.floor(Math.random() * PROM_SHAPES.length)];
+    var colors = PROM_COLORS[Math.floor(Math.random() * PROM_COLORS.length)];
+    el.className = 'prominence ' + shape;
+    /* 随机参数 */
+    var px = 8 + Math.random() * 84;          /* 水平位置 8%~92% */
+    var pw = 70 + Math.random() * 130;        /* 宽度 70~200px */
+    var ph = 120 + Math.random() * 180;       /* 高度 120~300px */
+    var pr = (Math.random() - 0.5) * 28;      /* 旋转 -14°~+14° */
+    var sway = (Math.random() - 0.5) * 10;   /* 摆动 ±5° */
+    var pb = 10 + Math.random() * 14;        /* blur 10~24px */
+    var pd = 2.2 + Math.random() * 1.3;       /* 持续 2.2~3.5s */
+    el.style.setProperty('--px', px + '%');
+    el.style.setProperty('--pw', pw + 'px');
+    el.style.setProperty('--ph', ph + 'px');
+    el.style.setProperty('--pr', pr + 'deg');
+    el.style.setProperty('--sway', sway + 'deg');
+    el.style.setProperty('--pb', pb + 'px');
+    el.style.setProperty('--pd', pd + 's');
+    el.style.setProperty('--pc', colors[0]);
+    el.style.setProperty('--pc2', colors[1]);
+    container.appendChild(el);
+    /* 动画结束后移除 */
+    el.addEventListener('animationend', function () { el.remove(); });
+  }
+
+  function initProminence() {
+    var band = document.querySelector('.ribbon-band');
+    if (!band) return;
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+    /* 注入容器 */
+    var c = document.createElement('div');
+    c.className = 'prominence-container';
+    c.setAttribute('aria-hidden', 'true');
+    band.appendChild(c);
+    /* 首次喷射延迟 800ms，之后每 ~2.5s 喷射一次（错峰让重叠感更强） */
+    setTimeout(spawnProminence, 800);
+    setTimeout(spawnProminence, 2200);
+    setInterval(spawnProminence, 2500);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     document.documentElement.classList.add('js');
     initNav();
@@ -227,6 +284,7 @@
     initTracking();
     initIcons();
     initFooterRibbon();
+    initProminence();
     initReveal();
   });
 })();
