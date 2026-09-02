@@ -575,7 +575,7 @@ a.btn[href^="/business-ai-scan"]::after {
   background: linear-gradient(172deg,
     #2B4BD8 0%, #7B5CFF 22%, #1C9E8F 45%, #C4407E 68%, #2B4BD8 88%, #7B5CFF 100%);
   background-size: 100% 260%;
-  animation: ribbon-drift-y 21s ease-in-out infinite alternate;
+  animation: ribbon-drift-y 10.5s ease-in-out infinite alternate;
 }
 .footer-ribbon .ribbon-layer:nth-child(2) {
   background: linear-gradient(-12deg,
@@ -584,7 +584,7 @@ a.btn[href^="/business-ai-scan"]::after {
   background-size: 100% 200%;
   transform: skewX(5deg) scale(1.1);
   opacity: .55; mix-blend-mode: screen;
-  animation: ribbon-drift-y 28s ease-in-out infinite alternate-reverse;
+  animation: ribbon-drift-y 14s ease-in-out infinite alternate-reverse;
 }
 @keyframes ribbon-drift-y {
   from { background-position: 50% 0%; }

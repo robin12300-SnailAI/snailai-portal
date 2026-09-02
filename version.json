@@ -1,9 +1,10 @@
 {
   "name": "snailai-portal",
-  "version": "4.5.1",
+  "version": "4.5.2",
   "release_date": "2026-09-02",
   "last_updated": "2026-09-02",
   "changelog": [
+    "4.5.2 (2026-09-02): 彩虹带再提速一倍 — 英雄区 13s/17s→6.5s/8.5s，页脚 21s/28s→10.5s/14s，颜色流动感显著增强",
     "4.5.1 (2026-09-02): CTA 流光全站化 + 深蓝区渐变加浓 — ①导航按钮与全站所有指向 Business AI Scan 的按钮（primary/secondary/outline）统一加白色流光扫过效果（href 选择器一处覆盖）；②深蓝 section-navy 底色渐变加浓（琥珀光 0.10→0.17、酒红晕 0.35→0.42、新增月光蓝晕）并加两团氛围光斑缓慢游移（15s/19s，与酒红 CTA 区同款待遇）；prefers-reduced-motion 同步降级",
     "4.5.0 (2026-09-02): 动效与图标升级 — ①全站 emoji 图标换 Lucide 统一线性 SVG（site.js 注入映射，36 图标，一处升级全站生效）；②Cloudflare 式滚动入场动效（IntersectionObserver data-reveal，区块头/卡片/步骤/光斑列表错峰 80ms，步骤号弹入+光环扩散，图标轻晃）；③酒红 CTA 区双氛围光斑游移 + 按钮流光；④页脚顶部第二条彩虹带（冷色主导/近垂直 172deg/更薄 118px/慢速反向，与英雄区完全错开）；⑤英雄区彩带速度加倍（26s→13s、34s→17s）；prefers-reduced-motion 全量降级",
     "4.4.0 (2026-09-02): 主页英雄区底部加蜗牛版彩虹带（双层渐变错速流动，青绿→靛蓝→紫→玫红→橙→琥珀，细带反向，致敬 Stripe Aurora）",
