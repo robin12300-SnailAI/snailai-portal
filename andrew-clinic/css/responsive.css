@@ -64,9 +64,13 @@
    MOBILE (max-width: 768px)
    ============================================ */
 @media (max-width: 768px) {
-  /* Hero background: downgrade to static image on mobile (save data/battery) */
-  .hero-bg-video { display: none; }
+  /* Hero background: static Sydney Harbour Bridge image on all viewports
+     (video element removed in V3.4.0 — no separate mobile downgrade needed) */
   .hero-bg-static { display: block; }
+
+  /* V3.4.0 — About stats: 2x2 on mobile */
+  .about-stats { grid-template-columns: repeat(2, 1fr); gap: 20px 12px; }
+  .hero-stats { gap: 18px; }
 
   /* Journey stack on mobile */
   .journey-grid { grid-template-columns: 1fr; gap: 32px; }

@@ -19,7 +19,7 @@
   <div class="container">
     <a href="index.html" class="nav-logo">
       <span class="nav-logo-pill"><img src="images/logo-sclc-410.png" alt="SCLC Logo" class="nav-logo-img"></span>
-      <div class="nav-logo-text">SKIN CANCER<br><span>LASER CENTRE</span><span class="version-badge" style="margin-left:8px;">V3.0.0</span></div>
+      <div class="nav-logo-text">SKIN CANCER<br><span>LASER CENTRE</span><span class="version-badge" style="margin-left:8px;">V3.3.2</span></div>
     </a>
     <div class="nav-links" id="navLinks">
       <a href="index.html" data-en="Home" data-zh="首页">Home</a>
@@ -43,6 +43,7 @@
     </div>
     <h1 id="detailTitle"></h1>
     <p id="detailSubtitle" style="color:var(--color-gray);font-size:1.1rem;"></p>
+    <div id="detailPrice" class="detail-price-badge" style="display:none;"></div>
   </div>
 </section>
 
@@ -57,6 +58,7 @@
         <div class="sidebar-card" style="text-align:center;">
           <h4 data-en="Ready to Start?" data-zh="准备开始？">Ready to Start?</h4>
           <p data-en="Book a consultation with our specialists" data-zh="预约我们的专家咨询" style="font-size:0.9rem;color:var(--color-gray);margin-bottom:var(--space-md);">Book a consultation with our specialists</p>
+          <div id="sidebarPrice" class="sidebar-price" style="display:none;"></div>
           <a id="sidebarCta" href="appointment.html" class="btn btn-primary" style="width:100%;">Book Now</a>
         </div>
         <div class="sidebar-card">
@@ -140,6 +142,18 @@
   subEl.setAttribute('data-zh', s.subtitle.zh);
   subEl.textContent = s.subtitle[lang];
 
+  // Price / duration badge (V3.3.2)
+  const priceEl = document.getElementById('detailPrice');
+  if (s.price) {
+    const fromTxt = { en: 'From', zh: '起' };
+    priceEl.style.display = 'inline-flex';
+    priceEl.innerHTML =
+      '<span class="dp-price">' + fromTxt[lang] + ' ' + s.price + '</span>' +
+      '<span class="dp-dot">·</span>' +
+      '<span class="dp-dur" data-en="' + s.duration.en + '" data-zh="' + s.duration.zh + '">' +
+      s.duration[lang] + '</span>';
+  }
+
   // Description
   const descEl = document.getElementById('detailDesc');
   descEl.setAttribute('data-en', s.description.en);
@@ -182,6 +196,16 @@
     sectionsEl.innerHTML += html;
   });
 
+  // Sidebar price (V3.3.2)
+  const sbPriceEl = document.getElementById('sidebarPrice');
+  if (s.price) {
+    sbPriceEl.style.display = 'block';
+    sbPriceEl.innerHTML =
+      '<span class="sp-price">' + s.price + '</span>' +
+      '<span class="sp-dur" data-en="' + s.duration.en + '" data-zh="' + s.duration.zh + '">' +
+      s.duration[lang] + '</span>';
+  }
+
   // CTA
   const ctaEl = document.getElementById('sidebarCta');
   ctaEl.setAttribute('data-en', s.cta.en);
@@ -198,7 +222,8 @@
   Object.keys(SERVICES_DATA).forEach(sid => {
     if (sid === id) return;
     const svc = SERVICES_DATA[sid];
-    sidebarServices.innerHTML += `<a href="service-detail.html?id=${sid}" style="display:block;padding:4px 0;font-size:0.85rem;color:var(--color-dark);transition:color 0.3s;" data-en="${svc.title.en}" data-zh="${svc.title.zh}">${svc.title[lang]}</a>`;
+    const priceTag = svc.price ? ` <span style="color:var(--color-accent);font-weight:600;">${svc.price}</span>` : '';
+    sidebarServices.innerHTML += `<a href="service-detail.html?id=${sid}" style="display:block;padding:4px 0;font-size:0.85rem;color:var(--color-dark);transition:color 0.3s;" data-en="${svc.title.en}" data-zh="${svc.title.zh}">${svc.title[lang]}${priceTag}</a>`;
   });
 })();
 </script>

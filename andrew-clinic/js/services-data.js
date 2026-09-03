@@ -1,12 +1,14 @@
 /**
  * SKIN CANCER LASER CENTRE — Services Data
- * Version: 1.0.0
+ * Version: 1.1.0 — added price + duration (V3.3.2)
  * Bilingual data for service-detail.html template
  */
 
 const SERVICES_DATA = {
   "skin-analysis": {
     id: "skin-analysis",
+    price: "$99",
+    duration: { en: "30 min", zh: "30 分钟" },
     title: { en: "SKIN ANALYSIS (VISIA)", zh: "皮肤分析 (VISIA)" },
     subtitle: { en: "Comprehensive Digital Skin Assessment", zh: "全面的数字皮肤评估" },
     icon: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c79323" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`,
@@ -40,6 +42,8 @@ const SERVICES_DATA = {
 
   "pdt": {
     id: "pdt",
+    price: "$450",
+    duration: { en: "90 min", zh: "90 分钟" },
     title: { en: "PHOTO DYNAMIC THERAPY (PDT)", zh: "光动力疗法 (PDT)" },
     subtitle: { en: "Light-Activated Treatment for Skin Cancer & Pre-Cancerous Lesions", zh: "光激活治疗皮肤癌及癌前病变" },
     icon: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c79323" stroke-width="1.5"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`,
@@ -121,6 +125,8 @@ const SERVICES_DATA = {
 
   "dermal-enhancement": {
     id: "dermal-enhancement",
+    price: "$490",
+    duration: { en: "45 min", zh: "45 分钟" },
     title: { en: "DERMAL ENHANCEMENT", zh: "皮肤焕新" },
     subtitle: { en: "FracRevive® Nd:YAG Laser Skin Rejuvenation", zh: "FracRevive® Nd:YAG 激光皮肤焕新" },
     icon: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c79323" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
@@ -144,6 +150,8 @@ const SERVICES_DATA = {
 
   "pico-laser": {
     id: "pico-laser",
+    price: "$420",
+    duration: { en: "45 min", zh: "45 分钟" },
     title: { en: "PICO LASER", zh: "皮秒激光" },
     subtitle: { en: "Fotona StarWalker® PICO Pro + FracTAT®", zh: "Fotona StarWalker® PICO Pro + FracTAT®" },
     icon: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c79323" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>`,
@@ -175,6 +183,8 @@ const SERVICES_DATA = {
 
   "healite-ii": {
     id: "healite-ii",
+    price: "$120",
+    duration: { en: "30 min", zh: "30 分钟" },
     title: { en: "HEALITE II", zh: "Healite II 光疗" },
     subtitle: { en: "LED Phototherapy for Healing & Rejuvenation", zh: "LED 光疗法用于愈合与焕新" },
     icon: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c79323" stroke-width="1.5"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
@@ -198,6 +208,8 @@ const SERVICES_DATA = {
 
   "wrinkles-pores": {
     id: "wrinkles-pores",
+    price: "$490",
+    duration: { en: "30 min", zh: "30 分钟" },
     title: { en: "WRINKLES & PORES", zh: "皱纹与毛孔" },
     subtitle: { en: "Targeted Treatment for Ageing Skin", zh: "针对老化皮肤的精准治疗" },
     icon: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c79323" stroke-width="1.5"><path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
@@ -221,6 +233,8 @@ const SERVICES_DATA = {
 
   "uv-brown-spots": {
     id: "uv-brown-spots",
+    price: "$350",
+    duration: { en: "30 min", zh: "30 分钟" },
     title: { en: "UV BROWN SPOTS", zh: "紫外线褐斑" },
     subtitle: { en: "Effective Treatment for Sun-Induced Pigmentation", zh: "有效治疗日晒引起的色素沉着" },
     icon: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c79323" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`,
@@ -244,6 +258,8 @@ const SERVICES_DATA = {
 
   "spots": {
     id: "spots",
+    price: "$350",
+    duration: { en: "30 min", zh: "30 分钟" },
     title: { en: "SPOTS & PIGMENTATION", zh: "色斑与色素沉着" },
     subtitle: { en: "Comprehensive Pigmentation Management", zh: "全面的色素管理" },
     icon: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c79323" stroke-width="1.5"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><circle cx="9" cy="10" r="1.5" fill="#c79323"/><circle cx="14" cy="8" r="1" fill="#c79323"/><circle cx="11" cy="14" r="1.5" fill="#c79323"/><circle cx="16" cy="13" r="1" fill="#c79323"/></svg>`,
@@ -267,6 +283,8 @@ const SERVICES_DATA = {
 
   "acne": {
     id: "acne",
+    price: "$290",
+    duration: { en: "45 min", zh: "45 分钟" },
     title: { en: "ACNE TREATMENT", zh: "痤疮治疗" },
     subtitle: { en: "Advanced Solutions for Active Acne & Scarring", zh: "活动性痤疮和疤痕的先进解决方案" },
     icon: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c79323" stroke-width="1.5"><path d="M9 10h.01M15 10h.01M9.5 15.5a3.5 3.5 0 005 0"/><circle cx="12" cy="12" r="10"/></svg>`,
@@ -290,6 +308,8 @@ const SERVICES_DATA = {
 
   "skin-cancer-check": {
     id: "skin-cancer-check",
+    price: "$195",
+    duration: { en: "45 min", zh: "45 分钟" },
     title: { en: "SKIN CANCER CHECK", zh: "皮肤癌检查" },
     subtitle: { en: "Early Detection Saves Lives", zh: "早发现拯救生命" },
     icon: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c79323" stroke-width="1.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944m11.658 4.016a11.95 11.95 0 01-2.236 5.166M12 21.056A11.955 11.955 0 012.344 6.96"/><path d="M12 21.056c1.842 0 3.578-.424 5.118-1.18"/></svg>`,
