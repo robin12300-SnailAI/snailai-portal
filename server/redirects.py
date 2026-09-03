@@ -104,11 +104,16 @@ def register_redirects(app):
 
     2026-09-02 起 academy.snailai.ai 全量 301 到 snailai.au（学院独立部署），
     本表目标也已改为 snailai.au 直跳——所有 host 统一 301，不再有本地 academy 静态服务分支。
+
+    2026-09-03 修复：保留 query string（ref_code 等参数不再被丢弃）。
     """
     for i, (old, new) in enumerate(REDIRECTS):
         def _make(old_path, target):
             def _view():
-                return redirect(target, code=301)
+                # 保留原始请求的 query string（如 ?ref_code=G2621）
+                qs = request.query_string.decode("utf-8") if request.query_string else ""
+                final = target + ("?" + qs if qs else "")
+                return redirect(final, code=301)
             return _view
         app.add_url_rule(old, endpoint=f"r301_{i}", view_func=_make(old, new))
         # 目录型路径补一条无尾斜杠规则（Flask 默认 strict_slashes 会 308，这里显式 301）
