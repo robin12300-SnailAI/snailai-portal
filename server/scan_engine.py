@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 AI_API_KEY = os.environ.get("AI_API_KEY", "")
 AI_BASE_URL = os.environ.get("AI_BASE_URL", "https://open.bigmodel.cn/api/paas/v4")
 AI_MODEL = os.environ.get("AI_MODEL", "glm-5.3-flash")
-AI_TIMEOUT = int(os.environ.get("AI_TIMEOUT_SECONDS", "120"))
+AI_TIMEOUT = int(os.environ.get("AI_TIMEOUT_SECONDS", "240"))  # Render→bigmodel.cn 跨境生成常超 120s
 AI_MAX_RETRIES = int(os.environ.get("AI_MAX_RETRIES", "2"))
 AI_TEMPERATURE = float(os.environ.get("AI_TEMPERATURE", "0.2"))
 
