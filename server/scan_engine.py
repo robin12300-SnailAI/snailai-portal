@@ -876,7 +876,7 @@ def process_scan(scan_id: str):
             json.dumps(norm),
             json.dumps(scoring),
             json.dumps(scoring["risk_flags"]),
-            "glm",
+            "openai" if "openai.com" in AI_BASE_URL else ("glm" if "bigmodel" in AI_BASE_URL else "other"),
             AI_MODEL,
             PROMPT_VERSION,
             knowledge_version,
