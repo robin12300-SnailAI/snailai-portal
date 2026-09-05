@@ -493,11 +493,9 @@ def _call_ai_model(user_prompt: str) -> Optional[dict]:
             {"role": "user", "content": user_prompt},
         ],
         "temperature": AI_TEMPERATURE,
-        # glm-5.3-flash 是强制思考模型：max_tokens 同时容纳思考+正文，
-        # 4096 会被思考吃掉导致正文截断/为空 → JSON 解析失败 → 无输出。
-        # response_format=json_object 实测能把 reasoning token 从 3000+ 压到
-        # ~70，且保证 content 是纯 JSON——超时与截断一并解决。
-        "max_tokens": 8192,
+        # gpt-5.6 系列只认 max_completion_tokens（max_tokens 会 400）。
+        # response_format=json_object 保证 content 是纯 JSON。
+        "max_completion_tokens": 8192,
         "response_format": {"type": "json_object"},
     }
 
@@ -719,8 +717,7 @@ Check for: hallucinated facts, exaggeration, missing human approval points, miss
                 {"role": "user", "content": user_prompt},
             ],
             "temperature": 0.1,
-            # 强制思考模型：1024 会被 reasoning 吃光导致 content 为空
-            "max_tokens": 4096,
+            "max_completion_tokens": 4096,
                 "response_format": {"type": "json_object"},
         }
         resp = http.post(f"{AI_BASE_URL}/chat/completions", headers=headers, json=payload, timeout=60)
