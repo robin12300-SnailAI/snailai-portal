@@ -495,9 +495,11 @@ def _call_ai_model(user_prompt: str) -> Optional[dict]:
         "temperature": AI_TEMPERATURE,
         # glm-5.3-flash 是强制思考模型：max_tokens 同时容纳思考+正文，
         # 4096 会被思考吃掉导致正文截断/为空 → JSON 解析失败 → 无输出。
-        # 必须抬高 max_tokens 并用 effort=low 控制思考开销。
+        # response_format=json_object 实测能把 reasoning token 从 3000+ 压到
+        # ~70，且保证 content 是纯 JSON——超时与截断一并解决。
         "max_tokens": 8192,
         "thinking": {"effort": "low"},
+        "response_format": {"type": "json_object"},
     }
 
     for attempt in range(AI_MAX_RETRIES + 1):
@@ -721,6 +723,7 @@ Check for: hallucinated facts, exaggeration, missing human approval points, miss
             # 强制思考模型：1024 会被 reasoning 吃光导致 content 为空
             "max_tokens": 4096,
             "thinking": {"effort": "low"},
+            "response_format": {"type": "json_object"},
         }
         resp = http.post(f"{AI_BASE_URL}/chat/completions", headers=headers, json=payload, timeout=60)
         resp.raise_for_status()
