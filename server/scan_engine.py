@@ -27,8 +27,8 @@ log = logging.getLogger(__name__)
 # ──────────────────────────────────────────────
 
 AI_API_KEY = os.environ.get("AI_API_KEY", "")
-AI_BASE_URL = os.environ.get("AI_BASE_URL", "https://open.bigmodel.cn/api/paas/v4")
-AI_MODEL = os.environ.get("AI_MODEL", "glm-5.3-flash")
+AI_BASE_URL = os.environ.get("AI_BASE_URL", "https://api.openai.com/v1")
+AI_MODEL = os.environ.get("AI_MODEL", "gpt-4o-mini")
 AI_TIMEOUT = int(os.environ.get("AI_TIMEOUT_SECONDS", "240"))  # Render→bigmodel.cn 跨境生成常超 120s
 AI_MAX_RETRIES = int(os.environ.get("AI_MAX_RETRIES", "2"))
 AI_TEMPERATURE = float(os.environ.get("AI_TEMPERATURE", "0.2"))
@@ -498,7 +498,6 @@ def _call_ai_model(user_prompt: str) -> Optional[dict]:
         # response_format=json_object 实测能把 reasoning token 从 3000+ 压到
         # ~70，且保证 content 是纯 JSON——超时与截断一并解决。
         "max_tokens": 8192,
-        "thinking": {"effort": "low"},
         "response_format": {"type": "json_object"},
     }
 
@@ -722,8 +721,7 @@ Check for: hallucinated facts, exaggeration, missing human approval points, miss
             "temperature": 0.1,
             # 强制思考模型：1024 会被 reasoning 吃光导致 content 为空
             "max_tokens": 4096,
-            "thinking": {"effort": "low"},
-            "response_format": {"type": "json_object"},
+                "response_format": {"type": "json_object"},
         }
         resp = http.post(f"{AI_BASE_URL}/chat/completions", headers=headers, json=payload, timeout=60)
         resp.raise_for_status()
