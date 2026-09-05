@@ -492,7 +492,6 @@ def _call_ai_model(user_prompt: str) -> Optional[dict]:
             {"role": "system", "content": ANALYSIS_SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt},
         ],
-        "temperature": AI_TEMPERATURE,
         # gpt-5.6 系列只认 max_completion_tokens（max_tokens 会 400）。
         # response_format=json_object 保证 content 是纯 JSON。
         "max_completion_tokens": 8192,
@@ -716,7 +715,6 @@ Check for: hallucinated facts, exaggeration, missing human approval points, miss
                 {"role": "system", "content": REVIEW_SYSTEM_PROMPT},
                 {"role": "user", "content": user_prompt},
             ],
-            "temperature": 0.1,
             "max_completion_tokens": 4096,
                 "response_format": {"type": "json_object"},
         }
