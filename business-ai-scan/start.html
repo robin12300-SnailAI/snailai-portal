@@ -808,7 +808,9 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 
     <div class="privacy-link"><a href="/business-ai-scan/privacy/" target="_blank">Privacy Notice</a></div>
 
-    <div class="cf-turnstile" data-sitekey="TURNSTILE_SITE_KEY" data-callback="onTurnstileSuccess"></div>
+    <!-- Turnstile 暂未启用：后端 TURNSTILE_SECRET_KEY 未配置时自动跳过验证。
+         启用方法：1) 在 Render 配置 TURNSTILE_SECRET_KEY；2) 把真实 sitekey 替换到下面的 data-sitekey；
+         3) 恢复 <div class="cf-turnstile" data-sitekey="真实KEY" data-callback="onTurnstileSuccess"></div> 与 api.js 引用 -->
 
     <div class="nav-row">
       <button class="btn btn-back" onclick="goStep(-1)">Back</button>
@@ -827,7 +829,9 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
+<!-- Turnstile api.js 暂不加载（sitekey 未配置），启用时一并恢复
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+-->
 <script>
 (function(){
   'use strict';
@@ -1236,6 +1240,15 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         localStorage.removeItem('bos_saved_at');
         try { fetch('/api/track/event', { method: 'POST', headers: {'Content-Type':'application/json'},
           body: JSON.stringify({ event: 'scan_completed', path: location.pathname, visitor_id: localStorage.getItem('snailai_vid') || '' }), keepalive: true }); } catch(e) {}
+      } else {
+        // 后端拒绝（验证失败 / CAPTCHA 失败等）：必须把错误显示出来，
+        // 否则用户会永远卡在本界面（此前 "无输出" bug 的根源之一）
+        const errs = result.errors && result.errors.length ? result.errors.join(' · ') : (result.error || 'Unknown error');
+        document.getElementById('scanIdDisplay').innerHTML =
+          '<strong style="color:#E84A0F">Submission failed:</strong> ' + errs.replace(/</g, '&lt;') +
+          '<br><button type="button" id="btnRetrySubmit" style="margin-top:12px;padding:10px 22px;background:#1A1A2E;color:#FCFCFA;border:none;border-radius:100px;cursor:pointer;font-weight:700">Back & fix</button>';
+        const retry = document.getElementById('btnRetrySubmit');
+        if (retry) retry.addEventListener('click', function(){ location.reload(); });
       }
     })
     .catch(err => {

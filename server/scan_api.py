@@ -118,13 +118,83 @@ def _verify_turnstile(token: str, remote_ip: str) -> bool:
 # 公开 API
 # ──────────────────────────────────────────────
 
+# 前端 start.html 按分步结构（step1..step6）收集数据；
+# 后端验证/清洗/入库全部使用扁平 key。此映射表负责把嵌套结构拍平。
+# 前端字段名 → 后端字段名；同名步骤内字段不改名的直接合并。
+_FRONTEND_STEP_FIELD_MAP = {
+    "step1": {
+        "full_name": "full_name", "work_email": "work_email",
+        "mobile": "mobile_number", "company_name": "company_name",
+        "company_website": "company_website",
+        "website_consent": "website_review_consent",
+        "suburb": "suburb", "postcode": "postcode", "role": "role",
+        "decision_authority": "decision_authority",
+        "employees": "employee_band",
+    },
+    "step2": {
+        "industry_group": "industry_group", "sub_industry": "sub_industry",
+        "years_operating": "years_operating", "business_model": "business_model",
+        "primary_goal": "primary_goal",
+    },
+    "step3": {
+        "general_tools": "tools", "industry_tools": "industry_tools",
+        "integration": "systems_integration",
+        "reentry_frequency": "re_entry_frequency",
+    },
+    "step4": {
+        "pain_description": "main_pain_process",
+        "pain_frequency": "pain_frequency",
+        "people_involved": "people_involved", "weekly_hours": "weekly_hours",
+        "what_goes_wrong": "what_goes_wrong",
+        "success_description": "success_looks_like",
+        "workflows": "industry_workflows",
+        "top_priority": "top_workflow_priority",
+    },
+    "step5": {
+        "process_documented": "process_documented",
+        "process_champion": "process_owner_exists",
+        "willing_pilot": "pilot_willingness",
+        "automation_level": "automation_level",
+        "data_sensitivity": "data_sensitivity",
+        "desired_start": "desired_start_time",
+        "budget": "indicative_budget",
+        "preferred_contact_method": "preferred_contact_method",
+        "onsite_assessment": "onsite_assessment_interest",
+    },
+    "step6": {
+        "consent_report": "consent_report",
+        "consent_no_personal": "consent_no_sensitive",
+        "consent_privacy": "consent_privacy",
+        "consent_email": "consent_email_delivery",
+        "newsletter": "marketing_opt_in",
+    },
+}
+
+
+def _flatten_payload(data: dict) -> dict:
+    """兼容前端嵌套格式（step1..step6）与旧扁平格式，统一输出扁平 key。"""
+    flat = dict(data)  # 保留 turnstile_token / idempotency_key / utm 等
+    flat.pop("utm", None)
+    if isinstance(data.get("utm"), dict):
+        for k, v in data["utm"].items():
+            flat[k] = v
+    for step, mapping in _FRONTEND_STEP_FIELD_MAP.items():
+        step_data = data.get(step)
+        if not isinstance(step_data, dict):
+            continue
+        for fe_key, be_key in mapping.items():
+            if fe_key in step_data:
+                flat[be_key] = step_data[fe_key]
+    return flat
+
+
 def api_scan_submit():
     """
     POST /api/scan/submit
     接收问卷提交，返回 scan_id 和处理状态。
     幂等：如果 idempotency_key 已存在，返回已有记录。
     """
-    data = request.get_json(silent=True) or {}
+    data = _flatten_payload(request.get_json(silent=True) or {})
     remote_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
 
     # 1. Turnstile 验证
