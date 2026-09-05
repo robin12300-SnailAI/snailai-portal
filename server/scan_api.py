@@ -879,19 +879,33 @@ def _log_sensitive_event(event_type: str, detection: SensitiveDetectionResult):
 
 
 def _enqueue_processing(scan_id: str):
-    """将 scan 加入处理队列"""
-    from app import scheduler
-    if scheduler:
-        scheduler.add_job(
-            "scan:process_submission",
-            _process_submission,
-            args=[scan_id],
-            id=f"scan_{scan_id[:8]}",
-            replace_existing=True,
-        )
-    else:
-        log.warning(f"[scan] No scheduler; processing {scan_id} synchronously")
-        _process_submission(scan_id)
+    """将 scan 加入处理队列。
+
+    旧实现依赖 `from app import scheduler`，但 app.py 中的调度器对象叫
+    `_sched` 且只在持锁的 gunicorn worker 里 start()——ImportError 被吞掉
+    后任务永远不执行，提交会永远停留在 PENDING（"无输出" bug 的一环）。
+    现改用独立守护线程执行，多 worker 部署下同样可靠。"""
+    import threading
+
+    def _job():
+        try:
+            _process_submission(scan_id)
+        except Exception as e:
+            log.error(f"[scan] Background processing crashed for {scan_id}: {e}")
+            conn = _scan_db()
+            try:
+                now = datetime.datetime.utcnow().isoformat() + "Z"
+                conn.execute(
+                    "UPDATE scan_analysis SET pipeline_stage='FAILED', pipeline_error=? WHERE scan_id=?",
+                    (f"Background worker error: {str(e)[:200]}", scan_id))
+                conn.execute(
+                    "UPDATE scan_submissions SET status='REVIEW_FAILED', updated_at=? WHERE id=?",
+                    (now, scan_id))
+                conn.commit()
+            finally:
+                conn.close()
+
+    threading.Thread(target=_job, daemon=True, name=f"scan_{scan_id[:8]}").start()
 
 
 def _process_submission(scan_id: str):
