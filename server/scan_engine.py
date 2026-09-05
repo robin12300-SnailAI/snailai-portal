@@ -493,7 +493,11 @@ def _call_ai_model(user_prompt: str) -> Optional[dict]:
             {"role": "user", "content": user_prompt},
         ],
         "temperature": AI_TEMPERATURE,
-        "max_tokens": 4096,
+        # glm-5.3-flash 是强制思考模型：max_tokens 同时容纳思考+正文，
+        # 4096 会被思考吃掉导致正文截断/为空 → JSON 解析失败 → 无输出。
+        # 必须抬高 max_tokens 并用 effort=low 控制思考开销。
+        "max_tokens": 8192,
+        "thinking": {"effort": "low"},
     }
 
     for attempt in range(AI_MAX_RETRIES + 1):
@@ -508,18 +512,31 @@ def _call_ai_model(user_prompt: str) -> Optional[dict]:
             result = resp.json()
 
             content = result["choices"][0]["message"]["content"]
+            finish_reason = result["choices"][0].get("finish_reason", "")
+            if not content or not content.strip():
+                log.error(f"[scan] AI returned EMPTY content (finish_reason={finish_reason}) — likely max_tokens exhausted by reasoning")
+                if attempt == AI_MAX_RETRIES:
+                    return None
+                time.sleep(2 ** attempt)
+                continue
+            if finish_reason == "length":
+                log.warning(f"[scan] AI output truncated (finish_reason=length) — JSON parse may fail")
             # 提取 JSON（可能被 markdown 代码块包裹）
             json_str = _extract_json(content)
             analysis = json.loads(json_str)
             return analysis
 
         except http.exceptions.Timeout:
-            log.warning(f"[scan] AI API timeout (attempt {attempt + 1}/{AI_MAX_RETRIES + 1})")
+            log.warning(f"[scan] AI API timeout after {AI_TIMEOUT}s (attempt {attempt + 1}/{AI_MAX_RETRIES + 1})")
         except json.JSONDecodeError as e:
             log.error(f"[scan] AI output JSON parse error: {e}")
             if attempt == AI_MAX_RETRIES:
                 return None
         except Exception as e:
+            status = getattr(getattr(e, "response", None), "status_code", None)
+            if status == 401:
+                log.error("[scan] AI API AUTH FAILED (401) — AI_API_KEY expired/invalid, update Render env var AI_API_KEY!")
+                return None  # 鉴权失败重试无意义
             log.error(f"[scan] AI API error (attempt {attempt + 1}): {e}")
             if attempt == AI_MAX_RETRIES:
                 return None
@@ -701,7 +718,9 @@ Check for: hallucinated facts, exaggeration, missing human approval points, miss
                 {"role": "user", "content": user_prompt},
             ],
             "temperature": 0.1,
-            "max_tokens": 1024,
+            # 强制思考模型：1024 会被 reasoning 吃光导致 content 为空
+            "max_tokens": 4096,
+            "thinking": {"effort": "low"},
         }
         resp = http.post(f"{AI_BASE_URL}/chat/completions", headers=headers, json=payload, timeout=60)
         resp.raise_for_status()
