@@ -78,6 +78,15 @@ REDIRECTS = [
     ("/snailai-pitch-2026/mobile.html", ACADEMY + "/archive/snailai-pitch-2026/"),
     ("/grad-show-2026/", ACADEMY + "/archive/grad-show-2026/"),
     ("/grad-reg-board/", ACADEMY + "/archive/grad-reg-board/"),
+    # 2026-09-06：/academy/register/ 仍可直开（200），页内 API 是相对路径，
+    # 从这个入口提交的报名会写进 snailai.ai 旧库 —— 这正是双库分裂的源头。
+    # 全部 301 到学院新站（保留 query string，ref_code 不能丢）。
+    ("/academy/register/", ACADEMY + "/register/"),
+    ("/academy/register/index.html", ACADEMY + "/register/"),
+    ("/academy/register/services.html", ACADEMY + "/register/services.html"),
+    ("/academy/register/students.html", ACADEMY + "/register/students.html"),
+    ("/academy/archive/grad-reg-board/", ACADEMY + "/archive/grad-reg-board/"),
+    ("/academy/archive/grad-show-2026/", ACADEMY + "/archive/grad-show-2026/"),
 
     # ---- B. 英文主站域内 301 ----
     ("/enterprise/", "/services/"),

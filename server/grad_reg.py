@@ -9,7 +9,9 @@
   event_registrations  — 登记者（访客填表）
   event_referrers      — 推荐人（先登记拿码）
 
-版本：grad-reg-v1.0.0
+版本：
+  grad-reg-v1.0.0
+  grad-reg-v1.1.0 (2026-09-06) — 新增透明代理模式，消除双库分裂
 """
 
 import os
@@ -18,7 +20,7 @@ import sqlite3
 import re
 from pathlib import Path
 from functools import wraps
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, Response
 
 # ── 路径常量 ──────────────────────────────────────────────
 if os.environ.get("DB_PATH"):
@@ -32,6 +34,78 @@ else:
 ADMIN_TOKEN = os.environ.get("GRAD_ADMIN_TOKEN") or os.environ.get("QUOTE_ADMIN_TOKEN", "")
 
 bp = Blueprint("grad_registrations", __name__, url_prefix="/api/grad-registrations")
+
+
+# ═══════════════════════════════════════════════════════════
+# 透明代理模式（2026-09-06）
+# ═══════════════════════════════════════════════════════════
+# 背景：2026-09-02 学院站剥离到 snailai.au（独立服务 snailai-school）后，
+# 报名数据分裂成两个库。本服务（snailai.ai）的 event_registrations 表冻结在
+# 18 条，而真数据在 snailai.au。同步脚本读本库 → 0 条待同步 → 静默假成功，
+# 20 天一条没进 CRM。
+#
+# 根治：设 GRAD_PROXY_TARGET=https://snailai.au 后，本 blueprint 的所有路由
+# 全部透明转发到目标站（读+写），本库不再接收新数据，双库彻底合并为单源。
+# 未设该环境变量时行为完全不变（向后兼容，可随时关掉）。
+GRAD_PROXY_TARGET = os.environ.get("GRAD_PROXY_TARGET", "").rstrip("/")
+
+# 需要转发的请求头（其余如 Host/Content-Length 由 requests 自行处理）
+_PROXY_PASS_HEADERS = ("X-Admin-Token", "Accept", "Content-Type", "Cookie")
+
+
+def _proxy_request(path=""):
+    """把当前请求转发到 GRAD_PROXY_TARGET，返回 Flask Response。
+
+    path 为空表示转发到与本站相同的子路径（由 before_request 拼接）。
+    目标站不可用时返回 502 + 明确提示，绝不静默降级到本地库
+    （静默降级正是本次事故的根因）。
+    """
+    import requests as _rq
+
+    target = f"{GRAD_PROXY_TARGET}/api/grad-registrations{path}"
+    if request.query_string:
+        target += "?" + request.query_string.decode("utf-8")
+
+    headers = {
+        k: v for k, v in request.headers.items()
+        if k in _PROXY_PASS_HEADERS
+    }
+    headers["User-Agent"] = "SnailAI-GradProxy/1.1"
+    # 标记来源，便于目标站日志排查
+    headers["X-Forwarded-By"] = "snailai.ai-grad-proxy"
+
+    body = request.get_data() if request.method in ("POST", "PUT", "PATCH", "DELETE") else None
+    try:
+        r = _rq.request(
+            request.method, target,
+            headers=headers,
+            data=body,
+            timeout=30,
+            allow_redirects=False,
+        )
+    except Exception as e:
+        return jsonify({
+            "error": "grad proxy upstream unreachable",
+            "target": GRAD_PROXY_TARGET,
+            "detail": str(e),
+        }), 502
+
+    # 剥掉逐跳首部，避免 Content-Length/Encoding 与实际内容不符
+    skip = {"transfer-encoding", "content-encoding", "content-length", "connection"}
+    resp_headers = [
+        (k, v) for k, v in r.headers.items()
+        if k.lower() not in skip
+    ]
+    return Response(r.content, status=r.status_code, headers=resp_headers)
+
+
+@bp.before_request
+def _maybe_proxy():
+    """开启代理时，所有 /api/grad-registrations/* 请求一律转发，不落本地库。"""
+    if not GRAD_PROXY_TARGET:
+        return None
+    sub = request.path[len("/api/grad-registrations"):]
+    return _proxy_request(sub)
 
 
 # ═══════════════════════════════════════════════════════════
