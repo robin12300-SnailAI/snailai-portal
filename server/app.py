@@ -4096,6 +4096,13 @@ def serve(path):
             return redirect("https://snailai.ai/" + path, code=303)
         return redirect("https://andrew-clinic.onrender.com/" + path, code=301)
 
+    # 备用路径退役：snailai.ai/andrew-clinic/* 同样 301 到新站。
+    # 仓库里的 andrew-clinic/ 目录已停止维护（V3.3.2 后不再同步），
+    # 继续静态吐出会显示过期版本（2026-09-12 用户实测撞上 V3.3.2 旧页）。
+    if path == "andrew-clinic" or path.startswith("andrew-clinic/"):
+        rest = path[len("andrew-clinic"):].lstrip("/")
+        return redirect("https://andrew-clinic.onrender.com/" + rest, code=301)
+
     # ── Academy 域名：2026-09-02 起全站 301 到 snailai.au（学院已整体迁移） ──
     # 学院现由独立服务 snailai-school（srv-dabpe6f40ujc739vlki0）承载，
     # 本服务不再提供学院内容。旧 URL 单跳 301 到对应新地址，至少保留 12 个月。
