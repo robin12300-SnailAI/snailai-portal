@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta property="og:site_name" content="Snail AI">
+    <meta property="og:type" content="article">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Sydney Clinics Can Cut Front-Desk Email in Half | Snail AI</title>
+<meta name="description" content="A practical workflow for triaging clinic inbox email — what to automate, what never to automate, and where a human stays in the loop.">
+<link rel="icon" type="image/png" href="/assets/snailai_logo.png">
+<link rel="canonical" href="https://snailai.ai/insights/clinic-front-desk-email-workflow/">
+<meta property="og:title" content="How Sydney Clinics Can Cut Front-Desk Email in Half | Snail AI">
+<meta property="og:description" content="A practical workflow for triaging clinic inbox email — what to automate, what never to automate, and where a human stays in the loop.">
+<meta property="og:image" content="https://snailai.ai/assets/og-image.png">
+    <meta property="og:image:alt" content="Snail AI — Practical AI for Sydney businesses">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:width" content="1200">
+<meta property="og:url" content="https://snailai.ai/insights/clinic-front-desk-email-workflow/">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How Sydney clinics can cut front-desk email volume in half",
+  "description": "A practical workflow for triaging clinic inbox email — what to automate, what never to automate, and where a human stays in the loop.",
+  "url": "https://snailai.ai/insights/clinic-front-desk-email-workflow/",
+  "datePublished": "2026-09-15",
+  "author": {"@type": "Person", "name": "Robin Luo", "jobTitle": "Founder and Business AI Implementation Lead", "url": "https://snailai.ai/about/"},
+  "publisher": {"@id": "https://snailai.ai/#organization"},
+  "mainEntityOfPage": "https://snailai.ai/insights/clinic-front-desk-email-workflow/"
+}
+</script>
+<style>
+.article-body { max-width: 780px; }
+.article-body p { font-size: 16px; line-height: 1.75; color: var(--ink-2); margin-bottom: 18px; }
+.article-body h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin: 40px 0 16px; line-height: 1.25; }
+.article-body ul, .article-body ol { margin: 0 0 18px 22px; }
+.article-body li { font-size: 16px; line-height: 1.7; color: var(--ink-2); margin-bottom: 9px; }
+.article-body a { color: var(--accent-2); font-weight: 600; }
+.article-body .pull {
+  background: var(--paper-2); border-left: 3px solid var(--accent);
+  padding: 18px 22px; border-radius: 0 10px 10px 0; margin: 26px 0;
+  font-size: 15.5px; line-height: 1.65; color: var(--ink-2);
+}
+.article-meta { font-size: 13.5px; color: var(--ink-3); margin-top: 22px; }
+@media (max-width: 768px) { .article-body h2 { font-size: 21px; } }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<nav class="nav">
+  <a href="/" class="nav-logo"><img src="/assets/snailai_logo.png?v=465" alt="Snail AI logo"><span>Snail AI</span></a>
+  <div class="nav-links">
+    <a href="/services/">Services</a>
+    <a href="/industries/">Industries</a>
+    <a href="/case-studies/">Case Studies</a>
+    <a href="/insights/">Insights</a>
+    <a href="/about/">About</a>
+    <a href="/contact/" class="nav-secondary">Contact</a>
+    <a href="/business-ai-scan/" class="nav-cta">Start the Business AI Scan</a>
+  </div>
+  <button class="nav-burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+<main id="main-content">
+
+<header class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="/">Home</a> / <a href="/insights/">Insights</a> / Clinic front-desk email</div>
+    <span class="eyebrow">Insights · Medical Clinics</span>
+    <h1>How Sydney clinics can cut front-desk email volume in half.</h1>
+    <p class="lede">A practical workflow for triaging the clinic inbox — what to automate, what never to automate, and where a human stays in the loop.</p>
+    <div class="article-meta">By Robin Luo, Founder &amp; Business AI Implementation Lead · First published September 2026 · 6 min read</div>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+    <div class="article-body">
+      <p>If you run a specialist clinic in Sydney, you already know the pattern. The front desk opens at 8:30 and the inbox is already at 40 unread. Referral letters, pathology results queries, appointment changes, transport bookings, billing questions, a specialist's PA chasing a letter from three weeks ago — all mixed together, all marked "urgent" by somebody.</p>
+      <p>By the time anyone works through it, real patient enquiries have sat unanswered for a day or two. Nobody's fault. The inbox was never designed as a work queue.</p>
+      <p>We've worked with Sydney clinics on exactly this problem. Here's the workflow we build, what we automate, what we deliberately don't — and the honest result: most clinics can cut the time their team spends on email roughly in half without touching a single clinical system.</p>
+
+      <h2>Step 1: Sort the inbox into five piles — automatically</h2>
+      <p>The single biggest win isn't AI writing replies. It's <strong>triage</strong>. Almost everything in a clinic inbox falls into five categories:</p>
+      <ol>
+        <li><strong>Appointment logistics</strong> — changes, confirmations, transport, reminders</li>
+        <li><strong>Referrals and inbound correspondence</strong> — letters from GPs or other specialists</li>
+        <li><strong>Billing and accounts</strong> — invoices, Medicare queries, payment issues</li>
+        <li><strong>General enquiries</strong> — fees, location, what to bring, parking</li>
+        <li><strong>Everything else</strong> — which usually turns out to be 10–15% of the volume</li>
+      </ol>
+      <p>A well-configured classifier reads each incoming email and routes it: appointment logistics go to the booking team's queue, billing goes to accounts, general enquiries get a fast, accurate templated answer with a human glance before it sends. Correspondence that needs clinical judgement goes to a nurse or practice manager queue — untouched by automation.</p>
+      <p>The front desk stops being a sorting room and starts being a service desk.</p>
+
+      <h2>Step 2: Answer the predictable 60% with reviewed templates</h2>
+      <p>A large share of clinic email is genuinely predictable: "Where do I park?", "Does Dr X bulk bill?", "What should I bring to my first appointment?", "Can I reschedule?"</p>
+      <p>For these, we build a small library of approved answer templates — written once, reviewed by the practice, kept accurate. When a matching enquiry arrives, the system drafts the reply. Here's the part that matters: <strong>a person still reads it before it goes out.</strong> Draft-then-review takes fifteen seconds; writing from scratch takes five minutes. Multiplied across dozens of emails a day, that's the "half" in the headline.</p>
+
+      <h2>Step 3: Chase the follow-ups that silently expire</h2>
+      <p>The most expensive email in a clinic is the one nobody answered. A referral that sat in the inbox for a week is a patient who went elsewhere. A billing query unanswered for two weeks becomes a phone call — which costs far more staff time than the original email would have.</p>
+      <p>So every item that enters a queue gets a clock. If it isn't resolved in two business days, it escalates — first to a reminder in the queue, then to the practice manager. Nothing silently expires. Clinics are often surprised that this rule alone, with no AI at all, changes behaviour more than any technology.</p>
+
+      <h2>What we never automate in a clinic</h2>
+      <p>This is where our approach differs from a generic "AI for business" pitch:</p>
+      <ul>
+        <li><strong>We never connect public systems to clinical records.</strong> Patient information in your practice management system stays there. Our workflows operate on the inbox and front-desk layer only — booking confirmations, logistics, billing, general enquiries.</li>
+        <li><strong>No clinical content is generated, summarised for decision-making, or sent without review.</strong> If an email contains anything that requires clinical judgement, it's routed to a human — full stop.</li>
+        <li><strong>Every outbound message has a human approval point</strong> during the rollout period, and the practice decides which categories earn the right to send automatically later. Some practices keep approval on everything permanently. That's a legitimate choice, and we build for it.</li>
+      </ul>
+      <div class="pull">If a vendor offers to "AI your whole inbox," ask them where patient data goes. If they can't answer crisply, walk away.</div>
+
+      <h2>What "in half" actually looks like</h2>
+      <p>A realistic outcome after 4–6 weeks, for a clinic doing 100+ emails a day:</p>
+      <ul>
+        <li>Triage is instant instead of a 45-minute morning ritual</li>
+        <li>Predictable enquiries get accurate replies in hours, not days</li>
+        <li>Nothing expires silently; escalation is automatic</li>
+        <li>The team's time shifts from sorting to the calls and patients that genuinely need a person</li>
+      </ul>
+      <p>We're deliberately not promising "zero email" or "full autopilot." The goal is a front desk that ends the day at zero unread and doesn't dread Monday. That's achievable. For a worked example of our clinic delivery boundaries, see how we rebuilt a <a href="/case-studies/specialist-medical-clinic-modernisation/">Sydney specialist clinic's web presence and workflow</a>, or read more about <a href="/industries/medical-clinics/">how we work with medical clinics</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <h2>Curious what's hiding in your inbox?</h2>
+    <p>The free Business AI Scan takes about ten minutes and gets you a written opportunity report — no access to your systems required.</p>
+    <a href="/business-ai-scan/" class="btn btn-primary btn-lg">Start the Business AI Scan</a>
+  </div>
+</section>
+
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="/assets/snailai_logo.png?v=465" alt="Snail AI logo">
+        <p>Connected websites and practical AI workflows for Sydney clinics and service businesses.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="/services/ai-workflow-automation/">AI Workflow Automation</a></li>
+          <li><a href="/services/website-system-integration/">Website &amp; System Integration</a></li>
+          <li><a href="/services/business-ai-assessment/">Business AI Assessment</a></li>
+          <li><a href="/services/corporate-ai-training/">Corporate AI Training</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Industries</h4>
+        <ul>
+          <li><a href="/industries/medical-clinics/">Medical Clinics</a></li>
+          <li><a href="/industries/construction-trades/">Construction &amp; Trades</a></li>
+          <li><a href="/industries/property-management/">Property Management</a></li>
+          <li><a href="/industries/professional-services/">Professional Services</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/case-studies/">Case Studies</a></li>
+          <li><a href="/insights/">Insights</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/terms/">Terms</a></li>
+          <li><a href="/security-and-data-handling/">Security &amp; Data Handling</a></li>
+          <li><a href="https://snailai.au/">Chinese Academy 中文学院</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© <span class="fyear">2026</span> Snail AI · Ausrealt International Pty Ltd · ABN 72 142 901 013 · North Sydney NSW · <a href="tel:+61417993551">0417 993 551</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/site.js"></script>
+<script>document.querySelectorAll('.fyear').forEach(function(e){e.textContent=new Date().getFullYear();});</script>
+</body>
+</html>
