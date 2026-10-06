@@ -232,6 +232,34 @@
   .hero .lede { font-size: 16.5px; }
   .why-grid { grid-template-columns: 1fr; }
 }
+/* ===== Payback model (own your systems) ===== */
+.payback-teaser {
+  background: var(--accent-warm); border: 1px solid rgba(194,65,12,0.25); border-radius: var(--r-lg);
+  padding: 26px 32px; text-align: center; font-size: 15.5px; color: var(--ink-2);
+}
+.payback-teaser strong { color: var(--ink); }
+.own-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; max-width: 920px; margin: 0 auto; }
+.own-col { border-radius: var(--r-lg); padding: 30px 32px; }
+.own-col h3 { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; margin-bottom: 18px; }
+.own-col.rent { background: var(--paper-2); }
+.own-col.own { background: #fff; border: 2px solid var(--accent); }
+.own-list { list-style: none; display: grid; gap: 12px; }
+.own-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; color: var(--ink-2); }
+.own-list li::before { font-weight: 800; flex-shrink: 0; }
+.own-col.rent .own-list li::before { content: "✕"; color: var(--ink-3); }
+.own-col.own .own-list li::before { content: "✓"; color: var(--accent); }
+.payback-slogan { text-align: center; font-size: 24px; font-weight: 800; letter-spacing: -0.01em; color: var(--ink); margin-top: 44px; }
+.payback-slogan .accent { color: var(--accent); }
+.payback-sub { text-align: center; color: var(--ink-3); font-size: 15px; margin-top: 10px; }
+.payback-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+.payback-stat { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 30px 24px; text-align: center; }
+.payback-stat .num { display: block; font-size: 34px; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
+.payback-stat .label { display: block; font-size: 14px; color: var(--ink-3); margin-top: 8px; font-weight: 600; }
+@media (max-width: 768px) {
+  .own-grid { grid-template-columns: 1fr; }
+  .payback-stats { grid-template-columns: 1fr; }
+  .payback-slogan { font-size: 20px; }
+}
 </style>
 </head>
 <body>
@@ -269,6 +297,7 @@
       <span>Founder-led discovery</span>
       <span>Local communication</span>
       <span>Practical implementation</span>
+      <span>Systems you own, not rent</span>
     </div>
   </div>
   <div class="ribbon-band" aria-hidden="true">
@@ -292,6 +321,12 @@
       <li>Teams experimenting with AI without a safe, structured implementation plan</li>
       <li>Technology projects that never move beyond a demonstration</li>
     </ul>
+    <div class="payback-teaser" style="margin-top:30px;">
+      💡 <strong>A different commercial model.</strong>
+      A Snail AI system typically costs about the same as <strong>one year of your current software subscriptions</strong>.
+      After year one, the subscriptions stop — and the system is yours.
+      <a href="#own-your-systems" style="color:var(--accent);font-weight:800;white-space:nowrap;">See how it works ↓</a>
+    </div>
   </div>
 </section>
 
@@ -322,6 +357,39 @@
         <a class="card-link" href="/services/business-ai-assessment/">Learn more →</a>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ===== Own your systems (payback model) ===== -->
+<section class="section" id="own-your-systems">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">The Snail AI commercial model</span>
+      <h2>Stop renting your software. Own your systems.</h2>
+      <p>Every year, businesses pay thousands in subscriptions that never become theirs. We build your system for roughly what you'd otherwise pay in one year of subscriptions — then it belongs to you.</p>
+    </div>
+    <div class="own-grid">
+      <div class="own-col rent">
+        <h3>🔄 The subscription treadmill</h3>
+        <ul class="own-list">
+          <li>You pay every year, forever</li>
+          <li>Prices keep rising; you fund features you never use</li>
+          <li>Your data and workflows live in someone else's system</li>
+          <li>Cancel — and you walk away with nothing</li>
+        </ul>
+      </div>
+      <div class="own-col own">
+        <h3>🐌 The Snail AI model</h3>
+        <ul class="own-list">
+          <li>One-time build, priced at roughly your one-year subscription cost</li>
+          <li>Typical payback period: about 12 months</li>
+          <li>The system and its data belong to you</li>
+          <li>After the build, running costs are a few cloud dollars a month — not thousands in licences</li>
+        </ul>
+      </div>
+    </div>
+    <p class="payback-slogan">Invest once. Pay it back in a year. <span class="accent">Own it forever.</span></p>
+    <p class="payback-sub">Higher efficiency, lower cost — every year after payback is pure return.</p>
   </div>
 </section>
 
@@ -383,6 +451,21 @@
         <h4>Proposal, implementation &amp; training</h4>
         <p>A clear proposal with scope and pricing, then delivery and team training — with human approval points throughout.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Payback stats ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>The maths our clients like most.</h2>
+      <p>We build the system for roughly one year of your subscription spend — then the subscriptions stop, and the system is yours.</p>
+    </div>
+    <div class="payback-stats">
+      <div class="payback-stat"><span class="num">1 year</span><span class="label">Your subscription spend ≈ the full build cost</span></div>
+      <div class="payback-stat"><span class="num">12 months</span><span class="label">Typical payback period on the investment</span></div>
+      <div class="payback-stat"><span class="num">100%</span><span class="label">After payback, the system is yours — subscriptions are gone</span></div>
     </div>
   </div>
 </section>
