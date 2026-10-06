@@ -5,6 +5,74 @@
 将验证后的 JSON 分析渲染为完整 HTML 报告
 """
 
+# ── Own vs Rent 回本计算（确定性，来自提交的年度订阅区间）──
+_SPEND_MIDPOINTS = {
+    "Under A$2,000": 1000,
+    "A$2,000-A$5,000": 3500,
+    "A$5,000-A$10,000": 7500,
+    "A$10,000-A$25,000": 17500,
+    "A$25,000+": 25000,
+}
+_CLOUD_RUNNING_PER_YEAR = 600  # 自建系统云运行成本估算 A$/年
+
+
+def _render_payback_section(norm: dict) -> str:
+    """Own-vs-Rent 一年回本计算（基于 annual_software_spend 区间，确定性渲染）"""
+    spend_band = (norm.get("readiness") or {}).get("annual_software_spend", "")
+    annual = _SPEND_MIDPOINTS.get(spend_band)
+
+    intro = (
+        "Most businesses keep paying for software forever. Snail AI builds systems differently: "
+        "the one-time build is priced at roughly what you would otherwise pay for <strong>one year "
+        "of subscriptions</strong>. After that year, the subscriptions stop — and the system is yours: "
+        "higher efficiency, lower cost, no licence renewals."
+    )
+
+    if not annual:
+        return (
+            f"<p>{intro}</p>"
+            """
+            <div class="payback-box">
+                <h3>How the model works</h3>
+                <ul>
+                    <li><strong>One-time build</strong> — priced at approximately one year of your current subscription spend</li>
+                    <li><strong>~12-month payback</strong> — the system typically pays for itself within the first year</li>
+                    <li><strong>100% yours afterwards</strong> — running costs are low-cost cloud, not per-seat licences</li>
+                    <li><strong>Higher efficiency, lower cost</strong> — automation removes repetitive work while the spend disappears</li>
+                </ul>
+                <p class="payback-note">You did not provide an annual subscription figure. On the validation call, tell us which tools you pay for and we will calculate your own-vs-rent comparison precisely.</p>
+            </div>"""
+        )
+
+    build = annual
+    rent_3yr = annual * 3
+    own_3yr = build + _CLOUD_RUNNING_PER_YEAR * 3
+    saving_3yr = rent_3yr - own_3yr
+
+    if saving_3yr >= 2000:
+        comparison = f"""
+            <div class="payback-box">
+                <h3>Your own-vs-rent calculation</h3>
+                <table class="payback-table">
+                    <tr><td>Your approximate annual software subscription spend (as submitted)</td><td>{_e(spend_band)}</td></tr>
+                    <tr><td>Snail AI one-time build cost (our model: ≈ one year of subscriptions)</td><td>≈ A${build:,}</td></tr>
+                    <tr><td>Typical payback period</td><td>~12 months</td></tr>
+                    <tr><td>Keep renting — 3-year subscription outlay</td><td>≈ A${rent_3yr:,}</td></tr>
+                    <tr><td>Own instead — one-time build + 3 years of cloud running costs</td><td>≈ A${own_3yr:,}</td></tr>
+                    <tr class="payback-saving"><td>Estimated 3-year difference that stays in your business</td><td>≈ A${saving_3yr:,}</td></tr>
+                </table>
+                <p class="payback-note">Illustrative estimate based on the band you selected. A precise calculation can be prepared during the validation call using your actual invoices.</p>
+            </div>"""
+    else:
+        comparison = f"""
+            <div class="payback-box">
+                <h3>Your own-vs-rent calculation</h3>
+                <p>At your reported subscription level ({_e(spend_band)} per year), a full custom rebuild may not be the right first step — at this spend level, <strong>a targeted workflow automation</strong> usually pays for itself through time savings rather than licence replacement.</p>
+                <p class="payback-note">The own-vs-rent model has the most impact for businesses spending A$5,000+ per year on subscriptions (ERP, booking, CRM, e-commerce and similar). Bring your invoice list to the validation call and we will show you the honest numbers.</p>
+            </div>"""
+
+    return f"<p>{intro}</p>{comparison}"
+
 
 def render_report_html(analysis: dict, norm: dict, scoring: dict, submission: dict) -> str:
     """渲染完整报告 HTML"""
@@ -138,6 +206,7 @@ def render_report_html(analysis: dict, norm: dict, scoring: dict, submission: di
         <tr><td class="label">Data Sensitivity</td><td>{_e(readiness['data_sensitivity'])}</td></tr>
         <tr><td class="label">Start Timeline</td><td>{_e(readiness['start_timeline'])}</td></tr>
         <tr><td class="label">Budget Range</td><td>{_e(readiness['budget'])}</td></tr>
+        <tr><td class="label">Annual Software Spend</td><td>{_e(readiness.get('annual_software_spend') or 'Not specified')}</td></tr>
     </table>
     """
 
@@ -296,6 +365,16 @@ def render_report_html(analysis: dict, norm: dict, scoring: dict, submission: di
   /* Pilot */
   .pilot-box {{ background: var(--accent-light); border: 1px solid var(--accent); border-radius: 12px; padding: 24px; }}
 
+  /* Own vs Rent payback */
+  .payback-box {{ background: var(--accent-light); border: 1px solid var(--accent); border-radius: 12px; padding: 24px; }}
+  .payback-box h3 {{ color: var(--accent-2); margin-bottom: 12px; font-size: 17px; }}
+  .payback-box ul {{ margin: 8px 0 8px 24px; }}
+  .payback-table {{ width: 100%; border-collapse: collapse; margin-top: 12px; }}
+  .payback-table td {{ padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 14.5px; vertical-align: top; }}
+  .payback-table td:last-child {{ text-align: right; font-weight: 700; white-space: nowrap; }}
+  .payback-table .payback-saving td {{ background: #f0fdf4; color: var(--green); font-weight: 800; }}
+  .payback-note {{ font-size: 12.5px; color: var(--ink-3); margin-top: 12px; }}
+
   /* Path */
   .path-grid {{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 16px 0; }}
   .path-card {{ background: var(--paper-2); border-radius: 8px; padding: 16px; border-top: 3px solid var(--accent); }}
@@ -392,15 +471,21 @@ def render_report_html(analysis: dict, norm: dict, scoring: dict, submission: di
     </div>
   </div>
 
-  <!-- 5. What Not to Automate Yet -->
+  <!-- 5. Own vs Rent -->
   <div class="section">
-    <h2>5. What Not to Automate Yet</h2>
+    <h2>5. Own vs Rent — the One-Year Payback Model</h2>
+    {_render_payback_section(norm)}
+  </div>
+
+  <!-- 6. What Not to Automate Yet -->
+  <div class="section">
+    <h2>6. What Not to Automate Yet</h2>
     {not_recommended if not_recommended else '<p>Based on this assessment, no workflows have been flagged as unsuitable for future consideration.</p>'}
   </div>
 
-  <!-- 6. Risks and Guardrails -->
+  <!-- 7. Risks and Guardrails -->
   <div class="section">
-    <h2>6. Risks and Guardrails</h2>
+    <h2>7. Risks and Guardrails</h2>
     <div class="risk-level-banner" style="background:{'#fef2f2' if scoring['risk_level']=='high' else '#fffbeb' if scoring['risk_level']=='medium' else '#f0fdf4'};padding:12px 16px;border-radius:8px;margin-bottom:16px;">
       <strong>Overall Risk Level: {scoring['risk_level'].upper()}</strong>
       {'— Medical/healthcare workflows require strict human oversight, data de-identification and professional compliance review.' if norm['is_medical'] else ''}
@@ -408,9 +493,9 @@ def render_report_html(analysis: dict, norm: dict, scoring: dict, submission: di
     {risk_controls if risk_controls else '<p>No specific risks identified beyond standard implementation considerations.</p>'}
   </div>
 
-  <!-- 7. Suggested 30/60/90-Day Path -->
+  <!-- 8. Suggested 30/60/90-Day Path -->
   <div class="section">
-    <h2>7. Suggested 30/60/90-Day Path</h2>
+    <h2>8. Suggested 30/60/90-Day Path</h2>
     <div class="path-grid">
       <div class="path-card">
         <h4>Days 0–30</h4>

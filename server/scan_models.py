@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS scan_submissions(
     data_sensitivity TEXT,
     desired_start_time TEXT,
     indicative_budget TEXT,
+    annual_software_spend TEXT,              -- 年度软件订阅支出区间（own-vs-rent 回本计算用）
     onsite_assessment_interest TEXT,
     preferred_contact_method TEXT,           -- Phone / Email / Video meeting
     -- 网站抓取同意
@@ -160,6 +161,10 @@ def init_scan_tables(conn: sqlite3.Connection):
     # 迁移：旧库补列（全新库已含列，ALTER 会抛错被忽略）
     try:
         c.execute("ALTER TABLE scan_submissions ADD COLUMN preferred_contact_method TEXT")
+    except sqlite3.OperationalError:
+        pass
+    try:
+        c.execute("ALTER TABLE scan_submissions ADD COLUMN annual_software_spend TEXT")
     except sqlite3.OperationalError:
         pass
     conn.commit()

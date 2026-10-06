@@ -88,6 +88,7 @@ def stage_normalise(submission: dict) -> dict:
             "data_sensitivity": submission.get("data_sensitivity", ""),
             "start_timeline": submission.get("desired_start_time", ""),
             "budget": submission.get("indicative_budget", ""),
+            "annual_software_spend": submission.get("annual_software_spend", ""),
             "onsite_interest": submission.get("onsite_assessment_interest", ""),
         },
         "is_medical": submission["industry_group"] == "C",

@@ -741,6 +741,20 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
 
     <div class="field">
+      <label for="f_spend">Approximate annual software subscription spend (all tools combined) <span class="req">*</span></label>
+      <select id="f_spend" required>
+        <option value="">Select...</option>
+        <option>Under A$2,000</option>
+        <option>A$2,000-A$5,000</option>
+        <option>A$5,000-A$10,000</option>
+        <option>A$10,000-A$25,000</option>
+        <option>A$25,000+</option>
+        <option>Not sure</option>
+      </select>
+      <div class="field-hint" style="font-size:13px;color:#6A6A85;margin-top:6px;">Website, booking, CRM, accounting, productivity and other recurring licences. We use this to show an own-vs-rent payback comparison in your report.</div>
+    </div>
+
+    <div class="field">
       <label for="f_onsite">Would you consider a complimentary on-site assessment if eligible? <span class="req">*</span></label>
       <select id="f_onsite" required>
         <option value="">Select...</option>
@@ -1105,7 +1119,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     }
 
     if (step === 5) {
-      const fields = ['f_documented','f_champion','f_pilot','f_auto_level','f_sensitivity','f_start_time','f_budget','f_onsite','f_contact'];
+      const fields = ['f_documented','f_champion','f_pilot','f_auto_level','f_sensitivity','f_start_time','f_budget','f_spend','f_onsite','f_contact'];
       fields.forEach(id => {
         const el = document.getElementById(id);
         if (!el.value) { addError(el.closest('.field')); valid = false; }
@@ -1172,6 +1186,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         data_sensitivity: document.getElementById('f_sensitivity').value,
         desired_start: document.getElementById('f_start_time').value,
         budget: document.getElementById('f_budget').value,
+        annual_spend: document.getElementById('f_spend').value,
         preferred_contact_method: document.getElementById('f_contact').value,
         onsite_assessment: document.getElementById('f_onsite').value
       },
