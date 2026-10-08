@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Security &amp; Data Handling | Snail AI</title>
-<meta name="description" content="How Snail AI handles client data and system security: access boundaries, storage locations, approval rules, encryption and retention — stated plainly.">
+<meta name="description" content="How Snail AI handles client data and system security: access boundaries, remote access logging, insurance, storage, encryption and retention — stated plainly.">
 <link rel="icon" type="image/png" href="/assets/snailai_logo.png">
 <link rel="canonical" href="https://snailai.ai/security-and-data-handling/">
 <meta property="og:title" content="Security &amp; Data Handling | Snail AI">
@@ -42,7 +42,7 @@
     <div class="crumbs"><a href="/">Home</a> / Security &amp; Data Handling</div>
     <span class="eyebrow">Policy</span>
     <h1>Security &amp; data handling, stated plainly.</h1>
-    <p class="lede">This page describes how we actually handle client data and access client systems — written to match our real practices, not a template.</p>
+    <p class="lede">This page describes how we actually handle client data and access client systems — including what happens every time we log in remotely — written to match our real practices, not a template.</p>
   </div>
 </header>
 
@@ -70,6 +70,34 @@
     </div>
 
     <div class="cs-section" style="margin-bottom:44px;">
+      <h2 style="font-size:24px;font-weight:800;margin-bottom:16px;">How we access your systems</h2>
+      <p style="max-width:780px;font-size:15.5px;color:var(--ink-2);margin-bottom:18px;">When we work on your systems remotely, three safeguards apply by default. Not as promises — as mechanisms you can check.</p>
+      <div class="card-grid cols-2">
+        <div class="card"><div class="card-icon">🔑</div><h3>SSH access, logged three ways</h3><p>Command-line access runs over SSH with per-client keys. Every session is written to an operations log that exists in three places: on your machine, on ours, and in a version-controlled repository with timestamped history. What we did and when is verifiable — not just claimed.</p></div>
+        <div class="card"><div class="card-icon">🎥</div><h3>Remote desktop, recorded end-to-end</h3><p>When we operate your screen via RustDesk, the full session is recorded. The recording stays on your machine, so you can review exactly what was seen and done.</p></div>
+        <div class="card"><div class="card-icon">⛔</div><h3>You can cut us off at any time</h3><p>Revoke a single line in your SSH key file, or switch off Remote Login, and our access ends immediately. The logs remain — permanently, on your side — even after access is revoked.</p></div>
+      </div>
+    </div>
+
+    <div class="cs-section" style="margin-bottom:44px;">
+      <h2 style="font-size:24px;font-weight:800;margin-bottom:16px;">A dedicated AI workstation — never your personal laptop</h2>
+      <ul class="check-list" style="max-width:780px;">
+        <li><strong>We don't log into your personal laptop.</strong> Personal machines hold private material — banking, family, files unrelated to work. That boundary is not negotiable on our side.</li>
+        <li><strong>A dedicated machine does the work.</strong> Our standard setup: you purchase a new Mac mini or iMac as a dedicated AI workstation. It joins your network, runs the automation, and nothing else touches it.</li>
+        <li><strong>You own the machine.</strong> You buy it, you keep the receipt, you keep the warranty. We deploy remotely over a private tunnel (Tailscale) and set it up — the hardware stays yours, permanently.</li>
+      </ul>
+    </div>
+
+    <div class="cs-section" style="margin-bottom:44px;">
+      <h2 style="font-size:24px;font-weight:800;margin-bottom:16px;">Contracts, insurance &amp; daily reports</h2>
+      <div class="card-grid cols-2">
+        <div class="card"><div class="card-icon">🛡️</div><h3>Professional insurance</h3><p>We hold Professional Indemnity (A$2M per claim) and Public Liability (A$20M) cover, underwritten through Lloyd's of London. A certificate of currency is available on request.</p></div>
+        <div class="card"><div class="card-icon">📄</div><h3>Sample contract on request</h3><p>Every engagement runs on a written agreement — scope, milestones, payment schedule, data handling. Want to review the terms before talking? Ask and we'll send a sample contract over.</p></div>
+        <div class="card"><div class="card-icon">📬</div><h3>A daily report whenever we log in</h3><p>If we logged into your systems — whether we changed something or only inspected it — you receive an email that same day stating what was done, what was found, and how anything we touched can be rolled back. No silent access. Ever.</p></div>
+      </div>
+    </div>
+
+    <div class="cs-section" style="margin-bottom:44px;">
       <h2 style="font-size:24px;font-weight:800;margin-bottom:16px;">AI-specific boundaries</h2>
       <ul class="check-list" style="max-width:780px;">
         <li>Client documents are processed within workflows we build <em>for the client</em> — not pasted into third-party AI tools for our own convenience</li>
@@ -82,7 +110,7 @@
     <div class="cs-section">
       <h2 style="font-size:24px;font-weight:800;margin-bottom:16px;">Retention &amp; your rights</h2>
       <p style="max-width:780px;font-size:15.5px;color:var(--ink-2);">Form submissions are retained only as long as needed to handle your enquiry. You can request access to, correction of, or deletion of your personal information at any time by emailing <a href="mailto:robin@snailai.ai">robin@snailai.ai</a>. See our <a href="/privacy/">Privacy Policy</a> for the full statement.</p>
-      <p style="max-width:780px;font-size:13px;color:var(--ink-3);margin-top:20px;">Last reviewed: September 2026 · Maintained by Snail AI · This page is reviewed whenever our practices change — not on a schedule for its own sake.</p>
+      <p style="max-width:780px;font-size:13px;color:var(--ink-3);margin-top:20px;">Last reviewed: October 2026 · Maintained by Snail AI · This page is reviewed whenever our practices change — not on a schedule for its own sake.</p>
     </div>
   </div>
 </section>
