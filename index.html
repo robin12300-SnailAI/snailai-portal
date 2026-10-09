@@ -255,10 +255,19 @@
 .payback-stat { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 30px 24px; text-align: center; }
 .payback-stat .num { display: block; font-size: 34px; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
 .payback-stat .label { display: block; font-size: 14px; color: var(--ink-3); margin-top: 8px; font-weight: 600; }
+.plane-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; max-width: 1020px; margin: 48px auto 0; }
+.plane-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 28px 26px; }
+.plane-card .plane-icon { font-size: 30px; line-height: 1; }
+.plane-card h3 { font-size: 17px; font-weight: 800; margin: 14px 0 10px; color: var(--ink); }
+.plane-card p { font-size: 14.5px; color: var(--ink-2); line-height: 1.6; }
+.plane-note { max-width: 820px; margin: 30px auto 0; text-align: center; font-size: 15.5px; color: var(--ink-2); line-height: 1.7; }
+.plane-note strong { color: var(--ink); }
+.plane-note .accent { color: var(--accent); font-weight: 800; }
 @media (max-width: 768px) {
   .own-grid { grid-template-columns: 1fr; }
   .payback-stats { grid-template-columns: 1fr; }
   .payback-slogan { font-size: 20px; }
+  .plane-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -390,6 +399,24 @@
     </div>
     <p class="payback-slogan">Invest once. Pay it back in a year. <span class="accent">Own it forever.</span></p>
     <p class="payback-sub">Higher efficiency, lower cost — every year after payback is pure return.</p>
+    <div class="plane-grid">
+      <div class="plane-card">
+        <div class="plane-icon">✈️</div>
+        <h3>The aircraft</h3>
+        <p>We design and build the complete system — custom to how your business actually runs. This is not something you can buy off the shelf, and it is not something you could build yourself. You need an AI team that has done this before.</p>
+      </div>
+      <div class="plane-card">
+        <div class="plane-icon">🎓</div>
+        <h3>The pilot's licence</h3>
+        <p>We train your team to operate the system day to day — not just watch it run. You fly it, you rely on it, and it becomes part of how your business works.</p>
+      </div>
+      <div class="plane-card">
+        <div class="plane-icon">📐</div>
+        <h3>The blueprints</h3>
+        <p>Full documentation, source code and data ownership are handed over — with AI tooling that makes routine maintenance and small fixes manageable in-house, without waiting on an agency.</p>
+      </div>
+    </div>
+    <p class="plane-note">That is why our fees after launch are minimal — and often optional. <strong>If you have learned to fly it, most routine maintenance never needs us.</strong> When you want to upgrade or extend the aircraft, come back to the people who drew the blueprints — <span class="accent">we know every rivet.</span></p>
   </div>
 </section>
 
