@@ -1,9 +1,10 @@
 {
   "name": "snailai-portal",
-  "version": "4.8.0",
-  "release_date": "2026-09-15",
-  "last_updated": "2026-09-15",
+  "version": "4.9.0",
+  "release_date": "2026-10-10",
+  "last_updated": "2026-10-10",
   "changelog": [
+    "4.9.0 (2026-10-10): 新增 AI Central Server 服务 — 新服务页 /services/ai-central-server/（问题→方案→工作方式→包含/不包含→FAQ→报价 全结构，Service JSON-LD/canonical/OG）；services 列表页新增第6张服务卡片+JSON-LD 扩至6项；首页服务区新增 AI Central Server 卡片；ai-workflow-automation 页加 note-box 关联（建 AI 系统时配套设置中央服务器）；全站6个服务页 footer 同步新链接；sitemap 增补新 URL",
     "4.8.0 (2026-09-15): Insights 首批 3 篇文章上线 — ①诊所前台邮件减半工作流（医疗）②AI 自动化成本与比价指南（通用搜索）③报价跟进工作流（技工/建筑）；每篇含 Article JSON-LD/canonical/OG + 文末 Scan CTA；Insights 索引页新增 Latest articles 卡片区；sitemap 增补 3 URL",
     "4.7.3 (2026-09-02): 全站升级批次4 — Quote-Andrew 2页加访问令牌保护(?k=skin2026)，已有 noindex,nofollow；留企业站不注入 site.css（独立风格保留）",
     "4.7.2 (2026-09-02): 全站升级批次3 — Portal(10页)+Tasks(6页)+Sign(1页) 共17页注入 site.css/site.js",
