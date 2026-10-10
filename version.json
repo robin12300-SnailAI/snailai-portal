@@ -1,9 +1,10 @@
 {
   "name": "snailai-portal",
-  "version": "4.9.0",
+  "version": "4.9.1",
   "release_date": "2026-10-10",
   "last_updated": "2026-10-10",
   "changelog": [
+    "4.9.1 (2026-10-10): AI Central Server 页移除报价区间（$2,000–$8,000 删除）——面向小企业不前置报价防吓跑，改为 What it costs 三步流程（Scan→固定书面报价→买断所有权）；服务列表卡片标签 From $2,000→Custom quote；JSON-LD 移除 offers 价格字段。定价策略：未来设专门报价栏目承载价格信息",
     "4.9.0 (2026-10-10): 新增 AI Central Server 服务 — 新服务页 /services/ai-central-server/（问题→方案→工作方式→包含/不包含→FAQ→报价 全结构，Service JSON-LD/canonical/OG）；services 列表页新增第6张服务卡片+JSON-LD 扩至6项；首页服务区新增 AI Central Server 卡片；ai-workflow-automation 页加 note-box 关联（建 AI 系统时配套设置中央服务器）；全站6个服务页 footer 同步新链接；sitemap 增补新 URL",
     "4.8.0 (2026-09-15): Insights 首批 3 篇文章上线 — ①诊所前台邮件减半工作流（医疗）②AI 自动化成本与比价指南（通用搜索）③报价跟进工作流（技工/建筑）；每篇含 Article JSON-LD/canonical/OG + 文末 Scan CTA；Insights 索引页新增 Latest articles 卡片区；sitemap 增补 3 URL",
     "4.7.3 (2026-09-02): 全站升级批次4 — Quote-Andrew 2页加访问令牌保护(?k=skin2026)，已有 noindex,nofollow；留企业站不注入 site.css（独立风格保留）",
